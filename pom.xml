@@ -72,6 +72,13 @@
 			<version>4.1.4</version>
 		</dependency>
 
+		<!-- log4jdbc 설정 -->
+		<dependency>
+			<groupId>org.bgee.log4jdbc-log4j2</groupId>
+			<artifactId>log4jdbc-log4j2-jdbc4</artifactId>
+			<version>1.16</version>
+		</dependency>
+		
 		<!-- thymeleaf layout dialect -->
 		<dependency>
 			<groupId>nz.net.ultraq.thymeleaf</groupId>
