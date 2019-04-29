@@ -15,11 +15,11 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import com.evaluation.domain.Company;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Log
+@Slf4j
 @Commit
 public class CompanyRepositoryTests {
 

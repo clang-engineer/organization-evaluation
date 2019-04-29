@@ -16,11 +16,11 @@ import com.evaluation.persistence.CompanyRepository;
 import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
-import lombok.extern.java.Log;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/company/**")
-@Log
+@Slf4j
 public class CompanyController {
 
 	@Autowired
