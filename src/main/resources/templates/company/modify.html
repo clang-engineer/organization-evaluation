@@ -1,0 +1,99 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layout1}">
+
+<div layout:fragment="content">
+	<!-- Begin Page Content -->
+	<div class="container-fluid">
+
+		<h1 class="mt-4">Company Detail</h1>
+		<!-- Page Heading -->
+		<p class="mb-4">
+			DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+			<a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+			.
+		</p>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h4 class="m-0 font-weight-bold text-primary">Company Detail</h4>
+
+			</div>
+			<div class="card-body">
+				<form role="form" th:action="@{modify}" method="post">
+					<input type="hidden" name="cno" th:value="${vo.cno}" />
+					<div class="form-group">
+						<label>Company Name</label> <input type="text" class="form-control" name="name" th:value="${vo.name}">
+					</div>
+					<div class="form-group">
+						<label>ID</label> <input type="text" class="form-control" name="id" th:value="${vo.id}">
+					</div>
+					<div class="form-group">
+						<label>Password</label> <input type="password" class="form-control" name="pwd" id="pwd" th:value="${vo.password}">
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control" name="pwd2" id="pwd2" th:value="${vo.password}">
+					</div>
+					<div class="form-group">
+						<label>Home page address</label> <input type="url" class="form-control" name="homepage" th:value="${vo.homepage}">
+					</div>
+				</form>
+					<div class="form-group">
+						<label>WriteId</label> <input type="text" class="form-control" name="writeId" readonly="readonly" th:value="${vo.writeId}">
+					</div>
+					<div class="form-group">
+						<label>WriteDate</label> <input type="text" class="form-control" name="writeDate" readonly="readonly" th:value="${#dates.format(vo.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+					</div>
+					<div class="form-group">
+						<label>UpdateId</label> <input type="text" class="form-control" name="updateId" readonly="readonly" th:value="${vo.updateId}">
+					</div>
+					<div class="form-group">
+						<label>updateDate</label> <input type="text" class="form-control" name="updateDate" readonly="readonly" th:value="${#dates.format(vo.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+					</div>
+
+					<button data-oper='modify' class="btn btn-default border">Modify</button>
+					<button data-oper='delete' class="btn btn-danger">Delete</button>
+					<button data-oper='list' class="btn btn-info">List</button>
+
+			</div>
+		</div>
+
+
+	</div>
+	<!-- /.container-fluid -->
+</div>
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	$(document).ready(function() {
+	    var formObj = $("form");
+	    $('button').on("click", function(e) {
+		
+ 		e.preventDefault();
+
+		var operation = $(this).data("oper");
+ 
+		if (operation === 'delete') {
+		    formObj.attr("action","delete");
+		} else if (operation === 'list') {
+		    formObj.attr("action","list").attr("method","get");
+		    formObj.empty();
+		}
+	    formObj.append("<input type='hidden' name='page' value='"+[[${pageVO.page}]]+"'/>");
+	    formObj.append("<input type='hidden' name='size' value='"+[[${pageVO.size}]]+"'/>");
+	    formObj.append("<input type='hidden' name='type' value='"+[[${pageVO.type}]]+"'/>");
+	    formObj.append("<input type='hidden' name='keyword' value='"+[[${pageVO.keyword}]]+"'/>");
+	 
+		console.log(formObj.attr);
+		 
+ 		formObj.submit();
+  
+	    });
+	});
+    </script>
+
+</th:block>
+</script>
+</body>
+
+</html>
+x
