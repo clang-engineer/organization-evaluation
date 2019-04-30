@@ -5,7 +5,14 @@ var turnManager = (function() {
     };
 
     var add = function(obj, callback) {
-	console.log("add...");
+	$.ajax({
+	    type:'post',
+	    url:'/turns/'+obj.cno,
+	    data:JSON.stringify(obj),
+	    datatype:'json',
+	    contentType:"application/json",
+	    success:callback
+	});
     };
 
     var update = function(obj, callback) {

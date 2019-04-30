@@ -15,10 +15,10 @@
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h4 class="m-0 font-weight-bold text-primary" style="display:inline">DataTables</h4>
-			<div style="float: right">
-				<button type="button" class="btn btn-warning pull-right">Add Survey</button>
-			</div>
+				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Survey Tables</h4>
+				<div style="float: right">
+					<button type="button" id="addTurnBtn" class="btn btn-warning pull-right">Add Survey</button>
+				</div>
 			</div>
 			<div class="card-body">
 
@@ -29,21 +29,13 @@
 							<tr>
 								<th>#No</th>
 								<th>Title</th>
-								<th>SurveyType</th>
+								<th>Turn Type</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
 								<th>Set Detail</th>
 							</tr>
 						</thead>
 						<tbody id="turnTable">
-							<tr>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-								<td></td>
-							</tr>
 						</tbody>
 					</table>
 
@@ -61,21 +53,33 @@
 	</form>
 
 	<!-- modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+	<div id="myModal" class="modal fade" role="dialog">
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Modal title</h4>
+					<h4 class="modal-title">Modal Header</h4>
+					<button type="button" class="close" data-dismiss="modal">&times;</button>
 				</div>
-				<div class="modal-body">처리가 완료되었습니다.</div>
+				<div class="modal-body">
+					<h5>Turn Title</h5>
+					<input type="text" class="form-control" name="turnTitle" />
+					<br />
+					<h5>Turn Type</h5>
+					<label class="checkbox-inline">
+						<input type="checkbox" name="turnType" value="360">
+						360 Survey
+					</label>
+					<label class="checkbox-inline">
+						<input type="checkbox" name="turnType" value="MBO">
+						MBO
+					</label>
+				</div>
 				<div class="modal-footer">
-					<button type="button" class="btn btn-default border">Close</button>
-					<button type="button" class="btn btn-primary">Save changes</button>
+					<button id="modalBtn" class="btn btn-info">Save</button>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
 				</div>
 			</div>
-			<!-- /.modal-content -->
 		</div>
-		<!-- /.modal-dialog -->
 	</div>
 	<!-- /.modal -->
 
@@ -89,6 +93,7 @@
 	<script th:inline="javascript">
 	$(document).ready(function(e) {
 	
+	/* turn list 출력 */
     (function(){
     turnManager.getAll([[${cno}]], printList);
     })();
@@ -103,7 +108,7 @@
 		str+="<tr>" +
 		"<td>"+(list.length-i)+"</td>"+
 		"<td>"+turnObj.title+"</td>"+
-		"<td>"+turnObj.surveyType+"</td>"+
+		"<td>"+turnObj.type+"</td>"+
 		"<td>"+formatDate(turnObj.writeDate)+"</td>"+
 		"<td>"+formatDate(turnObj.updateDate)+"</td>"+
 		"<td><a href='"+turnObj.tno+"'><button type='button' class='btn btn-success'>Survey Setting</button></a></td>"+
@@ -120,13 +125,55 @@
 	    + "-" +( date.getMonth()+1 >=10 ? date.getMonth()+1 :'0'+(date.getMonth()+1))
 	    + "-" +date.getDate()
 	}
-			
+	
+	
+	/* modal 창 */ 
+	$("#addTurnBtn").on('click',function(){
+	   $("#myModal").modal("show"); 
+	   $(".modal-title").text("Add Turn");
+	   mode="ADD";
 	});
+	
+	
+	
+	/* add turn */
+	$("#modalBtn").click(function(){
+	var cno=[[${cno}]];
+	var turnTitleObj=$("input[name='turnTitle']");
+	var turnTitle=turnTitleObj.val();
+	var turnType=get_chked_values();
+	
+	if (mode=='ADD') {
+		var obj={title:turnTitle, type:turnType,cno:cno};
+		//console.log(obj);
+		
+		turnManager.add(obj,function(list){
+		    printList(list);
+		    alert("새로운 회차가 등록 되었습니다.");
+		    turnTitleObj.val('');
+		    $("#myModal").modal("hide");
+		});
+	}
+	});
+
+	function get_chked_values(){
+	     var DATA='';
+	      $('input:checkbox[name=turnType]').each(function() {
+	         if($(this).is(':checked'))
+	            DATA += $(this).val();
+	      });
+	      
+	      if (DATA!=='' && DATA!=='360' && DATA!=='MBO') {
+		  DATA='ALL';
+	      }
+	      return DATA;
+	}
+	});
+	
+	
     </script>
 </th:block>
 </script>
 </body>
-
-s
 
 </html>

@@ -65,7 +65,7 @@ public class TurnController {
 
 		turnRepo.findById(turn.getTno()).ifPresent(origin -> {
 			origin.setTitle(turn.getTitle());
-			origin.setSurveyType(turn.getSurveyType());
+			origin.setType(turn.getType());
 			turnRepo.save(origin);
 		});
 

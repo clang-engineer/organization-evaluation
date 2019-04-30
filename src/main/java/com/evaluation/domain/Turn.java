@@ -34,7 +34,7 @@ public class Turn {
 
 	private String title;
 
-	private String surveyType;
+	private String type;
 
 	private String writeId;
 	private String updateId;

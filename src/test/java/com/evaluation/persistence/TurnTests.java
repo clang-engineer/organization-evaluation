@@ -42,7 +42,7 @@ public class TurnTests {
 		IntStream.range(0, 10).forEach(i -> {
 			Turn turn = new Turn();
 			turn.setTitle("turn..." + i);
-			turn.setSurveyType("type..." + i);
+			turn.setType("type..." + i);
 			turn.setCompany(company);
 			turnRepo.save(turn);
 		});
