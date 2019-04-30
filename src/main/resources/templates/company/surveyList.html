@@ -65,12 +65,13 @@
 					<input type="text" class="form-control" name="turnTitle" />
 					<br />
 					<h5>Turn Type</h5>
-					<label class="checkbox-inline"> <input type="checkbox" name="turnType" value="360"> 360 Survey
-					</label> &nbsp; <label class="checkbox-inline"> <input type="checkbox" name="turnType" value="MBO"> MBO
+					<label class="checkbox-inline"> <input type="checkbox" id="checkbox1" name="turnType" value="360"> 360 Survey
+					</label> &nbsp; <label class="checkbox-inline"> <input type="checkbox" id="checkbox2" name="turnType" value="MBO"> MBO
 					</label>
 				</div>
 				<div class="modal-footer">
 					<button id="modalBtn" class="btn btn-info">Save</button>
+					<button id="delModalBtn" class="btn btn-danger">Delete</button>
 					<button type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -88,9 +89,11 @@
 	<script th:inline="javascript">
 	$(document).ready(function(e) {
 	
+	var cno=[[${cno}]];
+	var tno;
 	/* turn list 출력 */
     (function(){
-    turnManager.getAll([[${cno}]], printList);
+    turnManager.getAll(cno, printList);
     })();
 	
 			
@@ -124,36 +127,41 @@
 	
 	/* modal 창 */ 
 	$("#addTurnBtn").on('click',function(){
+	   turnTitleObj.val('');
+	   checked_values(false);
+
 	   $("#myModal").modal("show"); 
 	   $(".modal-title").text("Add Turn");
 	   mode="ADD";
 	});
 	
 	
+	var turnTitleObj=$("input[name='turnTitle']");
 	
 	/* add turn */
 	$("#modalBtn").click(function(){
-	var cno=[[${cno}]];
-	var turnTitleObj=$("input[name='turnTitle']");
 	var turnTitle=turnTitleObj.val();
+	var cno=[[${cno}]];
 	var turnType=get_chked_values();
 	
 	if (mode=='ADD') {
 		var obj={title:turnTitle, type:turnType,cno:cno};
 		//console.log(obj);
-		
 		turnManager.add(obj,function(list){
-		    printList(list);
 		    alert("새로운 회차가 등록 되었습니다.");
-		    turnTitleObj.val('');
-		    $("#myModal").modal("hide");
-			$('input:checkbox[name=turnType]').each(function() {
-			       $(this).prop('checked',false);
-			 });
+		    afterAll(list)
 		});
-	}
+	} else if (mode=='MOD'){
+	    var obj={title:turnTitle, type:turnType, cno:cno, tno:tno}
+	    turnManager.update(obj,function(list){
+			alert("회차 정보가 수정되었습니다.");
+			afterAll(list);
+	    });
+		};
 	});
 	
+	
+	/* add시 check box 값 취합 */
 	function get_chked_values(){
 	     var DATA='';
 	      $('input:checkbox[name=turnType]').each(function() {
@@ -166,6 +174,65 @@
 	      }
 	      return DATA;
 	}
+	
+	function afterAll(list){
+	    printList(list);
+	    $("#myModal").modal("hide");
+	    turnTitleObj.val('');
+		checked_values(false);
+	}
+	
+	function checked_values(boolean){
+		$('input:checkbox[name=turnType]').each(function() {
+		       $(this).prop('checked',boolean);
+		 });
+	}
+	
+	/* modift, delete turn */
+	$("#turnTable").on("click","tr",function(e){
+	   var tds=$(this).find('td') 
+	   tno=tds.find('a').attr('href');
+	   turnTitleObj.val(tds[1].innerHTML);
+
+	   checked_values(false);
+	   
+	   mode='MOD';
+	   switch (tds[2].innerHTML) {
+	   	case '360' : 
+	   	    $("#checkbox1").prop('checked',true);
+	   	  	break;
+	   	case 'MBO' : 
+	   	    $("#checkbox2").prop('checked',true);
+	   	    break;
+	   	case '360/MBO' : 
+	   	    checked_values(true);
+	   	
+	   }	
+	  $("#myModal").modal("show");
+	  $(".modal-title").text("Modify/Delete Turn");
+	});
+
+	/* modal 창에서 삭제 버튼 눌렀을 때 동작 */	
+	$("#delModalBtn").on("click",function(){
+	    if(delchk()==true){
+			var obj ={cno:cno, tno:tno}    
+			turnManager.remove(obj,function(list){
+			alert("정상적으로 삭제 되었습니다.");
+			afterAll(list);		
+			});
+	    } else{
+			return;
+	    }
+	});
+	
+	function delchk(){
+	    if(confirm("삭제하시겠습니까?")){
+	        return true;
+	    } else {
+	        return false;
+	    }
+	}
+	
 	});
 	
 	

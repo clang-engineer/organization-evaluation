@@ -23,37 +23,45 @@
 				<form role="form" th:action="@{modify}" method="post">
 					<input type="hidden" name="cno" th:value="${vo.cno}" />
 					<div class="form-group">
-						<label>Company Name</label> <input type="text" class="form-control" name="name" th:value="${vo.name}">
+						<label>Company Name</label>
+						<input type="text" class="form-control" name="name" th:value="${vo.name}">
 					</div>
 					<div class="form-group">
-						<label>ID</label> <input type="text" class="form-control" name="id" th:value="${vo.id}">
+						<label>ID</label>
+						<input type="text" class="form-control" name="id" th:value="${vo.id}">
 					</div>
 					<div class="form-group">
-						<label>Password</label> <input type="password" class="form-control" name="pwd" id="pwd" th:value="${vo.password}">
+						<label>Password</label>
+						<input type="password" class="form-control" name="pwd" id="pwd" th:value="${vo.password}">
 					</div>
 					<div class="form-group">
 						<input type="password" class="form-control" name="pwd2" id="pwd2" th:value="${vo.password}">
 					</div>
 					<div class="form-group">
-						<label>Home page address</label> <input type="url" class="form-control" name="homepage" th:value="${vo.homepage}">
+						<label>Home page address</label>
+						<input type="url" class="form-control" name="homepage" th:value="${vo.homepage}">
 					</div>
 				</form>
-					<div class="form-group">
-						<label>WriteId</label> <input type="text" class="form-control" name="writeId" readonly="readonly" th:value="${vo.writeId}">
-					</div>
-					<div class="form-group">
-						<label>WriteDate</label> <input type="text" class="form-control" name="writeDate" readonly="readonly" th:value="${#dates.format(vo.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
-					</div>
-					<div class="form-group">
-						<label>UpdateId</label> <input type="text" class="form-control" name="updateId" readonly="readonly" th:value="${vo.updateId}">
-					</div>
-					<div class="form-group">
-						<label>updateDate</label> <input type="text" class="form-control" name="updateDate" readonly="readonly" th:value="${#dates.format(vo.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
-					</div>
+				<div class="form-group">
+					<label>WriteId</label>
+					<input type="text" class="form-control" name="writeId" readonly="readonly" th:value="${vo.writeId}">
+				</div>
+				<div class="form-group">
+					<label>WriteDate</label>
+					<input type="text" class="form-control" name="writeDate" readonly="readonly" th:value="${#dates.format(vo.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+				</div>
+				<div class="form-group">
+					<label>UpdateId</label>
+					<input type="text" class="form-control" name="updateId" readonly="readonly" th:value="${vo.updateId}">
+				</div>
+				<div class="form-group">
+					<label>updateDate</label>
+					<input type="text" class="form-control" name="updateDate" readonly="readonly" th:value="${#dates.format(vo.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+				</div>
 
-					<button data-oper='modify' class="btn btn-default border">Modify</button>
-					<button data-oper='delete' class="btn btn-danger">Delete</button>
-					<button data-oper='list' class="btn btn-info">List</button>
+				<button data-oper='modify' class="btn btn-default border">Modify</button>
+				<button data-oper='delete' class="btn btn-danger">Delete</button>
+				<button data-oper='list' class="btn btn-info">List</button>
 
 			</div>
 		</div>
@@ -73,7 +81,11 @@
 		var operation = $(this).data("oper");
  
 		if (operation === 'delete') {
+		    if(delchk()==true){
 		    formObj.attr("action","delete");
+		    } else {
+			return
+		    };
 		} else if (operation === 'list') {
 		    formObj.attr("action","list").attr("method","get");
 		    formObj.empty();
@@ -88,6 +100,14 @@
  		formObj.submit();
   
 	    });
+	    
+		function delchk(){
+		    if(confirm("삭제하시겠습니까?")){
+		        return true;
+		    } else {
+		        return false;
+		    }
+		}
 	});
     </script>
 

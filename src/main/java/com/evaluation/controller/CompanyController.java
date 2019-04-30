@@ -97,7 +97,7 @@ public class CompanyController {
 		rttr.addAttribute("type", vo.getType());
 		rttr.addAttribute("keyword", vo.getKeyword());
 
-		return "redirect/company/list";
+		return "redirect:/company/list";
 
 	}
 
