@@ -5,7 +5,7 @@
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
 
-		<h1 class="mt-4">Survey List</h1>
+		<h1 class="mt-4">Turn List</h1>
 		<!-- Page Heading -->
 		<p class="mb-4">
 			DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
@@ -15,9 +15,9 @@
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Survey Tables</h4>
+				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Turn Tables</h4>
 				<div style="float: right">
-					<button type="button" id="addTurnBtn" class="btn btn-warning pull-right">Add Survey</button>
+					<button type="button" id="addTurnBtn" class="btn btn-warning pull-right">Add Turn</button>
 				</div>
 			</div>
 			<div class="card-body">
@@ -32,7 +32,7 @@
 								<th>Turn Type</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
-								<th>Set Detail</th>
+								<th>Turn Detail</th>
 							</tr>
 						</thead>
 						<tbody id="turnTable">
@@ -65,18 +65,13 @@
 					<input type="text" class="form-control" name="turnTitle" />
 					<br />
 					<h5>Turn Type</h5>
-					<label class="checkbox-inline">
-						<input type="checkbox" name="turnType" value="360">
-						360 Survey
-					</label>
-					<label class="checkbox-inline">
-						<input type="checkbox" name="turnType" value="MBO">
-						MBO
+					<label class="checkbox-inline"> <input type="checkbox" name="turnType" value="360"> 360 Survey
+					</label> &nbsp; <label class="checkbox-inline"> <input type="checkbox" name="turnType" value="MBO"> MBO
 					</label>
 				</div>
 				<div class="modal-footer">
 					<button id="modalBtn" class="btn btn-info">Save</button>
-					<button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+					<button type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -111,7 +106,7 @@
 		"<td>"+turnObj.type+"</td>"+
 		"<td>"+formatDate(turnObj.writeDate)+"</td>"+
 		"<td>"+formatDate(turnObj.updateDate)+"</td>"+
-		"<td><a href='"+turnObj.tno+"'><button type='button' class='btn btn-success'>Survey Setting</button></a></td>"+
+		"<td><a href='"+turnObj.tno+"'><button type='button' class='btn btn-success'>Setting</button></a></td>"+
 		"</tr>";	
 	    }
 	    
@@ -152,10 +147,13 @@
 		    alert("새로운 회차가 등록 되었습니다.");
 		    turnTitleObj.val('');
 		    $("#myModal").modal("hide");
+			$('input:checkbox[name=turnType]').each(function() {
+			       $(this).prop('checked',false);
+			 });
 		});
 	}
 	});
-
+	
 	function get_chked_values(){
 	     var DATA='';
 	      $('input:checkbox[name=turnType]').each(function() {
@@ -164,7 +162,7 @@
 	      });
 	      
 	      if (DATA!=='' && DATA!=='360' && DATA!=='MBO') {
-		  DATA='ALL';
+		  DATA='360/MBO';
 	      }
 	      return DATA;
 	}
