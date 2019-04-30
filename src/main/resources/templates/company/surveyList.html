@@ -17,7 +17,8 @@
 			<div class="card-header py-3">
 				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Turn Tables</h4>
 				<div style="float: right">
-					<button type="button" id="addTurnBtn" class="btn btn-warning pull-right">Add Turn</button>
+					<button type="button" id="addTurnBtn" class="btn btn-warning">Add Turn</button>
+					<button type="button" id="companyListBtn" class="btn btn-info">Company List</button>
 				</div>
 			</div>
 			<div class="card-body">
@@ -233,6 +234,10 @@
 	    }
 	}
 	
+	
+	$("#companyListBtn").on("click",function(e){
+	   $("#f1").submit();
+	});
 	});
 	
 	
