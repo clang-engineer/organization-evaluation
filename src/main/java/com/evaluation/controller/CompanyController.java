@@ -102,7 +102,6 @@ public class CompanyController {
 	}
 
 	@GetMapping("/surveyList")
-	public void surveyList(Company company, PageVO vo, RedirectAttributes rttr) {
-
+	public void surveyList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo) {
 	}
 }

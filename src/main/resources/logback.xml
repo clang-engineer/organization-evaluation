@@ -23,10 +23,17 @@
 		</rollingPolicy>
 	</appender>
 
+	<!-- logger -->
 	<logger name="com.evaluation" level="debug">
 		<appender-ref ref="SAMPLE" />
 	</logger>
 	<logger name="com.evaluation" level="info">
 		<appender-ref ref="ROLLING" />
 	</logger>
+
+	<!-- root logger -->
+	<root level="OFF">
+		<appender-ref ref="SAMPLE" />
+	</root>
+
 </configuration>

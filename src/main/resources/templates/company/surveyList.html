@@ -1,1 +1,132 @@
-1
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layout1}">
+
+<div layout:fragment="content">
+	<!-- Begin Page Content -->
+	<div class="container-fluid">
+
+		<h1 class="mt-4">Survey List</h1>
+		<!-- Page Heading -->
+		<p class="mb-4">
+			DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+			<a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+		</p>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h4 class="m-0 font-weight-bold text-primary" style="display:inline">DataTables</h4>
+			<div style="float: right">
+				<button type="button" class="btn btn-warning pull-right">Add Survey</button>
+			</div>
+			</div>
+			<div class="card-body">
+
+				<div class="table-responsive">
+					<table class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+						<thead>
+							<tr>
+								<th>#No</th>
+								<th>Title</th>
+								<th>SurveyType</th>
+								<th>Write Date</th>
+								<th>Update Date</th>
+								<th>Set Detail</th>
+							</tr>
+						</thead>
+						<tbody id="turnTable">
+							<tr>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+								<td></td>
+							</tr>
+						</tbody>
+					</table>
+
+				</div>
+			</div>
+		</div>
+
+	</div>
+
+	<form id="f1" th:action="@{list}" method="get">
+		<input type="hidden" name="page" th:value=${pageVO.page} />
+		<input type="hidden" name="size" th:value=${pageVO.size} />
+		<input type="hidden" name="type" th:value=${pageVO.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+	</form>
+
+	<!-- modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Modal title</h4>
+				</div>
+				<div class="modal-body">처리가 완료되었습니다.</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default border">Close</button>
+					<button type="button" class="btn btn-primary">Save changes</button>
+				</div>
+			</div>
+			<!-- /.modal-content -->
+		</div>
+		<!-- /.modal-dialog -->
+	</div>
+	<!-- /.modal -->
+
+
+
+	<!-- /.container-fluid -->
+</div>
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript" th:src="@{'/public/turn.js'}"></script>
+	<script th:inline="javascript">
+	$(document).ready(function(e) {
+	
+    (function(){
+    turnManager.getAll([[${cno}]], printList);
+    })();
+	
+			
+	function printList(list){
+	    var str="";
+	    var turnObj;
+	    for(var i=0; i<list.length; i++){
+		turnObj=list[i];
+		
+		str+="<tr>" +
+		"<td>"+(list.length-i)+"</td>"+
+		"<td>"+turnObj.title+"</td>"+
+		"<td>"+turnObj.surveyType+"</td>"+
+		"<td>"+formatDate(turnObj.writeDate)+"</td>"+
+		"<td>"+formatDate(turnObj.updateDate)+"</td>"+
+		"<td><a href='"+turnObj.tno+"'><button type='button' class='btn btn-success'>Survey Setting</button></a></td>"+
+		"</tr>";	
+	    }
+	    
+	    $("#turnTable").html(str);
+	}
+	
+	
+	function formatDate(timeValue){
+	    var date=new Date(timeValue);
+	    return date.getFullYear()
+	    + "-" +( date.getMonth()+1 >=10 ? date.getMonth()+1 :'0'+(date.getMonth()+1))
+	    + "-" +date.getDate()
+	}
+			
+	});
+    </script>
+</th:block>
+</script>
+</body>
+
+s
+
+</html>

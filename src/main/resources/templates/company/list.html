@@ -15,26 +15,28 @@
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
-				<h4 cla"src/main/resources/templates/company/list.html"ss="m-0 font-weight-bold text-primary">DataTables</h4>
-
+				<h4 class="m-0 font-weight-bold text-primary" style="display:inline">DataTables</h4>
 				<!-- serarch box -->
-				<div class="input-group pull-right">
-					<select class="form-control col-sm-1 small" id="searchType">
-						<option>---
-							</optinon>
-						<option value="id" th:selected="${pageVO.type}=='id'">ID</option>
-						<option value="name" th:selected="${pageVO.type}=='name'">Name</option>
-					</select>
-					<input type="text" class="col-sm-2 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
-					<div class="input-group-append">
-						<button class="btn btn-primary" id="searchBtn" type="button">
-							<i class="fas fa-search fa-sm"></i>
-						</button>
+				<div style="float:right">
+					<div class="input-group">
+						<select class="form-control col-sm-4" id="searchType">
+							<option>---
+								</optinon>
+							<option value="id" th:selected="${pageVO.type}=='id'">ID</option>
+							<option value="name" th:selected="${pageVO.type}=='name'">Name</option>
+						</select>
+						<input type="text" class="col-sm-7 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+						<div class="input-group-append">
+							<button class="btn btn-primary" id="searchBtn" type="button">
+								<i class="fas fa-search fa-sm"></i>
+							</button>
+						</div>
 					</div>
 				</div>
 				<!-- /serarch box -->
-
 			</div>
+
+
 			<div class="card-body">
 
 				<div class="table-responsive">
@@ -68,9 +70,8 @@
 						</tbody>
 					</table>
 
+
 				</div>
-
-
 
 				<!-- page nation -->
 				<nav aria-label="Page navigation example">
