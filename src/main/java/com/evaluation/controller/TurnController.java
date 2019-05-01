@@ -44,7 +44,7 @@ public class TurnController {
 		turn.setCompany(company);
 		turnRepo.save(turn);
 
-		return new ResponseEntity<>(turnRepo.getTurnsOfCompany(company), HttpStatus.CREATED);
+		return new ResponseEntity<>(getTurnsByCompany(company), HttpStatus.CREATED);
 	}
 
 	@Transactional
@@ -55,7 +55,7 @@ public class TurnController {
 
 		Company company = new Company();
 		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(turnRepo.getTurnsOfCompany(company), HttpStatus.OK);
+		return new ResponseEntity<List<Turn>>(getTurnsByCompany(company), HttpStatus.OK);
 	}
 
 	@Transactional
@@ -72,7 +72,7 @@ public class TurnController {
 		Company company = new Company();
 		company.setCno(cno);
 
-		return new ResponseEntity<List<Turn>>(turnRepo.getTurnsOfCompany(company), HttpStatus.CREATED);
+		return new ResponseEntity<List<Turn>>(getTurnsByCompany(company), HttpStatus.CREATED);
 	}
 
 	@GetMapping("/{cno}")
@@ -81,6 +81,11 @@ public class TurnController {
 
 		Company company = new Company();
 		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(turnRepo.getTurnsOfCompany(company), HttpStatus.OK);
+		return new ResponseEntity<List<Turn>>(getTurnsByCompany(company), HttpStatus.OK);
+	}
+	
+	private List<Turn> getTurnsByCompany(Company company) throws RuntimeException {
+		log.info("getTurnsByCompany..."+company);
+		return turnRepo.getTurnsOfCompany(company);
 	}
 }
