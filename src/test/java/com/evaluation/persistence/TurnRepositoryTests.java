@@ -19,7 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Slf4j
 @Commit
-public class TurnTests {
+public class TurnRepositoryTests {
 	@Autowired
 	TurnRepository turnRepo;
 
@@ -29,7 +29,7 @@ public class TurnTests {
 		log.info("" + turnRepo);
 	}
 
-	@Test
+//	@Test
 	public void testInsertTurns() {
 
 		Long[] arr = { 300L, 299L, 288L };

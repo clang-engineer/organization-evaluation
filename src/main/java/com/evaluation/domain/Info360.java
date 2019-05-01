@@ -25,12 +25,15 @@ public class Info360 {
 
 	@Id
 	@Column
-	private String tno;
+	private Long tno;
 
 	private String title;
 	private String content;
 	private String replyCode;
 	private String status;
+
+	private Timestamp startDate;
+	private Timestamp endDate;
 
 	private String writeId;
 	private String updateId;

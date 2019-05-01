@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layout1}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
 
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
@@ -237,6 +237,15 @@
 	
 	$("#companyListBtn").on("click",function(e){
 	   $("#f1").submit();
+	});
+	
+	
+	$("#turnTable").on("click","a",function(e){
+		e.preventDefault();
+		$("#f1").empty();
+		$("#f1").attr("action",[[@{'/setDetail/360Info'}]]);
+		$("#f1").append("<input type='hidden' name='tno' value='"+$(this).attr('href')	+"'/>");
+	    $("#f1").submit();
 	});
 	});
 	
