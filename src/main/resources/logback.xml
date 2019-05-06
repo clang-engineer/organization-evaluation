@@ -24,10 +24,10 @@
 	</appender>
 
 	<!-- logger -->
-	<logger name="com.evaluation" level="debug">
+	<logger name="com.evaluation" level="debug" additivity="false">
 		<appender-ref ref="SAMPLE" />
 	</logger>
-	<logger name="com.evaluation" level="info">
+	<logger name="com.evaluation" level="info" additivity="false">
 		<appender-ref ref="ROLLING" />
 	</logger>
 
