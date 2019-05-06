@@ -2,7 +2,6 @@ package com.evaluation.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,10 +11,11 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.evaluation.domain.Company;
-import com.evaluation.persistence.CompanyRepository;
+import com.evaluation.service.CompanyService;
 import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
+import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -23,29 +23,27 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class CompanyController {
 
-	@Autowired
-	private CompanyRepository companyRepo;
+	@Setter(onMethod_ = { @Autowired })
+	private CompanyService companyService;
 
 	@GetMapping("/list")
 	public void list(@ModelAttribute("pageVO") PageVO vo, Model model) {
+		log.info("company list");
 
-		Pageable page = vo.makePageable(0, "cno");
-
-		Page<Company> result = companyRepo.findAll(companyRepo.makePredicate(vo.getType(), vo.getKeyword()), page);
-
+		Page<Company> result = companyService.getList(vo);
 		model.addAttribute("result", new PageMaker<>(result));
 	}
 
 	@GetMapping("/register")
 	public void registerGET() {
-		log.info("register get");
+		log.info("company register get");
 	}
 
 	@PostMapping("/register")
 	public String registerPost(Company vo, RedirectAttributes rttr) {
-		log.info("register post");
+		log.info("company register post");
 
-		companyRepo.save(vo);
+		companyService.register(vo);
 		rttr.addFlashAttribute("msg", "success");
 
 		return "redirect:/company/list";
@@ -53,29 +51,28 @@ public class CompanyController {
 
 	@GetMapping("/view")
 	public void view(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
-		log.info("" + cno);
+		log.info("company view get" + cno);
 
-		companyRepo.findById(cno).ifPresent(company -> model.addAttribute("vo", company));
-
+		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@GetMapping("/modify")
 	public void modifyGet(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
-		log.info("" + cno);
+		log.info("company modfiy get" + cno);
 
-		companyRepo.findById(cno).ifPresent(company -> model.addAttribute("vo", company));
+		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@PostMapping("/modify")
 	public String modifyPost(Company company, PageVO vo, RedirectAttributes rttr) {
-		log.info("" + company);
+		log.info("company modify post" + company);
 
-		companyRepo.findById(company.getCno()).ifPresent(origin -> {
+		companyService.get(company.getCno()).ifPresent(origin -> {
 			origin.setId(company.getId());
 			origin.setName(company.getName());
 			origin.setPassword(company.getPassword());
 			origin.setHomepage(company.getHomepage());
-			companyRepo.save(origin);
+			companyService.modify(origin);
 			rttr.addFlashAttribute("msg", "success");
 			rttr.addAttribute("cno", origin.getCno());
 		});
@@ -90,7 +87,9 @@ public class CompanyController {
 
 	@PostMapping("/delete")
 	public String delete(Long cno, PageVO vo, RedirectAttributes rttr) {
-		companyRepo.deleteById(cno);
+		log.info("company delete");
+
+		companyService.remove(cno);
 		rttr.addFlashAttribute("msg", "success");
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
