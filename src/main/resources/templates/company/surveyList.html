@@ -117,12 +117,20 @@
 	    $("#turnTable").html(str);
 	}
 	
-	
+	/* list에 출력되는 시간 포멧 */
 	function formatDate(timeValue){
 	    var date=new Date(timeValue);
-	    return date.getFullYear()
-	    + "-" +( date.getMonth()+1 >=10 ? date.getMonth()+1 :'0'+(date.getMonth()+1))
-	    + "-" +date.getDate()
+	    var yyyy = date.getFullYear();
+	    var mm = date.getMonth();
+	    var dd = date.getDate();
+
+	    var hh = date.getHours();
+	    var mi = date.getMinutes();
+	    var ss = date.getSeconds();
+	    
+		var formatedTime=[yyyy,'/',(mm>9?'':'0')+mm,'/',(dd>9?'':'0')+dd,' ',(hh>9?'':'0')+hh,':',(mi>9?'':'0')+mi,':',(ss>9?'':'0')+ss].join('');
+		
+		return formatedTime;
 	}
 	
 	

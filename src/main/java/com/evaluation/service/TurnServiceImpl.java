@@ -39,7 +39,7 @@ public class TurnServiceImpl implements TurnService {
 	}
 
 	@Override
-	public List<Turn> getLists(Company company) {
+	public List<Turn> getList(Company company) {
 		List<Turn> result = turnRepo.getTurnsOfCompany(company);
 		return result;
 	}

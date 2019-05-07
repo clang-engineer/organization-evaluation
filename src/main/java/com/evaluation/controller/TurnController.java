@@ -19,6 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 import com.evaluation.domain.Company;
 import com.evaluation.domain.Turn;
 import com.evaluation.persistence.TurnRepository;
+import com.evaluation.service.TurnService;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -31,31 +32,20 @@ public class TurnController {
 	@Setter(onMethod_ = @Autowired)
 	private TurnRepository turnRepo;
 
+	@Setter(onMethod_ = @Autowired)
+	private TurnService turnService;
+
 	@Transactional
 	@PostMapping("/{cno}")
 	public ResponseEntity<List<Turn>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("addReply.......................");
-		log.info("cno : " + cno);
-		log.info("Reply : " + turn);
 
 		Company company = new Company();
 		company.setCno(cno);
-
 		turn.setCompany(company);
-		turnRepo.save(turn);
 
-		return new ResponseEntity<>(getTurnsByCompany(company), HttpStatus.CREATED);
-	}
-
-	@Transactional
-	@DeleteMapping("/{cno}/{tno}")
-	public ResponseEntity<List<Turn>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
-		log.info("delete Turn : " + tno);
-		turnRepo.deleteById(tno);
-
-		Company company = new Company();
-		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(getTurnsByCompany(company), HttpStatus.OK);
+		turnService.register(turn);
+		return new ResponseEntity<>(getTurnList(company), HttpStatus.CREATED);
 	}
 
 	@Transactional
@@ -63,29 +53,41 @@ public class TurnController {
 	public ResponseEntity<List<Turn>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("modfify turn : " + turn);
 
-		turnRepo.findById(turn.getTno()).ifPresent(origin -> {
+		turnService.get(turn.getTno()).ifPresent(origin -> {
 			origin.setTitle(turn.getTitle());
 			origin.setType(turn.getType());
-			turnRepo.save(origin);
+			turnService.modify(origin);
 		});
 
 		Company company = new Company();
 		company.setCno(cno);
+		return new ResponseEntity<List<Turn>>(getTurnList(company), HttpStatus.CREATED);
+	}
 
-		return new ResponseEntity<List<Turn>>(getTurnsByCompany(company), HttpStatus.CREATED);
+	@Transactional
+	@DeleteMapping("/{cno}/{tno}")
+	public ResponseEntity<List<Turn>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
+		log.info("delete Turn : " + tno);
+
+		turnService.remove(tno);
+
+		Company company = new Company();
+		company.setCno(cno);
+		return new ResponseEntity<List<Turn>>(getTurnList(company), HttpStatus.OK);
 	}
 
 	@GetMapping("/{cno}")
-	public ResponseEntity<List<Turn>> getTurns(@PathVariable("cno") Long cno) {
+	public ResponseEntity<List<Turn>> getTurnByCompany(@PathVariable("cno") Long cno) {
 		log.info("get all turns...");
 
 		Company company = new Company();
 		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(getTurnsByCompany(company), HttpStatus.OK);
+		return new ResponseEntity<List<Turn>>(getTurnList(company), HttpStatus.OK);
 	}
-	
-	private List<Turn> getTurnsByCompany(Company company) throws RuntimeException {
-		log.info("getTurnsByCompany..."+company);
-		return turnRepo.getTurnsOfCompany(company);
+
+	private List<Turn> getTurnList(Company company) throws RuntimeException {
+		log.info("getTurnsByCompany..." + company);
+
+		return turnService.getList(company);
 	}
 }

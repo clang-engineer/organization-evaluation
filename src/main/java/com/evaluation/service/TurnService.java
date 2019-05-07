@@ -16,5 +16,5 @@ public interface TurnService {
 
 	public void remove(long tno);
 
-	public List<Turn> getLists(Company company);
+	public List<Turn> getList(Company company);
 }
