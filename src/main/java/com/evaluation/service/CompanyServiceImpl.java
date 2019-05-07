@@ -23,33 +23,37 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public void register(Company company) {
-		log.info("register..." + company);
+		log.info("service : company register " + company);
+		
 		companyRepo.save(company);
 	}
 
 	@Override
 	public Optional<Company> get(long cno) {
-		log.info("get...");
+		log.info("service : company get " + cno);
+		
 		return companyRepo.findById(cno);
 	}
 
 	@Override
 	public void modify(Company company) {
-		log.info("modify...");
+		log.info("service : company modify " + company);
+		
 		companyRepo.save(company);
 	}
 
 	@Override
 	public void remove(long cno) {
-		log.info("remove...");
+		log.info("service : company remove " + cno);
+		
 		companyRepo.deleteById(cno);
 	}
 
 	@Override
 	public Page<Company> getList(PageVO vo) {
-		log.info("get List...");
-		Pageable page = vo.makePageable(0, "cno");
+		log.info("service : company getList by" + vo);
 
+		Pageable page = vo.makePageable(0, "cno");
 		Page<Company> result = companyRepo.findAll(companyRepo.makePredicate(vo.getType(), vo.getKeyword()), page);
 		return result;
 	}

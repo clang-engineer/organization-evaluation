@@ -28,7 +28,7 @@ public class CompanyController {
 
 	@GetMapping("/list")
 	public void list(@ModelAttribute("pageVO") PageVO vo, Model model) {
-		log.info("company list");
+		log.info("controller : company list by " + vo);
 
 		Page<Company> result = companyService.getList(vo);
 		model.addAttribute("result", new PageMaker<>(result));
@@ -36,12 +36,12 @@ public class CompanyController {
 
 	@GetMapping("/register")
 	public void registerGET() {
-		log.info("company register get");
+		log.info("controller : company register get");
 	}
 
 	@PostMapping("/register")
 	public String registerPost(Company vo, RedirectAttributes rttr) {
-		log.info("company register post");
+		log.info("controller : company register post " + vo);
 
 		companyService.register(vo);
 		rttr.addFlashAttribute("msg", "success");
@@ -51,21 +51,21 @@ public class CompanyController {
 
 	@GetMapping("/view")
 	public void view(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
-		log.info("company view get" + cno);
+		log.info("controller : company view get" + cno);
 
 		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@GetMapping("/modify")
 	public void modifyGet(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
-		log.info("company modfiy get" + cno);
+		log.info("controller : company modfiy get " + cno);
 
 		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@PostMapping("/modify")
 	public String modifyPost(Company company, PageVO vo, RedirectAttributes rttr) {
-		log.info("company modify post" + company);
+		log.info("controller : company modify post" + company);
 
 		companyService.get(company.getCno()).ifPresent(origin -> {
 			origin.setId(company.getId());
@@ -87,7 +87,7 @@ public class CompanyController {
 
 	@PostMapping("/delete")
 	public String delete(Long cno, PageVO vo, RedirectAttributes rttr) {
-		log.info("company delete");
+		log.info("controller : company delete " + cno);
 
 		companyService.remove(cno);
 		rttr.addFlashAttribute("msg", "success");
@@ -102,5 +102,6 @@ public class CompanyController {
 
 	@GetMapping("/surveyList")
 	public void surveyList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo) {
+		log.info("controller : company surveyList");
 	}
 }

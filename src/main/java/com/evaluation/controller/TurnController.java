@@ -38,7 +38,7 @@ public class TurnController {
 	@Transactional
 	@PostMapping("/{cno}")
 	public ResponseEntity<List<Turn>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
-		log.info("addReply.......................");
+		log.info("controller : addTurn " + turn);
 
 		Company company = new Company();
 		company.setCno(cno);
@@ -51,7 +51,7 @@ public class TurnController {
 	@Transactional
 	@PutMapping("/{cno}")
 	public ResponseEntity<List<Turn>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
-		log.info("modfify turn : " + turn);
+		log.info("controller : modfify turn " + turn);
 
 		turnService.get(turn.getTno()).ifPresent(origin -> {
 			origin.setTitle(turn.getTitle());
@@ -67,7 +67,7 @@ public class TurnController {
 	@Transactional
 	@DeleteMapping("/{cno}/{tno}")
 	public ResponseEntity<List<Turn>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
-		log.info("delete Turn : " + tno);
+		log.info("controller : remove Turn " + tno);
 
 		turnService.remove(tno);
 
@@ -78,7 +78,7 @@ public class TurnController {
 
 	@GetMapping("/{cno}")
 	public ResponseEntity<List<Turn>> getTurnByCompany(@PathVariable("cno") Long cno) {
-		log.info("get all turns...");
+		log.info("controller : get all turns by " + cno);
 
 		Company company = new Company();
 		company.setCno(cno);
@@ -86,7 +86,7 @@ public class TurnController {
 	}
 
 	private List<Turn> getTurnList(Company company) throws RuntimeException {
-		log.info("getTurnsByCompany..." + company);
+		log.info("getTurnList" + company);
 
 		return turnService.getList(company);
 	}

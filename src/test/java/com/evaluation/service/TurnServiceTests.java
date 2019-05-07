@@ -74,7 +74,7 @@ public class TurnServiceTests {
 		log.info("========== test getList");
 		Company company = new Company();
 		company.setCno(100L);
-		service.getLists(company).forEach(turn -> log.info("" + turn));
+		service.getList(company).forEach(turn -> log.info("" + turn));
 		;
 	}
 
