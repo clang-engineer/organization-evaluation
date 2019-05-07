@@ -29,23 +29,23 @@ public class TurnRepositoryTests {
 		log.info("" + turnRepo);
 	}
 
-//	@Test
+	@Test
 	public void testInsertTurns() {
 
-		Long[] arr = { 300L, 299L, 288L };
+		Long[] arr = { 100L, 99L, 98L };
 
-	Arrays.stream(arr).forEach(num->{
-		
-		Company company = new Company();
-		company.setCno(num);
+		Arrays.stream(arr).forEach(num -> {
 
-		IntStream.range(0, 10).forEach(i -> {
-			Turn turn = new Turn();
-			turn.setTitle("turn..." + i);
-			turn.setType("type..." + i);
-			turn.setCompany(company);
-			turnRepo.save(turn);
-		});
+			Company company = new Company();
+			company.setCno(num);
+
+			IntStream.range(1, 11).forEach(i -> {
+				Turn turn = new Turn();
+				turn.setTitle("turn..." + i);
+				turn.setType("type..." + i);
+				turn.setCompany(company);
+				turnRepo.save(turn);
+			});
 		});
 
 	}

@@ -29,7 +29,7 @@ public class CompanyRepositoryTests {
 	@Test
 	public void insertCompanyDummies() {
 
-		IntStream.range(0, 300).forEach(i -> {
+		IntStream.range(1, 101).forEach(i -> {
 
 			Company company = new Company();
 			company.setId("sample id " + i);

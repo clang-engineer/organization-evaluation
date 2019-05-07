@@ -2,17 +2,14 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.Optional;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import com.evaluation.domain.Company;
-import com.evaluation.vo.PageVO;
+import com.evaluation.domain.Turn;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -20,11 +17,10 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-@Commit
-public class CompanyServiceTests {
+public class TurnServiceTests {
 
 	@Setter(onMethod_ = { @Autowired })
-	private CompanyService service;
+	TurnService service;
 
 	@Test
 	public void testExist() {
@@ -34,19 +30,22 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void register() {
+	public void testRegister() {
 		log.info("========== test register");
+
 		Company company = new Company();
+		company.setCno(100L);
 
-		company.setId("test id 1");
-		company.setName("test name 1");
-
-		service.register(company);
+		Turn turn = new Turn();
+		turn.setTitle("test title 1");
+		turn.setType("test type 1");
+		turn.setCompany(company);
+		service.register(turn);
 
 	}
 
 	@Test
-	public void get() {
+	public void testGet() {
 		log.info("========== test get");
 		log.info("" + service.get(1L));
 	}
@@ -54,11 +53,14 @@ public class CompanyServiceTests {
 	@Test
 	public void testModify() {
 		log.info("========== test Modify");
-		Optional<Company> co = service.get(100L);
-		Company company = co.get();
-		company.setId("test modify id 303");
-		company.setName("test modify name 303");
-		service.modify(company);
+		Turn turn = new Turn();
+
+		turn.setTno(2L);
+		turn.setTitle("test title modify 1");
+		turn.setType("test modify 1");
+
+		service.register(turn);
+
 	}
 
 	@Test
@@ -68,10 +70,11 @@ public class CompanyServiceTests {
 	}
 
 	@Test
-	public void getList() {
+	public void testGetList() {
 		log.info("========== test getList");
-		PageVO pageVO = new PageVO();
-		service.getList(pageVO).forEach(company -> log.info("" + company));
+		Company company = new Company();
+		company.setCno(100L);
+		service.getLists(company).forEach(turn -> log.info("" + turn));
 		;
 	}
 
