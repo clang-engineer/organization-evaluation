@@ -25,7 +25,7 @@ import lombok.ToString;
 @Entity
 @Table(name = "tbl_turn")
 @EqualsAndHashCode(of = "tno")
-@ToString(exclude="company")
+@ToString(exclude = "company")
 public class Turn {
 
 	@Id
@@ -47,4 +47,5 @@ public class Turn {
 	@JsonIgnore
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Company company;
+
 }
