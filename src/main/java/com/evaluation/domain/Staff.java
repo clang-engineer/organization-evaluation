@@ -4,8 +4,6 @@ import java.sql.Timestamp;
 
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
@@ -14,29 +12,25 @@ import javax.persistence.Table;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
-import com.fasterxml.jackson.annotation.JsonIgnore;
-
-import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
-import lombok.ToString;
 
 @Getter
 @Setter
 @Entity
-@Table(name = "tbl_turn")
-@EqualsAndHashCode(of = "tno")
-@ToString(exclude = "company")
-public class Turn {
+@Table(name = "tbl_staff")
+public class Staff {
 
 	@Id
-	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long tno;
-
-	private String title;
-
-	private String type;
-
+	private String email;
+	private String id;
+	private String password;
+	private String name;
+	private String department1;
+	private String department2;
+	private String level;
+	private String division1;
+	private String division2;
 	private String writeId;
 	private String updateId;
 
@@ -45,12 +39,8 @@ public class Turn {
 	@UpdateTimestamp
 	private Timestamp updateDate;
 
-	@JsonIgnore
-	@ManyToOne(fetch = FetchType.LAZY)
+	@ManyToOne(fetch=FetchType.LAZY)
 	@JoinColumn(name = "company_cno")
 	private Company company;
-
-//	@OneToOne(mappedBy = "turn", cascade = CascadeType.ALL)
-//	private Info360 info360;
 
 }

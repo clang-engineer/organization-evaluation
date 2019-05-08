@@ -25,6 +25,7 @@ public interface CompanyRepository extends CrudRepository<Company, Long>, Queryd
 		switch (type) {
 		case "id":
 			builder.and(company.id.like("%" + keyword + "%"));
+			break;
 		case "name":
 			builder.and(company.name.like("%" + keyword + "%"));
 			break;
