@@ -1,4 +1,4 @@
-package com.evaluation.service;
+package com.evaluation.service.Impl;
 
 import java.util.Optional;
 
@@ -7,6 +7,7 @@ import org.springframework.stereotype.Service;
 
 import com.evaluation.domain.Info360;
 import com.evaluation.persistence.Info360Repository;
+import com.evaluation.service.Info360Service;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

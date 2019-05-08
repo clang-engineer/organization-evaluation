@@ -1,4 +1,4 @@
-package com.evaluation.service;
+package com.evaluation.service.Impl;
 
 import java.util.Optional;
 
@@ -9,6 +9,7 @@ import org.springframework.stereotype.Service;
 
 import com.evaluation.domain.Company;
 import com.evaluation.persistence.CompanyRepository;
+import com.evaluation.service.CompanyService;
 import com.evaluation.vo.PageVO;
 
 import lombok.Setter;
