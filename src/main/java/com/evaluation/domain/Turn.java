@@ -48,4 +48,7 @@ public class Turn {
 	@ManyToOne(fetch = FetchType.LAZY)
 	private Company company;
 
+//	@OneToOne(mappedBy = "turn", cascade = CascadeType.ALL)
+//	private Info360 info360;
+
 }

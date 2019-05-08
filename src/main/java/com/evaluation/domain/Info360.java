@@ -9,7 +9,6 @@ import javax.persistence.OneToOne;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.Table;
 
-import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
 import lombok.Getter;
@@ -35,11 +34,11 @@ public class Info360 {
 	private Timestamp startDate;
 	private Timestamp endDate;
 
-	private String writeId;
+//	private String writeId;
 	private String updateId;
 
-	@CreationTimestamp
-	private Timestamp writeDate;
+//	@CreationTimestamp
+//	private Timestamp writeDate;
 	@UpdateTimestamp
 	private Timestamp updateDate;
 

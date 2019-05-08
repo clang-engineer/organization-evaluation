@@ -5,9 +5,12 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import com.evaluation.domain.Company;
+import com.evaluation.domain.Info360;
 import com.evaluation.domain.Turn;
+import com.evaluation.persistence.Info360Repository;
 import com.evaluation.persistence.TurnRepository;
 
 import lombok.Setter;
@@ -20,10 +23,20 @@ public class TurnServiceImpl implements TurnService {
 	@Setter(onMethod_ = { @Autowired })
 	private TurnRepository turnRepo;
 
+	@Setter(onMethod_ = { @Autowired })
+	private Info360Repository info360Repo;
+
+	@Transactional
 	@Override
 	public void register(Turn turn) {
 		log.info("service : turn register " + turn);
+
 		turnRepo.save(turn);
+
+		Info360 info360 = new Info360();
+		info360.setTno(turn.getTno());
+
+		info360Repo.save(info360);
 	}
 
 	@Override

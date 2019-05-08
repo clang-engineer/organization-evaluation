@@ -1,7 +1,6 @@
 package com.evaluation.persistence;
 
 import java.util.Arrays;
-import java.util.stream.IntStream;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -40,14 +39,12 @@ public class Info360RepositoryTests {
 			Turn turn = new Turn();
 			turn.setTno(num);
 
-			IntStream.range(0, 10).forEach(i -> {
-				Info360 info360 = new Info360();
-				info360.setTno((long)i);
-				info360.setTitle("test " + i);
-				info360.setContent("content " + i);
-				info360.setTurn(turn);
-				info360repo.save(info360);
-			});
+			Info360 info360 = new Info360();
+			info360.setTno(num);
+			info360.setTitle("test " + num);
+			info360.setContent("content " + num);
+			info360.setTurn(turn);
+			info360repo.save(info360);
 		});
 
 	}

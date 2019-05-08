@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutDetail}">
+
+<div layout:fragment="content">
+
+	<!-- Breadcrumbs-->
+	<ol class="breadcrumb">
+		<li class="breadcrumb-item">
+			<a th:href="@{index(tno=${tno})}">Dashboard</a>
+		</li>
+		<li class="breadcrumb-item active">Blank Page</li>
+	</ol>
+
+	<!-- Page Content -->
+	<h1>Information Of 360 Survey</h1>
+	<hr>
+	<p>This is a great starting point for new custom pages.</p>
+
+
+	<!-- DataTales Example -->
+	<div class="card shadow mb-4">
+		<div class="card-body">
+			<form action="" id="myForm" method="post">
+				<div class="form-group">
+					<label>Survey Title</label>
+					<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${info360.title}">
+				</div>
+				<div class="form-group">
+					<label>Content</label>
+					<textarea name="content" class="form-control" rows="5" th:text="${info360.content}"></textarea>
+				</div>
+				<div class="form-group">
+					<label>Status</label> <select class="form-control" name="status">
+						<option>--</option>
+						<option value="standby" th:selected="${info360.status}=='standby'">설정중</option>
+						<option value="progress" th:selected="${info360.status}=='progress'">평가 진행</option>
+						<option value="completion" th:selected="${info360.status}=='completion'">평가 완료</option>
+						<option value="close" th:selected="${info360.status}=='close'">완료</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>Reply Type</label> <select class="form-control" name="replyCode">
+						<option>--</option>
+						<option value="5A" th:selected="${info360.replyCode}=='5A'">5지 선다-A</option>
+						<option value="5B" th:selected="${info360.replyCode}=='5B'">5지 선다-B</option>
+						<option value="5C" th:selected="${info360.replyCode}=='5C'">5지 선다-C</option>
+						<option value="5D" th:selected="${info360.replyCode}=='5D'">5지 선다-D</option>
+						<option value="5E" th:selected="${info360.replyCode}=='5E'">5지 선다-E</option>
+					</select>
+				</div>
+				<div class="form-group">
+					<label>UpdateId</label>
+					<input type="text" class="form-control" name="updateId" th:value="${info360.updateId}" readonly="readonly">
+				</div>
+			</form>
+			<div class="form-group">
+					<label>updateDate</label>
+				<input type="url" class="form-control" name="updateDate" th:value="${#dates.format(info360.updateDate,'yyyy-MM-dd  hh:mm:ss')}" readonly="readonly">
+			</div>
+				<div class="form-group">
+					<button type="submit" class="btn btn-primary">Modify</button>
+				</div>
+		</div>
+	</div>
+
+	<!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+	$(document).ready(function() {
+	    $('button').on("click", function(e) {
+		var formObj = $("#myForm");
+		formObj.submit();
+	    });
+	});
+    </script>
+</th:block>
