@@ -26,7 +26,10 @@ public class Info360Controller {
 	public void home(long tno, Model model) {
 		log.info("controller : DetalPage view get " + tno);
 
+		info360Service.get(tno).ifPresent(company -> model.addAttribute("info360", company));
+		long cno = info360Service.get(tno).get().getTurn().getCompany().getCno();
 		model.addAttribute("tno", tno);
+		model.addAttribute("cno", cno);
 	}
 
 	@GetMapping("/view")
