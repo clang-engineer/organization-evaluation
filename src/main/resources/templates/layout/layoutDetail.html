@@ -20,6 +20,12 @@
 <!-- Custom styles for this template-->
 <link href="/css/sb-admin.css" rel="stylesheet">
 
+<style>
+table {
+	text-align: center;
+	vertical-align: middle;
+}
+</style>
 </head>
 
 <body id="page-top">
@@ -68,7 +74,7 @@
 		<ul class="sidebar navbar-nav">
 
 			<li class="nav-item">
-				<a class="nav-link" href="#">
+				<a class="nav-link" th:href="@{/staff/list(tno=${tno})}">
 					<i class="fas fa-fw fa-table"></i>
 					<span>Staff List</span>
 				</a>
@@ -80,7 +86,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
 					<h6 class="dropdown-header">360 Suvey Setting</h6>
-					<a class="dropdown-item" th:href="@{view(tno=${tno})}">Basic Info</a>
+					<a class="dropdown-item" th:href="@{/info360/view(tno=${tno})}">Basic Info</a>
 					<a class="dropdown-item" href="#">Relation Mapping</a>
 					<a class="dropdown-item" href="#">Question List</a>
 				</div>
