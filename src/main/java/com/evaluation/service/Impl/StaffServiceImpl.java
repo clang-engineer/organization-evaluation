@@ -51,8 +51,8 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Page<Staff> readList(long cno, PageVO vo) {
-		log.info("service : staff remove " + cno + vo);
+	public Page<Staff> getList(long cno, PageVO vo) {
+		log.info("service : staff getList " + cno + vo);
 
 		Pageable page = vo.makePageable(1, "name");
 		Page<Staff> result = staffRepo.findAll(staffRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);

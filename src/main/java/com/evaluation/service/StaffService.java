@@ -16,5 +16,5 @@ public interface StaffService {
 
 	public void remove(String email);
 
-	public Page<Staff> readList(long cno, PageVO vo);
+	public Page<Staff> getList(long cno, PageVO vo);
 }

@@ -31,7 +31,11 @@ public interface StaffRepository extends CrudRepository<Staff, String>, Querydsl
 			break;
 		case "department":
 			builder.and(staff.department1.like("%" + keyword + "%"));
-			builder.and(staff.department2.like("%" + keyword + "%"));
+			builder.or(staff.department2.like("%" + keyword + "%"));
+			break;
+		case "division":
+			builder.and(staff.division1.like("%" + keyword + "%"));
+			builder.or(staff.division2.like("%" + keyword + "%"));
 			break;
 		case "level":
 			builder.and(staff.level.like("%" + keyword + "%"));
