@@ -10,11 +10,11 @@ import com.evaluation.vo.PageVO;
 public interface StaffService {
 	public void register(Staff staff);
 
-	public Optional<Staff> read(String email);
+	public Optional<Staff> read(Long sno);
 
 	public void modify(Staff staff);
 
-	public void remove(String email);
+	public void remove(Long sno);
 
 	public Page<Staff> getList(long cno, PageVO vo);
 }

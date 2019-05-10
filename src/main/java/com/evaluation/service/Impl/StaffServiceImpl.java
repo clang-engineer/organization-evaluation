@@ -30,10 +30,10 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Optional<Staff> read(String email) {
-		log.info("service : staff read " + email);
+	public Optional<Staff> read(Long sno) {
+		log.info("service : staff read " + sno);
 
-		return staffRepo.findById(email);
+		return staffRepo.findById(sno);
 	}
 
 	@Override
@@ -44,17 +44,17 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public void remove(String email) {
-		log.info("service : staff remove " + email);
+	public void remove(Long sno) {
+		log.info("service : staff remove " + sno);
 
-		staffRepo.deleteById(email);
+		staffRepo.deleteById(sno);
 	}
 
 	@Override
 	public Page<Staff> getList(long cno, PageVO vo) {
 		log.info("service : staff getList " + cno + vo);
 
-		Pageable page = vo.makePageable(1, "name");
+		Pageable page = vo.makePageable(0, "sno");
 		Page<Staff> result = staffRepo.findAll(staffRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);
 		return result;
 	}

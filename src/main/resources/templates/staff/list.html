@@ -86,7 +86,7 @@
 								<td>[[${staff.level}]]</td>
 								<td>[[${staff.division1}]]</td>
 								<td>[[${staff.division2}]]</td>
-								<td><a th:href="${staff.email}" class="staffDetail">
+								<td><a th:href="${staff.sno}" class="staffDetail">
 										<button type="button" class="btn btn-info">Detail</button>
 									</a></td>
 							</tr>
@@ -100,8 +100,7 @@
 						<li class="page-item" th:if="${result.prevPage}">
 							<a class="page-link" th:href="${result.prevPage.pageNumber}+1" tabindex="-1">Prev</a>
 						</li>
-						<li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' "
-							th:each="p:${result.pageList}">
+						<li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' " th:each="p:${result.pageList}">
 							<a class="page-link" th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
 						</li>
 						<li class="page-item" th:if="${result.nextPage}">
@@ -141,10 +140,8 @@
 			if (msg == 'success' && history.state == null) {
 				alert("정상적으로 처리되었습니다.");
 				var stateObj = { msg: "" };
-			} else if (msg == 'fail' && history.state == null) {
-				alert("올바르지 못 한 정보입니다.");
-				var stateObj = { msg: "" };
-			}
+			} 
+			
 			history.replaceState({}, null, null);
 
 			var formObj = $("#f1");
@@ -172,9 +169,9 @@
 			$(".staffDetail").click(function (e) {
 				e.preventDefault();
 
-				var staffEmail = $(this).attr("href");
+				var staffSno = $(this).attr("href");
 				formObj.attr("action", [[@{ '/staff/view'}]]);
-			formObj.append("<input type='hidden' name='email' value='" + staffEmail + "'/>");
+			formObj.append("<input type='hidden' name='sno' value='" + staffSno + "'/>");
 			formObj.submit();
 		});
 

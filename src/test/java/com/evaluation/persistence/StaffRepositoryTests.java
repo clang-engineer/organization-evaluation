@@ -42,12 +42,17 @@ public class StaffRepositoryTests {
 			Company company = new Company();
 			company.setCno(num);
 
-			IntStream.range(1, 11).forEach(i -> {
+			IntStream.range(1, 201).forEach(i -> {
 				Staff staff = new Staff();
-				staff.setEmail("test email " + num + i);
+				staff.setEmail("testemail" + num + i + "@test.com");
 				staff.setId("test id" + i);
 				staff.setPassword("test id" + i);
 				staff.setName("test id" + i);
+				staff.setDepartment1("test id" + i);
+				staff.setDepartment2("department2");
+				staff.setLevel("test id" + i);
+				staff.setDivision1("test id" + i);
+				staff.setDivision2("test id" + i);
 				staff.setCompany(company);
 
 				staffRepo.save(staff);

@@ -55,14 +55,14 @@ public class StaffServiceTests {
 	public void readTest() {
 		log.info("read test...");
 
-		log.info("" + staffService.read("test@test.com"));
+		log.info("" + staffService.read(1L));
 	}
 
 	@Test
 	public void modifyTest() {
 		log.info("modify test...");
 
-		Optional<Staff> result = staffService.read("test@test.com");
+		Optional<Staff> result = staffService.read(1L);
 		Staff staff = result.get();
 		staff.setId("service test modify id");
 		staff.setPassword("service test modify pwd");
@@ -75,11 +75,11 @@ public class StaffServiceTests {
 
 		staffService.modify(staff);
 	}
-	
+
 	@Test
 	public void removeTest() {
 		log.info("remove test...");
-		
-		staffService.remove("test@test.com");
+
+		staffService.remove(2L);
 	}
 }

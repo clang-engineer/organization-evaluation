@@ -8,7 +8,7 @@ import com.evaluation.domain.Staff;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
-public interface StaffRepository extends CrudRepository<Staff, String>, QuerydslPredicateExecutor<Staff> {
+public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPredicateExecutor<Staff> {
 
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 
@@ -16,6 +16,7 @@ public interface StaffRepository extends CrudRepository<Staff, String>, Querydsl
 
 		QStaff staff = QStaff.staff;
 
+		builder.and(staff.sno.gt(0));
 		builder.and(staff.company.cno.eq(cno));
 
 		if (type == null) {
