@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layoutDetail}">
+
+<div layout:fragment="content">
+	<!-- .container-fluid -->
+	<div class="container-fluid">
+		<!-- Breadcrumbs-->
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a th:href="@{index(tno=${tno})}">Dashboard</a>
+			</li>
+			<li class="breadcrumb-item active">Blank Page</li>
+		</ol>
+
+		<!-- Page Content -->
+		<hr>
+		<p>This is a great starting point for new custom pages.</p>
+
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-body">
+				<fieldset disabled>
+					<div class="form-group">
+						<label>Name</label>
+						<input type="text" class="form-control" name="name" placeholder="" th:value="${staff.name}">
+					</div>
+					<div class="form-group">
+						<label>Email</label>
+						<input type="email" class="form-control" name="title" placeholder="" th:value="${staff.email}">
+					</div>
+					<div class="form-group">
+						<label>Id</label>
+						<input type="id" class="form-control" name="id" placeholder="" th:value="${staff.id}">
+					</div>
+					<div class="form-group">
+						<label>Password</label>
+						<input type="password" class="form-control" name="password" placeholder=""
+							th:value="${staff.password}">
+					</div>
+					<div class="form-group">
+						<input type="password" class="form-control" name="password2" placeholder=""
+							th:value="${staff.password}">
+					</div>
+					<div class="form-group">
+						<label>Department1</label>
+						<input type="text" class="form-control" name="department1" th:value="${staff.department1}">
+					</div>
+					<div class="form-group">
+						<label>Department2</label>
+						<input type="text" class="form-control" name="department2" th:value="${staff.department2}">
+					</div>
+					<div class="form-group">
+						<label>Level</label>
+						<input type="text" class="form-control" name="level" th:value="${staff.level}">
+					</div>
+					<div class="form-group">
+						<label>Division1</label>
+						<input type="text" class="form-control" name="division1" th:value="${staff.division1}">
+					</div>
+					<div class="form-group">
+						<label>Divisions2</label>
+						<input type="text" class="form-control" name="division2" th:value="${staff.division2}">
+					</div>
+					<div class="form-group">
+						<label>WriteId</label>
+						<input type="text" class="form-control" name="writeId" th:value="${staff.writeId}">
+					</div>
+					<div class="form-group">
+						<label>WriteDate</label>
+						<input type="url" class="form-control" name="writeDate" th:value="${#dates.format(staff.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+					</div>
+					<div class="form-group">
+						<label>UpdateId</label>
+						<input type="text" class="form-control" name="updateId" th:value="${staff.updateId}">
+					</div>
+					<div class="form-group">
+						<label>UpdateDate</label>
+						<input type="url" class="form-control" name="updateDate" th:value="${#dates.format(staff.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<button data-oper="modify" type="button" class="btn btn-success">Modify</button>
+					<button data-oper="list" type="button" class="btn btn-info">List</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<form th:action="@{modify}" method="get">
+		<input type="hidden" name="tno" th:value="${tno}" />
+		<input type="hidden" name="page" th:value=${pageVO.page} />
+		<input type="hidden" name="size" th:value=${pageVO.size} />
+		<input type="hidden" name="type" th:value=${pageVO.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+	</form>
+	<!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			var formObj = $("form");
+
+			$('button').on("click", function (e) {
+				e.preventDefault();
+
+				var operation = $(this).data("oper");
+				console.log(operation);
+				// [[@{'/staff/list'}]]
+				if (operation === 'list') {
+					formObj.attr("action", "list");
+				} else if (operation === 'modify') {
+					formObj.append("<input type='hidden' name='email' value='" + [[${ staff.email }]] + "'/>");
+				}
+				formObj.submit();
+			});
+		});
+	</script>
+</th:block>
