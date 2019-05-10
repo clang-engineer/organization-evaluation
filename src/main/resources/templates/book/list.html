@@ -1,0 +1,84 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+	<!-- .container-fluid -->
+	<div class="container-fluid">
+
+		<h1 class="mt-4">Code Book List</h1>
+		<!-- Page Heading -->
+		<p class="mb-4">
+			DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+			<a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+		</p>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
+
+				<!-- search box -->
+				<div class="col-md-3" style="float: right">
+					<button id="xlTemplate" class="btn btn-info">Excel Template</button>
+					<button id="xlRegister" class="btn btn-success">Excel Register</button>
+					<button id="register" class="btn btn-success">Register</button>
+				</div>
+
+			<!-- /search box -->
+		</div>
+
+		<div class="card-body">
+
+			<div class="table-responsive">
+
+				<table th:with="result=${result}" class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+					<thead>
+						<tr>
+							<th>#No</th>
+							<th>Title</th>
+							<th>Write Date</th>
+							<th>Update Date</th>
+							<th>Company Info</th>
+
+						</tr>
+					</thead>
+					<tbody>
+						<tr th:each="company:${result}">
+							<td>[[${company.bno}]]</td>
+							<td>[[${company.title}]]</td>
+							<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+							<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+							<td><a th:href="${company.bno}" class="companyDetail">
+									<button type="button" class="btn btn-info">Detail</button>
+								</a></td>
+						</tr>
+					</tbody>
+				</table>
+
+
+			</div>
+
+
+
+		</div>
+
+	</div>
+
+</div>
+
+
+
+
+
+<!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		
+	</script>
+</th:block>
+</html>
