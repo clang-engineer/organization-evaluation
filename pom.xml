@@ -92,6 +92,10 @@
 			<artifactId>gson</artifactId>
 			<version>2.8.5</version>
 		</dependency>
+		
+		<!-- apply webjars bootstrapt/ jquery -->
+	<!-- <dependency> <groupId>org.webjars</groupId> <artifactId>jquery</artifactId> <version>3.4.1</version> </dependency> <dependency> <groupId>org.webjars</groupId> 
+		<artifactId>bootstrap</artifactId> <version>4.3.1</version> </dependency> -->
 	</dependencies>
 
 	<build>

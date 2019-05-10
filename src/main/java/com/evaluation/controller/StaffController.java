@@ -46,8 +46,8 @@ public class StaffController {
 		Company company = turnService.get(tno).get().getCompany();
 		staff.setCompany(company);
 		staffService.register(staff);
+		
 		rttr.addFlashAttribute("msg", "success");
-
 		rttr.addAttribute("tno", tno);
 		return "redirect:/staff/list";
 	}
@@ -56,9 +56,9 @@ public class StaffController {
 	public void read(long sno, long tno, PageVO vo, Model model) {
 		log.info("controller : staff read by " + tno + vo);
 
-		model.addAttribute("tno", tno);
-
 		Optional<Staff> staff = staffService.read(sno);
+
+		model.addAttribute("tno", tno);
 		Staff result = staff.get();
 		model.addAttribute("staff", result);
 	}
@@ -67,9 +67,9 @@ public class StaffController {
 	public void modify(long sno, long tno, PageVO vo, Model model) {
 		log.info("controller : staff modify by " + tno + vo);
 
-		model.addAttribute("tno", tno);
-
 		Optional<Staff> staff = staffService.read(sno);
+
+		model.addAttribute("tno", tno);
 		Staff result = staff.get();
 		model.addAttribute("staff", result);
 	}
@@ -100,9 +100,19 @@ public class StaffController {
 		return "redirect:/staff/list";
 	}
 
-	// @GetMapping
-	// public void remove() {
-	// }
+	@PostMapping("/remove")
+	public String remove(long sno, long tno, PageVO vo, RedirectAttributes rttr) {
+		log.info("controller : staff delete by " + sno);
+
+		staffService.remove(sno);
+		
+		rttr.addAttribute("tno", tno);
+		rttr.addAttribute("page", vo.getPage());
+		rttr.addAttribute("size", vo.getSize());
+		rttr.addAttribute("type", vo.getType());
+		rttr.addAttribute("keyword", vo.getKeyword());
+		return "redirect:/staff/list";
+	}
 
 	@GetMapping("/list")
 	public void readList(long tno, PageVO vo, Model model) {

@@ -82,7 +82,7 @@
 				</fieldset>
 				<div class="form-group">
 					<button data-oper="modify" type="button" class="btn btn-success">Modify</button>
-					<button data-oper="remove" type="button" class="btn btn-info">remove</button>
+					<button data-oper="remove" type="button" class="btn btn-danger">remove</button>
 					<button data-oper="list" type="button" class="btn btn-info">List</button>
 				</div>
 			</div>
@@ -95,30 +95,42 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		$(document).ready(function() {
-	        var formObj = $("form");
-	        
-	        $('button').on("click", function(e) {
-		        e.preventDefault();
-		        
-		        var operation = $(this).data("oper");
-		        console.log(operation);
-		        // [[@{'/staff/list'}]]
-		        if (operation === 'list') {
-			        formObj.empty();
-			        formObj.attr("action", "list").attr("method", "get");
-		        } else if (operation === 'remove') {
-			        formObj.attr("action", "delete").attr("method", "post");
-		        }
-		        
-		        formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
-		        formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO.page }]] + "'/>");
-		        formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO.size }]] + "'/>");
-		        formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO.type }]] + "'/>");
-		        formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO.keyword }]] + "'/>");
-		        
-		        formObj.submit();
-	        });
-        });
+		$(document).ready(function () {
+			var formObj = $("form");
+
+			$('button').on("click", function (e) {
+				e.preventDefault();
+
+				var operation = $(this).data("oper");
+				console.log(operation);
+				// [[@{'/staff/list'}]]
+				if (operation === 'list') {
+					formObj.empty();
+					formObj.attr("action", "list").attr("method", "get");
+				} else if (operation === 'remove') {
+					if (delchk() == true) {
+						formObj.attr("action", "remove");
+					} else {
+						return
+					};
+				}
+
+				formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
+				formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO.page }]] + "'/>");
+				formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO.size }]] + "'/>");
+				formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO.type }]] + "'/>");
+				formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO.keyword }]] + "'/>");
+
+				formObj.submit();
+			});
+
+			function delchk() {
+				if (confirm("삭제하시겠습니까?")) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
 	</script>
 </th:block>
