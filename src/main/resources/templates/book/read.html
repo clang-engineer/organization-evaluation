@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <h1 class="mt-4">Book Register</h1>
+        <!-- Page Heading -->
+        <p class="mb-4">
+            DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+            <a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+            .
+        </p>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary">Book Register</h4>
+
+            </div>
+            <div class="card-body">
+                <form th:action="@{modify}" method="post">
+                    <input type="hidden" class="form-control" name="bno" required="required" th:value="${book.bno}">
+                    <div class="form-group">
+                        <label>Book Title</label>
+                        <input type="text" class="form-control" name="title" required="required" th:value="${book.title}">
+                    </div>
+                    <div class="form-group">
+                        <label>Write Id</label>
+                        <input type="text" class="form-control" name="" required="required" readonly th:value="${book.writeId}">
+                    </div>
+                    <div class="form-group">
+                        <label>Write Date</label>
+                        <input type="text" class="form-control" name="" required="required" readonly th:value="${#dates.format(book.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+                    </div>
+                    <div class="form-group">
+                        <label>update Id</label>
+                        <input type="text" class="form-control" name="" required="required" readonly th:value="${book.updateId}">
+                    </div>
+                    <div class="form-group">
+                        <label>update Date</label>
+                        <input type="text" class="form-control" name="" required="required" readonly th:value="${#dates.format(book.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+                    </div>
+                </form>
+
+                <button type="modify" data-oper="modify" class="btn btn-primary">Modify</button>
+                <button type="delete" data-oper="remove" class="btn btn-danger">Delete</button>
+                <button type="list" data-oper="list" class="btn btn-info">List</button>
+
+            </div>
+        </div>
+
+
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var formObj = $("form");
+            $('button').on("click", function (e) {
+                console.log($(this));
+                e.preventDefault();
+
+                var operation = $(this).data("oper");
+
+                if (operation === 'remove') {
+                    if (delchk() == true) {
+                        formObj.attr("action", "remove");
+                    } else {
+                        return;
+                    };
+                } else if (operation === 'list') {
+                    formObj.attr("action", "list").attr("method", "get");
+                    formObj.empty();
+                } else if (operation === 'modfify') {
+                    formObj.attr("action", "list");
+                }
+
+
+                formObj.submit();
+
+            });
+
+            function delchk() {
+                if (confirm("삭제하시겠습니까?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+        });
+    </script>
+</th:block>
+</script>
+</body>
+
+</html>

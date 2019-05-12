@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.evaluation.domain.Book;
@@ -20,6 +21,48 @@ public class BookController {
 
 	@Autowired
 	BookService bookService;
+
+	@GetMapping("/register")
+	public void register() {
+
+	}
+
+	@PostMapping("/register")
+	public String register(Book book) {
+		log.info("register" + book);
+
+		bookService.register(book);
+
+		return "redirect:/book/list";
+	}
+
+	@GetMapping("/read")
+	public void read(long bno, Model model) {
+		log.info("read" + bno);
+
+		model.addAttribute("book", bookService.read(bno).get());
+	}
+
+	@PostMapping("/modify")
+	public String modify(Book book) {
+		log.info("modify" + book);
+
+		bookService.read(book.getBno()).ifPresent(origin -> {
+			origin.setTitle(book.getTitle());
+			bookService.modify(origin);
+		});
+
+		return "redirect:/book/list";
+	}
+	
+	@PostMapping("/remove")
+	public String remove(long bno) {
+		log.info("remove " + bno);
+		
+		bookService.remove(bno);
+
+		return "redirect:/book/list";
+	}
 
 	@GetMapping("/list")
 	public void list(Model model) {

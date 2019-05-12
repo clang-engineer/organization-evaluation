@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layoutCompany}">
 
 <div layout:fragment="content">
 	<!-- .container-fluid -->
@@ -8,7 +9,8 @@
 		<h1 class="mt-4">Code Book List</h1>
 		<!-- Page Heading -->
 		<p class="mb-4">
-			DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+			DataTables is a third party plugin that is used to generate the demo table below. For more information about
+			DataTables, please visit the
 			<a target="_blank" href="https://datatables.net">official DataTables documentation</a>
 		</p>
 
@@ -18,38 +20,37 @@
 				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
 
 				<!-- search box -->
-				<div class="col-md-3" style="float: right">
-					<button id="xlTemplate" class="btn btn-info">Excel Template</button>
-					<button id="xlRegister" class="btn btn-success">Excel Register</button>
-					<button id="register" class="btn btn-success">Register</button>
+				<div class="col-md-2" style="float: right">
+					<button id="xlRegister" class="btn btn-success">xlDownload</button>
+					<button id="register" class="btn btn-primary">Register</button>
 				</div>
 
-			<!-- /search box -->
-		</div>
+				<!-- /search box -->
+			</div>
 
-		<div class="card-body">
+			<div class="card-body">
 
-			<div class="table-responsive">
+				<div class="table-responsive">
 
-				<table th:with="result=${result}" class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<table class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
 
-					<thead>
-						<tr>
-							<th>#No</th>
-							<th>Title</th>
-							<th>Write Date</th>
-							<th>Update Date</th>
-							<th>Company Info</th>
+						<thead>
+							<tr>
+								<th>#No</th>
+								<th>Title</th>
+								<th>Write Date</th>
+								<th>Update Date</th>
+								<th>Company Info</th>
 
-						</tr>
-					</thead>
-					<tbody>
-						<tr th:each="company:${result}">
-							<td>[[${company.bno}]]</td>
-							<td>[[${company.title}]]</td>
-							<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-							<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-							<td><a th:href="${company.bno}" class="companyDetail">
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="book:${result}">
+								<td>[[${book.bno}]]</td>
+								<td>[[${book.title}]]</td>
+								<td>[[${#dates.format(book.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+							<td>[[${#dates.format(book.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+							<td><a th:href="${book.bno}" class="bookDetail">
 									<button type="button" class="btn btn-info">Detail</button>
 								</a></td>
 						</tr>
@@ -62,9 +63,10 @@
 
 
 		</div>
-
+		
+		<form id="f1" th:action="@{book/list}" method="get">
+		</form>
 	</div>
-
 </div>
 
 
@@ -78,7 +80,47 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		
+		$(document).ready(function () {
+			var formObj = $("#f1");
+
+			// //페이지에 붙은 링크 클릭 시
+			// $(".pagination a").click(function (e) {
+			// 	e.preventDefault();
+
+			// 	formObj.find('[name="page"]').val($(this).attr('href'));
+			// 	formObj.submit();
+			// });
+
+			// //검색 버튼 클릭 시
+			// $("#searchBtn").click(function (e) {
+			// 	var typeStr = $("#searchType").find(":selected").val();
+			// 	var keywordStr = $("#searchKeyword").val();
+
+			// 	formObj.find("[name='type']").val(typeStr);
+			// 	formObj.find("[name='keyword']").val(keywordStr);
+			// 	formObj.find("[name='page']").val("1");
+			// 	formObj.submit();
+			// });
+
+			//디테일 버튼 클릭 시
+			$(".bookDetail").click(function (e) {
+				e.preventDefault();
+
+				var bookBno = $(this).attr("href");
+				formObj.attr("action", [['/book/read']]);
+				formObj.append("<input type='hidden' name='bno' value='" + bookBno + "'/>");
+				formObj.submit();
+			});
+
+			//제목 클릭 시
+			$("#register").click(function (e) {
+				e.preventDefault();
+
+				formObj.attr("action", '/book/register');
+				formObj.empty();
+				formObj.submit();
+			});
+		});
 	</script>
 </th:block>
 </html>
