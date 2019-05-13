@@ -41,6 +41,12 @@ public class ContentController {
         return new ResponseEntity<>(getContentsByBook(bno), HttpStatus.CREATED);
     }
 
+    @GetMapping("/{bno}/{idx}")
+    public ResponseEntity<String> read(@PathVariable("bno") long bno, @PathVariable("idx") int idx) {
+        String content = bookService.read(bno).get().getContents().get(idx);
+        return new ResponseEntity<>(content, HttpStatus.OK);
+    }
+
     @PutMapping("/{bno}/{idx}")
     public ResponseEntity<List<String>> modify(@PathVariable("bno") long bno, @PathVariable("idx") int idx,
             @RequestBody String content) {
@@ -54,7 +60,6 @@ public class ContentController {
         bookService.modify(book);
 
         return new ResponseEntity<>(getContentsByBook(bno), HttpStatus.CREATED);
-
     }
 
     @DeleteMapping("/{bno}/{idx}")
@@ -80,4 +85,5 @@ public class ContentController {
     private List<String> getContentsByBook(long bno) {
         return bookService.read(bno).get().getContents();
     }
+
 }

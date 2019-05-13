@@ -54,11 +54,11 @@ public class BookController {
 
 		return "redirect:/book/list";
 	}
-	
+
 	@PostMapping("/remove")
 	public String remove(long bno) {
 		log.info("remove " + bno);
-		
+
 		bookService.remove(bno);
 
 		return "redirect:/book/list";
@@ -68,5 +68,11 @@ public class BookController {
 	public void list(Model model) {
 		List<Book> book = bookService.list();
 		model.addAttribute("result", book);
+	}
+
+	@GetMapping("/contents")
+	public void contents(long bno, Model model) {
+		model.addAttribute("bno", bno);
+		model.addAttribute("result", bookService.read(bno).get().getContents());
 	}
 }
