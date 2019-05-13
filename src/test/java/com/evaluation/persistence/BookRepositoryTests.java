@@ -2,7 +2,12 @@ package com.evaluation.persistence;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
+
+import javax.transaction.Transactional;
+
+import com.evaluation.domain.Book;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -10,8 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Book;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,7 +33,7 @@ public class BookRepositoryTests {
 		log.info("" + bookRepo);
 	}
 
-	@Test
+	// @Test
 	public void testInertBook() {
 
 		IntStream.range(1, 11).forEach(i -> {
@@ -41,6 +44,15 @@ public class BookRepositoryTests {
 			book.setContents(contents);
 			bookRepo.save(book);
 		});
+	}
+
+	@Test
+	public void testRemoveContents() {
+		Book book = bookRepo.findById(14L).get();
+		List<String> contents = book.getContents();
+		contents.remove(1);
+		book.setContents(contents);
+		bookRepo.save(book);
 	}
 
 }
