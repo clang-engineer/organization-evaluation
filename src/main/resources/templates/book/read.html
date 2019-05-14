@@ -5,7 +5,7 @@
     <!-- Begin Page Content -->
     <div class="container-fluid">
 
-        <h1 class="mt-4">Book Register</h1>
+        <h1 class="mt-4">Book Detail</h1>
         <!-- Page Heading -->
         <p class="mb-4">
             DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
@@ -15,12 +15,20 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-header py-3">
-                <h4 class="m-0 font-weight-bold text-primary">Book Register</h4>
+                <h4 class="m-0 font-weight-bold text-primary">Book Detail</h4>
 
             </div>
             <div class="card-body">
                 <form th:action="@{modify}" method="post">
                     <input type="hidden" class="form-control" name="bno" required="required" th:value="${book.bno}">
+                    <div class="form-group">
+                        <label>Book Type</label>
+                        <select class="form-control" name="type">
+                            <option>--</option>
+                            <option value="360" th:selected="${book.type}=='360'">360 Survey</option>
+                            <option value="mbo" th:selected="${book.type}=='mbo'">MBO</option>
+                        </select>
+                    </div>
                     <div class="form-group">
                         <label>Book Title</label>
                         <input type="text" class="form-control" name="title" required="required" th:value="${book.title}">

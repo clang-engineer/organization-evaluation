@@ -49,6 +49,7 @@ public class BookController {
 
 		bookService.read(book.getBno()).ifPresent(origin -> {
 			origin.setTitle(book.getTitle());
+			origin.setType(book.getType());
 			bookService.modify(origin);
 		});
 

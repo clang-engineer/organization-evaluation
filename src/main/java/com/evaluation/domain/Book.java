@@ -30,6 +30,8 @@ public class Book {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long bno;
 
+	private String type;
+
 	@Column(unique = true, nullable = false)
 	private String title;
 
