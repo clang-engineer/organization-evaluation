@@ -30,7 +30,7 @@ public class Question {
     private int idx;
 
     private String category;
-    private String question;
+    private String item;
 
     private String division1;
     private String division2;

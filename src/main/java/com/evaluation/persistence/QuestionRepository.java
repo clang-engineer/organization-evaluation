@@ -13,7 +13,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
 
         BooleanBuilder builder = new BooleanBuilder();
 
-        QQuestion question = QQuestion.question1;
+        QQuestion question = QQuestion.question;
 
         builder.and(question.qno.gt(0));
         builder.and(question.turn.tno.eq(tno));
@@ -30,8 +30,8 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
         case "category":
             builder.and(question.category.like("%" + keyword + "%"));
             break;
-        case "question":
-            builder.and(question.question.like("%" + keyword + "%"));
+        case "item":
+            builder.and(question.item.like("%" + keyword + "%"));
             break;
         }
 

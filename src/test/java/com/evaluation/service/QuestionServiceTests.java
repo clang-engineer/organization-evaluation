@@ -44,7 +44,7 @@ public class QuestionServiceTests {
 				question.setDivision2("division2" + i);
 				question.setIdx(i);
 				question.setCategory("category" + i);
-				question.setQuestion("question" + i);
+				question.setItem("question" + i);
 				question.setTurn(turn);
 				questionService.register(question);
 			});

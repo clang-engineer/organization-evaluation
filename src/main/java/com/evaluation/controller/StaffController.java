@@ -46,7 +46,7 @@ public class StaffController {
 		Company company = turnService.get(tno).get().getCompany();
 		staff.setCompany(company);
 		staffService.register(staff);
-		
+
 		rttr.addFlashAttribute("msg", "success");
 		rttr.addAttribute("tno", tno);
 		return "redirect:/staff/list";
@@ -105,12 +105,13 @@ public class StaffController {
 		log.info("controller : staff delete by " + sno);
 
 		staffService.remove(sno);
-		
+
 		rttr.addAttribute("tno", tno);
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
 		rttr.addAttribute("type", vo.getType());
 		rttr.addAttribute("keyword", vo.getKeyword());
+		rttr.addFlashAttribute("msg", "success");
 		return "redirect:/staff/list";
 	}
 
