@@ -4,7 +4,8 @@ var contentService = (function () {
         $.ajax({
             type: 'post',
             url: '/contents/' + param.bno,
-            data: JSON.stringify(param.content),
+            // data: JSON.stringify(param.content),
+            data: param.content,
             contentType: "application/json; charset:utf-8",
             success: function (result, status, xhr) {
                 if (callback) {
@@ -37,7 +38,8 @@ var contentService = (function () {
         $.ajax({
             type: 'put',
             url: '/contents/' + param.bno + "/" + param.idx,
-            data: JSON.stringify(param.content),
+            // data: JSON.stringify(param.content),
+            data: param.content,
             contentType: "application/json; charset:utf-8",
             success: function (result, status, shr) {
                 if (callback) {

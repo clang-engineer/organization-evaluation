@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+    <!-- .container-fluid -->
+    <div class="container-fluid">
+        <h1 class="mt-4">Code Book List</h1>
+        <!-- Page Heading -->
+        <p class="mb-4">
+            DataTables is a third party plugin that is used to generate the demo table below. For more information about
+            DataTables, please visit the
+            <a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+        </p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
+
+                <!-- search box -->
+                <div class="col-md-2" style="float: right">
+                    <button id="bookRegister" class="btn btn-success">Add Content</button>
+                    <button id="bookList" class="btn btn-primary">Book List</button>
+                </div>
+
+                <!-- /search box -->
+            </div>
+
+            <div class="card-body">
+
+                <div class="table-responsive">
+
+                    <table class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#Idx</th>
+                                <th>Content</th>
+                                <th>Modify</th>
+                            </tr>
+                        </thead>
+                        <tbody class="contents">
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">CONTENT MODAL</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>CONTENT</label>
+                        <input class="form-control" name="content" value="New Content">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
+                    <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ./Modal -->
+
+</div>
+
+<th:block layout:fragment="script">
+    <script type="text/javascript" src="/public/contents.js"></script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+
+            var bnoValue = [[${ bno }]];
+            var contentsBody = $(".contents");
+            // console.log(bnoValue);
+            // console.log(contentsBody);
+
+            //modal 사용 변수 선언
+            var modal = $(".modal");
+            var modalContent = modal.find("input[name='content']");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+            showList();
+
+            //ajax 목록 출력
+            function showList() {
+                contentService.getList(bnoValue, function (result) {
+                    var str = "";
+                    if (result == null || result.length == 0) {
+                        contentsBody.html("");
+                        return;
+                    }
+                    for (var i = 0, len = result.length || 0; i < len; i++) {
+                        str += "<tr><td>" + i + "</td><td>" + result[i] +
+                            "</td><td><button data-idx='" + i + "' class='btn btn-info'>Modify</button></td></tr>"
+                    }
+                    contentsBody.html(str);
+                });
+            }
+
+
+            //list버튼 클릭 시
+            $("#bookList").on('click', function (e) {
+                window.location.href = "/book/list";
+            });
+
+            //register버튼 클릭 시
+            $("#bookRegister").on('click', function (e) {
+                modal.find("input").val("");
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+                $(".modal").modal("show");
+            });
+
+            //modal내의 register 클릭 시
+            modalRegisterBtn.on("click", function () {
+                var param = {
+                    bno: bnoValue,
+                    content: modalContent.val()
+                }
+
+                contentService.register(param, function (result) {
+                    alert("정상적으로 등록되었습니다.");
+                    modal.find("input").val("");
+                    modal.modal('hide');
+                    showList();
+                });
+            });
+
+            //각 행 클릭 시.. 
+            $(".contents").on("click", "button", function (e) {
+                idxValue = $(this).data('idx');
+                var param = {
+                    bno: bnoValue,
+                    idx: idxValue
+                }
+                contentService.read(param, function (result) {
+                    modalContent.val(result);
+                    modal.data("idx", idxValue);
+
+                    modal.find("button[id!='modalCloseBtn']").hide();
+                    modalModifyBtn.show();
+                    modalRemoveBtn.show();
+
+                    $(".modal").modal("show");
+                });
+            });
+
+            //모달 내의 수정 버튼 클릭 시..
+            modalModifyBtn.on("click", function (e) {
+                var param = {
+                    bno: bnoValue,
+                    idx: modal.data("idx"),
+                    content: modalContent.val()
+                }
+
+                contentService.modify(param, function (result) {
+                    alert("수정 되었습니다.");
+                    modal.modal("hide");
+                    showList();
+                });
+            });
+
+            //모달 내의 삭제 버튼 클릭 시
+            modalRemoveBtn.on("click", function (e) {
+                var param = {
+                    bno: bnoValue,
+                    idx: modal.data("idx"),
+                }
+
+                contentService.remove(param, function (result) {
+                    alert(result);
+                    modal.modal("hide");
+                    showList();
+                });
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
+
+        });
+    </script>
+</th:block>
+
+</html>
