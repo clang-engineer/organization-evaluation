@@ -39,7 +39,7 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public List<Book> list() {
-		Sort sort = new Sort(new Sort.Order(Sort.Direction.DESC, "bno"));
+		Sort sort = new Sort(new Sort.Order(Sort.Direction.ASC, "bno"));
 		List<Book> result = bookRepo.findAll(sort);
 		return result;
 	}

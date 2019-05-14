@@ -10,6 +10,6 @@ import com.evaluation.domain.Turn;
 
 public interface TurnRepository extends CrudRepository<Turn, Long> {
 
-	@Query("SELECT t FROM Turn t WHERE t.company=?1 AND t.tno>0 ORDER BY t.tno DESC")
+	@Query("SELECT t FROM Turn t WHERE t.company=?1 AND t.tno>0 ORDER BY t.tno ASC")
 	public List<Turn> getTurnsOfCompany(Company company);
 }
