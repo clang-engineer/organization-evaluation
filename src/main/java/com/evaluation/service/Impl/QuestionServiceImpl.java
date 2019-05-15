@@ -49,7 +49,7 @@ public class QuestionServiceImpl implements QuestionService {
 	public Page<Question> getList(long tno, PageVO vo) {
 		log.info("getList " + tno + vo);
 
-		Pageable page = vo.makePageable(0, "sno");
+		Pageable page = vo.makePageable(1, "qno");
 		Page<Question> result = questionRepo.findAll(questionRepo.makePredicate(vo.getType(), vo.getKeyword(), tno), page);
 		return result;
 	}

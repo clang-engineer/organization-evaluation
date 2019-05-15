@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutDetail}">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Tables</li>
+        </ol>
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i> Question List
+            </div>
+
+            <!-- search box -->
+            <div class="row" style="margin-top: 20px; margin-left: 7px;">
+                <div class="col-md-9">
+                    <button id="xlTemplate" class="btn btn-info">Excel Template</button>
+                    <button id="xlRegister" class="btn btn-success">Excel Register</button>
+                    <button id="register" class="btn btn-success">Register</button>
+                </div>
+                <div class="col-md-3" style="float: right">
+                    <div class="input-group">
+                        <select class="form-control col-sm-4" id="searchType">
+                            <option>---
+                                </optinon>
+                            <option value="division" th:selected="${pageVO.type}=='division'">Division</option>
+                            <option value="category" th:selected="${pageVO.type}=='category'">Category</option>
+                            <option value="item" th:selected="${pageVO.type}=='question'">Question</option>
+                        </select>
+                        <input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+                        <div class="input-group-append">
+                            <button class="btn btn-default border" id="searchBtn" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /search box -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table th:with="result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Idx</th>
+                                <th>Division1</th>
+                                <th>Division2</th>
+                                <th>Catogory</th>
+                                <th>Item</th>
+                                <th>Detail</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Idx</th>
+                                <th>Division1</th>
+                                <th>Division2</th>
+                                <th>Catogory</th>
+                                <th>Item</th>
+                                <th>Detail</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr th:each="question:${result.content}">
+                                <td>[[${question.idx}]]</td>
+                                <td>[[${question.division1}]]</td>
+                                <td>[[${question.division2}]]</td>
+                                <td>[[${question.category}]]</td>
+                                <td>[[${question.Item}]]</td>
+                                <td><a th:href="${question.qno}" class="questionDetail">
+                                        <button type="button" class="btn btn-info">Detail</button>
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- page nation -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item" th:if="${result.prevPage}">
+                            <a class="page-link" th:href="${result.prevPage.pageNumber}+1" tabindex="-1">Prev</a>
+                        </li>
+                        <li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' " th:each="p:${result.pageList}">
+                            <a class="page-link" th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
+                        </li>
+                        <li class="page-item" th:if="${result.nextPage}">
+                            <a class="page-link" th:href="${result.nextPage.pageNumber}+1">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--/ page nation -->
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+
+        </div>
+
+        <p class="small text-center text-muted my-5">
+            <em>More table examples coming soon...</em>
+        </p>
+
+    </div>
+    <!-- /.container-fluid -->
+    <form id="f1" th:action="@{list}" method="get">
+        <input type="hidden" name="tno" th:value="${tno}" />
+        <input type="hidden" name="page" th:value=${result.currentPageNum} />
+        <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
+        <input type="hidden" name="type" th:value=${pageVO.type} />
+        <input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+    </form>
+</div>
+
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+
+            var msg = [[${ msg }]];
+
+            if (msg == 'success' && history.state == null) {
+                alert("정상적으로 처리되었습니다.");
+                var stateObj = { msg: "" };
+            }
+
+            history.replaceState({}, null, null);
+
+            var formObj = $("#f1");
+
+            //페이지에 붙은 링크 클릭 시
+            $(".pagination a").click(function (e) {
+                e.preventDefault();
+
+                formObj.find('[name="page"]').val($(this).attr('href'));
+                formObj.submit();
+            });
+
+            //검색 버튼 클릭 시
+            $("#searchBtn").click(function (e) {
+                var typeStr = $("#searchType").find(":selected").val();
+                var keywordStr = $("#searchKeyword").val();
+
+                formObj.find("[name='type']").val(typeStr);
+                formObj.find("[name='keyword']").val(keywordStr);
+                formObj.find("[name='page']").val("1");
+                formObj.submit();
+            });
+
+            //디테일 버튼 클릭 시
+            $(".questionDetail").click(function (e) {
+                e.preventDefault();
+
+                var questionQno = $(this).attr("href");
+                formObj.attr("action", './view');
+                formObj.append("<input type='hidden' name='qno' value='" + questionQno + "'/>");
+                formObj.submit();
+            });
+
+            //등록 버튼 클릭 시
+            $("#register").click(function (e) {
+                e.preventDefault();
+                console.log(this);
+                formObj.attr("action", './register');
+                formObj.submit();
+            });
+
+        });
+    </script>
+</th:block>
