@@ -182,11 +182,15 @@
                     idx: modal.data("idx"),
                 }
 
-                contentService.remove(param, function (result) {
-                    alert(result);
-                    modal.modal("hide");
-                    showList();
-                });
+                if (delchk() == true) {
+                    contentService.remove(param, function (result) {
+                        alert("삭제 되었습니다.");
+                        modal.modal("hide");
+                        showList();
+                    });
+                } else {
+                    return;
+                };
             });
 
             //close button click 시
@@ -194,6 +198,13 @@
                 modal.modal('hide');
             });
 
+            function delchk() {
+                if (confirm("삭제하시겠습니까?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         });
     </script>
 </th:block>
