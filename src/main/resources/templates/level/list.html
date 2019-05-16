@@ -15,7 +15,7 @@
 		<!-- DataTables Example -->
 		<div class="card mb-3">
 			<div class="card-header">
-				<i class="fas fa-table"></i> Division List
+				<i class="fas fa-table"></i> Level List
 			</div>
 
 			<!-- search box -->
@@ -28,8 +28,7 @@
 						<select class="form-control col-sm-4" id="searchType">
 							<option>---
 								</optinon>
-							<option value="division1" th:selected="${pageVO.type}=='division1'">Division1</option>
-							<option value="division2" th:selected="${pageVO.type}=='division2'">Division2</option>
+							<option value="level" th:selected="${pageVO.type}=='level'">Level</option>
 						</select>
 						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
@@ -48,25 +47,22 @@
 						<thead>
 							<tr>
 								<th>Name</th>
-								<th>Division1</th>
-								<th>Division2</th>
+								<th>Level</th>
 								<th>Detail</th>
 							</tr>
 						</thead>
 						<tfoot>
 							<tr>
 								<th>Name</th>
-								<th>Division1</th>
-								<th>Division2</th>
+								<th>Level</th>
 								<th>Detail</th>
 							</tr>
 						</tfoot>
 						<tbody>
-							<tr th:each="division,status:${result.content}">
+							<tr th:each="level,status:${result.content}">
 								<td>[[${idxpageNum-1}*10+${status.count}]]</td>
-								<td>[[${division.division1}]]</td>
-								<td>[[${division.division2}]]</td>
-								<td><a th:href="${division.dno}" class="detail">
+								<td>[[${level.content}]]</td>
+								<td><a th:href="${level.lno}" class="detail">
 										<button type="button" class="btn btn-info">Detail</button>
 									</a></td>
 							</tr>
@@ -112,19 +108,19 @@
 		<div class="modal-dialog">
 			<div class="modal-content">
 				<div class="modal-header">
-					<h4 class="modal-title">Division</h4>
+					<h4 class="modal-title">Level</h4>
 					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
 					</button>
 				</div>
 				<div class="modal-body">
 					<div class="form-group">
-						<label>division1</label>
+						<label>level</label>
 						<input class="form-control" name="modalContent1" value="New Content">
 					</div>
-					<div class="form-group">
-						<label>division2</label>
+					<!-- <div class="form-group">
+						<label>level2</label>
 						<input class="form-control" name="modalContent2" value="New Content">
-					</div>
+					</div> -->
 				</div>
 				<div class="modal-footer">
 					<button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
@@ -147,7 +143,7 @@
 			//modal 사용 변수 선언
 			var modal = $("#myModal");
 			var modalContent1 = modal.find("input[name='modalContent1']");
-			var modalContent2 = modal.find("input[name='modalContent2']");
+			// var modalContent2 = modal.find("input[name='modalContent2']");
 			var modalModifyBtn = $("#modalModifyBtn");
 			var modalRemoveBtn = $("#modalRemoveBtn");
 			var modalRegisterBtn = $("#modalRegisterBtn");
@@ -193,10 +189,10 @@
 			$(".detail").click(function (e) {
 				e.preventDefault();
 				detailNo = $(this).attr("href");
-				dev1 = $(this).closest("tr").children().eq(1).text();
-				dev2 = $(this).closest("tr").children().eq(2).text();
-				modalContent1.val(dev1);
-				modalContent2.val(dev2);
+				content = $(this).closest("tr").children().eq(1).text();
+				// lev2 = $(this).closest("tr").children().eq(2).text();
+				modalContent1.val(content);
+				// modalContent2.val(lev2);
 				modal.data("idx", detailNo);
 
 				modal.find("button[id!='modalCloseBtn']").hide();
@@ -219,17 +215,17 @@
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
 				formObj.attr("action", "./register").attr("method", "post");
-				formObj.append("<input type='hidden' name='division1' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='division2' value='" + modalContent2.val() + "'/>");
+				formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
+				// formObj.append("<input type='hidden' name='level2' value='" + modalContent2.val() + "'/>");
 				formObj.submit();
 			});
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
 				formObj.attr("action", "./modify").attr("method", "post");
-				formObj.append("<input type='hidden' name='division1' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='division2' value='" + modalContent2.val() + "'/>");
-				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
+				formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
+				// formObj.append("<input type='hidden' name='level2' value='" + modalContent2.val() + "'/>");
+				formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
 				formObj.submit();
 			});
 
@@ -242,7 +238,7 @@
 					return;
 				};
 				formObj.attr("action", "./remove").attr("method", "post");
-				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
+				formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
 				formObj.submit();
 			});
 

@@ -47,15 +47,9 @@ public class DivisionController {
     public String modify(Division division, long tno, PageVO vo, RedirectAttributes rttr) {
         log.info("modify " + division);
 
-        divisionService.read(division.getDno()).ifPresent(origin -> {
-            origin.setDivision1(division.getDivision1());
-            origin.setDivision2(division.getDivision2());
-            origin.setUpdateId(division.getUpdateId());
+        divisionService.modify(division);
 
-            divisionService.modify(origin);
-            rttr.addFlashAttribute("msg", "modify");
-        });
-
+        rttr.addFlashAttribute("msg", "modify");
         rttr.addAttribute("tno", tno);
         rttr.addAttribute("page", vo.getPage());
         rttr.addAttribute("size", vo.getSize());

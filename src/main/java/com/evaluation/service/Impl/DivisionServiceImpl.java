@@ -40,7 +40,13 @@ public class DivisionServiceImpl implements DivisionService {
     public void modify(Division division) {
         log.info("modify " + division);
 
-        divisionRepo.save(division);
+        divisionRepo.findById(division.getDno()).ifPresent(origin -> {
+            origin.setDivision1(division.getDivision1());
+            origin.setDivision2(division.getDivision2());
+            origin.setUpdateId(division.getUpdateId());
+
+            divisionRepo.save(origin);
+        });
     }
 
     @Override

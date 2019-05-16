@@ -3,29 +3,29 @@
 
 <head>
 
-<meta charset="utf-8">
-<meta http-equiv="X-UA-Compatible" content="IE=edge">
-<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-<meta name="description" content="">
-<meta name="author" content="">
+	<meta charset="utf-8">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge">
+	<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+	<meta name="description" content="">
+	<meta name="author" content="">
 
-<title>Company Detail</title>
+	<title>Company Detail</title>
 
-<!-- Custom fonts for this template-->
-<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+	<!-- Custom fonts for this template-->
+	<link href="/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
 
-<!-- Page level plugin CSS-->
-<link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
+	<!-- Page level plugin CSS-->
+	<link href="/vendor/datatables/dataTables.bootstrap4.css" rel="stylesheet">
 
-<!-- Custom styles for this template-->
-<link href="/css/sb-admin.css" rel="stylesheet">
+	<!-- Custom styles for this template-->
+	<link href="/css/sb-admin.css" rel="stylesheet">
 
-<style>
-table {
-	text-align: center;
-	vertical-align: middle;
-}
-</style>
+	<style>
+		table {
+			text-align: center;
+			vertical-align: middle;
+		}
+	</style>
 </head>
 
 <body id="page-top">
@@ -89,7 +89,7 @@ table {
 					<a class="dropdown-item" th:href="@{/staff/list(tno=${tno})}">Staff</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" th:href="@{/department/list(tno=${tno})}">Department</a>
-					<a class="dropdown-item" href="#">Level</a>
+					<a class="dropdown-item" th:href="@{/level/list(tno=${tno})}">Level</a>
 					<a class="dropdown-item" th:href="@{/division/list(tno=${tno})}">Division</a>
 				</div>
 			</li>

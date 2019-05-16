@@ -41,7 +41,12 @@ public class DepartmentServiceImpl implements DepartmentService {
     public void modify(Department department) {
         log.info("modify " + department);
 
-        departmentRepo.save(department);
+        departmentRepo.findById(department.getDno()).ifPresent(origin -> {
+            origin.setDepartment1(department.getDepartment1());
+            origin.setDepartment2(department.getDepartment2());
+            origin.setUpdateId(department.getUpdateId());
+            departmentRepo.save(origin);
+        });
     }
 
     @Override

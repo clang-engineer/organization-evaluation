@@ -1,7 +1,7 @@
 package com.evaluation.controller;
 
-import com.evaluation.domain.Department;
-import com.evaluation.service.DepartmentService;
+import com.evaluation.domain.Level;
+import com.evaluation.service.LevelService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
@@ -18,53 +18,52 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/department/*")
+@RequestMapping("/level/*")
 @Slf4j
-public class DepartmentController {
+public class LevelController {
 
     @Autowired
-    DepartmentService departmentService;
+    LevelService levelService;
 
     @Autowired
     TurnService turnService;
 
     @PostMapping("/register")
-    public String register(long tno, Department department, RedirectAttributes rttr) {
-        log.info("department register by " + tno + department);
+    public String register(long tno, Level level, RedirectAttributes rttr) {
+        log.info("level register by " + tno + level);
 
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
 
         long cno = turnService.get(tno).get().getCompany().getCno();
-        department.setCno(cno);
+        level.setCno(cno);
 
-        departmentService.register(department);
+        levelService.register(level);
 
-        return "redirect:/department/list";
+        return "redirect:/level/list";
     }
 
     @PostMapping("/modify")
-    public String modify(Department department, long tno, PageVO vo, RedirectAttributes rttr) {
-        log.info("modify " + department);
+    public String modify(Level level, long tno, PageVO vo, RedirectAttributes rttr) {
+        log.info("modify " + level);
 
+        levelService.modify(level);
 
-        departmentService.modify(department);
         rttr.addFlashAttribute("msg", "modify");
-
         rttr.addAttribute("tno", tno);
         rttr.addAttribute("page", vo.getPage());
         rttr.addAttribute("size", vo.getSize());
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/department/list";
+        return "redirect:/level/list";
     }
 
     @PostMapping("/remove")
-    public String remove(long dno, long tno, PageVO vo, RedirectAttributes rttr) {
-        log.info("remove " + dno);
+    public String remove(long lno, long tno, PageVO vo, RedirectAttributes rttr) {
+        log.info("remove " + lno);
 
-        departmentService.remove(dno);
+        levelService.remove(lno);
 
         rttr.addFlashAttribute("msg", "remove");
         rttr.addAttribute("tno", tno);
@@ -73,17 +72,17 @@ public class DepartmentController {
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/department/list";
+        return "redirect:/level/list";
     }
 
     @GetMapping("/list")
     public void readList(long tno, PageVO vo, Model model) {
-        log.info("department list by " + tno);
+        log.info("level list by " + tno);
 
         model.addAttribute("tno", tno);
 
         long cno = turnService.get(tno).get().getCompany().getCno();
-        Page<Department> result = departmentService.getListWithPaging(cno, vo);
+        Page<Level> result = levelService.getListWithPaging(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
     }
