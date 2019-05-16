@@ -21,8 +21,6 @@
 			<!-- search box -->
 			<div class="row" style="margin-top: 20px; margin-left: 7px;">
 				<div class="col-md-9">
-					<button id="xlTemplate" class="btn btn-info">Excel Template</button>
-					<button id="xlRegister" class="btn btn-success">Excel Register</button>
 					<button id="register" class="btn btn-success">Register</button>
 				</div>
 				<div class="col-md-3" style="float: right">
@@ -68,7 +66,7 @@
 								<td>[[${idxpageNum-1}*10+${status.count}]]</td>
 								<td>[[${department.department1}]]</td>
 								<td>[[${department.department2}]]</td>
-								<td><a th:href="${department.dno}" class="staffDetail">
+								<td><a th:href="${department.dno}" class="detail">
 										<button type="button" class="btn btn-info">Detail</button>
 									</a></td>
 							</tr>
@@ -108,6 +106,37 @@
 		<input type="hidden" name="type" th:value=${pageVO.type} />
 		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
 	</form>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Department MODAL</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<label>Department1</label>
+						<input class="form-control" name="modalContent1" value="New Content">
+					</div>
+					<div class="form-group">
+						<label>Department2</label>
+						<input class="form-control" name="modalContent2" value="New Content">
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
+					<button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+					<button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+					<button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+				</div>
+
+			</div>
+		</div>
+	</div>
+	<!-- ./Modal -->
 </div>
 
 
@@ -115,12 +144,26 @@
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 		$(document).ready(function () {
+			//modal 사용 변수 선언
+			var modal = $("#myModal");
+			var modalContent1 = modal.find("input[name='modalContent1']");
+			var modalContent2 = modal.find("input[name='modalContent2']");
+			var modalModifyBtn = $("#modalModifyBtn");
+			var modalRemoveBtn = $("#modalRemoveBtn");
+			var modalRegisterBtn = $("#modalRegisterBtn");
+			var modalCloseBtn = $("#modalCloseBtn");
+
 
 			var msg = [[${ msg }]];
 
-			if (msg == 'success' && history.state == null) {
-				alert("정상적으로 처리되었습니다.");
-				var stateObj = { msg: "" };
+			if (history.state == null) {
+				if (msg == 'register') {
+					alert("등록 되었습니다.");
+				} else if (msg == 'modify') {
+					alert("수정 되었습니다.");
+				} else if (msg == 'remove') {
+					alert("삭제 되었습니다.");
+				}
 			}
 
 			history.replaceState({}, null, null);
@@ -147,23 +190,75 @@
 			});
 
 			//디테일 버튼 클릭 시
-			$(".staffDetail").click(function (e) {
+			$(".detail").click(function (e) {
+				e.preventDefault();
+				detailNo = $(this).attr("href");
+				dep1 = $(this).closest("tr").children().eq(1).text();
+				dep2 = $(this).closest("tr").children().eq(2).text();
+				modalContent1.val(dep1);
+				modalContent2.val(dep2);
+				modal.data("idx", detailNo);
+
+				modal.find("button[id!='modalCloseBtn']").hide();
+				modalModifyBtn.show();
+				modalRemoveBtn.show();
+
+				$("#myModal").modal("show");
+			});
+
+			//등록 버튼 클릭 시
+			$("#register").click(function (e) {
 				e.preventDefault();
 
-				var staffSno = $(this).attr("href");
-				formObj.attr("action", [[@{ '/staff/view'}]]);
-			formObj.append("<input type='hidden' name='sno' value='" + staffSno + "'/>");
-			formObj.submit();
-		});
+				modal.find("input").val("");
+				modal.find("button[id!='modalCloseBtn']").hide();
+				modalRegisterBtn.show();
+				$("#myModal").modal("show");
+			});
 
-		//등록 버튼 클릭 시
-		$("#register").click(function (e) {
-			e.preventDefault();
-			console.log(this);
-			formObj.attr("action", [[@{ '/staff/register'}]]);
-		formObj.submit();
-	     });
- 
-	});
+			//modal내의 register 클릭 시
+			modalRegisterBtn.on("click", function () {
+				formObj.attr("action", "./register").attr("method", "post");
+				formObj.append("<input type='hidden' name='department1' value='" + modalContent1.val() + "'/>");
+				formObj.append("<input type='hidden' name='department2' value='" + modalContent2.val() + "'/>");
+				formObj.submit();
+			});
+
+			//모달 내의 수정 버튼 클릭 시..
+			modalModifyBtn.on("click", function (e) {
+				formObj.attr("action", "./modify").attr("method", "post");
+				formObj.append("<input type='hidden' name='department1' value='" + modalContent1.val() + "'/>");
+				formObj.append("<input type='hidden' name='department2' value='" + modalContent2.val() + "'/>");
+				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
+				formObj.submit();
+			});
+
+
+			//모달 내의 삭제 버튼 클릭 시
+			modalRemoveBtn.on("click", function (e) {
+				if (delchk() == true) {
+					formObj.attr("action", "delete");
+				} else {
+					return;
+				};
+				formObj.attr("action", "./remove").attr("method", "post");
+				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
+				formObj.submit();
+			});
+
+			//close button click 시
+			modalCloseBtn.on("click", function (e) {
+				modal.modal('hide');
+			});
+
+			function delchk() {
+				if (confirm("삭제하시겠습니까?")) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+		});
 	</script>
 </th:block>
