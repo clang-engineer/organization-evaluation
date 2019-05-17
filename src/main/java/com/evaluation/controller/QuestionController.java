@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.evaluation.domain.Question;
 import com.evaluation.domain.Turn;
+import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.StaffService;
 import com.evaluation.vo.PageMaker;
@@ -32,91 +33,87 @@ public class QuestionController {
     @Setter(onMethod_ = { @Autowired })
     StaffService staffService;
 
+    @Setter(onMethod_ = { @Autowired })
+    DistinctInfoService distinctInfoservice;
+
     @GetMapping("/register")
     public void register(long tno, PageVO vo, Model model) {
-        log.info("Question register get by " + tno + vo);
+        log.info("register get by " + tno + vo);
 
         model.addAttribute("tno", tno);
+        model.addAttribute("distinctInfo", distinctInfoservice.getDistinctQuestionInfo(tno));
     }
 
     @PostMapping("/register")
     public String register(Question question, long tno, RedirectAttributes rttr) {
-        log.info("Question register post by " + question);
+        log.info("register post by " + question);
 
         Turn turn = new Turn();
         turn.setTno(tno);
         question.setTurn(turn);
         questionService.register(question);
 
-        rttr.addFlashAttribute("msg", "success");
+        rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
         return "redirect:/question/list";
     }
 
     @GetMapping("/view")
     public void read(long qno, long tno, PageVO vo, Model model) {
-        log.info("controller : staff read by " + tno + vo);
+        log.info("view by " + tno + vo);
 
         Optional<Question> question = questionService.read(qno);
 
         model.addAttribute("tno", tno);
+        model.addAttribute("distinctInfo", distinctInfoservice.getDistinctQuestionInfo(tno));
 
         Question result = question.get();
-        model.addAttribute("staff", result);
+        model.addAttribute("question", result);
     }
 
-    // @GetMapping("/modify")
-    // public void modify(long sno, long tno, PageVO vo, Model model) {
-    // log.info("controller : staff modify by " + tno + vo);
+    @GetMapping("/modify")
+    public void modify(long qno, long tno, PageVO vo, Model model) {
+        log.info("modify by " + tno + vo);
 
-    // Optional<Staff> staff = staffService.read(sno);
+        Optional<Question> question = questionService.read(qno);
 
-    // model.addAttribute("tno", tno);
-    // Staff result = staff.get();
-    // model.addAttribute("staff", result);
-    // }
+        model.addAttribute("tno", tno);
+        model.addAttribute("distinctInfo", distinctInfoservice.getDistinctQuestionInfo(tno));
 
-    // @PostMapping("/modify")
-    // public String modify(Staff staff, long tno, PageVO vo, RedirectAttributes
-    // rttr) {
-    // log.info("controller : staff modify post by " + staff.getName());
+        Question result = question.get();
+        model.addAttribute("question", result);
+    }
 
-    // staffService.read(staff.getSno()).ifPresent(origin -> {
-    // origin.setEmail(staff.getEmail());
-    // origin.setName(staff.getName());
-    // origin.setId(staff.getId());
-    // origin.setPassword(staff.getPassword());
-    // origin.setDepartment1(staff.getDepartment1());
-    // origin.setDepartment2(staff.getDepartment2());
-    // origin.setLevel(staff.getLevel());
-    // origin.setDivision1(staff.getDivision1());
-    // origin.setDivision2(staff.getDivision2());
-    // staffService.modify(origin);
-    // rttr.addFlashAttribute("msg", "success");
-    // });
+    @PostMapping("/modify")
+    public String modify(Question question, long tno, PageVO vo, RedirectAttributes rttr) {
+        log.info("modify" + question);
 
-    // rttr.addAttribute("tno", tno);
-    // rttr.addAttribute("page", vo.getPage());
-    // rttr.addAttribute("size", vo.getSize());
-    // rttr.addAttribute("type", vo.getType());
-    // rttr.addAttribute("keyword", vo.getKeyword());
-    // return "redirect:/staff/list";
-    // }
+        questionService.modify(question);
+        rttr.addAttribute("tno", tno);
+        rttr.addFlashAttribute("msg", "modify");
+        rttr.addAttribute("page", vo.getPage());
+        rttr.addAttribute("size", vo.getSize());
+        rttr.addAttribute("type", vo.getType());
+        rttr.addAttribute("keyword", vo.getKeyword());
 
-    // @PostMapping("/remove")
-    // public String remove(long sno, long tno, PageVO vo, RedirectAttributes rttr)
-    // {
-    // log.info("controller : staff delete by " + sno);
+        return "redirect:/question/list";
+    }
 
-    // staffService.remove(sno);
+    @PostMapping("/remove")
+    public String remove(long qno, long tno, PageVO vo, RedirectAttributes rttr) {
+        log.info("remove " + qno);
 
-    // rttr.addAttribute("tno", tno);
-    // rttr.addAttribute("page", vo.getPage());
-    // rttr.addAttribute("size", vo.getSize());
-    // rttr.addAttribute("type", vo.getType());
-    // rttr.addAttribute("keyword", vo.getKeyword());
-    // return "redirect:/staff/list";
-    // }
+        questionService.remove(qno);
+        
+        rttr.addAttribute("tno", tno);
+        rttr.addFlashAttribute("msg", "remove");
+        rttr.addAttribute("page", vo.getPage());
+        rttr.addAttribute("size", vo.getSize());
+        rttr.addAttribute("type", vo.getType());
+        rttr.addAttribute("keyword", vo.getKeyword());
+
+        return "redirect:/question/list";
+    }
 
     @GetMapping("/list")
     public void readList(long tno, PageVO vo, Model model) {

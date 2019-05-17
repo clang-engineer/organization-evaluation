@@ -47,32 +47,35 @@
             <!-- /search box -->
             <div class="card-body">
                 <div class="table-responsive">
-                    <table th:with="result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                    <table th:with="idxpageNum=${result.currentPageNum}, result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
                         <thead>
                             <tr>
-                                <th>Idx</th>
+                                <th>No</th>
                                 <th>Division1</th>
                                 <th>Division2</th>
+                                <th>Order Idx</th>
                                 <th>Catogory</th>
-                                <th>Item</th>
+                                <th>Question</th>
                                 <th>Detail</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
-                                <th>Idx</th>
+                                <th>No</th>
                                 <th>Division1</th>
                                 <th>Division2</th>
+                                <th>Order Idx</th>
                                 <th>Catogory</th>
-                                <th>Item</th>
+                                <th>Question</th>
                                 <th>Detail</th>
                             </tr>
                         </tfoot>
                         <tbody>
-                            <tr th:each="question:${result.content}">
-                                <td>[[${question.idx}]]</td>
+                            <tr th:each="question,status:${result.content}">
+                                <td>[[${idxpageNum-1}*10+${status.count}]]</td>
                                 <td>[[${question.division1}]]</td>
                                 <td>[[${question.division2}]]</td>
+                                <td>[[${question.idx}]]</td>
                                 <td>[[${question.category}]]</td>
                                 <td>[[${question.Item}]]</td>
                                 <td><a th:href="${question.qno}" class="questionDetail">
@@ -126,9 +129,14 @@
 
             var msg = [[${ msg }]];
 
-            if (msg == 'success' && history.state == null) {
-                alert("정상적으로 처리되었습니다.");
-                var stateObj = { msg: "" };
+            if (history.state == null) {
+                if (msg == 'register') {
+                    alert("등록 되었습니다.");
+                } else if (msg == 'modify') {
+                    alert("수정 되었습니다.");
+                } else if (msg == 'remove') {
+                    alert("삭제 되었습니다.");
+                }
             }
 
             history.replaceState({}, null, null);

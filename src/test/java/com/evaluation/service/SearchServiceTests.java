@@ -2,6 +2,7 @@ package com.evaluation.service;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,13 +19,13 @@ import lombok.extern.slf4j.Slf4j;
 public class SearchServiceTests {
 
     @Setter(onMethod_ = { @Autowired })
-    private SearchService searchService;
+    private DistinctInfoService searchService;
 
     @Test
     public void test() {
-        ArrayList<List<String>> result = searchService.getDistinctInfo(99L);
-        for (Object res : result) {
-            log.info("" + res);
+        Map<String, Object> result = searchService.getDistinctInfo(99L);
+        for (String key : result.keySet()) {
+            log.info("" + key + result.get(key));
         }
     }
 

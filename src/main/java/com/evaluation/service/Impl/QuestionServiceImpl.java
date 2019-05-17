@@ -36,7 +36,15 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public void modify(Question question) {
 		log.info("modify " + question);
-		questionRepo.save(question);
+
+		questionRepo.findById(question.getQno()).ifPresent(origin -> {
+			origin.setDivision1(question.getDivision1());
+			origin.setDivision2(question.getDivision2());
+			origin.setIdx(question.getIdx());
+			origin.setCategory(question.getCategory());
+			origin.setItem(question.getItem());
+			questionRepo.save(origin);
+		});
 	}
 
 	@Override
@@ -50,7 +58,8 @@ public class QuestionServiceImpl implements QuestionService {
 		log.info("getList " + tno + vo);
 
 		Pageable page = vo.makePageable(1, "qno");
-		Page<Question> result = questionRepo.findAll(questionRepo.makePredicate(vo.getType(), vo.getKeyword(), tno), page);
+		Page<Question> result = questionRepo.findAll(questionRepo.makePredicate(vo.getType(), vo.getKeyword(), tno),
+				page);
 		return result;
 	}
 
