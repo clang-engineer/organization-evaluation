@@ -37,8 +37,7 @@
 							<option value="level" th:selected="${pageVO.type}=='level'">Level</option>
 							<option value="division" th:selected="${pageVO.type}=='division'">Division</option>
 						</select>
-						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword"
-							th:value="${pageVO.keyword}" placeholder="Search for...">
+						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
 							<button class="btn btn-default border" id="searchBtn" type="button">
 								<i class="fas fa-search fa-sm"></i>
@@ -51,10 +50,10 @@
 			<!-- /search box -->
 			<div class="card-body">
 				<div class="table-responsive">
-					<table th:with="result=${result.result}" class="table table-bordered" id="dataTable" width="100%"
-						cellspacing="0">
+					<table th:with="idxpageNum=${result.currentPageNum}, result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 						<thead>
 							<tr>
+								<th>No</th>
 								<th>Name</th>
 								<th>E-mail</th>
 								<th>Department1</th>
@@ -67,6 +66,7 @@
 						</thead>
 						<tfoot>
 							<tr>
+								<th>No</th>
 								<th>Name</th>
 								<th>E-mail</th>
 								<th>Department1</th>
@@ -78,7 +78,8 @@
 							</tr>
 						</tfoot>
 						<tbody>
-							<tr th:each="staff:${result.content}">
+							<tr th:each="staff,status:${result.content}">
+								<td>[[${idxpageNum-1}*10+${status.count}]]</td>
 								<td>[[${staff.name}]]</td>
 								<td>[[${staff.email}]]</td>
 								<td>[[${staff.department1}]]</td>
@@ -169,9 +170,9 @@
 			$(".staffDetail").click(function (e) {
 				e.preventDefault();
 
-				var staffSno = $(this).attr("href");
+				var detailNo = $(this).attr("href");
 				formObj.attr("action", [[@{ '/staff/view'}]]);
-			formObj.append("<input type='hidden' name='sno' value='" + staffSno + "'/>");
+			formObj.append("<input type='hidden' name='sno' value='" + detailNo + "'/>");
 			formObj.submit();
 		});
 

@@ -73,7 +73,7 @@
 				<div class="modal-footer">
 					<button id="modalBtn" class="btn btn-info">Save</button>
 					<button id="delModalBtn" class="btn btn-danger">Delete</button>
-					<button type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
+					<button id="modalCloseBtn" type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
 				</div>
 			</div>
 		</div>
@@ -88,181 +88,186 @@
 <th:block layout:fragment="script">
 	<script th:inline="javascript" th:src="@{'/public/js/turn.js'}"></script>
 	<script th:inline="javascript">
-	$(document).ready(function(e) {
-	
-	var cno=[[${cno}]];
-	var tno;
-	/* turn list 출력 */
-    (function(){
-    turnManager.getAll(cno, printList);
-    })();
-	
-			
-	function printList(list){
-	    var str="";
-	    var turnObj;
-	    for(var i=0; i<list.length; i++){
-		turnObj=list[i];
-		
-		str+="<tr>" +
-		"<td>"+(i+1)+"</td>"+
-		"<td>"+turnObj.title+"</td>"+
-		"<td>"+turnObj.type+"</td>"+
-		"<td>"+formatDate(turnObj.writeDate)+"</td>"+
-		"<td>"+formatDate(turnObj.updateDate)+"</td>"+
-		"<td><a href='"+turnObj.tno+"'><button type='button' class='btn btn-success'>Setting</button></a></td>"+
-		"</tr>";	
-	    }
-	    
-	    $("#turnTable").html(str);
-	}
-	
-	/* list에 출력되는 시간 포멧 */
-	function formatDate(timeValue){
-	    var date=new Date(timeValue);
-	    var yyyy = date.getFullYear();
-	    var mm = date.getMonth();
-	    var dd = date.getDate();
+		$(document).ready(function (e) {
 
-	    var hh = date.getHours();
-	    var mi = date.getMinutes();
-	    var ss = date.getSeconds();
-	    
-		var formatedTime=[yyyy,'/',(mm>9?'':'0')+mm,'/',(dd>9?'':'0')+dd,' ',(hh>9?'':'0')+hh,':',(mi>9?'':'0')+mi,':',(ss>9?'':'0')+ss].join('');
-		
-		return formatedTime;
-	}
-	
-	
-	/* modal 창 */ 
-	$("#addTurnBtn").on('click',function(){
-	   turnTitleObj.val('');
-	   checked_values(false);
+			var cno = [[${ cno }]];
+			var tno;
+			/* turn list 출력 */
+			(function () {
+				turnManager.getAll(cno, printList);
+			})();
 
-	   $("#myModal").modal("show"); 
-	   $(".modal-title").text("Add Turn");
-	   mode="ADD";
-	});
-	
-	
-	var turnTitleObj=$("input[name='turnTitle']");
-	
-	/* add turn */
-	$("#modalBtn").click(function(){
-	var turnTitle=turnTitleObj.val();
-	var cno=[[${cno}]];
-	var turnType=get_chked_values();
-	
-	if (mode=='ADD') {
-		var obj={title:turnTitle, type:turnType,cno:cno};
-		//console.log(obj);
-		turnManager.add(obj,function(list){
-		    alert("새로운 회차가 등록 되었습니다.");
-		    afterAll(list)
-		});
-	} else if (mode=='MOD'){
-	    var obj={title:turnTitle, type:turnType, cno:cno, tno:tno}
-	    turnManager.update(obj,function(list){
-			alert("회차 정보가 수정되었습니다.");
-			afterAll(list);
-	    });
-		};
-	});
-	
-	
-	/* add시 check box 값 취합 */
-	function get_chked_values(){
-	     var DATA='';
-	      $('input:checkbox[name=turnType]').each(function() {
-	         if($(this).is(':checked'))
-	            DATA += $(this).val();
-	      });
-	      
-	      if (DATA!=='' && DATA!=='360' && DATA!=='MBO') {
-		  DATA='360/MBO';
-	      }
-	      return DATA;
-	}
-	
-	function afterAll(list){
-	    printList(list);
-	    $("#myModal").modal("hide");
-	    turnTitleObj.val('');
-		checked_values(false);
-	}
-	
-	function checked_values(boolean){
-		$('input:checkbox[name=turnType]').each(function() {
-		       $(this).prop('checked',boolean);
-		 });
-	}
-	
-	/* modift, delete turn */
-	$("#turnTable").on("click","tr",function(e){
-	   var tds=$(this).find('td') 
-	   tno=tds.find('a').attr('href');
-	   turnTitleObj.val(tds[1].innerHTML);
 
-	   checked_values(false);
-	   
-	   mode='MOD';
-	   switch (tds[2].innerHTML) {
-	   	case '360' : 
-	   	    $("#checkbox1").prop('checked',true);
-	   	  	break;
-	   	case 'MBO' : 
-	   	    $("#checkbox2").prop('checked',true);
-	   	    break;
-	   	case '360/MBO' : 
-	   	    checked_values(true);
-	   	
-	   }	
-	  $("#myModal").modal("show");
-	  $(".modal-title").text("Modify/Delete Turn");
-	});
+			function printList(list) {
+				var str = "";
+				var turnObj;
+				for (var i = 0; i < list.length; i++) {
+					turnObj = list[i];
 
-	/* modal 창에서 삭제 버튼 눌렀을 때 동작 */	
-	$("#delModalBtn").on("click",function(){
-	    if(delchk()==true){
-			var obj ={cno:cno, tno:tno}    
-			turnManager.remove(obj,function(list){
-			alert("정상적으로 삭제 되었습니다.");
-			afterAll(list);		
+					str += "<tr>" +
+						"<td>" + (i + 1) + "</td>" +
+						"<td>" + turnObj.title + "</td>" +
+						"<td>" + turnObj.type + "</td>" +
+						"<td>" + formatDate(turnObj.writeDate) + "</td>" +
+						"<td>" + formatDate(turnObj.updateDate) + "</td>" +
+						"<td><a href='" + turnObj.tno + "'><button type='button' class='btn btn-success'>Setting</button></a></td>" +
+						"</tr>";
+				}
+
+				$("#turnTable").html(str);
+			}
+
+			/* list에 출력되는 시간 포멧 */
+			function formatDate(timeValue) {
+				var date = new Date(timeValue);
+				var yyyy = date.getFullYear();
+				var mm = date.getMonth();
+				var dd = date.getDate();
+
+				var hh = date.getHours();
+				var mi = date.getMinutes();
+				var ss = date.getSeconds();
+
+				var formatedTime = [yyyy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd, ' ', (hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi, ':', (ss > 9 ? '' : '0') + ss].join('');
+
+				return formatedTime;
+			}
+
+
+			/* modal 창 */
+			$("#addTurnBtn").on('click', function () {
+				turnTitleObj.val('');
+				checked_values(false);
+
+				$("#myModal").modal("show");
+				$(".modal-title").text("Add Turn");
+				mode = "ADD";
 			});
-	    } else{
-			return;
-	    }
-	});
-	
-	function delchk(){
-	    if(confirm("삭제하시겠습니까?")){
-	        return true;
-	    } else {
-	        return false;
-	    }
-	}
-	
-	
-	$("#companyListBtn").on("click",function(e){
-	   $("#f1").submit();
-	});
-	
-	
-	$("#turnTable").on("click","a",function(e){
-	    if(confirm("회차 상세 설정 화면으로 이동하시겠습니까?")){
-		e.preventDefault();
-		$("#f1").empty();
-		$("#f1").attr("action",[[@{'/info360/index'}]]);
-		$("#f1").append("<input type='hidden' name='tno' value='"+$(this).attr('href')	+"'/>");
-	    $("#f1").submit();
-	    }else{
-		return false;
-	    }
-	});
-	});
-	
-	
-    </script>
+
+
+			var turnTitleObj = $("input[name='turnTitle']");
+
+			/* add turn */
+			$("#modalBtn").click(function () {
+				var turnTitle = turnTitleObj.val();
+				var cno = [[${ cno }]];
+				var turnType = get_chked_values();
+
+				if (mode == 'ADD') {
+					var obj = { title: turnTitle, type: turnType, cno: cno };
+					//console.log(obj);
+					turnManager.add(obj, function (list) {
+						alert("새로운 회차가 등록 되었습니다.");
+						afterAll(list)
+					});
+				} else if (mode == 'MOD') {
+					var obj = { title: turnTitle, type: turnType, cno: cno, tno: tno }
+					turnManager.update(obj, function (list) {
+						alert("회차 정보가 수정되었습니다.");
+						afterAll(list);
+					});
+				};
+			});
+
+
+			/* add시 check box 값 취합 */
+			function get_chked_values() {
+				var DATA = '';
+				$('input:checkbox[name=turnType]').each(function () {
+					if ($(this).is(':checked'))
+						DATA += $(this).val();
+				});
+
+				if (DATA !== '' && DATA !== '360' && DATA !== 'MBO') {
+					DATA = '360/MBO';
+				}
+				return DATA;
+			}
+
+			function afterAll(list) {
+				printList(list);
+				$("#myModal").modal("hide");
+				turnTitleObj.val('');
+				checked_values(false);
+			}
+
+			function checked_values(boolean) {
+				$('input:checkbox[name=turnType]').each(function () {
+					$(this).prop('checked', boolean);
+				});
+			}
+
+			/* detail 버튼 */
+			$("#turnTable").on("click", "a", function (e) {
+				if (confirm("회차 상세 설정 화면으로 이동하시겠습니까?")) {
+					e.preventDefault();
+					$("#f1").empty();
+					$("#f1").attr("action", '/info360/index');
+					$("#f1").append("<input type='hidden' name='tno' value='" + $(this).attr('href') + "'/>");
+					$("#f1").submit();
+				} else {
+					return false;
+				}
+			});
+
+			/* modift, delete turn */
+			$("#turnTable").on("click", "tr", function (e) {
+				var tds = $(this).find('td')
+				tno = tds.find('a').attr('href');
+				turnTitleObj.val(tds[1].innerHTML);
+
+				checked_values(false);
+
+				mode = 'MOD';
+				switch (tds[2].innerHTML) {
+					case '360':
+						$("#checkbox1").prop('checked', true);
+						break;
+					case 'MBO':
+						$("#checkbox2").prop('checked', true);
+						break;
+					case '360/MBO':
+						checked_values(true);
+
+				}
+				$("#myModal").modal("show");
+				$(".modal-title").text("Modify/Delete Turn");
+			});
+
+			/* modal 창에서 삭제 버튼 눌렀을 때 동작 */
+			$("#delModalBtn").on("click", function () {
+				if (delchk() == true) {
+					var obj = { cno: cno, tno: tno }
+					turnManager.remove(obj, function (list) {
+						alert("정상적으로 삭제 되었습니다.");
+						afterAll(list);
+					});
+				} else {
+					return;
+				}
+			});
+
+			function delchk() {
+				if (confirm("삭제하시겠습니까?")) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+
+
+			$("#companyListBtn").on("click", function (e) {
+				$("#f1").submit();
+			});
+
+			//close button click 시
+			$("#modalCloseBtn").on("click", function (e) {
+				$("#myModal").modal('hide');
+			});
+		});
+
+
+	</script>
 </th:block>
 </script>
 </body>

@@ -13,6 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.evaluation.domain.Company;
 import com.evaluation.domain.Staff;
+import com.evaluation.service.SearchService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -32,10 +33,16 @@ public class StaffController {
 	@Setter(onMethod_ = { @Autowired })
 	TurnService turnService;
 
+	@Setter(onMethod_ = { @Autowired })
+	SearchService searchService;
+
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {
 		log.info("controller : staff register get by " + tno + vo);
 
+		long cno = turnService.get(tno).get().getCompany().getCno();
+
+		model.addAttribute("distinctInfo", searchService.getDistinctInfo(cno));
 		model.addAttribute("tno", tno);
 	}
 
@@ -67,30 +74,23 @@ public class StaffController {
 	public void modify(long sno, long tno, PageVO vo, Model model) {
 		log.info("controller : staff modify by " + tno + vo);
 
-		Optional<Staff> staff = staffService.read(sno);
+		long cno = turnService.get(tno).get().getCompany().getCno();
 
-		model.addAttribute("tno", tno);
+		Optional<Staff> staff = staffService.read(sno);
 		Staff result = staff.get();
+		
+		model.addAttribute("distinctInfo", searchService.getDistinctInfo(cno));
+		model.addAttribute("tno", tno);
 		model.addAttribute("staff", result);
 	}
 
 	@PostMapping("/modify")
 	public String modify(Staff staff, long tno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff modify post by " + staff.getName());
-
-		staffService.read(staff.getSno()).ifPresent(origin -> {
-			origin.setEmail(staff.getEmail());
-			origin.setName(staff.getName());
-			origin.setId(staff.getId());
-			origin.setPassword(staff.getPassword());
-			origin.setDepartment1(staff.getDepartment1());
-			origin.setDepartment2(staff.getDepartment2());
-			origin.setLevel(staff.getLevel());
-			origin.setDivision1(staff.getDivision1());
-			origin.setDivision2(staff.getDivision2());
-			staffService.modify(origin);
-			rttr.addFlashAttribute("msg", "success");
-		});
+		
+		staffService.modify(staff);
+		
+		rttr.addFlashAttribute("msg", "success");
 
 		rttr.addAttribute("tno", tno);
 		rttr.addAttribute("page", vo.getPage());

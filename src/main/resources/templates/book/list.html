@@ -46,8 +46,8 @@
 							</tr>
 						</thead>
 						<tbody>
-							<tr th:each="book:${result}">
-								<td>[[${book.bno}]]</td>
+							<tr th:each="book,status:${result}">
+								<td>[[${status.count}]]</td>
 								<td>[[${book.type}]]</td>
 								<td><a th:href="${book.bno}" class="contentList">[[${book.title}]]</a></td>
 								<td>[[${#dates.format(book.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>

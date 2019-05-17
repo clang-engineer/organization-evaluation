@@ -40,7 +40,18 @@ public class StaffServiceImpl implements StaffService {
 	public void modify(Staff staff) {
 		log.info("service : staff modify " + staff);
 
-		staffRepo.save(staff);
+		staffRepo.findById(staff.getSno()).ifPresent(origin -> {
+			origin.setEmail(staff.getEmail());
+			origin.setName(staff.getName());
+			origin.setId(staff.getId());
+			origin.setPassword(staff.getPassword());
+			origin.setDepartment1(staff.getDepartment1());
+			origin.setDepartment2(staff.getDepartment2());
+			origin.setLevel(staff.getLevel());
+			origin.setDivision1(staff.getDivision1());
+			origin.setDivision2(staff.getDivision2());
+			staffRepo.save(origin);
+		});
 	}
 
 	@Override
