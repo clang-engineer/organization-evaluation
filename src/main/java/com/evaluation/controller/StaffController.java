@@ -13,7 +13,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.evaluation.domain.Company;
 import com.evaluation.domain.Staff;
-import com.evaluation.service.SearchService;
+import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -34,15 +34,13 @@ public class StaffController {
 	TurnService turnService;
 
 	@Setter(onMethod_ = { @Autowired })
-	SearchService searchService;
+	DistinctInfoService distinctInfoService;
 
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {
 		log.info("controller : staff register get by " + tno + vo);
 
-		long cno = turnService.get(tno).get().getCompany().getCno();
-
-		model.addAttribute("distinctInfo", searchService.getDistinctInfo(cno));
+		model.addAttribute("distinctInfo", distinctInfoService.getDistinctInfo(tno));
 		model.addAttribute("tno", tno);
 	}
 
@@ -74,12 +72,10 @@ public class StaffController {
 	public void modify(long sno, long tno, PageVO vo, Model model) {
 		log.info("controller : staff modify by " + tno + vo);
 
-		long cno = turnService.get(tno).get().getCompany().getCno();
-
 		Optional<Staff> staff = staffService.read(sno);
 		Staff result = staff.get();
-		
-		model.addAttribute("distinctInfo", searchService.getDistinctInfo(cno));
+
+		model.addAttribute("distinctInfo", distinctInfoService.getDistinctInfo(tno));
 		model.addAttribute("tno", tno);
 		model.addAttribute("staff", result);
 	}
@@ -87,9 +83,9 @@ public class StaffController {
 	@PostMapping("/modify")
 	public String modify(Staff staff, long tno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff modify post by " + staff.getName());
-		
+
 		staffService.modify(staff);
-		
+
 		rttr.addFlashAttribute("msg", "success");
 
 		rttr.addAttribute("tno", tno);

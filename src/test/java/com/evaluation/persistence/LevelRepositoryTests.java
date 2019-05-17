@@ -2,7 +2,6 @@ package com.evaluation.persistence;
 
 import java.util.stream.IntStream;
 
-import com.evaluation.domain.Department;
 import com.evaluation.domain.Level;
 
 import org.junit.Test;

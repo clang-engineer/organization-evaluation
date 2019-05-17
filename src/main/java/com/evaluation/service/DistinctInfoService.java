@@ -1,10 +1,9 @@
 package com.evaluation.service;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-public interface SearchService {
+public interface DistinctInfoService {
 
     public List<String> getListDepartment1(long cno);
 
@@ -17,5 +16,8 @@ public interface SearchService {
     public List<String> getListLevel(long cno);
 
     public Map<String, Object> getDistinctInfo(long cno);
-
+    
+    public List<String> getListCategory(long cno);
+    
+    public Map<String, Object> getDistinctQuestionInfo(long tno);
 }

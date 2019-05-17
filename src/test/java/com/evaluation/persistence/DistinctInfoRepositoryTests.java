@@ -14,18 +14,25 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class SearchRepositoryTests {
+public class DistinctInfoRepositoryTests {
     @Setter(onMethod_ = { @Autowired })
-    SearchRepository searchRepo;
+    DistinctInfoRepository repo;
 
     @Test
     public void testAutowired() {
-        log.info("===>" + searchRepo);
+        log.info("===>" + repo);
     }
 
     @Test
     public void testDepartment1() {
-        List<String> result = searchRepo.getListDepartment1(98L);
+        List<String> result = repo.getListDepartment1(98L);
         log.info("" + result);
+    }
+
+    @Test
+    public void testCategory() {
+        List<String> result = repo.getListCategory(1L);
+        log.info("" + result);
+
     }
 }
