@@ -48,9 +48,7 @@ public class QuestionController {
     public String register(Question question, long tno, RedirectAttributes rttr) {
         log.info("register post by " + question);
 
-        Turn turn = new Turn();
-        turn.setTno(tno);
-        question.setTurn(turn);
+        question.setTno(tno);
         questionService.register(question);
 
         rttr.addFlashAttribute("msg", "register");
@@ -104,7 +102,7 @@ public class QuestionController {
         log.info("remove " + qno);
 
         questionService.remove(qno);
-        
+
         rttr.addAttribute("tno", tno);
         rttr.addFlashAttribute("msg", "remove");
         rttr.addAttribute("page", vo.getPage());

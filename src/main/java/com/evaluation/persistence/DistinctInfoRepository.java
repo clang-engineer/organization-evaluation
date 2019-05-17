@@ -26,6 +26,6 @@ public interface DistinctInfoRepository extends CrudRepository<Company, Long> {
     @Query("SELECT DISTINCT l.content FROM Level l WHERE cno=?1 ORDER BY l.content ASC")
     public List<String> getListLevel(long cno);
 
-    @Query("SELECT DISTINCT q.category FROM Question q WHERE turn.tno=?1 ORDER BY q.category ASC")
+    @Query("SELECT DISTINCT q.category FROM Question q WHERE tno=?1 ORDER BY q.category ASC")
     public List<String> getListCategory(long tno);
 }

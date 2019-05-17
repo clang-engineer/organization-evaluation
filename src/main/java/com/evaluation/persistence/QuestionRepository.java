@@ -16,7 +16,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
         QQuestion question = QQuestion.question;
 
         builder.and(question.qno.gt(0));
-        builder.and(question.turn.tno.eq(tno));
+        builder.and(question.tno.eq(tno));
 
         if (type == null) {
             return builder;

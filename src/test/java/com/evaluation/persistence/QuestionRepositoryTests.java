@@ -43,8 +43,6 @@ public class QuestionRepositoryTests {
 		Long[] arr = { 1L, 2L, 3L };
 
 		Arrays.stream(arr).forEach(num -> {
-			Turn turn = new Turn();
-			turn.setTno(num);
 			IntStream.range(1, 31).forEach(i -> {
 				Question question = new Question();
 				question.setDivision1("division1" + i);
@@ -52,7 +50,7 @@ public class QuestionRepositoryTests {
 				question.setIdx(i);
 				question.setCategory("category" + i);
 				question.setItem("question" + i);
-				question.setTurn(turn);
+				question.setTno(num);
 				questionRepo.save(question);
 			});
 		});

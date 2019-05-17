@@ -36,8 +36,6 @@ public class QuestionServiceTests {
 		Long[] arr = { 1L, 2L, 3L };
 
 		Arrays.stream(arr).forEach(num -> {
-			Turn turn = new Turn();
-			turn.setTno(num);
 			IntStream.range(1, 11).forEach(i -> {
 				Question question = new Question();
 				question.setDivision1("division1" + i);
@@ -45,7 +43,7 @@ public class QuestionServiceTests {
 				question.setIdx(i);
 				question.setCategory("category" + i);
 				question.setItem("question" + i);
-				question.setTurn(turn);
+				question.setTno(num);
 				questionService.register(question);
 			});
 		});
