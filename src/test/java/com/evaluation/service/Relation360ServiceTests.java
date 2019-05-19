@@ -1,9 +1,9 @@
 package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
-import static org.junit.Assert.assertTrue;
 
 import com.evaluation.domain.Relation360;
+import com.evaluation.domain.Staff;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -22,6 +22,9 @@ public class Relation360ServiceTests {
     @Setter(onMethod_ = { @Autowired })
     Relation360Service relation360Service;
 
+    @Setter(onMethod_ = { @Autowired })
+    StaffService staffService;
+
     @Test
     public void diTest() {
         assertNotNull(relation360Service);
@@ -29,9 +32,12 @@ public class Relation360ServiceTests {
 
     @Test
     public void registerTest() {
+        Staff evaluated = staffService.read(2L).get();
+        Staff evaluator = staffService.read(15L).get();
+
         Relation360 relation360 = new Relation360();
-        relation360.setEvaluated("evaluated rel1");
-        relation360.setEvaluator("evaluator rel1");
+        relation360.setEvaluated(evaluated);
+        relation360.setEvaluator(evaluator);
         relation360.setRelation("me");
         relation360.setFinish("N");
         relation360.setTno(9L);
@@ -48,4 +54,5 @@ public class Relation360ServiceTests {
     public void removeTest() {
         relation360Service.remove(61L);
     }
+
 }

@@ -5,10 +5,11 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.BiConsumer;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.evaluation.domain.Relation360;
+import com.evaluation.domain.Staff;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -31,6 +32,9 @@ public class Relation360RepositoryTests {
     @Setter(onMethod_ = { @Autowired })
     Relation360Repository relation360Repo;
 
+    @Setter(onMethod_ = { @Autowired })
+    StaffRepository staffRepo;
+
     @Test
     public void diTest() {
         assertNotNull(relation360Repo);
@@ -44,8 +48,11 @@ public class Relation360RepositoryTests {
 
             IntStream.range(1, 21).forEach(i -> {
                 Relation360 relation360 = new Relation360();
-                relation360.setEvaluated("evaluated" + i);
-                relation360.setEvaluator("evaluator" + i);
+
+                Staff evaluated = staffRepo.findById((long) i).get();
+                Staff evaluator = staffRepo.findById((long) i + 1).get();
+                relation360.setEvaluated(evaluated);
+                relation360.setEvaluator(evaluator);
                 if (i % 4 == 0) {
                     relation360.setRelation("me");
                 } else if (i % 4 == 1) {
@@ -85,16 +92,21 @@ public class Relation360RepositoryTests {
     }
 
     @Test
+    public void readTest() {
+        Optional<Relation360> result = relation360Repo.findById(3L);
+        log.info("===>" + result.get().getEvaluated().getEmail());
+
+    }
+
+    @Test
     public void testList() {
         Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "rno");
-        Page<Relation360> result = relation360Repo.findAll(relation360Repo.makePredicate("evaluated", "2", 9L),
-                pageable);
+        Page<Relation360> result = relation360Repo.findAll(relation360Repo.makePredicate("evaluated", "102", 9L), pageable);
         log.info("PAGE : " + result.getPageable());
 
         log.info("----------------");
-        BiConsumer<? super String, ? super Integer> key;
         // fetch 타입 체크...! lazy때문에 못 불러오는데, 나중에도 그런지 확인해보자.
-        result.getContent().forEach(relation360 -> log.info("" + relation360.getAnswers()));
+        result.getContent().forEach(relation360 -> log.info("" + relation360.getEvaluated().getEmail()));
     }
 
 }

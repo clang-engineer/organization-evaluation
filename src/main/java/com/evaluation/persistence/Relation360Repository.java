@@ -10,6 +10,7 @@ import org.springframework.data.repository.CrudRepository;
 
 public interface Relation360Repository
         extends CrudRepository<Relation360, Long>, QuerydslPredicateExecutor<Relation360> {
+
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();
@@ -25,10 +26,10 @@ public interface Relation360Repository
 
         switch (type) {
         case "evaluated":
-            builder.and(relation360.evaluated.like("%" + keyword + "%"));
+            builder.and(relation360.evaluated.email.like("%" + keyword + "%"));
             break;
         case "evaluator":
-            builder.and(relation360.evaluator.like("%" + keyword + "%"));
+            builder.and(relation360.evaluator.email.like("%" + keyword + "%"));
             break;
         case "relation":
             builder.and(relation360.relation.like("%" + keyword + "%"));
@@ -40,4 +41,5 @@ public interface Relation360Repository
 
         return builder;
     }
+
 }

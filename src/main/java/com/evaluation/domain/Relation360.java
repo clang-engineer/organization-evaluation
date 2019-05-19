@@ -7,10 +7,12 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
+import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.ManyToOne;
 import javax.persistence.MapKeyColumn;
 import javax.persistence.Table;
 
@@ -31,8 +33,12 @@ public class Relation360 {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long rno;
 
-    private String evaluated;
-    private String evaluator;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evaluated", referencedColumnName = "sno")
+    private Staff evaluated;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "evaluator", referencedColumnName = "sno")
+    private Staff evaluator;
 
     private String relation;
 

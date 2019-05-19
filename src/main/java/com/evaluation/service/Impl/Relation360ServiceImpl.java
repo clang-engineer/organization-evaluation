@@ -41,8 +41,14 @@ public class Relation360ServiceImpl implements Relation360Service {
         log.info("modify : " + relation360);
 
         relation360Repo.findById(relation360.getRno()).ifPresent(origin -> {
+            origin.setRno(relation360.getRno());
             origin.setEvaluated(relation360.getEvaluated());
             origin.setEvaluator(relation360.getEvaluator());
+            origin.setRelation(relation360.getRelation());
+            origin.setTno(relation360.getTno());
+            origin.setAnswers(relation360.getAnswers());
+            origin.setComments(relation360.getComments());
+            origin.setFinish(relation360.getFinish());
             relation360Repo.save(origin);
         });
     }
