@@ -4,12 +4,9 @@ import java.sql.Timestamp;
 
 import javax.persistence.Column;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
-import javax.persistence.JoinColumn;
-import javax.persistence.ManyToOne;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -27,7 +24,7 @@ public class Staff {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long sno;
-
+	
 	@Column(unique = true, nullable = false)
 	private String email;
 	private String id;
@@ -46,8 +43,7 @@ public class Staff {
 	@UpdateTimestamp
 	private Timestamp updateDate;
 
-	@ManyToOne(fetch = FetchType.LAZY)
-	@JoinColumn(name = "company_cno")
-	private Company company;
+	@Column(name = "company_cno")
+	private long cno;
 
 }

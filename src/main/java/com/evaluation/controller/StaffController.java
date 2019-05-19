@@ -2,6 +2,13 @@ package com.evaluation.controller;
 
 import java.util.Optional;
 
+import com.evaluation.domain.Staff;
+import com.evaluation.service.DistinctInfoService;
+import com.evaluation.service.StaffService;
+import com.evaluation.service.TurnService;
+import com.evaluation.vo.PageMaker;
+import com.evaluation.vo.PageVO;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -10,14 +17,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.evaluation.domain.Company;
-import com.evaluation.domain.Staff;
-import com.evaluation.service.DistinctInfoService;
-import com.evaluation.service.StaffService;
-import com.evaluation.service.TurnService;
-import com.evaluation.vo.PageMaker;
-import com.evaluation.vo.PageVO;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -48,8 +47,8 @@ public class StaffController {
 	public String register(Staff staff, long tno, RedirectAttributes rttr) {
 		log.info("controller : staff register post by " + tno);
 
-		Company company = turnService.get(tno).get().getCompany();
-		staff.setCompany(company);
+		long cno = turnService.get(tno).get().getCompany().getCno();
+		staff.setCno(cno);
 		staffService.register(staff);
 
 		rttr.addFlashAttribute("msg", "success");

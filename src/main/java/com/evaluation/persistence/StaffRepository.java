@@ -17,7 +17,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 		QStaff staff = QStaff.staff;
 
 		builder.and(staff.sno.gt(0));
-		builder.and(staff.company.cno.eq(cno));
+		builder.and(staff.cno.eq(cno));
 
 		if (type == null) {
 			return builder;

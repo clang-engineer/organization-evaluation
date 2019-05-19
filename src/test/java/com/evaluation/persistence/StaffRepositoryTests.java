@@ -3,6 +3,8 @@ package com.evaluation.persistence;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+import com.evaluation.domain.Staff;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,9 +14,6 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Company;
-import com.evaluation.domain.Staff;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -35,14 +34,11 @@ public class StaffRepositoryTests {
 	@Test
 	public void insertDummiesTests() {
 
-		Long[] arr = { 100L, 99L, 98L };
+		Long[] arr = { 10L, 9L, 8L };
 
 		Arrays.stream(arr).forEach(num -> {
 
-			Company company = new Company();
-			company.setCno(num);
-
-			IntStream.range(1, 201).forEach(i -> {
+			IntStream.range(1, 31).forEach(i -> {
 				Staff staff = new Staff();
 				staff.setEmail("testemail" + num + i + "@test.com");
 				staff.setId("test id" + i);
@@ -53,7 +49,7 @@ public class StaffRepositoryTests {
 				staff.setLevel("test id" + i);
 				staff.setDivision1("test id" + i);
 				staff.setDivision2("test id" + i);
-				staff.setCompany(company);
+				staff.setCno(num);
 
 				staffRepo.save(staff);
 			});

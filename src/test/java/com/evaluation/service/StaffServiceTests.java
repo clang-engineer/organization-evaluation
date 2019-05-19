@@ -4,14 +4,13 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Optional;
 
+import com.evaluation.domain.Staff;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Company;
-import com.evaluation.domain.Staff;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -44,10 +43,7 @@ public class StaffServiceTests {
 		staff.setDivision1("division1");
 		staff.setDivision2("division2");
 
-		Company company = new Company();
-		company.setCno(1L);
-
-		staff.setCompany(company);
+		staff.setCno(1L);
 		staffService.register(staff);
 	}
 
