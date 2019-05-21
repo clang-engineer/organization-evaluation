@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutDetail}">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Tables</li>
+        </ol>
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i> Relation360 List
+            </div>
+
+            <!-- search box -->
+            <div class="row" style="margin-top: 20px; margin-left: 7px;">
+                <div class="col-md-9">
+                    <button id="register" class="btn btn-success">Register</button>
+                </div>
+                <div class="col-md-3" style="float: right">
+                    <div class="input-group">
+                        <select class="form-control col-sm-4" id="searchType">
+                            <option>---
+                                </optinon>
+                            <option value="evaluated" th:selected="${pageVO.type}=='evaluated'">evaluated name</option>
+                            <option value="evaluator" th:selected="${pageVO.type}=='evaluator'">evaluator name</option>
+                        </select>
+                        <input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+                        <div class="input-group-append">
+                            <button class="btn btn-default border" id="searchBtn" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /search box -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table th:with="idxpageNum=${result.currentPageNum}, result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>Idx</th>
+                                <th>Name</th>
+                                <th>Department1</th>
+                                <th>Department2</th>
+                                <th>Level</th>
+                                <th>Division1</th>
+                                <th>Division1</th>
+                                <th>본인</th>
+                                <th>1차</th>
+                                <th>2차</th>
+                                <th>3차</th>
+                                <th>제외</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>Idx</th>
+                                <th>Name</th>
+                                <th>Department1</th>
+                                <th>Department2</th>
+                                <th>Level</th>
+                                <th>Division1</th>
+                                <th>Division1</th>
+                                <th>본인</th>
+                                <th>1차</th>
+                                <th>2차</th>
+                                <th>3차</th>
+                                <th>제외</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr th:each="staff,status:${result.content}">
+                                <td>[[${idxpageNum-1}*10+${status.count}]]</td>
+                                <td>[[${staff.name}]]</td>
+                                <td>[[${staff.department1}]]</td>
+                                <td>[[${staff.department2}]]</td>
+                                <td>[[${staff.level}]]</td>
+                                <td>[[${staff.division1}]]</td>
+                                <td>[[${staff.division2}]]</td>
+                                <td>
+                                    <span class="evaluatorList" th:each="relation:${relationTable}">
+                                        <a th:href="${relation.rno}" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='me'">
+                                            [[${relation.evaluator.name}]],
+                                        </a>
+                                    </span>
+                                    <button class="btn btn-default" id="searchBtn" type="button">
+                                        <i class="fas fa-user-plus fa-sm"></i>
+                                    </button>
+                                </td>
+                                <td>
+                                    <span class="evaluatorList" th:each="relation:${relationTable}">
+                                        <a th:href="${relation.rno}" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='1'">
+                                            [[${relation.evaluator.name}]],
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="evaluatorList" th:each="relation:${relationTable}">
+                                        <a th:href="${relation.rno}" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='2'">
+                                            [[${relation.evaluator.name}]],
+                                        </a>
+                                    </span>
+                                </td>
+                                <td>
+                                    <span class="evaluatorList" th:each="relation:${relationTable}">
+                                        <a th:href="${relation.rno}" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='3'">
+                                            [[${relation.evaluator.name}]],
+                                        </a>
+                                    </span>
+                                </td>
+                                <td><a th:href="${staff.sno}" class="detail">
+                                        <button class="btn btn-default" id="searchBtn" type="button">
+                                            <i class="fas fa-trash-alt fa-sm"></i>
+                                        </button>
+                                        <!-- <button type="button" class="btn btn-danger">Delete</button> -->
+                                    </a></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+                <!-- page nation -->
+                <nav aria-label="Page navigation example">
+                    <ul class="pagination justify-content-end">
+                        <li class="page-item" th:if="${result.prevPage}">
+                            <a class="page-link" th:href="${result.prevPage.pageNumber}+1" tabindex="-1">Prev</a>
+                        </li>
+                        <li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' " th:each="p:${result.pageList}">
+                            <a class="page-link" th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
+                        </li>
+                        <li class="page-item" th:if="${result.nextPage}">
+                            <a class="page-link" th:href="${result.nextPage.pageNumber}+1">Next</a>
+                        </li>
+                    </ul>
+                </nav>
+                <!--/ page nation -->
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+
+        </div>
+
+        <p class="small text-center text-muted my-5">
+            <em>More table examples coming soon...</em>
+        </p>
+    </div>
+    <!-- /.container-fluid -->
+    <form id="f1" th:action="@{list}" method="get">
+        <input type="hidden" name="tno" th:value="${tno}" />
+        <input type="hidden" name="page" th:value=${result.currentPageNum} />
+        <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
+        <input type="hidden" name="type" th:value=${pageVO.type} />
+        <input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+    </form>
+
+    <!-- Modal -->
+    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title">relation360</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label>relation360</label>
+                        <input class="form-control" name="modalContent1" value="New Content">
+                    </div>
+                    <!-- <div class="form-group">
+						<label>relation3602</label>
+						<input class="form-control" name="modalContent2" value="New Content">
+					</div> -->
+                </div>
+                <div class="modal-footer">
+                    <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
+                    <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- ./Modal -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            //modal 사용 변수 선언
+            var modal = $("#myModal");
+            var modalContent1 = modal.find("input[name='modalContent1']");
+            // var modalContent2 = modal.find("input[name='modalContent2']");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+
+            var msg = [[${ msg }]];
+
+            if (history.state == null) {
+                if (msg == 'register') {
+                    alert("등록 되었습니다.");
+                } else if (msg == 'modify') {
+                    alert("수정 되었습니다.");
+                } else if (msg == 'remove') {
+                    alert("삭제 되었습니다.");
+                }
+            }
+
+            history.replaceState({}, null, null);
+
+            var formObj = $("#f1");
+
+            //페이지에 붙은 링크 클릭 시
+            $(".pagination a").click(function (e) {
+                e.preventDefault();
+
+                formObj.find('[name="page"]').val($(this).attr('href'));
+                formObj.submit();
+            });
+
+            //검색 버튼 클릭 시
+            $("#searchBtn").click(function (e) {
+                var typeStr = $("#searchType").find(":selected").val();
+                var keywordStr = $("#searchKeyword").val();
+
+                formObj.find("[name='type']").val(typeStr);
+                formObj.find("[name='keyword']").val(keywordStr);
+                formObj.find("[name='page']").val("1");
+                formObj.submit();
+            });
+
+            //디테일 버튼 클릭 시
+            $(".detail").click(function (e) {
+                e.preventDefault();
+                detailNo = $(this).attr("href");
+                content = $(this).closest("tr").children().eq(1).text();
+                // lev2 = $(this).closest("tr").children().eq(2).text();
+                modalContent1.val(content);
+                // modalContent2.val(lev2);
+                modal.data("idx", detailNo);
+
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalModifyBtn.show();
+                modalRemoveBtn.show();
+
+                $("#myModal").modal("show");
+            });
+
+            //등록 버튼 클릭 시
+            $("#register").click(function (e) {
+                e.preventDefault();
+
+                modal.find("input").val("");
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+                $("#myModal").modal("show");
+            });
+
+            //modal내의 register 클릭 시
+            modalRegisterBtn.on("click", function () {
+                formObj.attr("action", "./register").attr("method", "post");
+                formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
+                // formObj.append("<input type='hidden' name='relation3602' value='" + modalContent2.val() + "'/>");
+                formObj.submit();
+            });
+
+            //모달 내의 수정 버튼 클릭 시..
+            modalModifyBtn.on("click", function (e) {
+                formObj.attr("action", "./modify").attr("method", "post");
+                formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
+                // formObj.append("<input type='hidden' name='relation3602' value='" + modalContent2.val() + "'/>");
+                formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
+                formObj.submit();
+            });
+
+
+            //모달 내의 삭제 버튼 클릭 시
+            modalRemoveBtn.on("click", function (e) {
+                if (delchk() == true) {
+                    formObj.attr("action", "delete");
+                } else {
+                    return;
+                };
+                formObj.attr("action", "./remove").attr("method", "post");
+                formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
+                formObj.submit();
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
+
+            function delchk() {
+                if (confirm("삭제하시겠습니까?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
+
+
+            //평가자 리스트에 붙은 링크 클릭 시
+            $(".evaluatorList a").click(function (e) {
+                e.preventDefault();
+                detailNo = $(this).attr("href");
+                contentTrim = $.trim($(this).text());
+                content = contentTrim.substring(0, contentTrim.length - 1);
+                
+                console.log(content);
+
+                modalContent1.val(content).attr("readonly",true);
+                modal.data("idx", detailNo);
+
+                modal.find("button[id!='modalCloseBtn']").hide();
+                // modalModifyBtn.show();
+                modalRemoveBtn.show();
+
+                $("#myModal").modal("show");
+                console.log($(this).attr('href'));
+            });
+
+        });
+    </script>
+</th:block>
