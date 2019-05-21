@@ -4,6 +4,7 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.Arrays;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.stream.IntStream;
@@ -46,11 +47,11 @@ public class Relation360RepositoryTests {
 
         Arrays.stream(arr).forEach(num -> {
 
-            IntStream.range(1, 21).forEach(i -> {
+            IntStream.range(1, 31).forEach(i -> {
                 Relation360 relation360 = new Relation360();
 
-                Staff evaluated = staffRepo.findById((long) i).get();
-                Staff evaluator = staffRepo.findById((long) i + 1).get();
+                Staff evaluated = staffRepo.findById((long) num + i).get();
+                Staff evaluator = staffRepo.findById((long) num + i + 5).get();
                 relation360.setEvaluated(evaluated);
                 relation360.setEvaluator(evaluator);
                 if (i % 4 == 0) {
@@ -101,7 +102,8 @@ public class Relation360RepositoryTests {
     @Test
     public void testList() {
         Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "rno");
-        Page<Relation360> result = relation360Repo.findAll(relation360Repo.makePredicate("evaluated", "102", 9L), pageable);
+        Page<Relation360> result = relation360Repo.findAll(relation360Repo.makePredicate("evaluated", "102", 9L),
+                pageable);
         log.info("PAGE : " + result.getPageable());
 
         log.info("----------------");
@@ -109,4 +111,18 @@ public class Relation360RepositoryTests {
         result.getContent().forEach(relation360 -> log.info("" + relation360.getEvaluated().getEmail()));
     }
 
+    @Test
+    public void getDistinctEvaluatedListTest() {
+        Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "rno");
+
+        Page<Staff> result = relation360Repo.getDistinctEvaluatedList(9L, pageable);
+        result.getContent().forEach(relation360 -> log.info("" + relation360.getName()));
+        // log.info("" + result.getContent());
+    }
+
+    @Test
+    public void getAllRelationTest() {
+        List<Relation360> result = relation360Repo.findByTno(9L);
+        result.forEach(list -> log.info("" + list.getRno()));
+    }
 }

@@ -1,8 +1,10 @@
 package com.evaluation.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.evaluation.domain.Relation360;
+import com.evaluation.domain.Staff;
 import com.evaluation.vo.PageVO;
 
 import org.springframework.data.domain.Page;
@@ -17,6 +19,9 @@ public interface Relation360Service {
 
     public void remove(Long rno);
 
-    public Page<Relation360> getList(long tno, PageVO vo);
+    public List<Relation360> getAllList(long tno);
 
+    public Page<Relation360> getListWithPaging(long tno, PageVO vo);
+
+    public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
 }

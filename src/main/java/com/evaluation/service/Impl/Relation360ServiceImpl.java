@@ -1,8 +1,10 @@
 package com.evaluation.service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.evaluation.domain.Relation360;
+import com.evaluation.domain.Staff;
 import com.evaluation.persistence.Relation360Repository;
 import com.evaluation.service.Relation360Service;
 import com.evaluation.vo.PageVO;
@@ -61,7 +63,13 @@ public class Relation360ServiceImpl implements Relation360Service {
     }
 
     @Override
-    public Page<Relation360> getList(long tno, PageVO vo) {
+    public List<Relation360> getAllList(long tno) {
+        List<Relation360> result = relation360Repo.findByTno(tno);
+        return result;
+    }
+
+    @Override
+    public Page<Relation360> getListWithPaging(long tno, PageVO vo) {
         log.info("getList : " + tno + vo);
 
         Pageable page = vo.makePageable(1, "rno");
@@ -71,4 +79,25 @@ public class Relation360ServiceImpl implements Relation360Service {
 
         return result;
     }
+
+    @Override
+    public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo) {
+        log.info("getDistinctEvaluatedList : " + tno + vo);
+
+        Pageable page = vo.makePageable(1, "rno");
+
+        Page<Staff> result = null;
+        String type = vo.getType();
+        String keyword = vo.getKeyword();
+
+        if (type == null || type.isEmpty()  ) {
+            result = relation360Repo.getDistinctEvaluatedList(tno, page);
+        } else if (type.equals("evaluated")) {
+            result = relation360Repo.getDistinctEvaluatedListByEvaluated(keyword, tno, page);
+        } else if (type.equals("evaluator")) {
+            result = relation360Repo.getDistinctEvaluatedListByEvaluator(keyword, tno, page);
+        }
+        return result;
+    }
+
 }

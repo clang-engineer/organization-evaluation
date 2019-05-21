@@ -2,13 +2,17 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.List;
+
 import com.evaluation.domain.Relation360;
 import com.evaluation.domain.Staff;
+import com.evaluation.vo.PageVO;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
+import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.Setter;
@@ -53,6 +57,23 @@ public class Relation360ServiceTests {
     @Test
     public void removeTest() {
         relation360Service.remove(61L);
+    }
+
+    @Test
+    public void getDistinctEvaluatedListTest() {
+        PageVO vo = new PageVO();
+        vo.setType("evaluator");
+        vo.setKeyword("id2");
+
+        Page<Staff> result = relation360Service.getDistinctEvaluatedList(9L, vo);
+
+        result.getContent().forEach(staff -> log.info("" + staff.getSno()));
+    }
+
+    @Test
+    public void findByTnoTests() {
+        List<Relation360> result = relation360Service.getAllList(10L);
+        result.forEach(origin -> log.info("" + origin.getRno()));
     }
 
 }
