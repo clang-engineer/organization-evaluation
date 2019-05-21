@@ -1,6 +1,7 @@
 package com.evaluation.persistence;
 
 import java.util.Arrays;
+import java.util.List;
 import java.util.stream.IntStream;
 
 import com.evaluation.domain.Staff;
@@ -78,4 +79,22 @@ public class StaffRepositoryTests {
 
 	}
 
+	@Test
+	public void testGetAllList() {
+		List<Staff> result = staffRepo.getAllStaffListByCno(10);
+		log.info("===>>" + result);
+		result.forEach(staff -> {
+			log.info("===>" + staff.getName());
+		});
+	}
+	
+	@Test
+	public void testGetAllStaffListExcludeEvaluated() {
+		List<Staff> result = staffRepo.getAllStaffListExcludeEvaluated(10,9);
+		log.info("===>>" + result);
+		result.forEach(staff -> {
+			log.info("===>" + staff.getSno());
+		});
+		
+	}
 }

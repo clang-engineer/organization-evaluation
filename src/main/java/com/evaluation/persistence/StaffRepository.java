@@ -1,7 +1,11 @@
 package com.evaluation.persistence;
 
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
+
+import java.util.List;
 
 import com.evaluation.domain.QStaff;
 import com.evaluation.domain.Staff;
@@ -9,6 +13,13 @@ import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
 public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPredicateExecutor<Staff> {
+
+	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno ORDER BY s.name ASC")
+	public List<Staff> getAllStaffListByCno(@Param("cno") long cno);
+
+	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno) ORDER BY s.sno ASC ")
+	public List<Staff> getAllStaffListExcludeEvaluated(@Param("cno") long cno, @Param("tno") long tno);
+
 
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 

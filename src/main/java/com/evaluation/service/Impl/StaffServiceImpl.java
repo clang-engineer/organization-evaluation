@@ -1,16 +1,17 @@
 package com.evaluation.service.Impl;
 
+import java.util.List;
 import java.util.Optional;
-
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
 
 import com.evaluation.domain.Staff;
 import com.evaluation.persistence.StaffRepository;
 import com.evaluation.service.StaffService;
 import com.evaluation.vo.PageVO;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -70,4 +71,19 @@ public class StaffServiceImpl implements StaffService {
 		return result;
 	}
 
+	@Override
+	public List<Staff> getAllList(long cno) {
+		log.info("get All list by " + cno);
+
+		List<Staff> result = staffRepo.getAllStaffListByCno(cno);
+		return result;
+	}
+
+	@Override
+	public List<Staff> getAllListExcludeEvalated(long cno, long tno) {
+		log.info("get All list by " + cno);
+
+		List<Staff> result = staffRepo.getAllStaffListExcludeEvaluated(cno, tno);
+		return result;
+	}
 }
