@@ -19,7 +19,9 @@ public interface StaffService {
 
 	public Page<Staff> getList(long cno, PageVO vo);
 
-	public List<Staff> getAllList(long cno);
+	public List<Staff> getListNoPaging(long cno);
 
-	public List<Staff> getAllListExcludeEvalated(long cno, long tno);
+	public List<Staff> getEvaluatedList(long cno, long tno);
+
+	public List<Staff> getEvaluatorList(long cno, long tno, long sno);
 }

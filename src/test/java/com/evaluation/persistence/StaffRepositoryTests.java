@@ -87,14 +87,22 @@ public class StaffRepositoryTests {
 			log.info("===>" + staff.getName());
 		});
 	}
-	
+
 	@Test
 	public void testGetAllStaffListExcludeEvaluated() {
-		List<Staff> result = staffRepo.getAllStaffListExcludeEvaluated(10,9);
-		log.info("===>>" + result);
+		List<Staff> result = staffRepo.getStaffForEvaluated(10, 9);
 		result.forEach(staff -> {
 			log.info("===>" + staff.getSno());
 		});
-		
+
+	}
+
+	@Test
+	public void testGetAllStaffListExcludeEvaluator() {
+		List<Staff> result = staffRepo.getStaffForEvaluator(8, 8, 70);
+		result.forEach(staff -> {
+			log.info("===>" + staff.getSno());
+		});
+
 	}
 }

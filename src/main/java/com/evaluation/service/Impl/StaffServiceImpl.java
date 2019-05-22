@@ -72,7 +72,7 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public List<Staff> getAllList(long cno) {
+	public List<Staff> getListNoPaging(long cno) {
 		log.info("get All list by " + cno);
 
 		List<Staff> result = staffRepo.getAllStaffListByCno(cno);
@@ -80,10 +80,18 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public List<Staff> getAllListExcludeEvalated(long cno, long tno) {
-		log.info("get All list by " + cno);
+	public List<Staff> getEvaluatedList(long cno, long tno) {
+		log.info("get EvaluatedList list by " + cno);
 
-		List<Staff> result = staffRepo.getAllStaffListExcludeEvaluated(cno, tno);
+		List<Staff> result = staffRepo.getStaffForEvaluated(cno, tno);
+		return result;
+	}
+
+	@Override
+	public List<Staff> getEvaluatorList(long cno, long tno, long sno) {
+		log.info("get EvaluatedList list by " + cno);
+
+		List<Staff> result = staffRepo.getStaffForEvaluator(cno, tno, sno);
 		return result;
 	}
 }

@@ -18,8 +18,10 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	public List<Staff> getAllStaffListByCno(@Param("cno") long cno);
 
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno) ORDER BY s.sno ASC ")
-	public List<Staff> getAllStaffListExcludeEvaluated(@Param("cno") long cno, @Param("tno") long tno);
-
+	public List<Staff> getStaffForEvaluated(@Param("cno") long cno, @Param("tno") long tno);
+	
+	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
+	public List<Staff> getStaffForEvaluator(@Param("cno") long cno, @Param("tno") long tno, @Param("sno") long sno);
 
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 
