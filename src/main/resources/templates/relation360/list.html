@@ -122,8 +122,8 @@
                                         <i class="fas fa-user-plus fa-sm"></i>
                                     </button>
                                 </td>
-                                <td><a th:href="${staff.sno}" class="detail">
-                                        <button class="btn btn-default" id="searchBtn" type="button">
+                                <td><a th:href="${staff.sno}" class="evaluatedInfoDelete">
+                                        <button class="btn btn-default" type="button">
                                             <i class="fas fa-trash-alt fa-sm"></i>
                                         </button>
                                     </a></td>
@@ -266,20 +266,24 @@
                 formObj.submit();
             });
 
-            //디테일 버튼 클릭 시
-            $(".detail").click(function (e) {
+            //행 삭제 버튼 클릭 시
+            $(".evaluatedInfoDelete").click(function (e) {
                 e.preventDefault();
-                detailNo = $(this).attr("href");
+                evaluatedNo = $(this).attr("href");
                 content = $(this).closest("tr").children().eq(1).text();
                 // lev2 = $(this).closest("tr").children().eq(2).text();
-                modalContent1.val(content);
+                modalContent1.val("피평가자 '" + content + "'의 평가 정보를 모두 삭제합니다.");
                 // modalContent2.val(lev2);
-                modal.data("idx", detailNo);
+                modal.data("idx", evaluatedNo);
+                modal.data("delete", "row");
 
                 modal.find("button[id!='modalCloseBtn']").hide();
-                modalModifyBtn.show();
+                modal.find(":text").show();
+                modal.find("table").hide();
                 modalRemoveBtn.show();
 
+                $(".modal-dialog").removeClass("modal-xl");
+                $(".modal-content, .modal-dialog, .modal-body").removeAttr("style");
                 $("#myModal").modal("show");
             });
 
@@ -303,7 +307,6 @@
                 $("#myModal").modal("show");
             });
 
-
             //평가자 등록 버튼 클릭 시
             $(".staffForEvaluator").click(function (e) {
                 e.preventDefault();
@@ -325,7 +328,6 @@
                 modalRegisterBtn.show();
                 $("#myModal").modal("show");
             });
-
 
             //modal내의 register 클릭 시
             modalRegisterBtn.on("click", function () {
@@ -366,8 +368,16 @@
                 } else {
                     return;
                 };
-                formObj.attr("action", "./remove").attr("method", "post");
-                formObj.append("<input type='hidden' name='rno' value='" + modal.data("idx") + "'/>");
+
+                if (modal.data("delete") == "column") {
+                    console.log("column");
+                    formObj.attr("action", "./remove").attr("method", "post");
+                    formObj.append("<input type='hidden' name='rno' value='" + modal.data("idx") + "'/>");
+                } else if (modal.data("delete") == "row") {
+                    console.log("row");
+                    formObj.attr("action", "./removeRow").attr("method", "post");
+                    formObj.append("<input type='hidden' name='sno' value='" + modal.data("idx") + "'/>");
+                }
                 formObj.submit();
             });
 
@@ -383,7 +393,6 @@
                     return false;
                 }
             }
-
 
             //평가자 리스트에 붙은 링크 클릭 시
             $(".evaluatorList a").click(function (e) {
@@ -401,17 +410,17 @@
                 modal.find("table").hide();
 
                 if (relation == "me") {
-                    modalContent1.val("본인 평가를 삭제 합니다.");
+                    modalContent1.val("본인 평가 정보를 삭제 합니다.");
                 } else {
-                    modalContent1.val(content + "의 평가를 삭제 합니다.");
+                    modalContent1.val("평가자 '" + content + "'의 정보를 삭제 합니다.");
                 }
                 modal.data("idx", relationNo);
+                modal.data("delete", "column");
+
                 modal.find("button[id!='modalCloseBtn']").hide();
-                // modalModifyBtn.show();
                 modalRemoveBtn.show();
 
                 $("#myModal").modal("show");
-                // console.log($(this).attr('href'));
             });
 
             function showEvaluatedList(tno) {

@@ -37,12 +37,34 @@ public class Relation360Controller {
     TurnService turnService;
 
     @PostMapping("/register")
-    public String register(Relation360 relation360, RedirectAttributes rttr) {
+    public String register(Relation360 relation360, PageVO vo, RedirectAttributes rttr) {
         log.info("register " + relation360.getEvaluated().getSno());
 
-        log.info("" + relation360.getTno());
         relation360Service.register(relation360);
-        rttr.addAttribute("tno",  relation360.getTno());
+
+        rttr.addFlashAttribute("msg", "register");
+        rttr.addAttribute("tno", relation360.getTno());
+        rttr.addAttribute("page", vo.getPage());
+        rttr.addAttribute("size", vo.getSize());
+        rttr.addAttribute("type", vo.getType());
+        rttr.addAttribute("keyword", vo.getKeyword());
+
+        return "redirect:/relation360/list";
+    }
+
+    @PostMapping("/remove")
+    public String remove(long rno, long tno, PageVO vo, RedirectAttributes rttr) {
+        log.info("remove " + tno + rno);
+
+        relation360Service.remove(rno);
+
+        rttr.addFlashAttribute("msg", "remove");
+        rttr.addAttribute("tno", tno);
+        rttr.addAttribute("page", vo.getPage());
+        rttr.addAttribute("size", vo.getSize());
+        rttr.addAttribute("type", vo.getType());
+        rttr.addAttribute("keyword", vo.getKeyword());
+
         return "redirect:/relation360/list";
     }
 
@@ -52,16 +74,27 @@ public class Relation360Controller {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
-        log.info("cno---?" + cno);
-        model.addAttribute("cno", cno);
-
         List<Relation360> relationTable = relation360Service.getAllList(tno);
         model.addAttribute("relationTable", relationTable);
 
         Page<Staff> result = relation360Service.getDistinctEvaluatedList(tno, vo);
-        log.info("===>" + result.getContent());
         model.addAttribute("result", new PageMaker<>(result));
+    }
+
+    @PostMapping("/removeRow")
+    public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
+        log.info("deleteEvaluatedInfo by " + tno);
+
+        relation360Service.deleteEvaluatedInfo(tno, sno);
+
+        rttr.addFlashAttribute("msg", "remove");
+        rttr.addAttribute("tno", tno);
+        rttr.addAttribute("page", vo.getPage());
+        rttr.addAttribute("size", vo.getSize());
+        rttr.addAttribute("type", vo.getType());
+        rttr.addAttribute("keyword", vo.getKeyword());
+
+        return "redirect:/relation360/list";
     }
 
 }

@@ -90,7 +90,7 @@ public class Relation360ServiceImpl implements Relation360Service {
         String type = vo.getType();
         String keyword = vo.getKeyword();
 
-        if (type == null || type.isEmpty()  ) {
+        if (type == null || type.isEmpty()) {
             result = relation360Repo.getDistinctEvaluatedList(tno, page);
         } else if (type.equals("evaluated")) {
             result = relation360Repo.getDistinctEvaluatedListByEvaluated(keyword, tno, page);
@@ -100,4 +100,10 @@ public class Relation360ServiceImpl implements Relation360Service {
         return result;
     }
 
+    @Override
+    public void deleteEvaluatedInfo(long tno, long sno) {
+        log.info("deleteEvaluatedInfo " + tno + sno);
+
+        relation360Repo.deleteEvaluatedInfo(tno, sno);
+    }
 }

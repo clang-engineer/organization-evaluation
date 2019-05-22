@@ -24,4 +24,6 @@ public interface Relation360Service {
     public Page<Relation360> getListWithPaging(long tno, PageVO vo);
 
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
+
+    public void deleteEvaluatedInfo(long tno, long sno);
 }

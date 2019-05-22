@@ -125,4 +125,10 @@ public class Relation360RepositoryTests {
         List<Relation360> result = relation360Repo.findByTno(9L);
         result.forEach(list -> log.info("" + list.getRno()));
     }
+
+    
+    @Test
+    public void deleteEvaluatedInfo() {
+        relation360Repo.deleteEvaluatedInfo(8L,28L);
+    }
 }
