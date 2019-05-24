@@ -33,17 +33,16 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
 
         http.logout().logoutUrl("/admin/logout").invalidateHttpSession(true);
 
-        http.userDetailsService(customAdminService);
     }
 
-    // @Bean
-    // public PasswordEncoder passwordEncoder() {
-    //     return new BCryptPasswordEncoder();
-    // }
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-    // public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
-    //     log.info("build auth global,,");
-    //     auth.userDetailsService(customAdminService).passwordEncoder(passwordEncoder());
-    // }
+    public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
+        log.info("build auth global,,");
+        auth.userDetailsService(customAdminService).passwordEncoder(passwordEncoder());
+    }
 
 }
