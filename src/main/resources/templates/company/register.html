@@ -20,7 +20,7 @@
 
 			</div>
 			<div class="card-body">
-				<form th:action="@{register}" method="post" onsubmit="return tocheckpw1()">
+				<form th:action="@{register}" method="post">
 					<div class="form-group">
 						<label>Company Name</label>
 						<input type="text" class="form-control" name="name" placeholder="Enter Company Name" required="required">
@@ -41,8 +41,7 @@
 						<input type="url" class="form-control" name="homepage" placeholder="Enter home page address">
 					</div>
 					<button type="submit" class="btn btn-primary">Submit</button>
-					<button type="reset" class="btn btn-secondary">Reset</button>
-
+					<button id="list" class="btn btn-info">List</button>
 				</form>
 
 
@@ -55,15 +54,28 @@
 </div>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		function tocheckpw1() {
-			var pw = document.getElementsById("pwd").value;
-			var pwck = document.getElementById("pwd2").value;
+		var formObj = $("form");
 
-			if (pw != pwck) {
-				alert('비밀번호가 틀렸습니다. 다시 입력해 주세요');
-				return false;
-			}
-		}
+		// function tocheckpw1() {
+		// 	var pw = document.getElementsById("pwd").value;
+		// 	var pwck = document.getElementById("pwd2").value;
+
+		// 	if (pw != pwck) {
+		// 		alert('비밀번호가 틀렸습니다. 다시 입력해 주세요');
+		// 		return false;
+		// 	}
+		// }
+		
+		$(document).ready(function () {
+			$("#list").click(function (e) {
+				e.preventDefault();
+				formObj.attr("action", '/company/list').attr("method","get");
+				formObj.empty();
+				console.log($(this));
+				formObj.submit();
+			});
+
+		});
 	</script>
 </th:block>
 </script>

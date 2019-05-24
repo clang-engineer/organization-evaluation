@@ -16,7 +16,10 @@
 		<div class="card shadow mb-4">
 			<div class="card-header py-3">
 				<h4 class="m-0 font-weight-bold text-primary" style="display:inline">Company Tables</h4>
+
+
 				<!-- serarch box -->
+
 				<div style="float:right">
 					<div class="input-group">
 						<select class="form-control col-sm-4" id="searchType">
@@ -34,6 +37,9 @@
 					</div>
 				</div>
 				<!-- /serarch box -->
+				<div class="col-md-1" style="float: right">
+					<button id="register" class="btn btn-primary border btn-block">Register</button>
+				</div>
 			</div>
 
 
@@ -51,19 +57,19 @@
 								<th>Password</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
-								<th>Company Info</th>
+								<th>Turn Info</th>
 
 							</tr>
 						</thead>
 						<tbody>
 							<tr th:each="company:${result.content}">
 								<td>[[${company.cno}]]</td>
-								<td><a class="surveyList" th:href="${company.cno}">[[${company.name}]]</a></td>
+								<td><a class="companyDetail" th:href="${company.cno}">[[${company.name}]]</a></td>
 								<td>[[${company.id}]]</td>
 								<td>[[${company.password}]]</td>
 								<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 								<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-								<td><a th:href="${company.cno}" class="companyDetail">
+								<td><a th:href="${company.cno}" class="surveyList">
 										<button type="button" class="btn btn-info">Detail</button>
 									</a></td>
 							</tr>
@@ -129,77 +135,83 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	/* 	$(window).load(function() {
-	 var msg=[[${msg}]];
-	 if(msg=='success'){
-	 alert("정상적으로 처리되었습니다.");
-	 var stateObj={msg:""};
-	 }
-	 }); */
-	$(document).ready(function() {
-	    var formObj = $("#f1");
-		
-	    //페이지에 붙은 링크 클릭 시
-	    $(".pagination a").click(function(e) {
-		e.preventDefault();
+		/* 	$(window).load(function() {
+		 var msg=[[${msg}]];
+		 if(msg=='success'){
+		 alert("정상적으로 처리되었습니다.");
+		 var stateObj={msg:""};
+		 }
+		 }); */
+		$(document).ready(function () {
+			var formObj = $("#f1");
 
-		formObj.find('[name="page"]').val($(this).attr('href'));
-		formObj.submit();
-	    });
-		
-	    //검색 버튼 클릭 시
-	    $("#searchBtn").click(function(e) {
-		var typeStr = $("#searchType").find(":selected").val();
-		var keywordStr = $("#searchKeyword").val();
+			//페이지에 붙은 링크 클릭 시
+			$(".pagination a").click(function (e) {
+				e.preventDefault();
 
-		formObj.find("[name='type']").val(typeStr);
-		formObj.find("[name='keyword']").val(keywordStr);
-		formObj.find("[name='page']").val("1");
-		formObj.submit();
-	    });
-		
-	    //디테일 버튼 클릭 시
-	    $(".companyDetail").click(function(e) {
-		e.preventDefault();
+				formObj.find('[name="page"]').val($(this).attr('href'));
+				formObj.submit();
+			});
 
-		var companyCno = $(this).attr("href");
-		formObj.attr("action",[[@{'/company/view'}]]);
-		formObj.append("<input type='hidden' name='cno' value='"+companyCno+"'/>");
-		formObj.submit();
-	    });
-	    
-	    //제목 클릭 시
-	    $(".surveyList").click(function(e) {
-		e.preventDefault();
+			//검색 버튼 클릭 시
+			$("#searchBtn").click(function (e) {
+				var typeStr = $("#searchType").find(":selected").val();
+				var keywordStr = $("#searchKeyword").val();
 
-		var companyCno = $(this).attr("href");
-		formObj.attr("action",[[@{'surveyList'}]]);
-		formObj.append("<input type='hidden' name='cno' value='"+companyCno+"'/>");
-		
-		formObj.submit();
-	    });
-	});
+				formObj.find("[name='type']").val(typeStr);
+				formObj.find("[name='keyword']").val(keywordStr);
+				formObj.find("[name='page']").val("1");
+				formObj.submit();
+			});
 
-	/* 			$(document).ready(function(){
-	 var result=[[${result}]];
+			//디테일 버튼 클릭 시
+			$(".companyDetail").click(function (e) {
+				e.preventDefault();
 
-	 checkModal(result);
-	
-	 history.replaceState({},null,null);
-	
-	 function checkModal(result){
-	
-	 if(result===''||history.state){
-	 return;
-	 }
-	 if(parseInt(result)>0){
-	 $(".modal-body").html( result + "번째 정보가 정상적으로 등록 되었습니다.");
-	 $("#myModal").modal("show");
-	 }				
-	 }
-	
-	 }); */
-    </script>
+				var companyCno = $(this).attr("href");
+				formObj.attr("action", '/company/view');
+				formObj.append("<input type='hidden' name='cno' value='" + companyCno + "'/>");
+				formObj.submit();
+			});
+
+			//제목 클릭 시
+			$(".surveyList").click(function (e) {
+				e.preventDefault();
+
+				var companyCno = $(this).attr("href");
+				formObj.attr("action", 'surveyList');
+				formObj.append("<input type='hidden' name='cno' value='" + companyCno + "'/>");
+
+				formObj.submit();
+			});
+
+			$("#register").click(function (e) {
+				e.preventDefault();
+				formObj.attr("action", '/company/register');
+				formObj.submit();
+			})
+		});
+
+		/* 			$(document).ready(function(){
+		 var result=[[${result}]];
+
+		 checkModal(result);
+
+		 history.replaceState({},null,null);
+
+		 function checkModal(result){
+
+		 if(result===''||history.state){
+		 return;
+		 }
+		 if(parseInt(result)>0){
+		 $(".modal-body").html( result + "번째 정보가 정상적으로 등록 되었습니다.");
+		 $("#myModal").modal("show");
+		 }
+		 }
+
+		 }); */
+	</script>
 </th:block>
 </body>
 
