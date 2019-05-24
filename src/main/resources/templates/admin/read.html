@@ -1,0 +1,101 @@
+[[${result.uid}]]
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <h1 class="mt-4">Admin Register</h1>
+        <!-- Page Heading -->
+        <p class="mb-4">
+            DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+            <a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+            .
+        </p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary">Admin Register</h4>
+
+            </div>
+            <div class="card-body">
+                <form th:action="@{modify}" method="post">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="uname" placeholder="Enter Your Name" required="required" th:value="${result.uname}">
+                    </div>
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input type="text" class="form-control" name="uid" placeholder="Enter Admin ID" required="required" th:value="${result.uid}" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="text" class="form-control" name="upw" placeholder="Enter Admin Password" required="required" th:value="${result.upw}">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="upw2" placeholder="Confirm Admin Password" required="required" th:value="${result.upw}">
+                    </div>
+                    <label>Auth</label>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="roles" value="BASIC" th:checked="${#strings.contains(result.roles,'BASIC')}"> BASIC
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="roles" value="MANAGER" th:checked="${#strings.contains(result.roles,'MANAGER')}"> MANAGER
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="roles" value="ADMIN" th:checked="${#strings.contains(result.roles,'ADMIN')}"> ADMIN
+                            </label>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label>Enabled</label>
+                        <select class="form-control" name="enabled">
+                            <option>--</option>
+                            <option value="Y" th:selected="${result.enabled}==Y">Enabled</option>
+                            <option value="N" th:selected="${result.enabled}==N">Disabled</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button id="remove" type="button" class="btn btn-danger">Remove</button>
+                    <button id="list" type="button" class="btn btn-secondary">List</button>
+
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                </form>
+
+
+            </div>
+        </div>
+
+
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var formObj = $("form");
+
+            $("#list").click(function (e) {
+                e.preventDefault();
+                formObj.empty();
+                formObj.attr("action", "/admin/list").attr("method", "get");
+                formObj.submit();
+            });
+
+            $("#remove").click(function (e) {
+                e.preventDefault();
+                formObj.attr("action", "/admin/remove").attr("method","post");
+                formObj.submit();
+            });
+        });
+    </script>
+</th:block>
+</script>
+</body>
+
+</html>

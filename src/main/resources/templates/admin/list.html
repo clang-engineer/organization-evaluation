@@ -1,0 +1,114 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+	<!-- .container-fluid -->
+	<div class="container-fluid">
+
+		<h1 class="mt-4">Admin List</h1>
+		<!-- Page Heading -->
+		<p class="mb-4">
+			DataTables is a third party plugin that is used to generate the demo table below. For more information about
+			DataTables, please visit the
+			<a target="_blank" href="https://datatables.net">official DataTables documeantation</a>
+		</p>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Admin Tables</h4>
+
+				<!-- search box -->
+				<div class="col-md-1" style="float: right">
+					<button id="register" class="btn btn-primary btn-block">Register</button>
+				</div>
+
+				<!-- /search box -->
+			</div>
+
+			<div class="card-body">
+
+				<div class="table-responsive">
+
+					<table class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+
+						<thead>
+							<tr>
+								<th>#No</th>
+								<th>uid</th>
+								<th>uname</th>
+								<th>Write Date</th>
+								<th>Update Date</th>
+								<th>Enabled</th>
+
+							</tr>
+						</thead>
+						<tbody>
+							<tr th:each="admin,status:${result}">
+								<td>[[${status.count}]]</td>
+								<td>[[${admin.uid}]]</td>
+								<td><a th:href="${admin.uid}" class="adminSubject">[[${admin.uname}]]</a></td>
+								<td>[[${#dates.format(admin.writeDate,'yyyy-MM-dd  hh:mm:ss')}]]</td>
+								<td>[[${#dates.format(admin.updateDate,'yyyy-MM-dd  hh:mm:ss')}]]</td>
+								<td>[[${admin.enabled}]]</td>
+						</tr>
+					</tbody>
+				</table>
+
+
+			</div>
+
+
+
+		</div>
+		
+		<form id="f1" th:action="@{admin/list}" method="get">
+		</form>
+	</div>
+</div>
+
+
+
+
+
+<!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			var formObj = $("#f1");
+
+			//제목 클릭 시
+			$(".adminSubject").click(function (e) {
+				e.preventDefault();
+
+				var adminUid = $(this).attr("href");
+				formObj.attr("action", [['/admin/read']]);
+				formObj.append("<input type='hidden' name='uid' value='" + adminUid + "'/>");
+				formObj.submit();
+			});
+
+			$("#register").click(function (e) {
+				e.preventDefault();
+
+				formObj.attr("action", '/admin/register');
+				formObj.empty();
+				formObj.submit();
+			});
+
+			//디테일 버튼 클릭 시
+			$(".roleList").click(function (e) {
+				e.preventDefault();
+				var adminUid = $(this).attr("href");
+				formObj.empty();
+				formObj.append("<input type='hidden' name='uid' value='" + adminUid + "'/>");
+				formObj.attr("action", [['/role/contents']]).attr("method", "get");
+				formObj.submit();
+			});
+		});
+	</script>
+</th:block>
+</html>

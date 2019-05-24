@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+
+        <h1 class="mt-4">Admin Register</h1>
+        <!-- Page Heading -->
+        <p class="mb-4">
+            DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+            <a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+            .
+        </p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary">Admin Register</h4>
+
+            </div>
+            <div class="card-body">
+                <form th:action="@{register}" method="post">
+                    <div class="form-group">
+                        <label>Name</label>
+                        <input type="text" class="form-control" name="uname" placeholder="Enter Your Name" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label>ID</label>
+                        <input type="text" class="form-control" name="uid" placeholder="Enter Admin ID" required="required">
+                    </div>
+                    <div class="form-group">
+                        <label>Password</label>
+                        <input type="text" class="form-control" name="upw" placeholder="Enter Admin Password" required="required">
+                    </div>
+                    <div class="form-group">
+                        <input type="text" class="form-control" name="upw2" placeholder="Confirm Admin Password" required="required">
+                    </div>
+                    <!-- <label>Auth</label>
+                    <div class="form-group">
+                        <div class="checkbox">
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="roles" value="BASIC"> BASIC
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="roles" value="MANAGER"> MANAGER
+                            </label>
+                            <label class="checkbox-inline">
+                                <input type="checkbox" name="roles" value="ADMIN"> ADMIN
+                            </label>
+                        </div>
+                    </div> -->
+                    <div class="form-group">
+                        <label>Enabled</label>
+                        <select class="form-control" name="enabled">
+                            <option>--</option>
+                            <option value="Y">Enabled</option>
+                            <option value="N">Disabled</option>
+                        </select>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Submit</button>
+                    <button type="reset" class="btn btn-secondary">Reset</button>
+
+                </form>
+
+
+            </div>
+        </div>
+
+
+    </div>
+    <!-- /.container-fluid -->
+</div>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    </script>
+</th:block>
+</script>
+</body>
+
+</html>
