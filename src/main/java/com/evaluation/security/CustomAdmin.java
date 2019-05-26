@@ -12,11 +12,9 @@ import org.springframework.security.core.userdetails.User;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
-@Slf4j
 public class CustomAdmin extends User {
 
     private static final String ROLE_PREFIX = "ROLE_";

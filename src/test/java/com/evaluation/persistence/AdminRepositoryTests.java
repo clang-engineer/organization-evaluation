@@ -5,6 +5,7 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+
 import com.evaluation.domain.Admin;
 
 import org.junit.Test;
@@ -13,11 +14,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Slf4j
+@Transactional
 public class AdminRepositoryTests {
 
     @Setter(onMethod_ = { @Autowired })
@@ -50,6 +55,18 @@ public class AdminRepositoryTests {
             admin.setRoles(role);
 
             adminRepo.save(admin);
+        }
+    }
+
+    @Test
+    public void testGetRoles() {
+
+        Admin admin = adminRepo.findById("test").get();
+        log.info("===============================" + admin);
+        List<String> roles = admin.getRoles();
+        log.info("===>" + roles.getClass());
+        for (int i = 0; i < roles.size(); i++) {
+            log.info("" + roles.get(i));
         }
     }
 }

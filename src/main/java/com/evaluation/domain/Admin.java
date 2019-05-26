@@ -31,7 +31,7 @@ public class Admin {
     private String uname;
     private String enabled;
 
-    @ElementCollection(fetch = FetchType.EAGER)
+    @ElementCollection
     @CollectionTable(name = "tbl_admin_roles", joinColumns = @JoinColumn(name = "admin_uid"))
     @OrderColumn(name = "role_idx")
     @Column(name = "roleName")
