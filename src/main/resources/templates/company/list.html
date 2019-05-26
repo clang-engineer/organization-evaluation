@@ -68,7 +68,7 @@
 								<td>[[${company.password}]]</td>
 								<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 								<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-								<td><a th:href="${company.cno}" class="surveyList">
+								<td><a th:href="${company.cno}" class="turnList">
 									<button type="button" class="btn btn-default">
 											<i class="fas fa-sitemap"></i>
 										</button>
@@ -186,11 +186,11 @@
 			});
 
 			//제목 클릭 시
-			$(".surveyList").click(function (e) {
+			$(".turnList").click(function (e) {
 				e.preventDefault();
 
 				var companyCno = $(this).attr("href");
-				formObj.attr("action", 'surveyList');
+				formObj.attr("action", 'turnList');
 				formObj.append("<input type='hidden' name='cno' value='" + companyCno + "'/>");
 
 				formObj.submit();

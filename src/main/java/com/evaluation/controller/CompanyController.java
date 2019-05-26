@@ -95,8 +95,8 @@ public class CompanyController {
 
 	}
 
-	@GetMapping("/surveyList")
-	public void surveyList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo) {
+	@GetMapping("/turnList")
+	public void turnList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo) {
 		log.info("controller : company surveyList");
 	}
 }

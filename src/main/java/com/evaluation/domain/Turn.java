@@ -1,7 +1,11 @@
 package com.evaluation.domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 
+import javax.persistence.CollectionTable;
+import javax.persistence.Column;
+import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.FetchType;
 import javax.persistence.GeneratedValue;
@@ -9,6 +13,7 @@ import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.ManyToOne;
+import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -35,7 +40,11 @@ public class Turn {
 
 	private String title;
 
-	private String type;
+	@ElementCollection
+	@CollectionTable(name = "tbl_turn_types", joinColumns = @JoinColumn(name = "turn_tno"))
+	@OrderColumn(name = "type_idx")
+	@Column(name = "type_name")
+	private List<String> types;
 
 	private String writeId;
 	private String updateId;
@@ -49,8 +58,5 @@ public class Turn {
 	@ManyToOne(fetch = FetchType.LAZY)
 	@JoinColumn(name = "company_cno")
 	private Company company;
-
-//	@OneToOne(mappedBy = "turn", cascade = CascadeType.ALL)
-//	private Info360 info360;
 
 }

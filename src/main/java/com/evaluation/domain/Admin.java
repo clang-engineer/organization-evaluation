@@ -33,7 +33,7 @@ public class Admin {
     @ElementCollection
     @CollectionTable(name = "tbl_admin_roles", joinColumns = @JoinColumn(name = "admin_uid"))
     @OrderColumn(name = "role_idx")
-    @Column(name = "roleName")
+    @Column(name = "role_name")
     private List<String> roles;
 
     private String writeId;

@@ -2,6 +2,9 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -38,7 +41,10 @@ public class TurnServiceTests {
 
 		Turn turn = new Turn();
 		turn.setTitle("test title 1");
-		turn.setType("test type 1");
+		List<String> types = new ArrayList();
+		types.add("360");
+		types.add("mbo");
+		turn.setTypes(types);
 		turn.setCompany(company);
 		service.register(turn);
 
@@ -57,7 +63,10 @@ public class TurnServiceTests {
 
 		turn.setTno(2L);
 		turn.setTitle("test title modify 1");
-		turn.setType("test modify 1");
+		List<String> types = new ArrayList<>();
+		types.add("360");
+		types.add("mbo");
+		turn.setTypes(types);
 
 		service.register(turn);
 

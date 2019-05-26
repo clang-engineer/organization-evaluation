@@ -55,7 +55,7 @@ public class TurnController {
 
 		turnService.get(turn.getTno()).ifPresent(origin -> {
 			origin.setTitle(turn.getTitle());
-			origin.setType(turn.getType());
+			origin.setTypes(turn.getTypes());
 			turnService.modify(origin);
 		});
 
