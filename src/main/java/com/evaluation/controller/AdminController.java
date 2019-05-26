@@ -34,14 +34,13 @@ public class AdminController {
     @PostMapping("/register")
     public String register(Admin admin, RedirectAttributes rttr) {
         log.info("register post" + admin);
-        log.info("register post" + admin.getEnabled());
-        log.info("register post" + admin.getUpdateDate());
 
         String encryptPw = passwordEncoder.encode(admin.getUpw());
         admin.setUpw(encryptPw);
 
         adminService.register(admin);
 
+        rttr.addFlashAttribute("msg", "register");
         return "redirect:/admin/list";
     }
 
@@ -53,19 +52,25 @@ public class AdminController {
     }
 
     @PostMapping("/modify")
-    public String modify(Admin admin) {
+    public String modify(Admin admin, RedirectAttributes rttr) {
         log.info("modify " + admin);
 
+        String encryptPw = passwordEncoder.encode(admin.getUpw());
+        admin.setUpw(encryptPw);
+
         adminService.modify(admin);
+
+        rttr.addFlashAttribute("msg", "modify");
         return "redirect:/admin/list";
     }
 
     @PostMapping("/remove")
-    public String remove(String uid) {
+    public String remove(String uid, RedirectAttributes rttr) {
         log.info("delete " + uid);
 
         adminService.remove(uid);
-        
+
+        rttr.addFlashAttribute("msg", "remove");
         return "redirect:/admin/list";
     }
 
@@ -74,17 +79,4 @@ public class AdminController {
         model.addAttribute("result", adminService.list());
     }
 
-    @GetMapping("/login")
-    public void login() {
-    }
-
-    @GetMapping("/accessDenied")
-    public void accessDenied() {
-
-    }
-
-    @GetMapping("/logout")
-    public void logout() {
-
-    }
 }

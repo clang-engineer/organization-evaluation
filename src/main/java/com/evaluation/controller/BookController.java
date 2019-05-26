@@ -8,6 +8,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import com.evaluation.domain.Book;
 import com.evaluation.service.BookService;
@@ -28,11 +29,12 @@ public class BookController {
 	}
 
 	@PostMapping("/register")
-	public String register(Book book) {
+	public String register(Book book, RedirectAttributes rttr) {
 		log.info("register" + book);
 
 		bookService.register(book);
 
+		rttr.addFlashAttribute("msg", "register");
 		return "redirect:/book/list";
 	}
 
@@ -44,24 +46,22 @@ public class BookController {
 	}
 
 	@PostMapping("/modify")
-	public String modify(Book book) {
+	public String modify(Book book, RedirectAttributes rttr) {
 		log.info("modify" + book);
 
-		bookService.read(book.getBno()).ifPresent(origin -> {
-			origin.setTitle(book.getTitle());
-			origin.setType(book.getType());
-			bookService.modify(origin);
-		});
+		bookService.modify(book);
 
+		rttr.addFlashAttribute("msg", "modify");
 		return "redirect:/book/list";
 	}
 
 	@PostMapping("/remove")
-	public String remove(long bno) {
+	public String remove(long bno, RedirectAttributes rttr) {
 		log.info("remove " + bno);
 
 		bookService.remove(bno);
 
+		rttr.addFlashAttribute("msg", "remove");
 		return "redirect:/book/list";
 	}
 

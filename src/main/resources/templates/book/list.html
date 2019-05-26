@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layoutCompany}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
 
 <div layout:fragment="content">
 	<!-- .container-fluid -->
@@ -20,9 +19,8 @@
 				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
 
 				<!-- search box -->
-				<div class="col-md-2" style="float: right">
-					<button id="xlRegister" class="btn btn-success">xlDownload</button>
-					<button id="register" class="btn btn-primary">Register</button>
+				<div class="col-md-1" style="float: right">
+					<button id="register" class="btn btn-block btn-primary">Register</button>
 				</div>
 
 				<!-- /search box -->
@@ -41,7 +39,7 @@
 								<th>Title</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
-								<th>Book Info</th>
+								<th>Content List</th>
 
 							</tr>
 						</thead>
@@ -49,11 +47,11 @@
 							<tr th:each="book,status:${result}">
 								<td>[[${status.count}]]</td>
 								<td>[[${book.type}]]</td>
-								<td><a th:href="${book.bno}" class="contentList">[[${book.title}]]</a></td>
+								<td><a th:href="${book.bno}" class="bookDetail">[[${book.title}]]</a></td>
 								<td>[[${#dates.format(book.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 							<td>[[${#dates.format(book.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-							<td><a th:href="${book.bno}" class="bookDetail">
-									<button type="button" class="btn btn-info">Detail</button>
+							<td><a th:href="${book.bno}" class="contentList">
+									<button type="button" class="btn btn-default"><i class="fas fa-sitemap"></i></button>
 								</a></td>
 						</tr>
 					</tbody>
@@ -85,24 +83,21 @@
 		$(document).ready(function () {
 			var formObj = $("#f1");
 
-			// //페이지에 붙은 링크 클릭 시
-			// $(".pagination a").click(function (e) {
-			// 	e.preventDefault();
+			//작업 메시지 세트
+			var msg = [[${ msg }]];
 
-			// 	formObj.find('[name="page"]').val($(this).attr('href'));
-			// 	formObj.submit();
-			// });
+			if (history.state == null) {
+				if (msg == 'register') {
+					alert("등록 되었습니다.");
+				} else if (msg == 'modify') {
+					alert("수정 되었습니다.");
+				} else if (msg == 'remove') {
+					alert("삭제 되었습니다.");
+				}
+			}
 
-			// //검색 버튼 클릭 시
-			// $("#searchBtn").click(function (e) {
-			// 	var typeStr = $("#searchType").find(":selected").val();
-			// 	var keywordStr = $("#searchKeyword").val();
+			history.replaceState({}, null, null);
 
-			// 	formObj.find("[name='type']").val(typeStr);
-			// 	formObj.find("[name='keyword']").val(keywordStr);
-			// 	formObj.find("[name='page']").val("1");
-			// 	formObj.submit();
-			// });
 
 			//디테일 버튼 클릭 시
 			$(".bookDetail").click(function (e) {

@@ -1,10 +1,9 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
-
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layoutCompany}">
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
-
 		<h1 class="mt-4">Company List</h1>
 		<!-- Page Heading -->
 		<p class="mb-4">
@@ -70,7 +69,9 @@
 								<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 								<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 								<td><a th:href="${company.cno}" class="surveyList">
-										<button type="button" class="btn btn-info">Detail</button>
+									<button type="button" class="btn btn-default">
+											<i class="fas fa-sitemap"></i>
+										</button>
 									</a></td>
 							</tr>
 						</tbody>
@@ -135,15 +136,25 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-		/* 	$(window).load(function() {
-		 var msg=[[${msg}]];
-		 if(msg=='success'){
-		 alert("정상적으로 처리되었습니다.");
-		 var stateObj={msg:""};
-		 }
-		 }); */
+
 		$(document).ready(function () {
 			var formObj = $("#f1");
+
+			//작업 메시지 세트
+			var msg = [[${ msg }]];
+
+			if (history.state == null) {
+				if (msg == 'register') {
+					alert("등록 되었습니다.");
+				} else if (msg == 'modify') {
+					alert("수정 되었습니다.");
+				} else if (msg == 'remove') {
+					alert("삭제 되었습니다.");
+				}
+			}
+
+			history.replaceState({}, null, null);
+
 
 			//페이지에 붙은 링크 클릭 시
 			$(".pagination a").click(function (e) {

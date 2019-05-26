@@ -29,7 +29,14 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void modify(Book book) {
-		bookRepo.save(book);
+
+		bookRepo.findById(book.getBno()).ifPresent(origin -> {
+			origin.setTitle(book.getTitle());
+			origin.setType(book.getType());
+			origin.setUpdateId(book.getUpdateId());
+			bookRepo.save(origin);
+		});
+
 	}
 
 	@Override

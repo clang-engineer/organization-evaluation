@@ -40,7 +40,15 @@ public class CompanyServiceImpl implements CompanyService {
 	public void modify(Company company) {
 		log.info("service : company modify " + company);
 		
-		companyRepo.save(company);
+		companyRepo.findById(company.getCno()).ifPresent(origin -> {
+			origin.setId(company.getId());
+			origin.setName(company.getName());
+			origin.setPassword(company.getPassword());
+			origin.setHomepage(company.getHomepage());
+			origin.setUpdateId(company.getUpdateId());
+			companyRepo.save(origin);
+		});
+
 	}
 
 	@Override

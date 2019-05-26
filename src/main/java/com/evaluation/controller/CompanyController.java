@@ -67,15 +67,10 @@ public class CompanyController {
 	public String modifyPost(Company company, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : company modify post" + company);
 
-		companyService.get(company.getCno()).ifPresent(origin -> {
-			origin.setId(company.getId());
-			origin.setName(company.getName());
-			origin.setPassword(company.getPassword());
-			origin.setHomepage(company.getHomepage());
-			companyService.modify(origin);
-			rttr.addFlashAttribute("msg", "success");
-			rttr.addAttribute("cno", origin.getCno());
-		});
+		companyService.modify(company);
+
+		rttr.addFlashAttribute("msg", "modify");
+		rttr.addAttribute("cno", company.getCno());
 
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
@@ -90,7 +85,7 @@ public class CompanyController {
 		log.info("controller : company delete " + cno);
 
 		companyService.remove(cno);
-		rttr.addFlashAttribute("msg", "success");
+		rttr.addFlashAttribute("msg", "remove");
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
 		rttr.addAttribute("type", vo.getType());
