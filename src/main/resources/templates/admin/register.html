@@ -36,20 +36,22 @@
                     <div class="form-group">
                         <input type="text" class="form-control" name="upw2" placeholder="Confirm Admin Password" required="required">
                     </div>
-                    <!-- <label>Auth</label>
-                    <div class="form-group">
-                        <div class="checkbox">
-                            <label class="checkbox-inline">
-                                <input type="checkbox" name="roles" value="BASIC"> BASIC
-                            </label>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" name="roles" value="MANAGER"> MANAGER
-                            </label>
-                            <label class="checkbox-inline">
-                                <input type="checkbox" name="roles" value="ADMIN"> ADMIN
-                            </label>
+                    <fieldset disabled>
+                        <label>Auth</label>
+                        <div class="form-group">
+                            <div class="checkbox">
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="roles" value="BASIC"> BASIC
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="roles" value="MANAGER"> MANAGER
+                                </label>
+                                <label class="checkbox-inline">
+                                    <input type="checkbox" name="roles" value="ADMIN"> ADMIN
+                                </label>
+                            </div>
                         </div>
-                    </div> -->
+                    </fieldset>
                     <div class="form-group">
                         <label>Enabled</label>
                         <select class="form-control" name="enabled">
@@ -58,6 +60,9 @@
                             <option value="N">Disabled</option>
                         </select>
                     </div>
+
+                    <input type="hidden" name="writeId" th:value="${#authentication.name}">
+                    <input type="hidden" name="updateId" th:value="${#authentication.name}">
 
                     <button type="submit" class="btn btn-primary">Submit</button>
                     <button type="reset" class="btn btn-secondary">Reset</button>

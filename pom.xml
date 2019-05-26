@@ -9,8 +9,8 @@
 		<relativePath />
 		<!-- lookup parent from repository -->
 	</parent>
-	<groupId>com.young</groupId>
-	<artifactId>evaluationMybatis</artifactId>
+	<groupId>com.youNg</groupId>
+	<artifactId>evaluationJpa</artifactId>
 	<version>0.0.1-SNAPSHOT</version>
 	<packaging>war</packaging>
 	<name>evaluationJpa</name>
@@ -108,6 +108,11 @@
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-security</artifactId>
+		</dependency>
+		<dependency>
+			<groupId>org.thymeleaf.extras</groupId>
+			<artifactId>thymeleaf-extras-springsecurity5</artifactId>
+			<version>3.0.4.RELEASE</version>
 		</dependency>
 
 	</dependencies>

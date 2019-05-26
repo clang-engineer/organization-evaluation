@@ -38,6 +38,8 @@
 					<button type="submit" class="btn btn-primary">Submit</button>
 					<button type="reset" class="btn btn-secondary">Reset</button>
 
+					<input type="hidden" name="writeId" th:value="${#authentication.name}">
+					<input type="hidden" name="updateId" th:value="${#authentication.name}">
 				</form>
 
 

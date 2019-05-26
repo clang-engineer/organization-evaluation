@@ -7,7 +7,6 @@ import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
-import javax.persistence.FetchType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
 import javax.persistence.OrderColumn;
@@ -36,6 +35,9 @@ public class Admin {
     @OrderColumn(name = "role_idx")
     @Column(name = "roleName")
     private List<String> roles;
+
+    private String writeId;
+    private String updateId;
 
     @CreationTimestamp
     private Timestamp writeDate;

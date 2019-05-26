@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layoutCompany}">
 
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
@@ -40,6 +41,8 @@
 						<label>Home page address</label>
 						<input type="url" class="form-control" name="homepage" placeholder="Enter home page address">
 					</div>
+					<input type="hidden" name="writeId" th:value="${#authentication.name}">
+					<input type="hidden" name="updateId" th:value="${#authentication.name}">
 					<button type="submit" class="btn btn-primary">Submit</button>
 					<button id="list" class="btn btn-info">List</button>
 				</form>
@@ -65,11 +68,11 @@
 		// 		return false;
 		// 	}
 		// }
-		
+
 		$(document).ready(function () {
 			$("#list").click(function (e) {
 				e.preventDefault();
-				formObj.attr("action", '/company/list').attr("method","get");
+				formObj.attr("action", '/company/list').attr("method", "get");
 				formObj.empty();
 				console.log($(this));
 				formObj.submit();

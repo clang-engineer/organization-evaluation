@@ -41,6 +41,7 @@ public class AdminServiceImpl implements AdminService {
             origin.setUpw(admin.getUpw());
             origin.setEnabled(admin.getEnabled());
             origin.setRoles(admin.getRoles());
+            origin.setUpdateId(admin.getUpdateId());
 
             adminRepo.save(origin);
         });
@@ -55,7 +56,7 @@ public class AdminServiceImpl implements AdminService {
 
     @Override
     public List<Admin> list() {
-        Sort sort = new Sort(Sort.Direction.DESC, "writeDate");
+        Sort sort = new Sort(Sort.Direction.ASC, "writeDate");
         List<Admin> result = adminRepo.findAll(sort);
         return result;
 
