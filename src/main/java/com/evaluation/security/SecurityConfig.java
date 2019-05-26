@@ -31,14 +31,15 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.info("security config...");
 
-        http.authorizeRequests().antMatchers("/company/**").permitAll();
-        http.authorizeRequests().antMatchers("/book/**").hasRole("MANAGER");
+        http.authorizeRequests().antMatchers("/company/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/book/**").hasRole("ADMIN");
+        http.authorizeRequests().antMatchers("/admin/**").hasRole("ADMIN");
 
-        http.formLogin().loginPage("/admin/login");
+        http.formLogin().loginPage("/login");
 
-        http.exceptionHandling().accessDeniedPage("/admin/accessDenied");
+        http.exceptionHandling().accessDeniedPage("/accessDenied");
 
-        http.logout().logoutUrl("/admin/logout").invalidateHttpSession(true);
+        http.logout().logoutUrl("/logout").invalidateHttpSession(true);
 
         http.rememberMe().key("orez").userDetailsService(customAdminService).tokenRepository(getJDBCRepository())
                 .tokenValiditySeconds(60 * 60 * 24);
