@@ -43,14 +43,14 @@ public class Relation360 {
     private String relation;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_answer", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relation360_answer", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "answer_key")
     @Column(name = "answer_value")
     @OrderBy(clause = "answer_key asc")
     private Map<String, Integer> answers;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_comments", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relation360_comments", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "comment_key")
     @Column(name = "comment_value", length = 2000)
     @OrderBy(clause = "comment_key asc")

@@ -36,7 +36,7 @@ public class Book {
 	private String title;
 
 	@ElementCollection
-	@CollectionTable(name = "tbl_contents", joinColumns = @JoinColumn(name = "book_bno"))
+	@CollectionTable(name = "tbl_book_contents", joinColumns = @JoinColumn(name = "book_bno"))
 	@OrderColumn(name = "content_idx")
 	@Column(name = "content")
 	private List<String> contents;
