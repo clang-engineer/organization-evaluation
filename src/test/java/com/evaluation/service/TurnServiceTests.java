@@ -2,8 +2,8 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.evaluation.domain.Turn;
 
@@ -37,7 +37,7 @@ public class TurnServiceTests {
 
 		Turn turn = new Turn();
 		turn.setTitle("test title 1");
-		List<String> types = new ArrayList<String>();
+		Set<String> types = new HashSet<String>();
 		types.add("360");
 		types.add("mbo");
 		turn.setTypes(types);
@@ -59,7 +59,7 @@ public class TurnServiceTests {
 
 		turn.setTno(2L);
 		turn.setTitle("test title modify 1");
-		List<String> types = new ArrayList<>();
+		Set<String> types = new HashSet<>();
 		types.add("360");
 		types.add("mbo");
 		turn.setTypes(types);
@@ -77,7 +77,7 @@ public class TurnServiceTests {
 	@Test
 	public void testGetList() {
 		log.info("========== test getList");
-		
+
 		service.getList(100L).forEach(turn -> log.info("" + turn));
 		;
 	}

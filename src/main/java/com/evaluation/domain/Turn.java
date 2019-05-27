@@ -1,7 +1,7 @@
 package com.evaluation.domain;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -11,7 +11,6 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -36,9 +35,8 @@ public class Turn {
 
 	@ElementCollection
 	@CollectionTable(name = "tbl_turn_types", joinColumns = @JoinColumn(name = "turn_tno"))
-	@OrderColumn(name = "type_idx")
-	@Column(name = "type_name")
-	private List<String> types;
+	@Column(name = "type")
+	private Set<String> types;
 
 	private String writeId;
 	private String updateId;

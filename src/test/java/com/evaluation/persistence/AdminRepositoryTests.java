@@ -2,9 +2,7 @@ package com.evaluation.persistence;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import com.evaluation.domain.Admin;

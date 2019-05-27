@@ -1,5 +1,11 @@
 package com.evaluation.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
+import com.evaluation.domain.Turn;
+import com.google.gson.Gson;
+
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -13,12 +19,6 @@ import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
-
-import java.util.ArrayList;
-import java.util.List;
-
-import com.evaluation.domain.Turn;
-import com.google.gson.Gson;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -46,7 +46,7 @@ public class TurnControllerTests {
 
 		Turn turn = new Turn();
 		turn.setTitle("test controller turn 1");
-		List<String> types = new ArrayList<>();
+		Set<String> types = new HashSet<>();
 		types.add("360");
 		types.add("mbo");
 		turn.setTypes(types);
@@ -65,7 +65,7 @@ public class TurnControllerTests {
 		Turn turn = new Turn();
 		turn.setTno(48L);
 		turn.setTitle("test Update turn 1");
-		List<String> types = new ArrayList<>();
+		Set<String> types = new HashSet<>();
 		types.add("360");
 		types.add("mbo");
 		turn.setTypes(types);

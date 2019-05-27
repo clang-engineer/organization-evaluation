@@ -159,7 +159,7 @@
 			/* add turn */
 			$("#modalBtn").click(function () {
 				var turnTitle = turnTitleObj.val();
-				var cno = [[${ cno }]];
+				var cno = '[[${cno}]]';
 				var turnType = get_chked_values();
 
 				if (mode == 'ADD') {
@@ -233,7 +233,7 @@
 					case 'MBO':
 						$("#checkbox2").prop('checked', true);
 						break;
-					case '360,MBO':
+					case '360,MBO','MBO,360':
 						checked_values(true);
 				}
 				$("#myModal").modal("show");

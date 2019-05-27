@@ -1,8 +1,8 @@
 package com.evaluation.persistence;
 
-import java.util.ArrayList;
 import java.util.Arrays;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 import java.util.stream.IntStream;
 
 import com.evaluation.domain.Turn;
@@ -40,7 +40,7 @@ public class TurnRepositoryTests {
 			IntStream.range(1, 11).forEach(i -> {
 				Turn turn = new Turn();
 				turn.setTitle("turn..." + i);
-				List<String> types = new ArrayList<>();
+				Set<String> types = new HashSet<>();
 				types.add("360");
 				types.add("mbo");
 				turn.setTypes(types);
