@@ -6,7 +6,6 @@ import java.util.stream.IntStream;
 import javax.transaction.Transactional;
 
 import com.evaluation.domain.Question;
-import com.evaluation.domain.Turn;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

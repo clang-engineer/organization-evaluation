@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layoutDetail}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
 
 <div layout:fragment="content">
 	<div class="container-fluid">
@@ -137,12 +136,12 @@
 		$(document).ready(function () {
 
 			var msg = [[${ msg }]];
-			
+
 			if (msg == 'success' && history.state == null) {
 				alert("정상적으로 처리되었습니다.");
 				var stateObj = { msg: "" };
-			} 
-			
+			}
+
 			history.replaceState({}, null, null);
 
 			var formObj = $("#f1");

@@ -5,14 +5,13 @@ import static org.junit.Assert.assertNotNull;
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
+import com.evaluation.domain.Question;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Question;
-import com.evaluation.domain.Turn;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

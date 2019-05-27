@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutDetail}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
 
 <div layout:fragment="content">
 	<div class="container-fluid">
@@ -20,6 +20,7 @@
 		<div class="card shadow mb-4">
 			<div class="card-body">
 				<form action="" id="myForm" method="post">
+					<input type="hidden" name="tno" th:value="${tno}" />
 					<div class="form-group">
 						<label>Survey Title</label>
 						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${info360.title}">
@@ -47,15 +48,7 @@
 							<option value="5E" th:selected="${info360.replyCode}=='5E'">5지 선다-E</option>
 						</select>
 					</div>
-					<div class="form-group">
-						<label>UpdateId</label>
-						<input type="text" class="form-control" name="updateId" th:value="${info360.updateId}" readonly="readonly">
-					</div>
 				</form>
-				<div class="form-group">
-					<label>updateDate</label>
-					<input type="url" class="form-control" name="updateDate" th:value="${#dates.format(info360.updateDate,'yyyy-MM-dd  hh:mm:ss')}" readonly="readonly">
-				</div>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary">Modify</button>
 				</div>
@@ -69,11 +62,11 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	$(document).ready(function() {
-	    $('button').on("click", function(e) {
-		var formObj = $("#myForm");
-		formObj.submit();
-	    });
-	});
-    </script>
+		$(document).ready(function () {
+			$('button').on("click", function (e) {
+				var formObj = $("#myForm");
+				formObj.submit();
+			});
+		});
+	</script>
 </th:block>
