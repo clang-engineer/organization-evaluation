@@ -3,8 +3,9 @@ package com.evaluation.persistence;
 import static org.junit.Assert.assertNotNull;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
-
+import java.util.Set;
 
 import com.evaluation.domain.Admin;
 
@@ -44,7 +45,7 @@ public class AdminRepositoryTests {
             admin.setUpw(pwEncoder.encode("uid" + i));
             admin.setUname("uname" + i);
             admin.setEnabled("enabled");
-            List<String> role = new ArrayList<String>();
+            Set<String> role = new HashSet<String>();
             if (i <= 30) {
                 role.add("BASIC");
             } else if (i <= 60) {
@@ -63,10 +64,8 @@ public class AdminRepositoryTests {
 
         Admin admin = adminRepo.findById("test").get();
         log.info("===============================" + admin);
-        List<String> roles = admin.getRoles();
+        Set<String> roles = admin.getRoles();
         log.info("===>" + roles.getClass());
-        for (int i = 0; i < roles.size(); i++) {
-            log.info("" + roles.get(i));
-        }
+        roles.forEach(role -> log.info("" + role));
     }
 }

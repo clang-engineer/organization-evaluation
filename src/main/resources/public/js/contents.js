@@ -4,9 +4,11 @@ var contentService = (function () {
         $.ajax({
             type: 'post',
             url: '/contents/' + param.bno,
-            // data: JSON.stringify(param.content),
             data: param.content,
             contentType: "application/json; charset:utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+            },
             success: function (result, status, xhr) {
                 if (callback) {
                     callback(result);
@@ -41,6 +43,9 @@ var contentService = (function () {
             // data: JSON.stringify(param.content),
             data: param.content,
             contentType: "application/json; charset:utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+            },
             success: function (result, status, shr) {
                 if (callback) {
                     callback(result);
@@ -58,6 +63,9 @@ var contentService = (function () {
         $.ajax({
             type: 'delete',
             url: '/contents/' + param.bno + "/" + param.idx,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+            },
             success: function (result, status, shr) {
                 if (callback) {
                     callback(result);

@@ -18,9 +18,8 @@
                 <h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
 
                 <!-- search box -->
-                <div class="col-md-2" style="float: right">
-                    <button id="bookRegister" class="btn btn-success">Add Content</button>
-                    <button id="bookList" class="btn btn-primary">Book List</button>
+                <div class="col-md-1" style="float: right">
+                    <button id="bookRegister" class="btn btn-primary btn-block">Register</button>
                 </div>
 
                 <!-- /search box -->
@@ -83,8 +82,7 @@
 
             var bnoValue = [[${ bno }]];
             var contentsBody = $(".contents");
-            // console.log(bnoValue);
-            // console.log(contentsBody);
+            var csrf = JSON.parse('[[${_csrf}]]');
 
             //modal 사용 변수 선언
             var modal = $(".modal");
@@ -106,7 +104,7 @@
                     }
                     for (var i = 0, len = result.length || 0; i < len; i++) {
                         str += "<tr><td>" + i + "</td><td>" + result[i] +
-                            "</td><td><button data-idx='" + i + "' class='btn btn-info'>Modify</button></td></tr>"
+                            "</td><td><button data-idx='" + i + "' class='btn btn-default'><i class='fas fa-pen'></i></button></td></tr>"
                     }
                     contentsBody.html(str);
                 });
@@ -130,7 +128,8 @@
             modalRegisterBtn.on("click", function () {
                 var param = {
                     bno: bnoValue,
-                    content: modalContent.val()
+                    content: modalContent.val(),
+                    csrf: csrf
                 }
 
                 contentService.register(param, function (result) {
@@ -165,7 +164,8 @@
                 var param = {
                     bno: bnoValue,
                     idx: modal.data("idx"),
-                    content: modalContent.val()
+                    content: modalContent.val(),
+                    csrf: csrf
                 }
 
                 contentService.modify(param, function (result) {
@@ -180,6 +180,7 @@
                 var param = {
                     bno: bnoValue,
                     idx: modal.data("idx"),
+                    csrf: csrf
                 }
 
                 if (delchk() == true) {

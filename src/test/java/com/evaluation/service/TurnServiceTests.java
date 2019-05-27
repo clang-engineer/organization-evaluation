@@ -41,7 +41,7 @@ public class TurnServiceTests {
 
 		Turn turn = new Turn();
 		turn.setTitle("test title 1");
-		List<String> types = new ArrayList();
+		List<String> types = new ArrayList<String>();
 		types.add("360");
 		types.add("mbo");
 		turn.setTypes(types);
