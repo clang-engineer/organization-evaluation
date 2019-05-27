@@ -52,7 +52,7 @@ class DistinctInfoServiceImpl implements DistinctInfoService {
 
     @Override
     public Map<String, Object> getDistinctInfo(long tno) {
-        long cno = turnRepo.findById(tno).get().getCompany().getCno();
+        long cno = turnRepo.findById(tno).get().getCno();
 
         Map<String, Object> result = new HashMap<String, Object>();
 
@@ -67,7 +67,7 @@ class DistinctInfoServiceImpl implements DistinctInfoService {
 
     @Override
     public Map<String, Object> getDistinctQuestionInfo(long tno) {
-        long cno = turnRepo.findById(tno).get().getCompany().getCno();
+        long cno = turnRepo.findById(tno).get().getCno();
 
         Map<String, Object> result = new HashMap<String, Object>();
 

@@ -4,6 +4,10 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.evaluation.domain.Turn;
+import com.evaluation.persistence.TurnRepository;
+import com.evaluation.service.TurnService;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -15,11 +19,6 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
-
-import com.evaluation.domain.Company;
-import com.evaluation.domain.Turn;
-import com.evaluation.persistence.TurnRepository;
-import com.evaluation.service.TurnService;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -40,12 +39,11 @@ public class TurnController {
 	public ResponseEntity<List<Turn>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : addTurn " + turn);
 
-		Company company = new Company();
-		company.setCno(cno);
-		turn.setCompany(company);
+		turn.setCno(cno);
 
 		turnService.register(turn);
-		return new ResponseEntity<>(getTurnList(company), HttpStatus.CREATED);
+
+		return new ResponseEntity<>(getTurnList(cno), HttpStatus.CREATED);
 	}
 
 	@Transactional
@@ -59,9 +57,7 @@ public class TurnController {
 			turnService.modify(origin);
 		});
 
-		Company company = new Company();
-		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(getTurnList(company), HttpStatus.CREATED);
+		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.CREATED);
 	}
 
 	@Transactional
@@ -71,23 +67,19 @@ public class TurnController {
 
 		turnService.remove(tno);
 
-		Company company = new Company();
-		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(getTurnList(company), HttpStatus.OK);
+		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.OK);
 	}
 
 	@GetMapping("/{cno}")
 	public ResponseEntity<List<Turn>> getTurnByCompany(@PathVariable("cno") Long cno) {
 		log.info("controller : get all turns by " + cno);
 
-		Company company = new Company();
-		company.setCno(cno);
-		return new ResponseEntity<List<Turn>>(getTurnList(company), HttpStatus.OK);
+		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.OK);
 	}
 
-	private List<Turn> getTurnList(Company company) throws RuntimeException {
-		log.info("getTurnList" + company);
+	private List<Turn> getTurnList(Long cno) throws RuntimeException {
+		log.info("getTurnList" + cno);
 
-		return turnService.getList(company);
+		return turnService.getList(cno);
 	}
 }

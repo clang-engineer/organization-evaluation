@@ -28,7 +28,7 @@ public class RestListController {
     public ResponseEntity<List<Staff>> getStaffForEvaluated(@PathVariable("tno") long tno) {
         log.info("get All Staff List Exclude Evaluated....");
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
+        long cno = turnService.get(tno).get().getCno();
         return new ResponseEntity<>(staffService.getEvaluatedList(cno, tno), HttpStatus.OK);
     }
 
@@ -37,7 +37,7 @@ public class RestListController {
             @PathVariable("sno") long sno) {
         log.info("get All Staff List....");
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
+        long cno = turnService.get(tno).get().getCno();
         return new ResponseEntity<>(staffService.getEvaluatorList(cno, tno, sno), HttpStatus.OK);
     }
 

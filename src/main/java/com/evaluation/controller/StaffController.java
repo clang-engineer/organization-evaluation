@@ -47,7 +47,7 @@ public class StaffController {
 	public String register(Staff staff, long tno, RedirectAttributes rttr) {
 		log.info("controller : staff register post by " + tno);
 
-		long cno = turnService.get(tno).get().getCompany().getCno();
+		long cno = turnService.get(tno).get().getCno();
 		staff.setCno(cno);
 		staffService.register(staff);
 
@@ -116,7 +116,7 @@ public class StaffController {
 
 		model.addAttribute("tno", tno);
 
-		long cno = turnService.get(tno).get().getCompany().getCno();
+		long cno = turnService.get(tno).get().getCno();
 		Page<Staff> result = staffService.getList(cno, vo);
 		model.addAttribute("result", new PageMaker<>(result));
 	}

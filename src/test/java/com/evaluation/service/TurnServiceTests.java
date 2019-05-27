@@ -5,14 +5,13 @@ import static org.junit.Assert.assertNotNull;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.evaluation.domain.Turn;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Company;
-import com.evaluation.domain.Turn;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -36,16 +35,13 @@ public class TurnServiceTests {
 	public void testRegister() {
 		log.info("========== test register");
 
-		Company company = new Company();
-		company.setCno(100L);
-
 		Turn turn = new Turn();
 		turn.setTitle("test title 1");
 		List<String> types = new ArrayList<String>();
 		types.add("360");
 		types.add("mbo");
 		turn.setTypes(types);
-		turn.setCompany(company);
+		turn.setCno(100L);
 		service.register(turn);
 
 	}
@@ -81,9 +77,8 @@ public class TurnServiceTests {
 	@Test
 	public void testGetList() {
 		log.info("========== test getList");
-		Company company = new Company();
-		company.setCno(100L);
-		service.getList(company).forEach(turn -> log.info("" + turn));
+		
+		service.getList(100L).forEach(turn -> log.info("" + turn));
 		;
 	}
 

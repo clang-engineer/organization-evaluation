@@ -35,7 +35,7 @@ public class DivisionController {
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
+        long cno = turnService.get(tno).get().getCno();
         division.setCno(cno);
 
         divisionService.register(division);
@@ -81,7 +81,7 @@ public class DivisionController {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
+        long cno = turnService.get(tno).get().getCno();
         Page<Division> result = divisionService.getListWithPaging(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 

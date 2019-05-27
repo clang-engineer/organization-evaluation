@@ -5,15 +5,14 @@ import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
 
+import com.evaluation.domain.Turn;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Company;
-import com.evaluation.domain.Turn;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -38,9 +37,6 @@ public class TurnRepositoryTests {
 
 		Arrays.stream(arr).forEach(num -> {
 
-			Company company = new Company();
-			company.setCno(num);
-
 			IntStream.range(1, 11).forEach(i -> {
 				Turn turn = new Turn();
 				turn.setTitle("turn..." + i);
@@ -48,7 +44,7 @@ public class TurnRepositoryTests {
 				types.add("360");
 				types.add("mbo");
 				turn.setTypes(types);
-				turn.setCompany(company);
+				turn.setCno(num);
 				turnRepo.save(turn);
 			});
 		});

@@ -3,7 +3,6 @@ package com.evaluation.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.Company;
 import com.evaluation.domain.Turn;
 
 public interface TurnService {
@@ -16,5 +15,5 @@ public interface TurnService {
 
 	public void remove(long tno);
 
-	public List<Turn> getList(Company company);
+	public List<Turn> getList(Long cno);
 }

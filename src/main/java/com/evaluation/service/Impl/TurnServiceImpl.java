@@ -3,16 +3,15 @@ package com.evaluation.service.Impl;
 import java.util.List;
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
-import org.springframework.transaction.annotation.Transactional;
-
-import com.evaluation.domain.Company;
 import com.evaluation.domain.Info360;
 import com.evaluation.domain.Turn;
 import com.evaluation.persistence.Info360Repository;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.TurnService;
+
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -59,9 +58,9 @@ public class TurnServiceImpl implements TurnService {
 	}
 
 	@Override
-	public List<Turn> getList(Company company) {
-		log.info("service : turn getList by " + company);
-		List<Turn> result = turnRepo.getTurnsOfCompany(company);
+	public List<Turn> getList(Long cno) {
+		log.info("service : turn getList by " + cno);
+		List<Turn> result = turnRepo.getTurnsOfCompany(cno);
 		return result;
 	}
 

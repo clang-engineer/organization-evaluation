@@ -35,7 +35,7 @@ public class DepartmentController {
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
+        long cno = turnService.get(tno).get().getCno();
         department.setCno(cno);
 
         departmentService.register(department);
@@ -82,7 +82,7 @@ public class DepartmentController {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCompany().getCno();
+        long cno = turnService.get(tno).get().getCno();
         Page<Department> result = departmentService.getListWithPaging(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
