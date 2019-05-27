@@ -1,8 +1,8 @@
 package com.evaluation.security;
 
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.evaluation.domain.Admin;
 
@@ -12,9 +12,11 @@ import org.springframework.security.core.userdetails.User;
 
 import lombok.Getter;
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @Getter
 @Setter
+@Slf4j
 public class CustomAdmin extends User {
 
     private static final String ROLE_PREFIX = "ROLE_";
@@ -32,9 +34,10 @@ public class CustomAdmin extends User {
         this.admin = vo;
     }
 
-    private static List<GrantedAuthority> makeGrantedAuthority(List<String> roles) {
-        List<GrantedAuthority> list = new ArrayList<>();
-
+    private static Set<GrantedAuthority> makeGrantedAuthority(Set<String> roles) {
+        Set<GrantedAuthority> list = new HashSet<>();
+        
+        roles.forEach(role -> log.info(ROLE_PREFIX + role));
         roles.forEach(role -> list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role)));
 
         return list;

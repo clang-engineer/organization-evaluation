@@ -1,7 +1,7 @@
 package com.evaluation.domain;
 
 import java.sql.Timestamp;
-import java.util.List;
+import java.util.Set;
 
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
@@ -9,7 +9,6 @@ import javax.persistence.ElementCollection;
 import javax.persistence.Entity;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
-import javax.persistence.OrderColumn;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -23,7 +22,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "tbl_admin")
 public class Admin {
-
+    
     @Id
     private String uid;
     private String upw;
@@ -32,9 +31,8 @@ public class Admin {
 
     @ElementCollection
     @CollectionTable(name = "tbl_admin_roles", joinColumns = @JoinColumn(name = "admin_uid"))
-    @OrderColumn(name = "role_idx")
-    @Column(name = "role_name")
-    private List<String> roles;
+    @Column(name = "role")
+    private Set<String> roles;
 
     private String writeId;
     private String updateId;
