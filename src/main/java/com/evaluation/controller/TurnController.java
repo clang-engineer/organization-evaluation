@@ -4,8 +4,8 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
+import com.evaluation.domain.InfoSurvey;
 import com.evaluation.domain.Turn;
-import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.TurnService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -29,9 +29,6 @@ import lombok.extern.slf4j.Slf4j;
 public class TurnController {
 
 	@Setter(onMethod_ = @Autowired)
-	private TurnRepository turnRepo;
-
-	@Setter(onMethod_ = @Autowired)
 	private TurnService turnService;
 
 	@Transactional
@@ -41,6 +38,13 @@ public class TurnController {
 
 		turn.setCno(cno);
 
+		InfoSurvey info360 = new InfoSurvey();
+		info360.setTitle("-");
+		InfoSurvey infoMbo = new InfoSurvey();
+		infoMbo.setTitle("-");
+
+		turn.setInfo360(info360);
+		turn.setInfoMbo(infoMbo);
 		turnService.register(turn);
 
 		return new ResponseEntity<>(getTurnList(cno), HttpStatus.CREATED);
@@ -51,11 +55,7 @@ public class TurnController {
 	public ResponseEntity<List<Turn>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
 
-		turnService.get(turn.getTno()).ifPresent(origin -> {
-			origin.setTitle(turn.getTitle());
-			origin.setTypes(turn.getTypes());
-			turnService.modify(origin);
-		});
+		turnService.modify(turn);
 
 		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.CREATED);
 	}

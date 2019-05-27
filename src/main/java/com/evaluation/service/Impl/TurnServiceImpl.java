@@ -3,9 +3,7 @@ package com.evaluation.service.Impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.Info360;
 import com.evaluation.domain.Turn;
-import com.evaluation.persistence.Info360Repository;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.TurnService;
 
@@ -23,20 +21,12 @@ public class TurnServiceImpl implements TurnService {
 	@Setter(onMethod_ = { @Autowired })
 	private TurnRepository turnRepo;
 
-	@Setter(onMethod_ = { @Autowired })
-	private Info360Repository info360Repo;
-
 	@Transactional
 	@Override
 	public void register(Turn turn) {
 		log.info("service : turn register " + turn);
 
 		turnRepo.save(turn);
-
-		Info360 info360 = new Info360();
-		info360.setTno(turn.getTno());
-
-		info360Repo.save(info360);
 	}
 
 	@Override
@@ -48,7 +38,12 @@ public class TurnServiceImpl implements TurnService {
 	@Override
 	public void modify(Turn turn) {
 		log.info("service : turn modify " + turn);
-		turnRepo.save(turn);
+
+		turnRepo.findById(turn.getTno()).ifPresent(origin -> {
+			origin.setTitle(turn.getTitle());
+			origin.setTypes(turn.getTypes());
+			turnRepo.save(origin);
+		});
 	}
 
 	@Override

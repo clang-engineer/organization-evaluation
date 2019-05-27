@@ -1,46 +1,59 @@
 package com.evaluation.service.Impl;
 
-import java.util.Optional;
+import com.evaluation.domain.InfoSurvey;
+import com.evaluation.persistence.TurnRepository;
+import com.evaluation.service.InfoSurveyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
-import com.evaluation.domain.Info360;
-import com.evaluation.persistence.Info360Repository;
-import com.evaluation.service.Info360Service;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class Info360ServiceImpl implements Info360Service {
+public class Info360ServiceImpl implements InfoSurveyService {
 
 	@Setter(onMethod_ = { @Autowired })
-	private Info360Repository info360Repo;
+	private TurnRepository turnRepo;
 
 	@Override
-	public void register(Info360 info360) {
-		log.info("service : info360 register " + info360);
-		info360Repo.save(info360);
+	public void register(Long tno, InfoSurvey infoSurvey) {
+
+		log.info("service : info360 register " + infoSurvey);
+
+		turnRepo.findById(tno).ifPresent(origin -> {
+			origin.setInfo360(infoSurvey);
+			turnRepo.save(origin);
+		});
 	}
 
 	@Override
-	public Optional<Info360> get(long tno) {
+	public InfoSurvey read(long tno) {
 		log.info("service : info360 get " + tno);
-		return info360Repo.findById(tno);
+
+		return turnRepo.findById(tno).get().getInfo360();
 	}
 
 	@Override
-	public void modify(Info360 info360) {
-		log.info("service : info360 modify " + info360);
-		info360Repo.save(info360);
+	public void modify(Long tno, InfoSurvey infoSurvey) {
+		log.info("service : info360 modify " + tno);
+
+		turnRepo.findById(tno).ifPresent(origin -> {
+			origin.setInfo360(infoSurvey);
+			turnRepo.save(origin);
+		});
 	}
 
 	@Override
 	public void remove(long tno) {
 		log.info("service : info360 remove " + tno);
-		info360Repo.deleteById(tno);
+
+		turnRepo.findById(tno).ifPresent(origin -> {
+			origin.setInfo360(null);
+			turnRepo.save(origin);
+		});
+
 	}
 
 }

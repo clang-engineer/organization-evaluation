@@ -4,7 +4,12 @@ import java.sql.Timestamp;
 
 import javax.persistence.Embeddable;
 
+import lombok.Getter;
+import lombok.Setter;
+
 @Embeddable
+@Getter
+@Setter
 public class InfoSurvey {
 
 	private String title;

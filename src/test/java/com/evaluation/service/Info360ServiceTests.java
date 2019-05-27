@@ -2,13 +2,13 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import com.evaluation.domain.InfoSurvey;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Info360;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,48 +19,47 @@ import lombok.extern.slf4j.Slf4j;
 public class Info360ServiceTests {
 
 	@Setter(onMethod_ = { @Autowired })
-	Info360Service service;
+	InfoSurveyService info360Service;
+
+	@Setter(onMethod_ = { @Autowired })
+	TurnService turnService;
 
 	@Test
 	public void testExist() {
 		log.info("========== test exist service");
-		assertNotNull(service);
+		assertNotNull(info360Service);
 	}
 
 	@Test
 	public void testRegister() {
 		log.info("========== test register");
 
-		Info360 info360 = new Info360();
-
-		info360.setTno(2L);
-		info360.setTitle("test...");
-
-		service.register(info360);
+		InfoSurvey info360 = new InfoSurvey();
+		info360.setTitle("제1회..");
+		info360Service.register(1L, info360);
 	}
 
 	@Test
 	public void testGet() {
 		log.info("========== test get");
-		log.info("" + service.get(1L));
+		log.info("" + info360Service.read(1L));
 	}
 
 	@Test
 	public void testModify() {
 		log.info("========== test Modify");
-		Info360 info360 = new Info360();
+		InfoSurvey info360 = new InfoSurvey();
 
-		info360.setTno(1L);
 		info360.setTitle("test title modify 1");
 
-		service.register(info360);
+		info360Service.register(1L, info360);
 
 	}
 
 	@Test
 	public void testDelete() {
 		log.info("========== test delete");
-		service.remove(1L);
+		info360Service.remove(1L);
 	}
 
 }

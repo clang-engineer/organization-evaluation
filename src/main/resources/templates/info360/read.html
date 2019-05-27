@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutDetail}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
 
 <div layout:fragment="content">
 	<div class="container-fluid">
@@ -46,14 +46,6 @@
 							<option value="5D" th:selected="${info360.replyCode}=='5D'">5지 선다-D</option>
 							<option value="5E" th:selected="${info360.replyCode}=='5E'">5지 선다-E</option>
 						</select>
-					</div>
-					<div class="form-group">
-						<label>UpdateId</label>
-						<input type="text" class="form-control" name="updateId" th:value="${info360.updateId}">
-					</div>
-					<div class="form-group">
-						<label>updateDate</label>
-						<input type="url" class="form-control" name="updateDate" th:value="${#dates.format(info360.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
 					</div>
 				</fieldset>
 				<div class="form-group">
