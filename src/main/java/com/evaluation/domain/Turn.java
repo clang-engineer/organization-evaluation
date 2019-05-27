@@ -3,14 +3,20 @@ package com.evaluation.domain;
 import java.sql.Timestamp;
 import java.util.Set;
 
+import javax.persistence.AttributeOverride;
+import javax.persistence.AttributeOverrides;
 import javax.persistence.CollectionTable;
 import javax.persistence.Column;
 import javax.persistence.ElementCollection;
+import javax.persistence.Embedded;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.PrimaryKeyJoinColumn;
+import javax.persistence.SecondaryTable;
+import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
 import org.hibernate.annotations.CreationTimestamp;
@@ -24,6 +30,9 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "tbl_turn")
+@SecondaryTables({
+		@SecondaryTable(name = "tbl_turn_360", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")),
+		@SecondaryTable(name = "tbl_turn_mbo", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")), })
 @EqualsAndHashCode(of = "tno")
 public class Turn {
 
@@ -49,4 +58,21 @@ public class Turn {
 	@Column(name = "company_cno")
 	private Long cno;
 
+	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_360")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_360")),
+			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_360")),
+			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_360")),
+			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_360")),
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_360")) })
+	private InfoSurvey info360;
+
+	@Embedded
+	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_mbo")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_mbo")),
+			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_mbo")),
+			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_mbo")),
+			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_mbo")),
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_mbo")) })
+	private InfoSurvey infoMbo;
 }
