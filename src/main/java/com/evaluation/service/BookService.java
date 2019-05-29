@@ -15,4 +15,6 @@ public interface BookService {
 	public void remove(Long bno);
 
 	public List<Book> list();
+
+	public List<Book> listFindByType(String type);
 }

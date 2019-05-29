@@ -51,4 +51,8 @@ public class BookServiceImpl implements BookService {
 		return result;
 	}
 
+	@Override
+	public List<Book> listFindByType(String type) {
+		return bookRepo.findByType(type);
+	}
 }

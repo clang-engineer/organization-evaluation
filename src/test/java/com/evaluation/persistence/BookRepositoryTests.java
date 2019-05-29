@@ -40,7 +40,8 @@ public class BookRepositoryTests {
 			Book book = new Book();
 			book.setTitle("test" + i + 1);
 
-			List<String> contents = Arrays.asList("매우 그렇다" + i + 1, "그렇다" + i + 1, "보통이다" + i + 1, "그렇지 않다" + i + 1, "매우 그렇지 않다" + i + 1);
+			List<String> contents = Arrays.asList("매우 그렇다" + i + 1, "그렇다" + i + 1, "보통이다" + i + 1, "그렇지 않다" + i + 1,
+					"매우 그렇지 않다" + i + 1);
 			book.setContents(contents);
 			bookRepo.save(book);
 		});
@@ -55,4 +56,8 @@ public class BookRepositoryTests {
 		bookRepo.save(book);
 	}
 
+	@Test
+	public void testfindByType() {
+		log.info("" + bookRepo.findByType("360Status"));
+	}
 }

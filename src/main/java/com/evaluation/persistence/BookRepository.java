@@ -11,4 +11,5 @@ public interface BookRepository extends CrudRepository<Book, Long> {
 
 	List<Book> findAll(Sort sort);
 
+	List<Book> findByType(String type);
 }
