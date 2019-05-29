@@ -87,13 +87,14 @@ public class QuestionController {
 
         questionService.modify(question);
         rttr.addAttribute("tno", tno);
+        rttr.addAttribute("qno", question.getQno());
         rttr.addFlashAttribute("msg", "modify");
         rttr.addAttribute("page", vo.getPage());
         rttr.addAttribute("size", vo.getSize());
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/question/list";
+        return "redirect:/question/view";
     }
 
     @PostMapping("/remove")

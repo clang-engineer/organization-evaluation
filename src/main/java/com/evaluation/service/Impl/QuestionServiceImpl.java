@@ -43,6 +43,7 @@ public class QuestionServiceImpl implements QuestionService {
 			origin.setIdx(question.getIdx());
 			origin.setCategory(question.getCategory());
 			origin.setItem(question.getItem());
+			origin.setUpdateId(question.getUpdateId());
 			questionRepo.save(origin);
 		});
 	}

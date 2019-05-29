@@ -41,7 +41,7 @@
                 </div>
                 <div class="form-group">
                     <label>WriteId</label>
-                    <input type="text" class="form-control" name="writeId" readonly>
+                    <input type="text" class="form-control" name="writeId" th:value="${question.writeId}"readonly>
                 </div>
                 <div class="form-group">
                     <label>WriteDate</label>
@@ -49,7 +49,7 @@
                 </div>
                 <div class="form-group">
                     <label>UpdateId</label>
-                    <input type="text" class="form-control" name="updateId" readonly>
+                    <input type="text" class="form-control" name="updateId" th:value="${question.updateId}" readonly>
                 </div>
                 <div class="form-group">
 						<label>UpdateDate</label>

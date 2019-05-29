@@ -18,7 +18,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <form action="modify" method="POST">
+                <form th:action="@{modify}" method="POST">
                     <input type="hidden" name="qno" th:value="${question.qno}">
                     <div class="form-group">
                         <label>Division1</label>
@@ -49,6 +49,7 @@
                         <label>Question</label>
                         <input type="text" class="form-control" name="item" th:value="${question.item}">
                     </div>
+                    <input type="hidden" name="updateId" th:value="${#authentication.name}">
                 </form>
                 <div class="form-group">
                     <label>WriteId</label>
@@ -60,7 +61,7 @@
                 </div>
                 <div class="form-group">
                      <label>UpdateId</label>
-                     <input type="text" class="form-control" name="updateId" th:value="${question.updateId}" readonly>
+                     <input type="text" class="form-control" name="updateId" th:value="${#authentication.name}" readonly>
                 </div>
                 <div class="form-group">
                     <label>UpdateDate</label>

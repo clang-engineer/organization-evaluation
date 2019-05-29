@@ -88,11 +88,13 @@ public class StaffController {
 		rttr.addFlashAttribute("msg", "success");
 
 		rttr.addAttribute("tno", tno);
+		rttr.addAttribute("sno", staff.getSno());
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
 		rttr.addAttribute("type", vo.getType());
 		rttr.addAttribute("keyword", vo.getKeyword());
-		return "redirect:/staff/list";
+
+		return "redirect:/staff/view";
 	}
 
 	@PostMapping("/remove")
