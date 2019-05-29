@@ -1,6 +1,5 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
-
 <div layout:fragment="content">
 	<div class="container-fluid">
 		<!-- Breadcrumbs-->
@@ -10,7 +9,6 @@
 			</li>
 			<li class="breadcrumb-item active">Blank Page</li>
 		</ol>
-
 		<!-- Page Content -->
 		<hr>
 		<p>This is a great starting point for new custom pages.</p>
@@ -28,25 +26,36 @@
 						<label>Content</label>
 						<textarea name="content" class="form-control" rows="5" th:text="${info360.content}"></textarea>
 					</div>
-					<div class="form-group">
-						<label>Status</label> <select class="form-control" name="status">
-							<option>--</option>
-							<option value="standby" th:selected="${info360.status}=='standby'">설정중</option>
-							<option value="progress" th:selected="${info360.status}=='progress'">평가 진행</option>
-							<option value="completion" th:selected="${info360.status}=='completion'">평가 완료</option>
-							<option value="close" th:selected="${info360.status}=='close'">완료</option>
-						</select>
-					</div>
+
 					<div class="form-group">
 						<label>Reply Type</label> <select class="form-control" name="replyCode">
 							<option>--</option>
-							<option value="5A" th:selected="${info360.replyCode}=='5A'">5지 선다-A</option>
-							<option value="5B" th:selected="${info360.replyCode}=='5B'">5지 선다-B</option>
-							<option value="5C" th:selected="${info360.replyCode}=='5C'">5지 선다-C</option>
-							<option value="5D" th:selected="${info360.replyCode}=='5D'">5지 선다-D</option>
-							<option value="5E" th:selected="${info360.replyCode}=='5E'">5지 선다-E</option>
+							<span th:each="book:${bookReply}">
+								<option th:selected="${book.bno}==${info360.replyCode}" th:value="${book.bno}">[[${book.title}]]</option>
+							</span>
 						</select>
 					</div>
+
+					<!-- date time picker -->
+					<div class="form-group">
+						<label for="">시작일</label>
+						<input class="form-control" type="datetime-local" th:value="${info360.startDate}" name="startDate" readonly>
+					</div>
+					<div class="form-group">
+						<label for="">종료일</label>
+						<input class="form-control" type="datetime-local" th:value="${info360.endDate}" name="endDate" readonly>
+					</div>
+					<!--./ date time picker -->
+					<div class="form-group">
+						<label>Status</label>
+						<select class="form-control" name="status">
+							<option>--</option>
+							<span th:each="status:${bookStatus}">
+								<option value="standby" th:selected="${status}==${info360.status}" th:value="${status}">[[${status}]]</option>
+							</span>
+						</select>
+					</div>
+
 				</fieldset>
 				<div class="form-group">
 					<button type="submit" class="btn btn-primary">Modify</button>
@@ -64,11 +73,11 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	$(document).ready(function() {
-	    $('button').on("click", function(e) {
-		var formObj = $("#myForm");
-		formObj.submit();
-	    });
-	});
-    </script>
+		$(document).ready(function () {
+			$('button').on("click", function (e) {
+				var formObj = $("#myForm");
+				formObj.submit();
+			});
+		});
+	</script>
 </th:block>

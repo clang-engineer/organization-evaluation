@@ -1,6 +1,7 @@
 package com.evaluation.controller;
 
 import com.evaluation.domain.InfoSurvey;
+import com.evaluation.service.BookService;
 import com.evaluation.service.InfoSurveyService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -22,11 +23,16 @@ public class Info360Controller {
 	@Setter(onMethod_ = { @Autowired })
 	private InfoSurveyService info360Service;
 
+	@Setter(onMethod_ = { @Autowired })
+	private BookService bookService;
+
 	@GetMapping("/read")
 	public void view(long tno, Model model) {
 		log.info("info360 read get " + tno);
 
 		model.addAttribute("tno", tno);
+		model.addAttribute("bookStatus", bookService.read(1L).get().getContents());
+		model.addAttribute("bookReply", bookService.listFindByType("360Reply"));
 		model.addAttribute("info360", info360Service.read(tno));
 	}
 
@@ -35,6 +41,8 @@ public class Info360Controller {
 		log.info("info360 modify get" + tno);
 
 		model.addAttribute("tno", tno);
+		model.addAttribute("bookStatus", bookService.read(1L).get().getContents());
+		model.addAttribute("bookReply", bookService.listFindByType("360Reply"));
 		model.addAttribute("info360", info360Service.read(tno));
 	}
 
@@ -42,9 +50,10 @@ public class Info360Controller {
 	public String modify(long tno, InfoSurvey info360, RedirectAttributes rttr) {
 		log.info("controller : info360 modify post " + info360);
 
+		log.info("" + info360.getStartDate());
 		info360Service.modify(tno, info360);
 
 		rttr.addAttribute("tno", tno);
-		return "redirect:/info360/view";
+		return "redirect:/info360/read";
 	}
 }
