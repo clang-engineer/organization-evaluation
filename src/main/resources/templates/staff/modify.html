@@ -20,7 +20,7 @@
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
 			<div class="card-body">
-				<form action="modify" method="POST">
+				<form th:action="@{modify}" method="POST">
 					<input type="hidden" name="sno" th:value="${staff.sno}">
 					<div class="form-group">
 						<label>Name</label>
@@ -76,26 +76,7 @@
 							<option th:each="res:${distinctInfo.division2}" th:text="${res}" th:value="${res}" th:selected="${staff.division2}==${res}"></option>
 						</select>
 					</div>
-					<!-- <div class="form-group">
-						<label>Department1</label>
-						<input type="text" class="form-control" name="department1" th:value="${staff.department1}">
-					</div>
-					<div class="form-group">
-						<label>Department2</label>
-						<input type="text" class="form-control" name="department2" th:value="${staff.department2}">
-					</div>
-					<div class="form-group">
-						<label>Level</label>
-						<input type="text" class="form-control" name="level" th:value="${staff.level}">
-					</div>
-					<div class="form-group">
-						<label>Division1</label>
-						<input type="text" class="form-control" name="division1" th:value="${staff.division1}">
-					</div>
-					<div class="form-group">
-						<label>Divisions2</label>
-						<input type="text" class="form-control" name="division2" th:value="${staff.division2}">
-					</div> -->
+					<input type="hidden" name="updateId" th:value="${#authentication.name}">
 				</form>
 				<fieldset disabled>
 					<div class="form-group">
@@ -108,7 +89,7 @@
 					</div>
 					<div class="form-group">
 						<label>UpdateId</label>
-						<input type="text" class="form-control" name="updateId" th:value="${staff.updateId}">
+						<input type="text" class="form-control" name="updateId" th:value="${#authentication.name}">
 					</div>
 					<div class="form-group">
 						<label>UpdateDate</label>
@@ -146,7 +127,7 @@
 					if (delchk() == true) {
 						formObj.attr("action", "remove");
 					} else {
-						return
+						return;
 					};
 				}
 

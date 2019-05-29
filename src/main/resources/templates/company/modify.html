@@ -53,7 +53,7 @@
 				</div>
 				<div class="form-group">
 					<label>UpdateId</label>
-					<input type="text" class="form-control" name="updateId" readonly="readonly" th:value="${vo.updateId}">
+					<input type="text" class="form-control" name="updateId" readonly="readonly" th:value="${#authentication.name}">
 				</div>
 				<div class="form-group">
 					<label>updateDate</label>

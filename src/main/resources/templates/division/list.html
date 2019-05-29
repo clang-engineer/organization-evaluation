@@ -105,6 +105,7 @@
 		<input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO.type} />
 		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 	</form>
 
 	<!-- Modal -->
@@ -155,6 +156,7 @@
 
 
 			var msg = [[${ msg }]];
+			var authName = [[${ #authentication.name }]];
 
 			if (history.state == null) {
 				if (msg == 'register') {
@@ -221,6 +223,8 @@
 				formObj.attr("action", "./register").attr("method", "post");
 				formObj.append("<input type='hidden' name='division1' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='division2' value='" + modalContent2.val() + "'/>");
+				formObj.append("<input type='hidden' name='writeId' value='" + authName + "'/>");
+				formObj.append("<input type='hidden' name='updateId' value='" + authName + "'/>");
 				formObj.submit();
 			});
 
@@ -230,6 +234,7 @@
 				formObj.append("<input type='hidden' name='division1' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='division2' value='" + modalContent2.val() + "'/>");
 				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
+				formObj.append("<input type='hidden' name='updateId' value='" + authName + "'/>");
 				formObj.submit();
 			});
 

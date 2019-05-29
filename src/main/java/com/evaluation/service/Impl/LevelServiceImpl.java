@@ -42,6 +42,7 @@ public class LevelServiceImpl implements LevelService {
 
         levelRepo.findById(level.getLno()).ifPresent(origin -> {
             origin.setContent(level.getContent());
+            origin.setUpdateId(level.getUpdateId());
             levelRepo.save(origin);
         });
     }

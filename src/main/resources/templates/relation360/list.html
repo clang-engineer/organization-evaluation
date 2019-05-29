@@ -164,6 +164,7 @@
         <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
         <input type="hidden" name="type" th:value=${pageVO.type} />
         <input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 
     <!-- Modal -->
@@ -232,6 +233,7 @@
             // var cno = [[${ cno }]];
             var tno = [[${ tno }]];
             var msg = [[${ msg }]];
+			var authName = [[${ #authentication.name }]];
 
             if (history.state == null) {
                 if (msg == 'register') {

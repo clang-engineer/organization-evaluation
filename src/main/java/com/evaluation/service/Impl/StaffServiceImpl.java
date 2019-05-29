@@ -51,6 +51,7 @@ public class StaffServiceImpl implements StaffService {
 			origin.setLevel(staff.getLevel());
 			origin.setDivision1(staff.getDivision1());
 			origin.setDivision2(staff.getDivision2());
+			origin.setUpdateId(staff.getUpdateId());
 			staffRepo.save(origin);
 		});
 	}
