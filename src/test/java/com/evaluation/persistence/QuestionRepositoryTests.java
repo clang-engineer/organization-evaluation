@@ -76,4 +76,9 @@ public class QuestionRepositoryTests {
 		result.getContent().forEach(question -> log.info("" + question.getQno()));
 
 	}
+
+	@Test
+	public void testDeleteAll() {
+		questionRepo.deleteByTno(41L);
+	}
 }

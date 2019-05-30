@@ -5,10 +5,18 @@ import com.evaluation.domain.Question;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface QuestionRepository extends CrudRepository<Question, Long>, QuerydslPredicateExecutor<Question> {
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Question q WHERE q.tno=?1")
+    public void deleteByTno(long tno);
+
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();

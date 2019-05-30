@@ -64,4 +64,11 @@ public class QuestionServiceImpl implements QuestionService {
 		return result;
 	}
 
+	@Override
+	public void deleteByTno(long tno) {
+		log.info("delete by tno : " + tno);
+
+		questionRepo.deleteByTno(tno);
+	}
+
 }

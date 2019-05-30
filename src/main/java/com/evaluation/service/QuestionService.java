@@ -17,4 +17,6 @@ public interface QuestionService {
 	public void remove(Long qno);
 
 	public Page<Question> getList(long tno, PageVO vo);
+
+	public void deleteByTno(long tno);
 }

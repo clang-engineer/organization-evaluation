@@ -139,8 +139,11 @@ public class QuestionController {
         log.info("read file" + uploadFile);
         log.info("" + deleteList);
 
-        int iteration = 0;
+        if (deleteList == true) {
+            questionService.deleteByTno(question.getTno());
+        }
 
+        int iteration = 0;
         List<List<String>> allData = readExcel(uploadFile);
 
         for (List<String> newLine : allData) {
