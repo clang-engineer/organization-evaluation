@@ -25,7 +25,7 @@ public class Question {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long qno;
 
-    private int idx;
+    private String idx;
 
     private String category;
     private String item;

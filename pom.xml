@@ -115,6 +115,27 @@
 			<version>3.0.4.RELEASE</version>
 		</dependency>
 
+		<!-- https://mvnrepository.com/artifact/com.opencsv/opencsv -->
+		<!-- <dependency>
+			<groupId>com.opencsv</groupId>
+			<artifactId>opencsv</artifactId>
+			<version>4.0</version>
+		</dependency> -->
+
+		<!-- ???? ?? poi 2007? ???? -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi</artifactId>
+			<version>3.13</version>
+		</dependency>
+
+		<!-- ???? ?? poi 2007? ???? -->
+		<dependency>
+			<groupId>org.apache.poi</groupId>
+			<artifactId>poi-ooxml</artifactId>
+			<version>3.13</version>
+		</dependency>
+
 	</dependencies>
 
 	<build>

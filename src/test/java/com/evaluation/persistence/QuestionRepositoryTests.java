@@ -46,7 +46,7 @@ public class QuestionRepositoryTests {
 				Question question = new Question();
 				question.setDivision1("division1" + i);
 				question.setDivision2("division2" + i);
-				question.setIdx(i);
+				question.setIdx("" + i);
 				question.setCategory("category" + i);
 				question.setItem("question" + i);
 				question.setTno(num);
