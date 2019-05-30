@@ -24,12 +24,14 @@ public class Staff {
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private long sno;
-	
+
 	@Column(unique = true, nullable = false)
 	private String email;
 	private String id;
 	private String password;
 	private String name;
+	private String telephone;
+
 	private String department1;
 	private String department2;
 	private String level;
@@ -37,7 +39,6 @@ public class Staff {
 	private String division2;
 	private String writeId;
 	private String updateId;
-
 	@CreationTimestamp
 	private Timestamp writeDate;
 	@UpdateTimestamp
