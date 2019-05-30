@@ -52,6 +52,7 @@ public class StaffServiceImpl implements StaffService {
 			origin.setDivision1(staff.getDivision1());
 			origin.setDivision2(staff.getDivision2());
 			origin.setUpdateId(staff.getUpdateId());
+			origin.setTelephone(staff.getTelephone());
 			staffRepo.save(origin);
 		});
 	}
@@ -94,5 +95,12 @@ public class StaffServiceImpl implements StaffService {
 
 		List<Staff> result = staffRepo.getStaffForEvaluator(cno, tno, sno);
 		return result;
+	}
+
+	@Override
+	public void deleteByCno(long cno) {
+		log.info("delete by tno : " + cno);
+
+		staffRepo.deleteByCno(cno);
 	}
 }

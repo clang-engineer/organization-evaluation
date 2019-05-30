@@ -105,4 +105,9 @@ public class StaffRepositoryTests {
 		});
 
 	}
+
+	@Test
+	public void testDeleteAll() {
+		staffRepo.deleteByCno(1L);
+	}
 }

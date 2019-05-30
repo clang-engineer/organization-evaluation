@@ -127,6 +127,40 @@
 		<input type="hidden" name="type" th:value=${pageVO.type} />
 		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
 	</form>
+
+	<!-- Modal -->
+	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+		<div class="modal-dialog">
+			<div class="modal-content">
+				<div class="modal-header">
+					<h4 class="modal-title">Staff</h4>
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+					</button>
+				</div>
+				<div class="modal-body">
+					<div class="form-group">
+						<input type="file" name="uploadFile">
+					</div>
+					<div class="form-group">
+						<label class="checkbox-inline">
+							<input type="checkbox" name="deleteList"> 기존 설정 삭제 후 입력
+						</label>
+					</div>
+				</div>
+				<div class="modal-footer">
+					<button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+					<button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- ./Modal -->
+
+	<div id="viewLoading">
+		<img src="/img/loading.gif" />
+	</div>
+
+
 </div>
 
 
@@ -136,6 +170,16 @@
 		$(document).ready(function () {
 
 			var msg = [[${ msg }]];
+			var csrf = JSON.parse('[[${_csrf}]]');
+
+			var tno = [[${ tno }]];
+			var writeId = [[${ #authentication.name }]];
+			//modal 사용 변수 선언
+			var modal = $("#myModal");
+			var modalDeleteList = modal.find("input[name='deleteList']");
+			var modalRegisterBtn = $("#modalRegisterBtn");
+			var modalCloseBtn = $("#modalCloseBtn");
+
 
 			if (msg == 'success' && history.state == null) {
 				alert("정상적으로 처리되었습니다.");
@@ -170,19 +214,96 @@
 				e.preventDefault();
 
 				var detailNo = $(this).attr("href");
-				formObj.attr("action", [[@{ '/staff/view'}]]);
-			formObj.append("<input type='hidden' name='sno' value='" + detailNo + "'/>");
-			formObj.submit();
+				formObj.attr("action", './view');
+				formObj.append("<input type='hidden' name='sno' value='" + detailNo + "'/>");
+				formObj.submit();
+			});
+
+			//등록 버튼 클릭 시
+			$("#register").click(function (e) {
+				e.preventDefault();
+				console.log(this);
+				formObj.attr("action", './register');
+				formObj.submit();
+			});
+
+			//xlRegister 클릭 시
+			$("#xlRegister").click(function (e) {
+				e.preventDefault();
+				modal.find("button[id!='modalCloseBtn']").hide();
+				modalRegisterBtn.show();
+				$("#myModal").modal("show");
+			});
+
+			//modal내의 register 클릭 시
+			modalRegisterBtn.on("click", function () {
+
+				var formData = new FormData();
+
+				var inputFile = $("input[name='uploadFile']");
+				var files = inputFile[0].files;
+
+				if (!checkExtension(files[0].name, files[0].size)) {
+					return false;
+
+				}
+
+				formData.append("uploadFile", files[0]);
+				formData.append("writeId", writeId);
+				formData.append("updateId", writeId);
+				formData.append("tno", tno);
+				formData.append("deleteList", modalDeleteList.prop('checked'));
+
+				$.ajax({
+					url: '/staff/upload',
+					processData: false,
+					contentType: false,
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(csrf.headerName, csrf.token);
+					},
+					data: formData,
+					type: 'POST',
+					success: function (result) {
+						alert("등록 완료 하였습니다.");
+						$("#myModal").modal("hide");
+						window.location.reload();
+					}, error: function (request, status, error) {
+						alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+					}
+				});
+			});
+
+			$('#viewLoading').hide();
+
+
+
+		}).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
+			console.log('ajax start');
+			$("#myModal").modal("hide");
+			$('#viewLoading').show();
+		}).ajaxStop(function () {        // ajax 통신 완료 callback (로딩바 hide)
+			console.log('ajax end');
+			$('#viewLoading').hide();
 		});
 
-		//등록 버튼 클릭 시
-		$("#register").click(function (e) {
-			e.preventDefault();
-			console.log(this);
-			formObj.attr("action", [[@{ '/staff/register'}]]);
-		formObj.submit();
-	     });
- 
-	});
+
+
+
+		//파일 사이즈 및 형식 제한.
+		var regex = new RegExp("(.*?)\.(xlsx)$");
+		var maxSize = 5242880;//5MB
+
+		function checkExtension(fileName, fileSize) {
+			if (fileSize >= maxSize) {
+				alert("파일 사이즈 초과");
+				return false;
+			}
+
+			if (!regex.test(fileName)) {
+				alert("xlsx 파일만 업로드 가능.")
+				return false;
+			}
+			return true;
+		}
 	</script>
 </th:block>

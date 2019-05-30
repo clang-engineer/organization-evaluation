@@ -24,4 +24,6 @@ public interface StaffService {
 	public List<Staff> getEvaluatedList(long cno, long tno);
 
 	public List<Staff> getEvaluatorList(long cno, long tno, long sno);
+
+	public void deleteByCno(long cno);
 }

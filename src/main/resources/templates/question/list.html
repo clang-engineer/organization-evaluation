@@ -21,8 +21,8 @@
             <!-- search box -->
             <div class="row" style="margin-top: 20px; margin-left: 7px;">
                 <div class="col-md-9">
-                    <button id="csvTemplate" class="btn btn-info">Excel Template</button>
-                    <button id="csvRegister" class="btn btn-success">Excel Register</button>
+                    <button id="xlTemplate" class="btn btn-info">Excel Template</button>
+                    <button id="xlRegister" class="btn btn-success">Excel Register</button>
                     <button id="register" class="btn btn-success">Register</button>
                 </div>
                 <div class="col-md-3" style="float: right">
@@ -141,8 +141,6 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
-                    <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
                     <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
                     <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
                 </div>
@@ -150,6 +148,9 @@
         </div>
     </div>
     <!-- ./Modal -->
+    <div id="viewLoading">
+        <img src="/img/loading.gif" />
+    </div>
 </div>
 
 
@@ -165,11 +166,7 @@
             var writeId = [[${ #authentication.name }]];
             //modal 사용 변수 선언
             var modal = $("#myModal");
-            var modalContent1 = modal.find("input[name='modalContent1']");
             var modalDeleteList = modal.find("input[name='deleteList']");
-            // var modalContent2 = modal.find("input[name='modalContent2']");
-            var modalModifyBtn = $("#modalModifyBtn");
-            var modalRemoveBtn = $("#modalRemoveBtn");
             var modalRegisterBtn = $("#modalRegisterBtn");
             var modalCloseBtn = $("#modalCloseBtn");
 
@@ -225,8 +222,8 @@
                 formObj.submit();
             });
 
-            //csvRegister 클릭 시
-            $("#csvRegister").click(function (e) {
+            //xlRegister 클릭 시
+            $("#xlRegister").click(function (e) {
                 e.preventDefault();
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
@@ -244,6 +241,7 @@
 
                 if (!checkExtension(files[0].name, files[0].size)) {
                     return false;
+
                 }
 
                 formData.append("uploadFile", files[0]);
@@ -271,6 +269,14 @@
                 });
             });
 
+            $('#viewLoading').hide();
+        }).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
+            console.log('ajax start');
+            $("#myModal").modal("hide");
+            $('#viewLoading').show();
+        }).ajaxStop(function () {        // ajax 통신 완료 callback (로딩바 hide)
+            console.log('ajax end');
+            $('#viewLoading').hide();
         });
 
 

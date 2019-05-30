@@ -146,13 +146,12 @@ public class QuestionController {
         int iteration = 0;
         List<List<String>> allData = readExcel(uploadFile);
 
-        for (List<String> newLine : allData) {
+        for (List<String> list : allData) {
             if (iteration == 0) {
                 iteration++;
                 continue;
             }
-            List<String> list = newLine;
-            // log.info("" + list);
+
             Question row = new Question();
             row.setTno(question.getTno());
             row.setIdx(list.get(0));
@@ -209,7 +208,8 @@ public class QuestionController {
                                 value = cell.getStringCellValue() + "";
                                 break;
                             case XSSFCell.CELL_TYPE_BLANK:
-                                value = cell.getBooleanCellValue() + "";
+                                // value = cell.getBooleanCellValue() + "";
+                                value = "";
                                 break;
                             case XSSFCell.CELL_TYPE_ERROR:
                                 value = cell.getErrorCellValue() + "";
