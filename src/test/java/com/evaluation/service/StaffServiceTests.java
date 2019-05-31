@@ -121,4 +121,9 @@ public class StaffServiceTests {
 		}
 		return list;
 	}
+
+	@Test
+	public void testDeleteDistinctInfoByCno() {
+		staffService.deleteDistinctInfoByCno(1L);
+	}
 }

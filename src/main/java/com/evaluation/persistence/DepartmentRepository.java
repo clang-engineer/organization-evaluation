@@ -7,13 +7,21 @@ import com.evaluation.domain.QDepartment;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface DepartmentRepository extends CrudRepository<Department, Long>, QuerydslPredicateExecutor<Department> {
     @Query("SELECT d FROM Department d WHERE d.cno=?1 AND d.dno>0 ORDER BY d.dno ASC")
     public List<Department> getDepartmentOfCompany(long cno);
+
+    // 부서정보 전체 삭제
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Department d WHERE d.cno=?1")
+    public void deleteByCno(long cno);
 
     public default Predicate makePredicate(String type, String keyword, long cno) {
 
@@ -23,7 +31,6 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
 
         builder.and(department.dno.gt(0));
         builder.and(department.cno.eq(cno));
-
 
         if (type == null) {
             return builder;

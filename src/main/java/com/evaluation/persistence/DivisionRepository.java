@@ -5,10 +5,19 @@ import com.evaluation.domain.QDivision;
 import com.querydsl.core.BooleanBuilder;
 import com.querydsl.core.types.Predicate;
 
+import org.springframework.data.jpa.repository.Modifying;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.transaction.annotation.Transactional;
 
 public interface DivisionRepository extends CrudRepository<Division, Long>, QuerydslPredicateExecutor<Division> {
+
+    // 구분 전체 삭제
+    @Transactional
+    @Modifying
+    @Query("DELETE FROM Division d WHERE d.cno=?1")
+    public void deleteByCno(long cno);
 
     public default Predicate makePredicate(String type, String keyword, long cno) {
 

@@ -29,4 +29,6 @@ public interface StaffService {
 	public void deleteByCno(long cno);
 
 	public Map<String, Object> getDistinctInfoListByCno(Long cno);
+
+	public void deleteDistinctInfoByCno(long cno);
 }

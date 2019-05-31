@@ -6,24 +6,32 @@ import java.util.Map;
 import java.util.Optional;
 
 import com.evaluation.domain.Staff;
+import com.evaluation.persistence.DepartmentRepository;
+import com.evaluation.persistence.DivisionRepository;
+import com.evaluation.persistence.LevelRepository;
 import com.evaluation.persistence.StaffRepository;
 import com.evaluation.service.StaffService;
 import com.evaluation.vo.PageVO;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@AllArgsConstructor
 public class StaffServiceImpl implements StaffService {
 
-	@Setter(onMethod_ = { @Autowired })
 	StaffRepository staffRepo;
+
+	DepartmentRepository departmentRepo;
+
+	DivisionRepository divisionRepo;
+
+	LevelRepository levelRepo;
 
 	@Override
 	public void register(Staff staff) {
@@ -106,6 +114,7 @@ public class StaffServiceImpl implements StaffService {
 		staffRepo.deleteByCno(cno);
 	}
 
+	@Override
 	public Map<String, Object> getDistinctInfoListByCno(Long cno) {
 		log.info("staffDistinctInfoByCno " + cno);
 
@@ -120,5 +129,14 @@ public class StaffServiceImpl implements StaffService {
 		result.put("level", lev);
 
 		return result;
+	}
+
+	@Override
+	public void deleteDistinctInfoByCno(long cno) {
+		log.info("deleteDistinctInfoByCno " + cno);
+
+		departmentRepo.deleteByCno(cno);
+		levelRepo.deleteByCno(cno);
+		divisionRepo.deleteByCno(cno);
 	}
 }
