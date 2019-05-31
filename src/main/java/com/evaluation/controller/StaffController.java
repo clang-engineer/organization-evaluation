@@ -2,11 +2,20 @@ package com.evaluation.controller;
 
 import java.io.InputStream;
 import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
+import com.evaluation.domain.Department;
+import com.evaluation.domain.Division;
+import com.evaluation.domain.Level;
 import com.evaluation.domain.Staff;
+import com.evaluation.service.DepartmentService;
 import com.evaluation.service.DistinctInfoService;
+import com.evaluation.service.DivisionService;
+import com.evaluation.service.LevelService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -16,9 +25,9 @@ import org.apache.poi.xssf.usermodel.XSSFCell;
 import org.apache.poi.xssf.usermodel.XSSFRow;
 import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -27,22 +36,27 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/staff/*")
 @Slf4j
+@AllArgsConstructor
+@Transactional
 public class StaffController {
 
-	@Setter(onMethod_ = { @Autowired })
 	StaffService staffService;
 
-	@Setter(onMethod_ = { @Autowired })
 	TurnService turnService;
 
-	@Setter(onMethod_ = { @Autowired })
 	DistinctInfoService distinctInfoService;
+
+	LevelService levelService;
+
+	DepartmentService departmentService;
+
+	DivisionService divisionService;
 
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {
@@ -147,6 +161,7 @@ public class StaffController {
 		int iteration = 0;
 		List<List<String>> allData = readExcel(uploadFile);
 
+		// 직원 등록
 		for (List<String> list : allData) {
 			if (iteration == 0) {
 				iteration++;
@@ -170,8 +185,66 @@ public class StaffController {
 
 			staffService.register(row);
 		}
+
+		// map으로 구성된 회원의 각 중복 제거 정보 서비스 객체에서 가져옴.
+		Map<String, Object> result = staffService.getDistinctInfoListByCno(cno);
+
+		// level map에서 꺼내고 list로 캐스팅 후에 db저장
+		Object levObj = result.get("level");
+		List<String> levList = (List<String>) convertObjectToList(levObj);
+		for (int i = 0; i < levList.size(); i++) {
+			Level level = new Level();
+			level.setCno(cno);
+			level.setContent(levList.get(i));
+			level.setWriteId(staff.getWriteId());
+			level.setUpdateId(staff.getUpdateId());
+
+			levelService.register(level);
+		}
+
+		// department map에서 꺼내고 list로 캐스팅 후에 db저장
+		Object depObj = result.get("department");
+		List<List<String>> depList = (List<List<String>>) convertObjectToList(depObj);
+		depList.forEach(data -> {
+			Department department = new Department();
+			department.setCno(cno);
+			department.setDepartment1(data.get(0));
+			department.setDepartment2(data.get(1));
+			department.setWriteId(staff.getWriteId());
+			department.setUpdateId(staff.getUpdateId());
+
+			departmentService.register(department);
+		});
+
+		// division map에서 꺼내고 list로 캐스팅 후에 db저장
+		Object divObj = result.get("division");
+		List<List<String>> divList = (List<List<String>>) convertObjectToList(divObj);
+		divList.forEach(data -> {
+			Division division = new Division();
+			division.setCno(cno);
+			division.setDivision1(data.get(0));
+			division.setDivision2(data.get(1));
+			division.setWriteId(staff.getWriteId());
+			division.setUpdateId(staff.getUpdateId());
+
+			divisionService.register(division);
+		});
+
 	}
 
+	/* cast Object to List function */
+	public static List<?> convertObjectToList(Object obj) {
+		List<?> list = new ArrayList<>();
+		if (obj.getClass().isArray()) {
+			list = Arrays.asList((Object[]) obj);
+		} else if (obj instanceof Collection) {
+			list = new ArrayList<>((Collection<?>) obj);
+		}
+		return list;
+	}
+	/* .cast Object to List function */
+
+	/* read excel funcion */
 	public List<List<String>> readExcel(MultipartFile uploadFile) {
 		List<List<String>> ret = new ArrayList<List<String>>();
 
@@ -234,4 +307,5 @@ public class StaffController {
 
 		return ret;
 	}
+	/* .read excel funcion */
 }

@@ -98,8 +98,16 @@ public class StaffServiceTests {
 
 		Object dep = result.get("department");
 		List<List<String>> department = (List<List<String>>) convertObjectToList(dep);
-		department.forEach(action -> {
-			log.info(action.get(1));
+		department.forEach(data -> {
+			log.info(data.get(0));
+			log.info(data.get(1));
+		});
+
+		Object divObj = result.get("division");
+		List<List<String>> divList = (List<List<String>>) convertObjectToList(divObj);
+		divList.forEach(data -> {
+			log.info(data.get(0));
+			log.info(data.get(1));
 		});
 	}
 
