@@ -1,5 +1,6 @@
 package com.evaluation.persistence;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -109,5 +110,32 @@ public class StaffRepositoryTests {
 	@Test
 	public void testDeleteAll() {
 		staffRepo.deleteByCno(1L);
+	}
+
+	@Test
+	public void testGetDistinctDepartmentListByCno() {
+		List<List<String>> result = new ArrayList<List<String>>();
+		staffRepo.getDistinctDepartmentListByCno(1L).forEach(arr -> result.add(arr));
+
+		result.forEach(data -> log.info("" + data.get(1)));
+		log.info("" + result);
+	}
+
+	@Test
+	public void testGetDistinctDivisionListByCno() {
+		List<List<String>> result = new ArrayList<List<String>>();
+		staffRepo.getDistinctDivisionListByCno(1L).forEach(arr -> result.add(arr));
+
+		result.forEach(data -> log.info("" + data.get(1)));
+		log.info("" + result);
+	}
+
+	@Test
+	public void testGetDistinctLevelListByCno() {
+		List<String> result = new ArrayList<String>();
+		staffRepo.getDistinctLevelListByCno(1L).forEach(arr -> result.add(arr));
+
+		result.forEach(data -> log.info("" + data));
+		log.info("" + result);
 	}
 }

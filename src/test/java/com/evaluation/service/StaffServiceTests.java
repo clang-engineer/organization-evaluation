@@ -2,6 +2,11 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Collection;
+import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.evaluation.domain.Staff;
@@ -77,5 +82,35 @@ public class StaffServiceTests {
 		log.info("remove test...");
 
 		staffService.remove(2L);
+	}
+
+	@Test
+	public void testGetDistinctInfoListByCno() {
+		log.info("getDistinctInfoListByCno test");
+
+		Map<String, Object> result = staffService.getDistinctInfoListByCno(1L);
+
+		Object lev = result.get("level");
+		List<String> level = (List<String>) convertObjectToList(lev);
+		for (int i = 0; i < level.size(); i++) {
+			log.info(level.get(i));
+		}
+
+		Object dep = result.get("department");
+		List<List<String>> department = (List<List<String>>) convertObjectToList(dep);
+		department.forEach(action -> {
+			log.info(action.get(1));
+		});
+	}
+
+	// cast Object to List
+	public static List<?> convertObjectToList(Object obj) {
+		List<?> list = new ArrayList<>();
+		if (obj.getClass().isArray()) {
+			list = Arrays.asList((Object[]) obj);
+		} else if (obj instanceof Collection) {
+			list = new ArrayList<>((Collection<?>) obj);
+		}
+		return list;
 	}
 }

@@ -16,6 +16,7 @@ import com.querydsl.core.types.Predicate;
 
 public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPredicateExecutor<Staff> {
 
+	// 검색을 위한.. 나중에 criteria 작업 필요
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno ORDER BY s.name ASC")
 	public List<Staff> getAllStaffListByCno(@Param("cno") long cno);
 
@@ -25,10 +26,21 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
 	public List<Staff> getStaffForEvaluator(@Param("cno") long cno, @Param("tno") long tno, @Param("sno") long sno);
 
+	// 직원 전원 삭제
 	@Transactional
 	@Modifying
 	@Query("DELETE FROM Staff s WHERE s.cno=?1")
 	public void deleteByCno(long cno);
+
+	// 엑셀을 통한 직원 정보 입력 후, 중복 제거 한 직원 정보 각각 삽입하기 위한 쿼리
+	@Query("SELECT DISTINCT s.department1, s.department2 FROM Staff s WHERE s.cno=?1")
+	public List<List<String>> getDistinctDepartmentListByCno(long cno);
+
+	@Query("SELECT DISTINCT s.division1, s.division2 FROM Staff s WHERE s.cno=?1")
+	public List<List<String>> getDistinctDivisionListByCno(long cno);
+
+	@Query("SELECT DISTINCT s.level FROM Staff s WHERE s.cno=?1")
+	public List<String> getDistinctLevelListByCno(long cno);
 
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 

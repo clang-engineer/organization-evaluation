@@ -1,6 +1,8 @@
 package com.evaluation.service.Impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.evaluation.domain.Staff;
@@ -102,5 +104,21 @@ public class StaffServiceImpl implements StaffService {
 		log.info("delete by tno : " + cno);
 
 		staffRepo.deleteByCno(cno);
+	}
+
+	public Map<String, Object> getDistinctInfoListByCno(Long cno) {
+		log.info("staffDistinctInfoByCno " + cno);
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		List<List<String>> dep = staffRepo.getDistinctDepartmentListByCno(cno);
+		List<List<String>> div = staffRepo.getDistinctDivisionListByCno(cno);
+		List<String> lev = staffRepo.getDistinctLevelListByCno(cno);
+
+		result.put("department", dep);
+		result.put("division", div);
+		result.put("level", lev);
+
+		return result;
 	}
 }
