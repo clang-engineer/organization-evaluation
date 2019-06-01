@@ -49,13 +49,14 @@ public class PageMaker<T> {
 
 		if (this.totalPageNum < tempEndNum) {
 			tempEndNum = this.totalPageNum;
-			this.nextPage = null;
 		}
 
 		for (int i = startNum; i <= tempEndNum; i++) {
 			pageList.add(startPage);
 			startPage = startPage.next();
 		}
-		this.nextPage = startPage.getPageNumber() + 1 < totalPageNum ? startPage : null;
+		
+		//마지막 this.nextPage에 할당되는 값은 화면의 마지막 페이지 번호가 전체 페이지 수보다 작으면 next에 startPage를 할당하고, 아니면 null을 할당.
+		this.nextPage = startPage.getPageNumber() < this.totalPageNum ? startPage : null;
 	}
 }
