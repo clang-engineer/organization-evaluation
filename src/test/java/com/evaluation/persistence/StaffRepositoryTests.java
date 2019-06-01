@@ -138,4 +138,18 @@ public class StaffRepositoryTests {
 		result.forEach(data -> log.info("" + data));
 		log.info("" + result);
 	}
+
+	@Test
+	public void testFindByCnoAndName() {
+		log.info("" + staffRepo.findByCnoAndName(1, "이동영"));
+	}
+
+	@Test
+	public void testFindByCnoAndEmail() {
+		log.info("" + staffRepo.findByCnoAndEmail(1L, "choij@dwchem.co.kr"));
+	}
+
+	// relation 설정할 때 직원 불러오기 위해! evaluator 위해
+	// public Staff findByCnoEqualAndNameEqual(long cno, String email);
+
 }

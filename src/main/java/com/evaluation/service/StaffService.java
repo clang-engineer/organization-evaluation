@@ -31,4 +31,8 @@ public interface StaffService {
 	public Map<String, Object> getDistinctInfoListByCno(Long cno);
 
 	public void deleteDistinctInfoByCno(long cno);
+
+	public Staff readByCnoAndEmail(long cno, String email);
+
+	public Staff readByCnoAndName(long cno, String name);
 }

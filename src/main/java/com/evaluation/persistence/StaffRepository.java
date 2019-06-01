@@ -42,6 +42,14 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	@Query("SELECT DISTINCT s.level FROM Staff s WHERE s.cno=?1")
 	public List<String> getDistinctLevelListByCno(long cno);
 
+	// relation 설정할 때 직원 불러오기 위해! evaluated 위해
+	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.email=?2")
+	public Staff findByCnoAndEmail(long cno, String email);
+
+	// relation 설정할 때 직원 불러오기 위해! evaluator 위해
+	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.name=?2")
+	public Staff findByCnoAndName(long cno, String name);
+
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 
 		BooleanBuilder builder = new BooleanBuilder();

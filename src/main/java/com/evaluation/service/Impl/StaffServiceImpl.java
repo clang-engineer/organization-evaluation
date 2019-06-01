@@ -139,4 +139,14 @@ public class StaffServiceImpl implements StaffService {
 		levelRepo.deleteByCno(cno);
 		divisionRepo.deleteByCno(cno);
 	}
+
+	@Override
+	public Staff readByCnoAndEmail(long cno, String email) {
+		return staffRepo.findByCnoAndEmail(cno, email);
+	}
+
+	@Override
+	public Staff readByCnoAndName(long cno, String name) {
+		return staffRepo.findByCnoAndName(cno, name);
+	}
 }
