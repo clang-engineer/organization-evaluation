@@ -32,15 +32,18 @@ public class AboutExcel {
                 XSSFRow row = sheet.getRow(rowindex);
                 if (row != null) {
                     List<String> tmpList = new ArrayList<String>();
-                    // 셀의 수
-                    int cells = row.getPhysicalNumberOfCells();
+                    // 셀의 수 getPhysicalNumberOfCells()은 개수카운팅에 문제가 있음... getLastCellNum으로!!
+                    // int cells = row.getPhysicalNumberOfCells();
+                    int cells = row.getLastCellNum();
                     for (columnindex = 0; columnindex <= cells; columnindex++) {
                         // 셀값을 읽는다
                         XSSFCell cell = row.getCell(columnindex);
                         String value = "";
                         // 셀이 빈값일경우를 위한 널체크
                         if (cell == null) {
-                            continue;
+                            value = null;
+                            // 최초버전 continue로 뒀으나, 이것때문에 행렬 어그러짐 문제 발생.
+                            // continue;
                         } else {
                             // 타입별로 내용 읽기
                             switch (cell.getCellType()) {
@@ -49,14 +52,14 @@ public class AboutExcel {
                                 break;
                             case XSSFCell.CELL_TYPE_NUMERIC:
                                 // value = cell.getNumericCellValue() + "";
-                                value = cell.getRawValue();
+                                value = cell.getRawValue().trim().trim();
                                 break;
                             case XSSFCell.CELL_TYPE_STRING:
-                                value = cell.getStringCellValue() + "";
+                                value = cell.getStringCellValue().trim() + "";
                                 break;
                             case XSSFCell.CELL_TYPE_BLANK:
                                 // value = cell.getBooleanCellValue() + "";
-                                value = "";
+                                value = null;
                                 break;
                             case XSSFCell.CELL_TYPE_ERROR:
                                 value = cell.getErrorCellValue() + "";
