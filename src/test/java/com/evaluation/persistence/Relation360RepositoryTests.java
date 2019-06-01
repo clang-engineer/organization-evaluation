@@ -115,7 +115,7 @@ public class Relation360RepositoryTests {
     public void getDistinctEvaluatedListTest() {
         Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "rno");
 
-        Page<Staff> result = relation360Repo.getDistinctEvaluatedList(9L, pageable);
+        Page<Staff> result = relation360Repo.getDistinctEvaluatedList(1L, pageable);
         result.getContent().forEach(relation360 -> log.info("" + relation360.getName()));
         // log.info("" + result.getContent());
     }
@@ -134,5 +134,10 @@ public class Relation360RepositoryTests {
     @Test
     public void testDeleteAllByTno() {
         relation360Repo.deleteAllRelationByTno(1L);
+    }
+
+    @Test
+    public void testFindEvaluatorByEvaulatedSno() {
+        relation360Repo.findByEvaulatedSno(47972L).forEach(origin -> log.info("" + origin.getEvaluator().getSno()));
     }
 }

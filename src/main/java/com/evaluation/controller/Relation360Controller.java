@@ -79,11 +79,18 @@ public class Relation360Controller {
 
         model.addAttribute("tno", tno);
 
-        List<Relation360> relationTable = relation360Service.getAllList(tno);
-        model.addAttribute("relationTable", relationTable);
-
+        // 우선 중복 제거한 피평가자 paging처리해서 구함
         Page<Staff> result = relation360Service.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
+
+        //출력된 피평가자들의 sno로 relation table을 만듬. 
+        List<Relation360> relationTable = new ArrayList<>();
+        result.getContent().forEach(origin -> {
+            List<Relation360> tmpList = relation360Service.findRelationByEvaulatedSno(origin.getSno());
+            relationTable.addAll(tmpList);
+        });
+        model.addAttribute("relationTable", relationTable);
+
     }
 
     @PostMapping("/removeRow")

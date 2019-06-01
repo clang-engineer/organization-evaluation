@@ -23,6 +23,10 @@ public interface Relation360Repository
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=?1")
     public List<Relation360> findByTno(long tno);
 
+    //모든 테이블 가져오니 넘 느려서, 페이지에 표시되는 관련 관계자 정보만 가져오기로 함.
+    @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluated.sno=?1")
+    public List<Relation360> findByEvaulatedSno(long sno);
+
     // 하나의 tno에 존재하는 모든 relation 중 중복을 제거한 피평가자 실질적으로 페이징 처리됨.
     @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=?1 ORDER BY r.evaluated.sno DESC")
     public Page<Staff> getDistinctEvaluatedList(long tno, Pageable pageable);

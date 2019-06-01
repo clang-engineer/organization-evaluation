@@ -113,4 +113,10 @@ public class Relation360ServiceImpl implements Relation360Service {
 
         relation360Repo.deleteAllRelationByTno(tno);
     }
+
+    public List<Relation360> findRelationByEvaulatedSno(long sno) {
+        log.info("findRelationByEvaulatedSno " + sno);
+
+        return relation360Repo.findByEvaulatedSno(sno);
+    }
 }

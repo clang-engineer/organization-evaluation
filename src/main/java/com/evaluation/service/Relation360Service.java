@@ -28,4 +28,6 @@ public interface Relation360Service {
     public void deleteEvaluatedInfo(long tno, long sno);
 
     public void deleteAllRelationByTno(long tno);
+
+    public List<Relation360> findRelationByEvaulatedSno(long sno);
 }
