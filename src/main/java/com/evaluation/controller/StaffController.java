@@ -190,6 +190,7 @@ public class StaffController {
 
 		// level map에서 꺼내고 list로 캐스팅 후에 db저장
 		Object levObj = result.get("level");
+		@SuppressWarnings("unchecked")
 		List<String> levList = (List<String>) convertObjectToList(levObj);
 		for (int i = 0; i < levList.size(); i++) {
 			Level level = new Level();
@@ -203,6 +204,7 @@ public class StaffController {
 
 		// department map에서 꺼내고 list로 캐스팅 후에 db저장
 		Object depObj = result.get("department");
+		@SuppressWarnings("unchecked")
 		List<List<String>> depList = (List<List<String>>) convertObjectToList(depObj);
 		depList.forEach(data -> {
 			Department department = new Department();
@@ -217,6 +219,7 @@ public class StaffController {
 
 		// division map에서 꺼내고 list로 캐스팅 후에 db저장
 		Object divObj = result.get("division");
+		@SuppressWarnings("unchecked")
 		List<List<String>> divList = (List<List<String>>) convertObjectToList(divObj);
 		divList.forEach(data -> {
 			Division division = new Division();

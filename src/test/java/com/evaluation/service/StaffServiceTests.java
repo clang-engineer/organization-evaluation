@@ -91,12 +91,14 @@ public class StaffServiceTests {
 		Map<String, Object> result = staffService.getDistinctInfoListByCno(1L);
 
 		Object lev = result.get("level");
+		@SuppressWarnings("unchecked")
 		List<String> level = (List<String>) convertObjectToList(lev);
 		for (int i = 0; i < level.size(); i++) {
 			log.info(level.get(i));
 		}
 
 		Object dep = result.get("department");
+		@SuppressWarnings("unchecked")
 		List<List<String>> department = (List<List<String>>) convertObjectToList(dep);
 		department.forEach(data -> {
 			log.info(data.get(0));
@@ -104,6 +106,7 @@ public class StaffServiceTests {
 		});
 
 		Object divObj = result.get("division");
+		@SuppressWarnings("unchecked")
 		List<List<String>> divList = (List<List<String>>) convertObjectToList(divObj);
 		divList.forEach(data -> {
 			log.info(data.get(0));
