@@ -35,11 +35,17 @@ public interface Relation360Repository
     @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.evaluator.name LIKE %?1% AND r.tno=?2")
     public Page<Staff> getDistinctEvaluatedListByEvaluator(String keyword, long tno, Pageable pageable);
 
-    // 회차에 속하는 evaluated정보 모두 삭제
+    // 회차에 속하는 특정 evaluated정보 모두 삭제
     @Modifying
     @Transactional
     @Query("DELETE FROM Relation360 r WHERE r.rno>0 AND r.tno=?1 AND r.evaluated.sno=?2")
     public void deleteEvaluatedInfo(long tno, long sno);
+
+    // 회차에 속하는 모든 realtion 삭제
+    @Modifying
+    @Transactional
+    @Query("DELETE FROM Relation360 r WHERE r.rno>0 AND r.tno=?1")
+    public void deleteAllRelationByTno(long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 

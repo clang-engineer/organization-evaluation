@@ -56,7 +56,7 @@ public class Relation360 {
     @OrderBy(clause = "comment_key asc")
     private Map<String, String> comments;
 
-    private String finish;
+    private String finish = "N";
 
     @CreationTimestamp
     private Timestamp writeDate;

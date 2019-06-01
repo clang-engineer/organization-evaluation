@@ -106,4 +106,11 @@ public class Relation360ServiceImpl implements Relation360Service {
 
         relation360Repo.deleteEvaluatedInfo(tno, sno);
     }
+
+    @Override
+    public void deleteAllRelationByTno(long tno) {
+        log.info("deleteAllRelationByTno " + tno);
+
+        relation360Repo.deleteAllRelationByTno(tno);
+    }
 }
