@@ -2,44 +2,48 @@ package com.evaluation.service.Impl;
 
 import java.util.Optional;
 
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.stereotype.Service;
-
 import com.evaluation.domain.Company;
 import com.evaluation.persistence.CompanyRepository;
+import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.CompanyService;
 import com.evaluation.vo.PageVO;
 
-import lombok.Setter;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
+
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
+@Transactional
+@AllArgsConstructor
 public class CompanyServiceImpl implements CompanyService {
 
-	@Setter(onMethod_ = @Autowired)
 	private CompanyRepository companyRepo;
+
+	private TurnRepository turnRepo;
 
 	@Override
 	public void register(Company company) {
 		log.info("service : company register " + company);
-		
+
 		companyRepo.save(company);
 	}
 
 	@Override
 	public Optional<Company> get(long cno) {
 		log.info("service : company get " + cno);
-		
+
 		return companyRepo.findById(cno);
 	}
 
 	@Override
 	public void modify(Company company) {
 		log.info("service : company modify " + company);
-		
+
 		companyRepo.findById(company.getCno()).ifPresent(origin -> {
 			origin.setId(company.getId());
 			origin.setName(company.getName());
@@ -53,8 +57,9 @@ public class CompanyServiceImpl implements CompanyService {
 
 	@Override
 	public void remove(long cno) {
-		log.info("service : company remove " + cno);
-		
+		log.info("compny+turn delete " + cno);
+
+		turnRepo.deleteByCno(cno);
 		companyRepo.deleteById(cno);
 	}
 

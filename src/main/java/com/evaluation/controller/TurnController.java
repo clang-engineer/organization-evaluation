@@ -4,7 +4,6 @@ import java.util.List;
 
 import javax.transaction.Transactional;
 
-import com.evaluation.domain.InfoSurvey;
 import com.evaluation.domain.Turn;
 import com.evaluation.service.TurnService;
 
@@ -38,13 +37,6 @@ public class TurnController {
 
 		turn.setCno(cno);
 
-		InfoSurvey info360 = new InfoSurvey();
-		info360.setTitle("-");
-		InfoSurvey infoMbo = new InfoSurvey();
-		infoMbo.setTitle("-");
-
-		turn.setInfo360(info360);
-		turn.setInfoMbo(infoMbo);
 		turnService.register(turn);
 
 		return new ResponseEntity<>(getTurnList(cno), HttpStatus.CREATED);

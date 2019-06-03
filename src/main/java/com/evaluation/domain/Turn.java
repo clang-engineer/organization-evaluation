@@ -31,8 +31,8 @@ import lombok.Setter;
 @Entity
 @Table(name = "tbl_turn")
 @SecondaryTables({
-		@SecondaryTable(name = "tbl_turn_360", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")),
-		@SecondaryTable(name = "tbl_turn_mbo", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")), })
+		@SecondaryTable(name = "tbl_turn_info360", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")),
+		@SecondaryTable(name = "tbl_turn_infoMbo", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")), })
 @EqualsAndHashCode(of = "tno")
 public class Turn {
 
@@ -59,20 +59,20 @@ public class Turn {
 	private Long cno;
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_360")),
-			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_360")),
-			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_360")),
-			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_360")),
-			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_360")),
-			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_360")) })
+	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_info360")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_info360")),
+			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_info360")),
+			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_info360")),
+			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_info360")),
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_info360")) })
 	private InfoSurvey info360;
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_mbo")),
-			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_mbo")),
-			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_mbo")),
-			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_mbo")),
-			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_mbo")),
-			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_mbo")) })
+	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_infoMbo")) })
 	private InfoSurvey infoMbo;
 }
