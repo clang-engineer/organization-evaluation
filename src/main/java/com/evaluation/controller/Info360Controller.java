@@ -31,7 +31,6 @@ public class Info360Controller {
 		log.info("info360 read get " + tno);
 
 		model.addAttribute("tno", tno);
-		model.addAttribute("bookStatus", bookService.read(1L).get().getContents());
 		model.addAttribute("bookReply", bookService.listFindByType("360Reply"));
 		model.addAttribute("info360", info360Service.read(tno));
 	}
@@ -41,7 +40,6 @@ public class Info360Controller {
 		log.info("info360 modify get" + tno);
 
 		model.addAttribute("tno", tno);
-		model.addAttribute("bookStatus", bookService.read(1L).get().getContents());
 		model.addAttribute("bookReply", bookService.listFindByType("360Reply"));
 		model.addAttribute("info360", info360Service.read(tno));
 	}

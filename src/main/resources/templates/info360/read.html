@@ -50,9 +50,10 @@
 						<label>Status</label>
 						<select class="form-control" name="status">
 							<option>--</option>
-							<span th:each="status:${bookStatus}">
-								<option value="standby" th:selected="${status}==${info360.status}" th:value="${status}">[[${status}]]</option>
-							</span>
+							<option value="setting" th:selected="${info360.status}=='setting'">설정 중</option>
+							<option value="survey" th:selected="${info360.status}=='survey'">평가 진행</option>
+							<option value="count" th:selected="${info360.status}=='count'">평가 집계</option>
+							<option value="inactivation" th:selected="${info360.status}=='inactivation'">비활성화</option>
 						</select>
 					</div>
 
