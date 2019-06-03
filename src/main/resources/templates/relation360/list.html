@@ -294,7 +294,7 @@
                 evaluatedNo = $(this).attr("href");
                 content = $(this).closest("tr").children().eq(1).text();
                 // lev2 = $(this).closest("tr").children().eq(2).text();
-                modalContent1.val("피평가자 '" + content + "'의 평가 정보를 모두 삭제합니다.");
+                modalContent1.val("피평가자 '" + content + "'의 평가 명단을 모두 삭제합니다.");
                 // modalContent2.val(lev2);
                 modal.data("idx", evaluatedNo);
                 modal.data("delete", "row");
@@ -410,7 +410,11 @@
                         success: function (result) {
                             alert("등록 완료 하였습니다.");
                             $("#myModal").modal("hide");
-                            window.location.reload();
+
+                            //parameter 제거 -> tno추가 하고 리로드
+                            url = window.location.href.split("?")[0];
+                            url += '?tno=' + tno;
+                            window.location.href = url;
                         }, error: function (request, status, error) {
                             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                         }
@@ -475,7 +479,8 @@
                 e.preventDefault();
                 relationNo = $(this).attr("href");
                 contentTrim = $.trim($(this).text());
-                content = contentTrim.substring(0, contentTrim.length - 1);
+                evaluatorName = contentTrim.substring(0, contentTrim.length - 1);
+                evaluatedName = $(this).closest("tr").children().eq(1).text();
 
                 var relation = $(this).data("relation");
 
@@ -489,7 +494,7 @@
                 if (relation == "me") {
                     modalContent1.val("본인 평가 정보를 삭제 합니다.");
                 } else {
-                    modalContent1.val("평가자 '" + content + "'의 정보를 삭제 합니다.");
+                    modalContent1.val(evaluatedName + "님의 평가자 명단에서 '" + evaluatorName + "'님을 제외합니다.");
                 }
                 modal.data("idx", relationNo);
                 modal.data("delete", "column");
@@ -509,11 +514,11 @@
                     }
                     for (var i = 0, len = list.length || 0; i < len; i++) {
                         str += "<tr><td><input type='radio' name='evaluated' value='" + list[i].sno + "'></td>";
-                        str += "<td>" + list[i].sno + "</td>";
+                        str += "<td>" + list[i].name + "</td>";
                         str += "<td>" + list[i].id + "</td>";
-                        str += "<td>" + list[i].department1 + "</td>";
-                        str += "<td>" + list[i].department2 + "</td>";
-                        str += "<td>" + list[i].level + "</td></tr>";
+                        str += "<td>" + (list[i].department1 || '') + "</td>";
+                        str += "<td>" + (list[i].department2 || '') + "</td>";
+                        str += "<td>" + (list[i].level || '') + "</td></tr>";
                     }
                     $("#radioBody").html(str);
                 });
@@ -528,11 +533,11 @@
                     }
                     for (var i = 0, len = list.length || 0; i < len; i++) {
                         str += "<tr><td><input type='radio' name='evaluator' value='" + list[i].sno + "'></td>";
-                        str += "<td>" + list[i].sno + "</td>";
+                        str += "<td>" + list[i].name + "</td>";
                         str += "<td>" + list[i].id + "</td>";
-                        str += "<td>" + list[i].department1 + "</td>";
-                        str += "<td>" + list[i].department2 + "</td>";
-                        str += "<td>" + list[i].level + "</td></tr>";
+                        str += "<td>" + (list[i].department1 || '') + "</td>";
+                        str += "<td>" + (list[i].department2 || '') + "</td>";
+                        str += "<td>" + (list[i].level || '') + "</td></tr>";
                     }
                     $("#radioBody").html(str);
                 });
