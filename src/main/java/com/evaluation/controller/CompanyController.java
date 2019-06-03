@@ -96,7 +96,9 @@ public class CompanyController {
 	}
 
 	@GetMapping("/turnList")
-	public void turnList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo) {
+	public void turnList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
 		log.info("controller : company surveyList");
+
+		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 }

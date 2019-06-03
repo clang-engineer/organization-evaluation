@@ -9,8 +9,7 @@
         <!-- Page Heading -->
         <p class="mb-4">
             DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
-            <a target="_blank" href="https://datatables.net">official DataTables documentation</a>
-            .
+            <a target="_blank" href="https://datatables.net">official DataTables documentation</a> .
         </p>
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
@@ -39,25 +38,26 @@
                     </div>
                     <input type="hidden" name="updateId" th:value="${#authentication.name}">
                 </form>
-                    <div class="form-group">
-                        <label>Write Id</label>
-                        <input type="text" class="form-control" readonly th:value="${book.writeId}">
-                    </div>
-                    <div class="form-group">
-                        <label>Write Date</label>
-                        <input type="text" class="form-control" readonly th:value="${#dates.format(book.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
-                    </div>
-                    <div class="form-group">
-                        <label>update Id</label>
-                        <input type="text" class="form-control" readonly th:value="${book.updateId}">
-                    </div>
-                    <div class="form-group">
-                        <label>update Date</label>
-                        <input type="text" class="form-control" readonly th:value="${#dates.format(book.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
-                    </div>
-
-                <button type="modify" data-oper="modify" class="btn btn-primary">Modify</button>
-                <button type="delete" data-oper="remove" class="btn btn-danger">Delete</button>
+                <div class="form-group">
+                    <label>Write Id</label>
+                    <input type="text" class="form-control" readonly th:value="${book.writeId}">
+                </div>
+                <div class="form-group">
+                    <label>Write Date</label>
+                    <input type="text" class="form-control" readonly th:value="${#dates.format(book.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+                </div>
+                <div class="form-group">
+                    <label>update Id</label>
+                    <input type="text" class="form-control" readonly th:value="${book.updateId}">
+                </div>
+                <div class="form-group">
+                    <label>update Date</label>
+                    <input type="text" class="form-control" readonly th:value="${#dates.format(book.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+                </div>
+                <span sec:authorize="hasRole('ROLE_ADMIN')">
+                        <button type="modify" data-oper="modify" class="btn btn-primary">Modify</button>
+                        <button type="delete" data-oper="remove" class="btn btn-danger">Delete</button>
+                    </span>
                 <button type="list" data-oper="list" class="btn btn-info">List</button>
 
             </div>
@@ -69,9 +69,9 @@
 </div>
 <th:block layout:fragment="script">
     <script th:inline="javascript">
-        $(document).ready(function () {
+        $(document).ready(function() {
             var formObj = $("form");
-            $('button').on("click", function (e) {
+            $('button').on("click", function(e) {
                 console.log($(this));
                 e.preventDefault();
 

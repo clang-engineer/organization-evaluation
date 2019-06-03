@@ -1,10 +1,8 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
-
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
-
 		<h1 class="mt-4">Turn List</h1>
 		<!-- Page Heading -->
 		<p class="mb-4">
@@ -79,7 +77,9 @@
 				</div>
 				<div class="modal-footer">
 					<button id="modalBtn" class="btn btn-info">Save</button>
-					<button id="delModalBtn" class="btn btn-danger">Delete</button>
+					<span th:if="(${vo.writeId} eq ${#authentication.name}) or ${#authorization.expression('hasRole(''ADMIN'')')}">
+							<button id="delModalBtn" class="btn btn-danger">Delete</button>
+						</span>
 					<button id="modalCloseBtn" type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
 				</div>
 			</div>
@@ -233,7 +233,7 @@
 					case 'MBO':
 						$("#checkbox2").prop('checked', true);
 						break;
-					case '360,MBO','MBO,360':
+					case '360,MBO', 'MBO,360':
 						checked_values(true);
 				}
 				$("#myModal").modal("show");

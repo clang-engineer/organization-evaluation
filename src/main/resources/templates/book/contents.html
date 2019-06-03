@@ -18,9 +18,11 @@
                 <h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
 
                 <!-- search box -->
-                <div class="col-md-1" style="float: right">
-                    <button id="bookRegister" class="btn btn-primary btn-block">Register</button>
-                </div>
+                <span sec:authorize="hasRole('ROLE_ADMIN')">
+                    <div class="col-md-1" style="float: right">
+                        <button id="bookRegister" class="btn btn-primary btn-block">Register</button>
+                    </div>
+                </span>
 
                 <!-- /search box -->
             </div>
@@ -62,9 +64,11 @@
                     </div>
                 </div>
                 <div class="modal-footer">
-                    <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
-                    <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
-                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    <span sec:authorize="hasRole('ROLE_ADMIN')">
+                        <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
+                        <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+                        <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    </span>
                     <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
                 </div>
 

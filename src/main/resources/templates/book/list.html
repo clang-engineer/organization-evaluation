@@ -19,9 +19,11 @@
 				<h4 class="m-0 font-weight-bold text-primary" style="display: inline">Code Book Tables</h4>
 
 				<!-- search box -->
-				<div class="col-md-1" style="float: right">
-					<button id="register" class="btn btn-block btn-primary">Register</button>
-				</div>
+				<span sec:authorize="hasRole('ROLE_ADMIN')">
+					<div class="col-md-1" style="float: right">
+						<button id="register" class="btn btn-block btn-primary">Register</button>
+					</div>
+				</span>
 
 				<!-- /search box -->
 			</div>

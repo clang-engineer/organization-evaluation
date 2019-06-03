@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org"  xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
 
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
@@ -61,7 +61,9 @@
 				</div>
 
 				<button data-oper='modify' class="btn btn-default border">Modify</button>
-				<button data-oper='delete' class="btn btn-danger">Delete</button>
+					<span th:if="(${vo.writeId} eq ${#authentication.name}) or ${#authorization.expression('hasRole(''ADMIN'')')}">
+					<button data-oper='delete' class="btn btn-danger">Delete</button>
+				</span>
 				<button data-oper='list' class="btn btn-info">List</button>
 
 			</div>
@@ -73,44 +75,44 @@
 </div>
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
-	$(document).ready(function() {
-	    var formObj = $("form");
-	    $('button').on("click", function(e) {
-		
- 		e.preventDefault();
+		$(document).ready(function () {
+			var formObj = $("form");
+			$('button').on("click", function (e) {
 
-		var operation = $(this).data("oper");
- 
-		if (operation === 'delete') {
-		    if(delchk()==true){
-		    formObj.attr("action","delete");
-		    } else {
-			return
-		    };
-		} else if (operation === 'list') {
-		    formObj.attr("action","list").attr("method","get");
-		    formObj.empty();
-		}
-	    formObj.append("<input type='hidden' name='page' value='"+[[${pageVO.page}]]+"'/>");
-	    formObj.append("<input type='hidden' name='size' value='"+[[${pageVO.size}]]+"'/>");
-	    formObj.append("<input type='hidden' name='type' value='"+[[${pageVO.type}]]+"'/>");
-	    formObj.append("<input type='hidden' name='keyword' value='"+[[${pageVO.keyword}]]+"'/>");
-	 
-		console.log(formObj.attr);
-		 
- 		formObj.submit();
-  
-	    });
-	    
-		function delchk(){
-		    if(confirm("삭제하시겠습니까?")){
-		        return true;
-		    } else {
-		        return false;
-		    }
-		}
-	});
-    </script>
+				e.preventDefault();
+
+				var operation = $(this).data("oper");
+
+				if (operation === 'delete') {
+					if (delchk() == true) {
+						formObj.attr("action", "delete");
+					} else {
+						return
+					};
+				} else if (operation === 'list') {
+					formObj.attr("action", "list").attr("method", "get");
+					formObj.empty();
+				}
+				formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO.page }]] + "'/>");
+				formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO.size }]] + "'/>");
+				formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO.type }]] + "'/>");
+				formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO.keyword }]] + "'/>");
+
+				console.log(formObj.attr);
+
+				formObj.submit();
+
+			});
+
+			function delchk() {
+				if (confirm("삭제하시겠습니까?")) {
+					return true;
+				} else {
+					return false;
+				}
+			}
+		});
+	</script>
 
 </th:block>
 </body>
