@@ -70,10 +70,10 @@ public class Relation360ServiceTests {
         result.getContent().forEach(staff -> log.info("" + staff.getSno()));
     }
 
-    @Test
-    public void findByTnoTests() {
-        List<Relation360> result = relation360Service.getAllList(10L);
-        result.forEach(origin -> log.info("" + origin.getRno()));
-    }
+    // @Test
+    // public void findByTnoTests() {
+    //     List<Relation360> result = relation360Service.getAllList(10L);
+    //     result.forEach(origin -> log.info("" + origin.getRno()));
+    // }
 
 }

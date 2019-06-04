@@ -62,11 +62,11 @@ public class Relation360ServiceImpl implements Relation360Service {
         relation360Repo.deleteById(rno);
     }
 
-    @Override
-    public List<Relation360> getAllList(long tno) {
-        List<Relation360> result = relation360Repo.findByTno(tno);
-        return result;
-    }
+    // @Override
+    // public List<Relation360> getAllList(long tno) {
+    // List<Relation360> result = relation360Repo.findByTno(tno);
+    // return result;
+    // }
 
     @Override
     public Page<Relation360> getListWithPaging(long tno, PageVO vo) {
@@ -114,9 +114,22 @@ public class Relation360ServiceImpl implements Relation360Service {
         relation360Repo.deleteAllRelationByTno(tno);
     }
 
-    public List<Relation360> findRelationByEvaulatedSno(long sno) {
+    @Override
+    public List<Relation360> findRelationByEvaulatedSno(long sno, long tno) {
         log.info("findRelationByEvaulatedSno " + sno);
 
-        return relation360Repo.findByEvaulatedSno(sno);
+        return relation360Repo.findByEvaulatedSno(sno, tno);
+    }
+
+    // 회차에 속하는 평가자이면 로그인 true로 하기 위한 서비스
+    @Override
+    public Staff findInEvaluator(long tno, String email) {
+        return relation360Repo.findInEvaluator(tno, email);
+    }
+
+    //로그인 했을 때 평가할 대상자 뽑기 위한 서비스
+    @Override
+    public List<Relation360> findByEvaluator(long sno, long tno) {
+        return relation360Repo.findByEvaulaordSno(sno, tno);
     }
 }

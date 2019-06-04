@@ -120,11 +120,11 @@ public class Relation360RepositoryTests {
         // log.info("" + result.getContent());
     }
 
-    @Test
-    public void getAllRelationTest() {
-        List<Relation360> result = relation360Repo.findByTno(9L);
-        result.forEach(list -> log.info("" + list.getRno()));
-    }
+    // @Test
+    // public void getAllRelationTest() {
+    // List<Relation360> result = relation360Repo.findByTno(9L);
+    // result.forEach(list -> log.info("" + list.getRno()));
+    // }
 
     @Test
     public void deleteEvaluatedInfo() {
@@ -138,6 +138,16 @@ public class Relation360RepositoryTests {
 
     @Test
     public void testFindEvaluatorByEvaulatedSno() {
-        relation360Repo.findByEvaulatedSno(47972L).forEach(origin -> log.info("" + origin.getEvaluator().getSno()));
+        relation360Repo.findByEvaulatedSno(47972L, 1L).forEach(origin -> log.info("" + origin.getEvaluator().getSno()));
+    }
+
+    @Test
+    public void findInEvaluator() {
+        log.info(relation360Repo.findInEvaluator(1L, "youm.huh@siliconmitus.com").getName());
+    }
+
+    @Test
+    public void testFindByEvaulaordSno() {
+        log.info("" + relation360Repo.findByEvaulaordSno(2L, 1L));
     }
 }

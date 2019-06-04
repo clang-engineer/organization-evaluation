@@ -83,10 +83,10 @@ public class Relation360Controller {
         Page<Staff> result = relation360Service.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
-        //출력된 피평가자들의 sno로 relation table을 만듬. 
+        // 출력된 피평가자들의 sno로 relation table을 만듬.
         List<Relation360> relationTable = new ArrayList<>();
         result.getContent().forEach(origin -> {
-            List<Relation360> tmpList = relation360Service.findRelationByEvaulatedSno(origin.getSno());
+            List<Relation360> tmpList = relation360Service.findRelationByEvaulatedSno(origin.getSno(), tno);
             relationTable.addAll(tmpList);
         });
         model.addAttribute("relationTable", relationTable);
