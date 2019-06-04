@@ -60,4 +60,9 @@ public class CompanyRepositoryTests {
 		result.getContent().forEach(company -> log.info("" + company));
 	}
 
+	@Test
+	public void testFindByComId() {
+		log.info("" + repo.findByCompanyId("siliconmitus"));
+	}
+
 }

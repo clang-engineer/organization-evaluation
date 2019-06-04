@@ -18,4 +18,6 @@ public interface CompanyService {
 	public void remove(long cno);
 
 	public Page<Company> getList(PageVO page);
+
+	public Company readByCompanyId(String name);
 }

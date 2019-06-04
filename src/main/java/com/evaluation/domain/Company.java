@@ -2,6 +2,7 @@ package com.evaluation.domain;
 
 import java.sql.Timestamp;
 
+import javax.jdo.annotations.Unique;
 import javax.persistence.Entity;
 import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
@@ -26,6 +27,7 @@ public class Company {
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
 	private Long cno;
 
+	@Unique
 	private String id;
 	private String name;
 	private String password;

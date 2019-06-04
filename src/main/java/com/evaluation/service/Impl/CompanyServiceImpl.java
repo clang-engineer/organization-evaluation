@@ -59,6 +59,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	}
 
+	// company삭제할 때 turn도 삭제 하기 위함.
 	@Override
 	public void remove(long cno) {
 		log.info("compny+turn delete " + cno);
@@ -74,6 +75,13 @@ public class CompanyServiceImpl implements CompanyService {
 		Pageable page = vo.makePageable(0, "cno");
 		Page<Company> result = companyRepo.findAll(companyRepo.makePredicate(vo.getType(), vo.getKeyword()), page);
 		return result;
+	}
+
+	// 회사이름으로 정보 불러오기 위함.
+	@Override
+	public Company readByCompanyId(String name) {
+		log.info("compny read by name " + name);
+		return companyRepo.findByCompanyId(name);
 	}
 
 }

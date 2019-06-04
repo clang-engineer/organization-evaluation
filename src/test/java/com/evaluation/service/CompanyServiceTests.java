@@ -72,7 +72,10 @@ public class CompanyServiceTests {
 		log.info("========== test getList");
 		PageVO pageVO = new PageVO();
 		service.getList(pageVO).forEach(company -> log.info("" + company));
-		;
 	}
 
+	@Test
+	public void testReadByName() {
+		log.info("" + service.readByCompanyId("siliconmitus"));
+	}
 }
