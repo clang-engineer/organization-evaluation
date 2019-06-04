@@ -1,6 +1,7 @@
 package com.evaluation.persistence;
 
 import java.util.Arrays;
+import java.util.Iterator;
 import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;
@@ -80,5 +81,13 @@ public class QuestionRepositoryTests {
 	@Test
 	public void testDeleteAll() {
 		questionRepo.deleteByTno(41L);
+	}
+
+	@Test
+	public void testDistinctDivision() {
+		Iterator qi = questionRepo.getDistinctDivisionCountByTno(1L).iterator();
+		while (qi.hasNext()) {
+			log.info("" + qi.next());
+		}
 	}
 }

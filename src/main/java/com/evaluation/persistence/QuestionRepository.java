@@ -1,5 +1,7 @@
 package com.evaluation.persistence;
 
+import java.util.List;
+
 import com.evaluation.domain.QQuestion;
 import com.evaluation.domain.Question;
 import com.querydsl.core.BooleanBuilder;
@@ -16,6 +18,10 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
     @Modifying
     @Query("DELETE FROM Question q WHERE q.tno=?1")
     public void deleteByTno(long tno);
+
+    // 서베이 메인에 직군-계층 별 문항 수 표시하기 위한 쿼리
+    @Query("SELECT q.division1, q.division2, COUNT(q.qno) FROM Question q WHERE tno=?1 GROUP BY q.division1, q.division2")
+    public List<List<String>> getDistinctDivisionCountByTno(long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 

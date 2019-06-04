@@ -1,5 +1,6 @@
 package com.evaluation.service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -71,4 +72,9 @@ public class QuestionServiceImpl implements QuestionService {
 		questionRepo.deleteByTno(tno);
 	}
 
+	public List<List<String>> DistinctDivisionCountByTno(long tno) {
+		log.info("getDistinctDivision by tno : " + tno);
+
+		return questionRepo.getDistinctDivisionCountByTno(tno);
+	}
 }

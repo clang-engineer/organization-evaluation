@@ -1,5 +1,6 @@
 package com.evaluation.service;
 
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -19,4 +20,6 @@ public interface QuestionService {
 	public Page<Question> getList(long tno, PageVO vo);
 
 	public void deleteByTno(long tno);
+
+	public List<List<String>> DistinctDivisionCountByTno(long tno);
 }
