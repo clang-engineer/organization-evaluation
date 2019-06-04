@@ -30,6 +30,10 @@ public class Company {
 	private String name;
 	private String password;
 	private String homepage;
+
+	private String hrManager;
+	private String hrManagerTel;
+
 	private String writeId;
 	private String updateId;
 

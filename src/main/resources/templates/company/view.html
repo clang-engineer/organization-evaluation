@@ -20,38 +20,46 @@
 			<div class="card-body">
 				<div class="form-group">
 					<label>Company Name</label>
-					<input type="text" class="form-control" name="name" readonly="readonly" th:value="${vo.name}">
+					<input type="text" class="form-control" name="name" readonly th:value="${vo.name}">
 				</div>
 				<div class="form-group">
 					<label>ID</label>
-					<input type="text" class="form-control" name="id" readonly="readonly" th:value="${vo.id}">
+					<input type="text" class="form-control" name="id" readonly th:value="${vo.id}">
 				</div>
 				<div class="form-group">
 					<label>Password</label>
-					<input type="password" class="form-control" name="pwd" id="pwd" readonly="readonly" th:value="${vo.password}">
+					<input type="password" class="form-control" name="pwd" id="pwd" readonly th:value="${vo.password}">
 				</div>
 				<div class="form-group">
-					<input type="password" class="form-control" name="pwd2" id="pwd2" readonly="readonly" th:value="${vo.password}">
+					<input type="password" class="form-control" name="pwd2" id="pwd2" readonly th:value="${vo.password}">
+				</div>
+				<div class="form-group">
+					<label>HR Manager Name</label>
+					<input type="text" class="form-control" name="hrManager" th:value="${vo.hrManager}" readonly>
+				</div>
+				<div class="form-group">
+					<label>HR Manager Telephone</label>
+					<input type="text" class="form-control" name="hrManager" th:value="${vo.hrManagerTel}" readonly>
 				</div>
 				<div class="form-group">
 					<label>Home page address</label>
-					<input type="url" class="form-control" name="homepage" readonly="readonly" th:value="${vo.homepage}">
+					<input type="url" class="form-control" name="homepage" readonly th:value="${vo.homepage}">
 				</div>
 				<div class="form-group">
 					<label>WriteId</label>
-					<input type="url" class="form-control" name="writeId" readonly="readonly" th:value="${vo.writeId}">
+					<input type="url" class="form-control" name="writeId" readonly th:value="${vo.writeId}">
 				</div>
 				<div class="form-group">
 					<label>WriteDate</label>
-					<input type="url" class="form-control" name="writeDate" readonly="readonly" th:value="${#dates.format(vo.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+					<input type="url" class="form-control" name="writeDate" readonly th:value="${#dates.format(vo.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
 				</div>
 				<div class="form-group">
 					<label>UpdateId</label>
-					<input type="url" class="form-control" name="updateId" readonly="readonly" th:value="${vo.updateId}">
+					<input type="url" class="form-control" name="updateId" readonly th:value="${vo.updateId}">
 				</div>
 				<div class="form-group">
 					<label>updateDate</label>
-					<input type="url" class="form-control" name="updateDate" readonly="readonly" th:value="${#dates.format(vo.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+					<input type="url" class="form-control" name="updateDate" readonly th:value="${#dates.format(vo.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
 				</div>
 				<button data-oper="modify" class="btn btn-default border">Modify</button>
 				<button data-oper="list" class="btn btn-info">List</button>

@@ -49,6 +49,10 @@ public class CompanyServiceImpl implements CompanyService {
 			origin.setName(company.getName());
 			origin.setPassword(company.getPassword());
 			origin.setHomepage(company.getHomepage());
+
+			origin.setHrManager(company.getHrManager());
+			origin.setHrManagerTel(company.getHrManagerTel());
+
 			origin.setUpdateId(company.getUpdateId());
 			companyRepo.save(origin);
 		});
