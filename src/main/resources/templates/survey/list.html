@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<!-- div content -->
+<div layout:fragment="content">
+
+
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-5 mb-3">Blog Home One
+            <small>Subheading</small>
+        </h1>
+
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="card-body">
+                <div class="col-md-12">
+                    <div class="card mb-4">
+                        <h5 class="card-header">본인평가</h5>
+                        <div class="card-body">
+
+                            <h5 class="card-title">Special title treatment</h5>
+                            <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
+                            <a href="#" class="btn btn-primary">Go Survey</a>
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <h5 class="card-header">1차 평가자로서 평가할 대상
+                            <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 직속 상사 입니다.</small>
+                        </h5>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Department</th>
+                                        <th scope="col">Division</th>
+                                        <th scope="col">Level</th>
+                                        <th scope="col">Survey</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="evaluated,status:${evaluatedList}" th:if="${evaluated.relation}=='1'">
+                                        <th scope="row">[[${status.index}+1]]</th>
+                                        <td>[[${evaluated.evaluated.name}]]</td>
+                                        <td>[[${evaluated.evaluated.department1}]]-[[${evaluated.evaluated.department2}]]</td>
+                                        <td>[[${evaluated.evaluated.division1}]]-[[${evaluated.evaluated.division2}]]</td>
+                                        <td>[[${evaluated.evaluated.level}]]</td>
+                                        <td><i class="fas fa-user-edit fa-fw"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+
+                        </div>
+                    </div>
+                    <div class="card mb-4">
+                        <h5 class="card-header">2차 평가자로서 평가할 대상
+                            <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 차상위 상사 입니다.</small>
+                        </h5>
+                        <div class="card-body">
+                            <table class="table">
+                                <thead class="thead-dark">
+                                    <tr>
+                                        <th scope="col">#</th>
+                                        <th scope="col">Name</th>
+                                        <th scope="col">Department</th>
+                                        <th scope="col">Division</th>
+                                        <th scope="col">Level</th>
+                                        <th scope="col">Survey</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr th:each="evaluated,status:${evaluatedList}" th:if="${evaluated.relation}=='2'">
+                                        <th scope="row">[[${status.index}+1]]</th>
+                                        <td>[[${evaluated.evaluated.name}]]</td>
+                                        <td>[[${evaluated.evaluated.department1}]]-[[${evaluated.evaluated.department2}]]</td>
+                                        <td>[[${evaluated.evaluated.division1}]]-[[${evaluated.evaluated.division2}]]</td>
+                                        <td>[[${evaluated.evaluated.level}]]</td>
+                                        <td><i class="fas fa-user-edit fa-fw"></i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ./div content -->
+
+
+
+    <th:block layout:fragment="script">
+        <script th:inline="javascript">
+        </script>
+    </th:block>
+    </body>
+
+</html>

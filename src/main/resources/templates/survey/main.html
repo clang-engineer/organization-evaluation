@@ -1,0 +1,111 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<!-- div content -->
+<div layout:fragment="content">
+
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-5 mb-3">Blog Home One
+            <small>Subheading</small>
+        </h1>
+        <!-- <ol class="breadcrumb">
+      <li class="breadcrumb-item">
+        <a href="index.html">Home</a>
+      </li>
+      <li class="breadcrumb-item active">Blog Home 1</li>
+    </ol> -->
+
+        <div class="row">
+
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+
+                <!-- Blog Post -->
+                <div class="card mb-4">
+                    
+                    <div class="card-body">
+                        <h2 class="card-title">[[${turn.title}]]</h2>
+                        <p class="card-text">[[${turn.info360.title}]]</p>
+                        <p class="card-text">[[${turn.info360.content}]]</p>
+                        <a th:href="@{list(company=${company.id},tno=${turn.tno})}" class="btn btn-primary">Survey start &rarr;</a>
+                    </div>
+                    <div class="card-footer text-muted">
+                        Posted on January 1, 2017 by
+                    </div>
+                </div>
+
+
+                <!-- Pagination -->
+                <ul class="pagination justify-content-center mb-4">
+                    <!-- <li class="page-item">
+            <a class="page-link" href="#">&larr; Older</a>
+          </li>
+          <li class="page-item disabled">
+            <a class="page-link" href="#">Newer &rarr;</a>
+          </li>
+        </ul> -->
+
+            </div>
+
+            <!-- Sidebar Widgets Column -->
+            <div class="col-md-4">
+
+                <!-- Search Widget -->
+                <div class="card mb-4" style="align-content: center">
+                    <h5 class="card-header">Survey Period</h5>
+                    <div class="card-body">
+                        <div>
+                            시작일 : <span th:text="${#temporals.format(turn.info360.startDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                        </div>
+                        ~
+                        종료일 : <span th:text="${#temporals.format(turn.info360.endDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                    </div>
+                </div>
+
+                <!-- Categories Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header">Question</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <ul class="list-unstyled mb-0">
+                                    <li th:each="question,index:${question}">
+                                        [[${question[0]}]] - [[${question[1]}]] ([[${question[2]}]]문항)
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Side Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header">Help</h5>
+                    <div class="card-body">
+                        You can put anything you want inside of these side widgets. They are easy to use, and feature the new Bootstrap 4 card containers!
+                    </div>
+                </div>
+
+            </div>
+
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+</div>
+<!-- ./div content -->
+
+
+
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    </script>
+</th:block>
+</body>
+
+</html>
