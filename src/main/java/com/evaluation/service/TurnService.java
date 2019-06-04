@@ -16,4 +16,6 @@ public interface TurnService {
 	public void remove(long tno);
 
 	public List<Turn> getList(Long cno);
+
+	public List<Turn> getListInSurvey(Long cno);
 }

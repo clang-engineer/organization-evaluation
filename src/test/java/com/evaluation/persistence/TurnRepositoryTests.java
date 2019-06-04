@@ -1,5 +1,6 @@
 package com.evaluation.persistence;
 
+import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
 import java.util.Set;
@@ -49,5 +50,10 @@ public class TurnRepositoryTests {
 			});
 		});
 
+	}
+
+	@Test
+	public void testGetTurnsOfCompanyByStatus() {
+		turnRepo.getTurnsInSurvey(1L, LocalDateTime.now()).forEach(origin -> log.info("" + origin.getTitle()));
 	}
 }

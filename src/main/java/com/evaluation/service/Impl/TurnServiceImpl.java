@@ -1,5 +1,6 @@
 package com.evaluation.service.Impl;
 
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
@@ -91,6 +92,15 @@ public class TurnServiceImpl implements TurnService {
 	public List<Turn> getList(Long cno) {
 		log.info("service : turn getList by " + cno);
 		List<Turn> result = turnRepo.getTurnsOfCompany(cno);
+		return result;
+	}
+
+	@Override
+	public List<Turn> getListInSurvey(Long cno) {
+		log.info("service : turn getList by " + cno);
+		
+		// 시간 제약 조건을 위해 localtime을 같이
+		List<Turn> result = turnRepo.getTurnsInSurvey(cno, LocalDateTime.now());
 		return result;
 	}
 
