@@ -115,9 +115,8 @@
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!-- form for logout -->
-    <form method="POST" th:action="@{/logout}">
+    <form id="logOutForm" method="POST" th:action="@{/logout}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-        <button class="btn btn-primary btn-block" type="submit">Logout</button>
     </form>
     <!-- ./form for logout -->
     
@@ -131,7 +130,7 @@
         $("#logOut").click(function (e) {
             e.preventDefault();
             alert("success");
-            $("form").submit();
+            $("#logOutForm").submit();
         })
     </script>
 

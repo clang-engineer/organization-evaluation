@@ -88,7 +88,7 @@
 			</div>
 		</div>
 	</div>
-	<form th:action="@{modify}" method="get">
+	<form id="f1" th:action="@{modify}" method="get">
 		<input type="hidden" name="tno" th:value="${tno}" />
 		<input type="hidden" name="page" th:value=${pageVO.page} />
 		<input type="hidden" name="size" th:value=${pageVO.size} />
@@ -103,7 +103,7 @@
 <th:block layout:fragment="script">
 	<script th:inline="javascript">
 		$(document).ready(function () {
-			var formObj = $("form");
+			var formObj = $("#f1");
 
 			$('button').on("click", function (e) {
 				e.preventDefault();

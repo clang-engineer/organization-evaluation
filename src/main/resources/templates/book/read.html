@@ -18,7 +18,7 @@
 
             </div>
             <div class="card-body">
-                <form th:action="@{modify}" method="post">
+                <form id="f1" th:action="@{modify}" method="post">
                     <input type="hidden" class="form-control" name="bno" required="required" th:value="${book.bno}">
                     <div class="form-group">
                         <label>Book Type</label>
@@ -70,7 +70,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function() {
-            var formObj = $("form");
+            var formObj = $("#f1");
             $('button').on("click", function(e) {
                 console.log($(this));
                 e.preventDefault();

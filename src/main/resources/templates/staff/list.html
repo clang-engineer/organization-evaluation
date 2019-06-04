@@ -180,10 +180,14 @@
 			var modalRegisterBtn = $("#modalRegisterBtn");
 			var modalCloseBtn = $("#modalCloseBtn");
 
-
-			if (msg == 'success' && history.state == null) {
-				alert("정상적으로 처리되었습니다.");
-				var stateObj = { msg: "" };
+			if (history.state == null) {
+				if (msg == 'register') {
+					alert("등록 되었습니다.");
+				} else if (msg == 'modify') {
+					alert("수정 되었습니다.");
+				} else if (msg == 'remove') {
+					alert("삭제 되었습니다.");
+				}
 			}
 
 			history.replaceState({}, null, null);

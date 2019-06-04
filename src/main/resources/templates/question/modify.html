@@ -18,7 +18,7 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <form th:action="@{modify}" method="POST">
+                <form id="f1" th:action="@{modify}" method="POST">
                     <input type="hidden" name="qno" th:value="${question.qno}">
                     <div class="form-group">
                         <label>Division1</label>
@@ -83,7 +83,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function () {
-            var formObj = $("form");
+            var formObj = $("#f1");
 
             $('button').on("click", function (e) {
                 e.preventDefault();

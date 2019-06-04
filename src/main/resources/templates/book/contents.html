@@ -89,7 +89,7 @@
             var csrf = JSON.parse('[[${_csrf}]]');
 
             //modal 사용 변수 선언
-            var modal = $(".modal");
+            var modal = $("#myModal");
             var modalContent = modal.find("input[name='content']");
             var modalModifyBtn = $("#modalModifyBtn");
             var modalRemoveBtn = $("#modalRemoveBtn");
@@ -125,7 +125,7 @@
                 modal.find("input").val("");
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
-                $(".modal").modal("show");
+                $("#myModal").modal("show");
             });
 
             //modal내의 register 클릭 시
@@ -159,7 +159,7 @@
                     modalModifyBtn.show();
                     modalRemoveBtn.show();
 
-                    $(".modal").modal("show");
+                    $("#myModal").modal("show");
                 });
             });
 

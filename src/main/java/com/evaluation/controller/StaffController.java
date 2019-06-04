@@ -70,7 +70,7 @@ public class StaffController {
 		staff.setCno(cno);
 		staffService.register(staff);
 
-		rttr.addFlashAttribute("msg", "success");
+		rttr.addFlashAttribute("msg", "register");
 		rttr.addAttribute("tno", tno);
 		return "redirect:/staff/list";
 	}
@@ -104,7 +104,7 @@ public class StaffController {
 
 		staffService.modify(staff);
 
-		rttr.addFlashAttribute("msg", "success");
+		rttr.addFlashAttribute("msg", "modify");
 
 		rttr.addAttribute("tno", tno);
 		rttr.addAttribute("sno", staff.getSno());
@@ -127,7 +127,7 @@ public class StaffController {
 		rttr.addAttribute("size", vo.getSize());
 		rttr.addAttribute("type", vo.getType());
 		rttr.addAttribute("keyword", vo.getKeyword());
-		rttr.addFlashAttribute("msg", "success");
+		rttr.addFlashAttribute("msg", "remove");
 		return "redirect:/staff/list";
 	}
 
