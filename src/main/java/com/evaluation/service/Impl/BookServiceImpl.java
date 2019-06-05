@@ -23,7 +23,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public Optional<Book> read(Long bno) {
+	public Optional<Book> read(int bno) {
 		return bookRepo.findById(bno);
 	}
 
@@ -40,7 +40,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public void remove(Long bno) {
+	public void remove(int bno) {
 		bookRepo.deleteById(bno);
 	}
 

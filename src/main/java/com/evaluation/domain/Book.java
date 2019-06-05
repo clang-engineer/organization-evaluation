@@ -28,7 +28,7 @@ public class Book {
 
 	@Id
 	@GeneratedValue(strategy = GenerationType.IDENTITY)
-	private Long bno;
+	private int bno;
 
 	private String type;
 

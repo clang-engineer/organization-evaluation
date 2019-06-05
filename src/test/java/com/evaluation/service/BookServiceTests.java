@@ -28,7 +28,7 @@ public class BookServiceTests {
 
     @Test
     public void contentsList() {
-        Optional<Book> book = bookService.read(1L);
+        Optional<Book> book = bookService.read(1);
 
         book.get().getContents().forEach(content -> log.info("" + content));
     }
@@ -37,6 +37,6 @@ public class BookServiceTests {
     public void name() {
 
         // log.info(bookService.read(Long.parseLong(info360Service.read(1L).getReplyCode()).get().getTitle());
-        log.info(bookService.read(Long.parseLong(info360Service.read(7L).getReplyCode())).get().getTitle());
+        log.info(bookService.read(Integer.parseInt(info360Service.read(7).getReplyCode())).get().getTitle());
     }
 }

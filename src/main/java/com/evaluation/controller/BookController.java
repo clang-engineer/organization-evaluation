@@ -39,7 +39,7 @@ public class BookController {
 	}
 
 	@GetMapping("/read")
-	public void read(long bno, Model model) {
+	public void read(int bno, Model model) {
 		log.info("read" + bno);
 
 		model.addAttribute("book", bookService.read(bno).get());
@@ -56,7 +56,7 @@ public class BookController {
 	}
 
 	@PostMapping("/remove")
-	public String remove(long bno, RedirectAttributes rttr) {
+	public String remove(int bno, RedirectAttributes rttr) {
 		log.info("remove " + bno);
 
 		bookService.remove(bno);
@@ -72,7 +72,7 @@ public class BookController {
 	}
 
 	@GetMapping("/contents")
-	public void contents(long bno, Model model) {
+	public void contents(int bno, Model model) {
 		model.addAttribute("bno", bno);
 		model.addAttribute("result", bookService.read(bno).get().getContents());
 	}

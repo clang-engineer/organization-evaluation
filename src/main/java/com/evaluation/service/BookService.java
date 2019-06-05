@@ -8,11 +8,11 @@ import com.evaluation.domain.Book;
 public interface BookService {
 	public void register(Book book);
 
-	public Optional<Book> read(Long bno);
+	public Optional<Book> read(int bno);
 
 	public void modify(Book book);
 
-	public void remove(Long bno);
+	public void remove(int bno);
 
 	public List<Book> list();
 

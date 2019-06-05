@@ -49,7 +49,7 @@ public class BookRepositoryTests {
 
 	@Test
 	public void testRemoveContents() {
-		Book book = bookRepo.findById(14L).get();
+		Book book = bookRepo.findById(14).get();
 		List<String> contents = book.getContents();
 		contents.remove(1);
 		book.setContents(contents);

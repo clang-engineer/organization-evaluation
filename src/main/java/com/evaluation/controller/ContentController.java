@@ -28,7 +28,7 @@ public class ContentController {
     private BookService bookService;
 
     @PostMapping("/{bno}")
-    public ResponseEntity<List<String>> addContent(@PathVariable("bno") long bno, @RequestBody String content) {
+    public ResponseEntity<List<String>> addContent(@PathVariable("bno") int bno, @RequestBody String content) {
         log.info("add Content");
 
         Book book = bookService.read(bno).get();
@@ -42,13 +42,13 @@ public class ContentController {
     }
 
     @GetMapping("/{bno}/{idx}")
-    public ResponseEntity<String> read(@PathVariable("bno") long bno, @PathVariable("idx") int idx) {
+    public ResponseEntity<String> read(@PathVariable("bno") int bno, @PathVariable("idx") int idx) {
         String content = bookService.read(bno).get().getContents().get(idx);
         return new ResponseEntity<>(content, HttpStatus.OK);
     }
 
     @PutMapping("/{bno}/{idx}")
-    public ResponseEntity<List<String>> modify(@PathVariable("bno") long bno, @PathVariable("idx") int idx,
+    public ResponseEntity<List<String>> modify(@PathVariable("bno") int bno, @PathVariable("idx") int idx,
             @RequestBody String content) {
         log.info("modify Content");
 
@@ -63,7 +63,7 @@ public class ContentController {
     }
 
     @DeleteMapping("/{bno}/{idx}")
-    public ResponseEntity<List<String>> delete(@PathVariable("bno") long bno, @PathVariable("idx") int idx) {
+    public ResponseEntity<List<String>> delete(@PathVariable("bno") int bno, @PathVariable("idx") int idx) {
         log.info("delete Content");
 
         Book book = bookService.read(bno).get();
@@ -77,12 +77,12 @@ public class ContentController {
     }
 
     @GetMapping("/{bno}")
-    public ResponseEntity<List<String>> getContents(@PathVariable("bno") long bno) {
+    public ResponseEntity<List<String>> getContents(@PathVariable("bno") int bno) {
         log.info("get contents");
         return new ResponseEntity<>(getContentsByBook(bno), HttpStatus.OK);
     }
 
-    private List<String> getContentsByBook(long bno) {
+    private List<String> getContentsByBook(int bno) {
         return bookService.read(bno).get().getContents();
     }
 

@@ -7,7 +7,7 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.evaluation.domain.Book;
 
-public interface BookRepository extends CrudRepository<Book, Long> {
+public interface BookRepository extends CrudRepository<Book, Integer> {
 
 	List<Book> findAll(Sort sort);
 
