@@ -235,8 +235,8 @@
 
 			/* 행 클릭 시!! modify, delete turn */
 			$("#turnTable").on("click", "tr", function (e) {
-				var tds = $(this).find('td')
-				tno = tds.find('a').attr('href');
+				var tds = $(this).find('td');
+				tno = tds.find('a').last().attr('href');
 				turnTitleObj.val(tds[1].innerHTML);
 				checked_values(false);
 

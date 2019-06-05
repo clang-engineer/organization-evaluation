@@ -2,8 +2,6 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
-import java.util.List;
-
 import com.evaluation.domain.Relation360;
 import com.evaluation.domain.Staff;
 import com.evaluation.vo.PageVO;
