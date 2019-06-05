@@ -77,4 +77,10 @@ public class QuestionServiceImpl implements QuestionService {
 
 		return questionRepo.getDistinctDivisionCountByTno(tno);
 	}
+
+	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2) {
+		log.info("getDivision by tno : " + tno);
+
+		return questionRepo.getListByDivision(tno, division1, division2);
+	}
 }

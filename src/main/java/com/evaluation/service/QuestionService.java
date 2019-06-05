@@ -22,4 +22,6 @@ public interface QuestionService {
 	public void deleteByTno(long tno);
 
 	public List<List<String>> DistinctDivisionCountByTno(long tno);
+
+	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
 }
