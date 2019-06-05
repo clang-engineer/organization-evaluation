@@ -2,7 +2,6 @@ package com.evaluation.domain;
 
 import java.time.LocalDateTime;
 
-import javax.persistence.Column;
 import javax.persistence.Embeddable;
 
 import org.springframework.format.annotation.DateTimeFormat;
@@ -16,7 +15,6 @@ import lombok.Setter;
 public class InfoSurvey {
 
 	private String title;
-	@Column(name = "content", length = 2000)
 	private String content;
 
 	private String replyCode;

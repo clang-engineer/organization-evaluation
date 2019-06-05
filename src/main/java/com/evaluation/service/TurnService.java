@@ -18,4 +18,6 @@ public interface TurnService {
 	public List<Turn> getList(Long cno);
 
 	public List<Turn> getListInSurvey(Long cno);
+
+	public void commentRegister(Turn turn);
 }

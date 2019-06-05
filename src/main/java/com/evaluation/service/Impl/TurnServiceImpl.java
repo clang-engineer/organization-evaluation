@@ -98,10 +98,14 @@ public class TurnServiceImpl implements TurnService {
 	@Override
 	public List<Turn> getListInSurvey(Long cno) {
 		log.info("service : turn getList by " + cno);
-		
+
 		// 시간 제약 조건을 위해 localtime을 같이
 		List<Turn> result = turnRepo.getTurnsInSurvey(cno, LocalDateTime.now());
 		return result;
 	}
 
+	@Override
+	public void commentRegister(Turn turn) {
+		turnRepo.save(turn);
+	}
 }

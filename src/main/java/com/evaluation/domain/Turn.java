@@ -1,6 +1,7 @@
 package com.evaluation.domain;
 
 import java.sql.Timestamp;
+import java.util.List;
 import java.util.Set;
 
 import javax.persistence.AttributeOverride;
@@ -14,6 +15,7 @@ import javax.persistence.GeneratedValue;
 import javax.persistence.GenerationType;
 import javax.persistence.Id;
 import javax.persistence.JoinColumn;
+import javax.persistence.OrderColumn;
 import javax.persistence.PrimaryKeyJoinColumn;
 import javax.persistence.SecondaryTable;
 import javax.persistence.SecondaryTables;
@@ -47,6 +49,12 @@ public class Turn {
 	@Column(name = "type")
 	private Set<String> types;
 
+	@ElementCollection
+	@CollectionTable(name = "tbl_question_comments", joinColumns = @JoinColumn(name = "turn_tno"))
+	@OrderColumn(name = "comment_idx")
+	@Column(name = "comment")
+	private List<String> comments;
+
 	private String writeId;
 	private String updateId;
 
@@ -60,7 +68,7 @@ public class Turn {
 
 	@Embedded
 	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_info360")),
-			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_info360")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_info360", length = 2000)),
 			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_info360")),
 			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_info360")),
 			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_info360")),
@@ -69,7 +77,7 @@ public class Turn {
 
 	@Embedded
 	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoMbo")),
-			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoMbo", length = 2000)),
 			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_infoMbo")),
 			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_infoMbo")),
 			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_infoMbo")),
