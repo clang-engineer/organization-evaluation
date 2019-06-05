@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<!-- div content -->
+<div layout:fragment="content">
+    <!-- container -->
+    <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        <h1 class="mt-5 mb-3">Blog Home One
+            <small>Subheading</small>
+        </h1>
+
+        <!-- card -->
+        <div class="card mb-4">
+            <h5 class="card-header text-white bg-dark">객관식
+                <small class="float-md-right">[[${evaluated}]] 님에 대한 객관식 질의 입니다.</small>
+            </h5>
+            <div class="card-body mt-2 ml-3" th:each="category:${category}">
+                <h5 class="card-title mb-4 ml-1">[[${category}]]</h5>
+                <div class="ml-3 mb-5" th:each="question,status:${questionList}" th:if="${category}==${question[1]}">
+                    <h6 class="card-text mb-4">
+                        [[${question[0]}]] - [[${question[2]}]]
+                    </h6>
+                    <div th:each="book:${book}" class="mr-5 question">
+                        <label>
+                            <!-- <input th:name="'q'+${status.count}" type="radio" th:value="${status.count}"> -->
+                            <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" th:value="${status.count}">
+                            [[${book}]]
+                        </label>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <!-- ./card -->
+        <!-- card -->
+        <div class="card mb-5 essay">
+            <h5 class="card-header text-white bg-dark">주관식
+                <small class="float-md-right">[[${evaluated}]] 님에 대한 주관식 질의 입니다.</small>
+            </h5>
+            <h6 class="card-body mt-2 ml-3" th:each="question, status:${commentList}">
+                <div class="card-text mb-3">[[${status.count}]] - [[${question}]]</div>
+                <textarea name="c+${status.count}" class="form-control" rows="4"></textarea>
+                <p class="float-md-right" id="count_message">2000/2000</p>
+            </h6>
+            <button class="btn btn-primary">Submit</button>
+        </div>
+        <!-- ./card -->
+    </div>
+    <!-- ./container -->
+</div>
+<!-- ./div content -->
+
+</html>
+<th:block layout:fragment=" script">
+    <script th:inline="javascript">
+        $(document).ready(function (e) {
+            var formObj = $("#f1");
+
+            $("table").on("click", "button", function (e) {
+
+                var finish = $(this).data("finish");
+                var rno = $(this).data("rno");
+                var evaluated = $(this).data("evaluated");
+                var name = $(this).data("name");
+
+                if (confirm(name + "님 설문페이지로 이동하시겠습니까?")) {
+                    formObj.append("<input type='hidden' name='rno' value='" + rno + "'/>");
+                    $("#f1").submit();
+                } else {
+                    return false;
+                }
+            })
+
+            //글자 수 카운터
+            $(".essay").on("keyup", "textarea", function (e) {
+                var maxLength = 2000;
+                var length = $(this).val().length;
+                var length = maxLength - length;
+                console.log(length);
+                console.log($(this).next());
+                $(this).next().html(length+"/2000");
+            });
+        });
+
+    </script>
+</th:block>

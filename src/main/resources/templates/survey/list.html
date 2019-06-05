@@ -29,7 +29,7 @@
                             <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 직속 상사 입니다.</small>
                         </h5>
                         <div class="card-body">
-                            <table class="table">
+                            <table id="table" class="table">
                                 <thead class="thead-dark">
                                     <tr>
                                         <th scope="col">#</th>
@@ -41,13 +41,17 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    <tr th:each="evaluated,status:${evaluatedList}" th:if="${evaluated.relation}=='1'">
+                                    <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='1'">
                                         <th scope="row">[[${status.index}+1]]</th>
-                                        <td>[[${evaluated.evaluated.name}]]</td>
-                                        <td>[[${evaluated.evaluated.department1}]]-[[${evaluated.evaluated.department2}]]</td>
-                                        <td>[[${evaluated.evaluated.division1}]]-[[${evaluated.evaluated.division2}]]</td>
-                                        <td>[[${evaluated.evaluated.level}]]</td>
-                                        <td><i class="fas fa-user-edit fa-fw"></i></td>
+                                        <td>[[${relation.evaluated.name}]]</td>
+                                        <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
+                                        <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
+                                        <td>[[${relation.evaluated.level}]]</td>
+                                        <td th:if="${relation.finish}=='N'">
+                                            <button data-finish="N" th:data-name="${relation.evaluated.name}" th:data-evaluated="${relation.evaluated}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
+                                        </td>
+                                        <td th:if="${relation.finish}=='Y'" th:text="끝"></td>
+                                        <td th:if="${relation.finish}=='T'" th:text="임시저장"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -77,7 +81,9 @@
                                         <td>[[${evaluated.evaluated.department1}]]-[[${evaluated.evaluated.department2}]]</td>
                                         <td>[[${evaluated.evaluated.division1}]]-[[${evaluated.evaluated.division2}]]</td>
                                         <td>[[${evaluated.evaluated.level}]]</td>
-                                        <td><i class="fas fa-user-edit fa-fw"></i></td>
+                                        <td th:if="${evaluated.finish}=='N'"><i class="fas fa-user-edit fa-fw"></i></td>
+                                        <td th:if="${evaluated.finish}=='T'" th:text="임시저장"></td>
+                                        <td th:if="${evaluated.finish}=='Y'" th:text="끝"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -89,12 +95,30 @@
     </div>
     <!-- ./div content -->
 
-
-
-    <th:block layout:fragment="script">
-        <script th:inline="javascript">
-        </script>
-    </th:block>
-    </body>
+    <form id="f1" th:action="@{evaluate}" method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
 
 </html>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function (e) {
+            var formObj = $("#f1");
+
+            $("table").on("click", "button", function (e) {
+
+                var finish = $(this).data("finish");
+                var rno = $(this).data("rno");
+                var evaluated = $(this).data("evaluated");
+                var name = $(this).data("name");
+
+                if (confirm(name + "님 설문페이지로 이동하시겠습니까?")) {
+                    formObj.append("<input type='hidden' name='rno' value='" + rno + "'/>");
+                    $("#f1").submit();
+                } else {
+                    return false;
+                }
+            })
+        });
+    </script>
+</th:block>

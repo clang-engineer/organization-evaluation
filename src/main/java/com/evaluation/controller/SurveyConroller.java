@@ -1,9 +1,13 @@
 package com.evaluation.controller;
 
+import java.util.LinkedHashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.evaluation.domain.Staff;
+import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
@@ -32,6 +36,8 @@ public class SurveyConroller {
     Relation360Service relation360Service;
 
     QuestionService questionService;
+
+    BookService bookService;
 
     @GetMapping("/")
     public String survey(String company, Model model) {
@@ -85,5 +91,39 @@ public class SurveyConroller {
 
         model.addAttribute("evaluatedList", relation360Service.findByEvaluator(evaluator.getSno(), tno));
 
+    }
+
+    // @PostMapping("/evaluate")
+    @GetMapping("/evaluate")
+    public void evaluate(Long rno, Model model) {
+        log.info("" + rno);
+
+        // 관계 정보가 존재하는 경우에 작동
+        relation360Service.read(rno).ifPresent(relation -> {
+            model.addAttribute("rno", rno);
+            model.addAttribute("evaluated", relation.getEvaluated().getName());
+
+            // 회차에 속하는 comment list를 추가하기 위한.
+            turnService.get(relation.getTno()).ifPresent(turn -> {
+                model.addAttribute("commentList", turn.getComments());
+                bookService.read(turn.getInfo360().getReplyCode()).ifPresent(book -> {
+                    model.addAttribute("book", book.getContents());
+                });
+            });
+
+            // 개인의 division 정보와 일치하는 객관식 list를 추가하기 위한
+            Staff evaluated = new Staff();
+            evaluated = relation.getEvaluated();
+            questionService.getListByDivision(relation.getTno(), evaluated.getDivision1(), evaluated.getDivision2())
+                    .ifPresent(question -> {
+                        Set<String> category = new LinkedHashSet<String>();
+                        question.forEach(q -> {
+                            category.add(q.get(1));
+                        });
+                        model.addAttribute("category", category);
+                        model.addAttribute("questionList", question);
+                    });
+
+        });
     }
 }
