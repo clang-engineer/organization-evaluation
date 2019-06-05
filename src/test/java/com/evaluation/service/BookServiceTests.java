@@ -37,6 +37,6 @@ public class BookServiceTests {
     public void name() {
 
         // log.info(bookService.read(Long.parseLong(info360Service.read(1L).getReplyCode()).get().getTitle());
-        log.info(bookService.read(Integer.parseInt(info360Service.read(7).getReplyCode())).get().getTitle());
+        log.info(bookService.read(info360Service.read(7).getReplyCode()).get().getTitle());
     }
 }

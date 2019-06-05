@@ -1,4 +1,3 @@
-
 package com.evaluation.controller;
 
 import org.springframework.stereotype.Controller;
@@ -9,17 +8,18 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @RequestMapping("/**")
 public class HomeController {
 
+
     @GetMapping("/login")
-    public void login() {
+    public void adminLogin() {
     }
 
     @GetMapping("/accessDenied")
-    public void accessDenied() {
+    public void adminAccessDenied() {
 
     }
 
     @GetMapping("/logout")
-    public void logout() {
+    public void adminLogout() {
 
     }
 }

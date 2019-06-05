@@ -100,9 +100,10 @@
 					<span>Staff Info</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
-					<h6 class="dropdown-header">Staff Setting</h6>
+					<h6 class="dropdown-header">Staff : </h6>
 					<a class="dropdown-item" th:href="@{/staff/list(tno=${tno})}">Staff</a>
 					<div class="dropdown-divider"></div>
+					<h6 class="dropdown-header">Detail : </h6>
 					<a class="dropdown-item" th:href="@{/department/list(tno=${tno})}">Department</a>
 					<a class="dropdown-item" th:href="@{/level/list(tno=${tno})}">Level</a>
 					<a class="dropdown-item" th:href="@{/division/list(tno=${tno})}">Division</a>
@@ -114,10 +115,13 @@
 					<span>360 Survey</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
-					<h6 class="dropdown-header">360 Suvey Setting</h6>
-					<a class="dropdown-item" th:href="@{/info360/read(tno=${tno})}">Basic Info</a>
+					<h6 class="dropdown-header">Basic Info : </h6>
+					<a class="dropdown-item" th:href="@{/info360/read(tno=${tno})}">Info</a>
 					<a class="dropdown-item" th:href="@{/relation360/list(tno=${tno})}">Relation Mapping</a>
-					<a class="dropdown-item" th:href="@{/question/list(tno=${tno})}">Question List</a>
+					<div class="dropdown-divider"></div>
+					<h6 class="dropdown-header">Question : </h6>
+					<a class="dropdown-item" th:href="@{/question/list(tno=${tno})}">Multiple Choice</a>
+					<a class="dropdown-item" th:href="@{/comment/list(tno=${tno})}">Essay</a>
 				</div>
 			</li>
 			<li class="nav-item dropdown">
@@ -126,7 +130,7 @@
 					<span>MBO</span>
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
-					<h6 class="dropdown-header">MBO Setting</h6>
+					<h6 class="dropdown-header">MBO Setting : </h6>
 					<a class="dropdown-item" href="#">Basic Info</a>
 					<a class="dropdown-item" href="#">Relation Mapping</a>
 				</div>

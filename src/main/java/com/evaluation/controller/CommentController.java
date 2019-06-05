@@ -27,7 +27,7 @@ public class CommentController {
 
         turnService.get(tno).ifPresent(turn -> {
             turn.getComments().add(comment);
-            turnService.register(turn);
+            turnService.commentRegister(turn);
         });
 
         rttr.addAttribute("tno", tno);
@@ -40,7 +40,7 @@ public class CommentController {
 
         turnService.get(tno).ifPresent(turn -> {
             turn.getComments().set(idx, comment);
-            turnService.register(turn);
+            turnService.commentRegister(turn);
         });
 
         rttr.addAttribute("tno", tno);
@@ -52,7 +52,7 @@ public class CommentController {
         log.info("remove " + idx);
         turnService.get(tno).ifPresent(turn -> {
             turn.getComments().remove(idx);
-            turnService.register(turn);
+            turnService.commentRegister(turn);
         });
 
         rttr.addAttribute("tno", tno);

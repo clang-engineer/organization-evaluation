@@ -2,9 +2,10 @@ package com.evaluation.persistence;
 
 import java.util.Arrays;
 import java.util.List;
-import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;
+
+import com.evaluation.domain.Book;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -12,8 +13,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Book;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -33,18 +32,20 @@ public class BookRepositoryTests {
 		log.info("" + bookRepo);
 	}
 
-	// @Test
+	@Test
 	public void testInertBook() {
 
-		IntStream.range(1, 11).forEach(i -> {
-			Book book = new Book();
-			book.setTitle("test" + i + 1);
-
-			List<String> contents = Arrays.asList("매우 그렇다" + i + 1, "그렇다" + i + 1, "보통이다" + i + 1, "그렇지 않다" + i + 1,
-					"매우 그렇지 않다" + i + 1);
-			book.setContents(contents);
-			bookRepo.save(book);
-		});
+		Book book = new Book();
+		book.setTitle("매우 긍정 - 매우 부정");
+		List<String> contents = Arrays.asList("매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다");
+		book.setContents(contents);
+		bookRepo.save(book);
+		
+		Book book2 = new Book();
+		book2.setTitle("아주 그렇다 - 아주 그렇지 않다");
+		contents = Arrays.asList("아주 그렇다", "그렇다", "보통이다", "그렇지 않다", "아주 그렇지 않다");
+		book2.setContents(contents);
+		bookRepo.save(book2);
 	}
 
 	@Test

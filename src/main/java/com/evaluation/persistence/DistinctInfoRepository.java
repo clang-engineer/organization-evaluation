@@ -8,6 +8,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
+//각 입력폼에서 사용하기 위해서 작성함.
 @Repository
 public interface DistinctInfoRepository extends CrudRepository<Company, Long> {
 

@@ -17,7 +17,7 @@ public class InfoSurvey {
 	private String title;
 	private String content;
 
-	private String replyCode;
+	private Integer replyCode;
 	private String status;
 
 	@DateTimeFormat(pattern = "yyyy-MM-dd'T'HH:mm")

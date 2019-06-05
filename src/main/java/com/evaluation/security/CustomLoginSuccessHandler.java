@@ -33,7 +33,7 @@ public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
             return;
         }
 
-        if (roleNames.contains("ROLE_MEMBER")) {
+        if (roleNames.contains("ROLE_MANAGER")) {
             response.sendRedirect("/company/list");
             return;
         }

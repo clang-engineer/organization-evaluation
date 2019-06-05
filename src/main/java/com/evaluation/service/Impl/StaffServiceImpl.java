@@ -78,7 +78,7 @@ public class StaffServiceImpl implements StaffService {
 	public Page<Staff> getList(long cno, PageVO vo) {
 		log.info("service : staff getList " + cno + vo);
 
-		Pageable page = vo.makePageable(0, "sno");
+		Pageable page = vo.makePageable(1, "sno");
 		Page<Staff> result = staffRepo.findAll(staffRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);
 		return result;
 	}
