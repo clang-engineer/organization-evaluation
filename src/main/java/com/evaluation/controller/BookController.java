@@ -1,6 +1,7 @@
 package com.evaluation.controller;
 
-import java.util.List;
+import com.evaluation.domain.Book;
+import com.evaluation.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -9,9 +10,6 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
-
-import com.evaluation.domain.Book;
-import com.evaluation.service.BookService;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -67,8 +65,9 @@ public class BookController {
 
 	@GetMapping("/list")
 	public void list(Model model) {
-		List<Book> book = bookService.list();
-		model.addAttribute("result", book);
+		bookService.list().ifPresent(origin -> {
+			model.addAttribute("result", origin);
+		});
 	}
 
 	@GetMapping("/contents")
