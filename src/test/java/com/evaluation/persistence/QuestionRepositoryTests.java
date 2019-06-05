@@ -47,7 +47,7 @@ public class QuestionRepositoryTests {
 				Question question = new Question();
 				question.setDivision1("division1" + i);
 				question.setDivision2("division2" + i);
-				question.setIdx("" + i);
+				question.setIdx(i);
 				question.setCategory("category" + i);
 				question.setItem("question" + i);
 				question.setTno(num);
@@ -89,5 +89,10 @@ public class QuestionRepositoryTests {
 		while (qi.hasNext()) {
 			log.info("" + qi.next());
 		}
+	}
+
+	@Test
+	public void testGetListByDivision() {
+		questionRepo.getListByDivision(1L, "실리콘마이터스", "임원").ifPresent(list -> log.info("" + list));
 	}
 }

@@ -1,7 +1,5 @@
 package com.evaluation.controller;
 
-import java.io.InputStream;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -13,10 +11,6 @@ import com.evaluation.service.StaffService;
 import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
-import org.apache.poi.xssf.usermodel.XSSFCell;
-import org.apache.poi.xssf.usermodel.XSSFRow;
-import org.apache.poi.xssf.usermodel.XSSFSheet;
-import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
@@ -155,8 +149,8 @@ public class QuestionController {
 
             Question row = new Question();
             row.setTno(question.getTno());
-            row.setIdx(list.get(0));
-            row.setCategory(list.get(1));
+            row.setCategory(list.get(0));
+            row.setIdx(Integer.parseInt(list.get(1)));
             row.setItem(list.get(2));
             row.setDivision1(list.get(3));
             row.setDivision2(list.get(4));
