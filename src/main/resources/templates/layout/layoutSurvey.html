@@ -23,18 +23,62 @@
             vertical-align: middle;
         }
 
-        @media (max-width:770px) {
+        @media (max-width:768px) {
             .question {
                 display: block;
+                background: red;
+            }
+
+            .fixedbutton {
+                position: fixed;
+                bottom: 3%;
+                right: 0%;
+            }
+
+        }
+
+        @media (min-width:768px) {
+            .question {
+                display: block;
+                background: orange;
+            }
+
+            .fixedbutton {
+                position: fixed;
+                bottom: 5%;
+                right: 5%;
             }
         }
 
-        @media (min-width:771px) {
+        @media (min-width:992px) {
             .question {
                 display: inline;
+                background: yellow;
+            }
+
+            .fixedbutton {
+                position: fixed;
+                bottom: 5%;
+                right: 8%;
             }
         }
 
+        @media (min-width:1200px) {
+            .question {
+                display: inline;
+                background: green;
+            }
+
+            .fixedbutton {
+                position: fixed;
+                bottom: 5%;
+                right: 15%;
+            }
+        }
+
+        /* .fa-save{
+            color: powderblue;
+        } */
         /* input[type=radio] { */
         /* Double-sized Checkboxes */
         /* -ms-transform: scale(1.5); */

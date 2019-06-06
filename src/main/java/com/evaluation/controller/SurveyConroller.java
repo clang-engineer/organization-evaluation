@@ -1,5 +1,6 @@
 package com.evaluation.controller;
 
+import java.util.HashMap;
 import java.util.LinkedHashSet;
 import java.util.Set;
 
@@ -18,6 +19,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -89,12 +91,23 @@ public class SurveyConroller {
         HttpSession session = request.getSession();
         Staff evaluator = (Staff) session.getAttribute("evaluator");
 
+        model.addAttribute("tno", tno);
+        model.addAttribute("company", company);
         model.addAttribute("evaluatedList", relation360Service.findByEvaluator(evaluator.getSno(), tno));
 
     }
 
-    // @PostMapping("/evaluate")
     @GetMapping("/evaluate")
+    public String evaluate(String company, long tno, RedirectAttributes rttr) {
+        log.info("" + tno);
+
+        rttr.addAttribute("company", company);
+        rttr.addAttribute("tno", tno);
+        return "redirect:/survey/list";
+    }
+
+    // @GetMapping("/evaluate")
+    @PostMapping("/evaluate")
     public void evaluate(Long rno, Model model) {
         log.info("" + rno);
 
@@ -116,6 +129,7 @@ public class SurveyConroller {
             evaluated = relation.getEvaluated();
             questionService.getListByDivision(relation.getTno(), evaluated.getDivision1(), evaluated.getDivision2())
                     .ifPresent(question -> {
+                        // 중복 제거한 카테고리를 위해
                         Set<String> category = new LinkedHashSet<String>();
                         question.forEach(q -> {
                             category.add(q.get(1));
@@ -125,5 +139,11 @@ public class SurveyConroller {
                     });
 
         });
+    }
+
+    @PostMapping("/submit")
+    @ResponseBody
+    public void submit(HashMap<String, String> comment) {
+        log.info("" + comment);
     }
 }
