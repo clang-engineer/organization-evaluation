@@ -21,10 +21,10 @@
                         <h6 class="card-text mb-4">
                             [[${question[0]}]] - [[${question[2]}]]
                         </h6>
-                        <div th:each="book:${book}" class="mr-5 question">
+                        <div th:each="book,idx:${book}" class="mr-5 question">
                             <label>
                                 <!-- <input th:name="'q'+${status.count}" type="radio" th:value="${status.count}"> -->
-                                <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${status.count}">
+                                <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${idx.count}">
                                 [[${book}]]
                             </label>
                         </div>
@@ -40,8 +40,8 @@
                 <h6 class="card-body mt-2 ml-2" th:each="question, status:${commentList}">
                     <div class="card-text mb-4">[[${status.count}]] - [[${question}]]</div>
                     <!-- <textarea required th:name="'c'+${status.count}" class="form-control" rows="4"></textarea> -->
-                    <textarea required th:name="'comment[\'c'+${status.count}+'\']'" class="form-control" rows="4"></textarea>
-                    <p class="float-md-right" id="count_message">2000/2000</p>
+                    <textarea required th:name="'c'+${status.count}" class="form-control" rows="4"></textarea>
+                    <p class="float-md-right" id="count_message">0/2000</p>
                 </h6>
             </div>
             <!-- ./card -->
@@ -53,10 +53,15 @@
         </div>
         <!-- button -->
         <div class="row fixedbutton">
-            <div class="col-md-2">
+            <div class="col-md-3">
                 <div class="btn-group-vertical btn-group-lg">
-                    <button class="btn btn-default"><i class="fas fa-pause-circle fa-3x"></i></button>
-                    <button class="btn btn-default"><i class="fas fa-list fa-3x"></i></button>
+                    <button class="btn btn-default"><i class="fas fa-pause-circle fa-2x"></i>
+                        <div>Pause</div>
+                    </button>
+                    <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+                        <div>Top</div>
+                    </button>
+
                 </div>
             </div>
         </div>
@@ -81,7 +86,7 @@
             $(".essay").on("keyup", "textarea", function (e) {
                 var maxLength = 2000;
                 var length = $(this).val().length;
-                var length = maxLength - length;
+                // var length = maxLength - length;
                 $(this).next().html(length + "/2000");
             });
 
@@ -110,11 +115,30 @@
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit").click(function (e) {
                 e.preventDefault();
-                // formObj[0].checkValidity();
-                // formObj[0].reportValidity();
-                console.log($("form").serializeArray());
+                formObj[0].checkValidity();
+                formObj[0].reportValidity();
+                // console.log($("formF").serializeArray());
+                // var data = $("form").serializeArray()
+                // formObj.append(data);
                 formObj.submit();
             })
+
+
+            //탑 버튼 나중에 나오도록
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 1000) {
+                    $('#top').fadeIn();
+                } else {
+                    $('#top').fadeOut();
+                }
+            });
+
+            //스크롤 부드럽게 이동
+            $('#top').click(function () {
+                console.log(1);
+                $('html, body').animate({ scrollTop: 0 }, 400);
+                return false;
+            });
         });
         /* documnet ready function */
 

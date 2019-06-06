@@ -32,7 +32,7 @@
                             - [[${turn.title}]]
                         </p>
                         <p class="card-text">[[${turn.info360.content}]]</p>
-                        <a th:href="@{list(company=${company.id},tno=${turn.tno})}" class="btn btn-primary">Survey start &rarr;</a>
+                        <a th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary">Survey start &rarr;</a>
                     </div>
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
                     </div>
@@ -90,8 +90,8 @@
                             <label for="">
                                 인사 관련 문의 : 
                             </label>
-                            <br>[[${company.hrManager}]] ([[${company.name}]])
-                            <br>Tel : [[${company.hrManagerTel}]] 
+                            <br>[[${companyInfo.hrManager}]] ([[${companyInfo.name}]])
+                            <br>Tel : [[${companyInfo.hrManagerTel}]] 
                             </p>
                             <p class="card-text">
                             <label for="">

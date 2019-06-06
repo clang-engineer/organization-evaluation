@@ -26,12 +26,12 @@
         @media (max-width:768px) {
             .question {
                 display: block;
-                background: red;
+                /* background: red; */
             }
 
             .fixedbutton {
                 position: fixed;
-                bottom: 3%;
+                bottom: 5%;
                 right: 0%;
             }
 
@@ -40,7 +40,7 @@
         @media (min-width:768px) {
             .question {
                 display: block;
-                background: orange;
+                /* background: orange; */
             }
 
             .fixedbutton {
@@ -53,7 +53,7 @@
         @media (min-width:992px) {
             .question {
                 display: inline;
-                background: yellow;
+                /* background: yellow; */
             }
 
             .fixedbutton {
@@ -66,7 +66,7 @@
         @media (min-width:1200px) {
             .question {
                 display: inline;
-                background: green;
+                /* background: green; */
             }
 
             .fixedbutton {
@@ -74,6 +74,10 @@
                 bottom: 5%;
                 right: 15%;
             }
+        }
+
+        #top {
+            display: none;
         }
 
         /* .fa-save{
@@ -110,22 +114,23 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" href="about.html">About</a>
+                        <a class="nav-link" th:href="@{main(company=${company},tno=${tno})}">About</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="services.html">Survey</a>
+                        <a class="nav-link" th:href="@{list(company=${company},tno=${tno})}">Survey</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="contact.html">Contact</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                            Blog
+                            <i class="fas fa-user-circle fa-fw"></i>
+                            <span>[[${session.evaluator.name}]]</span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                            <a class="dropdown-item" href="blog-home-1.html">Blog Home 1</a>
-                            <a class="dropdown-item" href="blog-home-2.html">Blog Home 2</a>
-                            <a class="dropdown-item" href="blog-post.html">Blog Post</a>
+                            <a class="dropdown-item" href="blog-home-2.html">Profile</a>
+                            <div class="dropdown-divider"></div>
+                            <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
                         </div>
                     </li>
                 </ul>
@@ -133,14 +138,47 @@
         </div>
     </nav>
 
-    <!-- Page Content -->
     <!-- content body -->
     <div layout:fragment="content">
 
     </div>
     <!-- ./content body -->
 
-    <!-- /.container -->
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <!-- modal-dialog -->
+        <div class="modal-dialog" role="document">
+            <!-- modal-content -->
+            <div class="modal-content">
+                <!-- modal-header -->
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <!-- ./modal-header -->
+                <!-- modal-body -->
+                <div class="modal-body">[[${session.evaluator.name}]]님의 계정에서 로그아웃 하시겠습니까?</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <button id="logOut" class="btn btn-primary">Logout</button>
+                </div>
+                <!-- ./modal-body -->
+            </div>
+            <!-- ./modal-content -->
+        </div>
+        <!-- ./modal-dialog -->
+    </div>
+    <!-- ./Logout Modal-->
+    <!-- form for logout -->
+    <form method="POST" th:action="@{logout}">
+        <input type="hidden" name="company" th:value="${company}">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
+    <!-- ./form for logout -->
+
 
     <!-- Footer -->
     <footer class="py-1 bg-dark fixed-bottom">
@@ -155,6 +193,13 @@
     <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <!--customjavascript-->
+    <script>
+        $("#logOut").click(function (e) {
+            e.preventDefault();
+            alert("success");
+            $("form").submit();
+        })
+    </script>
     <th:block layout:fragment="script">
     </th:block>
 

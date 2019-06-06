@@ -1,7 +1,7 @@
 package com.evaluation.controller;
 
-import java.util.HashMap;
 import java.util.LinkedHashSet;
+import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -14,12 +14,13 @@ import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
 import com.evaluation.service.TurnService;
 
+import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -57,10 +58,15 @@ public class SurveyConroller {
     public String userLogin(long tno, Staff staff, RedirectAttributes rttr, HttpServletRequest request) {
         log.info("user login" + tno + staff);
 
-        String company = companyService.get(turnService.get(tno).get().getCno()).get().getId();
+        turnService.get(tno).ifPresent(turn -> {
+            long cno = turn.getCno();
+            companyService.get(cno).ifPresent(origin -> {
+                String company = origin.getId();
+                rttr.addAttribute("company", company);
+            });
+        });
+        
         Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
-
-        rttr.addAttribute("company", company);
 
         if (evaluator.getPassword().equals(staff.getPassword())) {
             rttr.addAttribute("tno", tno);
@@ -72,34 +78,68 @@ public class SurveyConroller {
         }
     }
 
+    @PostMapping("/logout")
+    public String userLogOut(String company, HttpServletRequest request, RedirectAttributes rttr) {
+        log.info("log out!");
+
+        HttpSession session = request.getSession();
+        session.invalidate();
+
+        rttr.addAttribute("company", company);
+
+        return "redirect:/survey/";
+    }
+
     @GetMapping("/main")
-    public void main(String company, Long tno, Model model) {
+    public String main(String company, Long tno, Model model, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("====>turn main by company" + company);
+
+        HttpSession session = request.getSession();
+        if (session.getAttribute("evaluator") == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey/";
+        }
 
         long cno = companyService.readByCompanyId(company).getCno();
 
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
         model.addAttribute("question", questionService.DistinctDivisionCountByTno(tno));
-        model.addAttribute("company", companyService.readByCompanyId(company));
+        model.addAttribute("companyInfo", companyService.readByCompanyId(company));
         turnService.get(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
+        return "/survey/main";
     }
 
     @GetMapping("/list")
-    public void list(String company, long tno, HttpServletRequest request, Model model) {
+    public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
         log.info("====>turn list by company" + company);
         HttpSession session = request.getSession();
         Staff evaluator = (Staff) session.getAttribute("evaluator");
+
+        if (evaluator == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey/";
+        }
 
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
         model.addAttribute("evaluatedList", relation360Service.findByEvaluator(evaluator.getSno(), tno));
 
+        return "/survey/list";
     }
 
+    // 새로 고침시 리스트로 복귀하기 위한 매핑
     @GetMapping("/evaluate")
-    public String evaluate(String company, long tno, RedirectAttributes rttr) {
+    public String evaluate(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
+
+        HttpSession session = request.getSession();
+        if (session.getAttribute("evaluator") == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey/";
+        }
 
         rttr.addAttribute("company", company);
         rttr.addAttribute("tno", tno);
@@ -108,8 +148,11 @@ public class SurveyConroller {
 
     // @GetMapping("/evaluate")
     @PostMapping("/evaluate")
-    public void evaluate(Long rno, Model model) {
+    public void evaluate(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
+
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
 
         // 관계 정보가 존재하는 경우에 작동
         relation360Service.read(rno).ifPresent(relation -> {
@@ -142,8 +185,7 @@ public class SurveyConroller {
     }
 
     @PostMapping("/submit")
-    @ResponseBody
-    public void submit(HashMap<String, String> comment) {
-        log.info("" + comment);
+    public void submit(@RequestParam Map<String, String> answer) {
+        log.info("" + answer);
     }
 }
