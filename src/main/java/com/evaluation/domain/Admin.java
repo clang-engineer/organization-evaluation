@@ -24,7 +24,9 @@ import lombok.Setter;
 public class Admin {
     
     @Id
+    @Column(name = "uid")
     private String uid;
+
     private String upw;
     private String uname;
     private String enabled;

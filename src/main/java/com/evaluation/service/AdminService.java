@@ -14,5 +14,5 @@ public interface AdminService {
 
     public void remove(String uid);
 
-    public List<Admin> list();
+    public Optional<List<Admin>> list();
 }

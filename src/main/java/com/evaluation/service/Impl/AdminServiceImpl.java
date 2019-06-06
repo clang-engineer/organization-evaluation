@@ -55,9 +55,9 @@ public class AdminServiceImpl implements AdminService {
     }
 
     @Override
-    public List<Admin> list() {
+    public Optional<List<Admin>> list() {
         Sort sort = new Sort(Sort.Direction.ASC, "writeDate");
-        List<Admin> result = adminRepo.findAll(sort);
+        Optional<List<Admin>> result = adminRepo.findAll(sort);
         return result;
 
     }

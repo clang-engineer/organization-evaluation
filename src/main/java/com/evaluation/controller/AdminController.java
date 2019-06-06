@@ -76,7 +76,9 @@ public class AdminController {
 
     @GetMapping("/list")
     public void list(Model model) {
-        model.addAttribute("result", adminService.list());
+        adminService.list().ifPresent(admin -> {
+            model.addAttribute("result", admin);
+        });
     }
 
 }
