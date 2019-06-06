@@ -12,10 +12,12 @@ import com.evaluation.domain.Division;
 import com.evaluation.domain.Level;
 import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
+import com.evaluation.function.RandomPassword;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.DivisionService;
 import com.evaluation.service.LevelService;
+import com.evaluation.service.Relation360Service;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -53,6 +55,8 @@ public class StaffController {
 	DepartmentService departmentService;
 
 	DivisionService divisionService;
+
+	Relation360Service relation360Service;
 
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {
@@ -151,6 +155,8 @@ public class StaffController {
 
 		long cno = turnService.get(tno).get().getCno();
 		if (deleteList == true) {
+			// 관계 모두 삭제하고 등록
+			relation360Service.deleteAllRelationByTno(tno);
 			staffService.deleteByCno(cno);
 		}
 
@@ -174,7 +180,11 @@ public class StaffController {
 			row.setDivision1(list.get(5));
 			row.setDivision2(list.get(6));
 			row.setEmail(list.get(7));
-			row.setPassword(list.get(8));
+			if (list.get(8) == null || list.get(8) == "N") {
+				row.setPassword(RandomPassword.numberGen(6, 2));
+			} else {
+				row.setPassword(list.get(8));
+			}
 			row.setTelephone(list.get(9));
 			row.setWriteId(staff.getWriteId());
 			row.setUpdateId(staff.getUpdateId());
