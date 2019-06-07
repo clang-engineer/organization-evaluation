@@ -78,8 +78,9 @@ public class TurnServiceTests {
 	public void testGetList() {
 		log.info("========== test getList");
 
-		service.getList(100L).forEach(turn -> log.info("" + turn));
-		;
+		service.getList(100L).ifPresent(origin -> {
+			origin.forEach(turn -> log.info("" + turn));
+		});
 	}
 
 }

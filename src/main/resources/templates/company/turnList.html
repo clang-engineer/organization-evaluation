@@ -108,6 +108,15 @@
 
 
 			function printList(list) {
+				if (list == null) {
+					//list null 일 때 새로고침 한번 되도록함.
+					if (self.name != 'reload') {
+						self.name = 'reload';
+						self.location.reload(true);
+					}
+					else self.name = '';
+					return false;
+				}
 				var str = "";
 				var turnObj;
 				for (var i = 0; i < list.length; i++) {

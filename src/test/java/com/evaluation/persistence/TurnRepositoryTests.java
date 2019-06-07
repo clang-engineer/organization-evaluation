@@ -3,6 +3,7 @@ package com.evaluation.persistence;
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 import java.util.stream.IntStream;
 
@@ -54,6 +55,10 @@ public class TurnRepositoryTests {
 
 	@Test
 	public void testGetTurnsOfCompanyByStatus() {
-		turnRepo.getTurnsInSurvey(1L, LocalDateTime.now()).forEach(origin -> log.info("" + origin.getTitle()));
+		turnRepo.getTurnsInSurvey(1L, LocalDateTime.now()).ifPresent(origin -> {
+			origin.forEach(turn -> {
+				log.info("===>" + turn.getTitle());
+			});
+		});
 	}
 }

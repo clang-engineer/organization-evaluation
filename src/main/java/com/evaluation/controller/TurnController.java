@@ -1,6 +1,7 @@
 package com.evaluation.controller;
 
 import java.util.List;
+import java.util.Optional;
 
 import javax.transaction.Transactional;
 
@@ -32,7 +33,7 @@ public class TurnController {
 
 	@Transactional
 	@PostMapping("/{cno}")
-	public ResponseEntity<List<Turn>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
+	public ResponseEntity<Optional<List<Turn>>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : addTurn " + turn);
 
 		turn.setCno(cno);
@@ -44,33 +45,33 @@ public class TurnController {
 
 	@Transactional
 	@PutMapping("/{cno}")
-	public ResponseEntity<List<Turn>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
+	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
 		turn.setInfo360(turnService.get(turn.getTno()).get().getInfo360());
 		turn.setInfoMbo(turnService.get(turn.getTno()).get().getInfoMbo());
 		turnService.modify(turn);
 
-		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.CREATED);
+		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.CREATED);
 	}
 
 	@Transactional
 	@DeleteMapping("/{cno}/{tno}")
-	public ResponseEntity<List<Turn>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
+	public ResponseEntity<Optional<List<Turn>>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
 		log.info("controller : remove Turn " + tno);
 
 		turnService.remove(tno);
 
-		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.OK);
+		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.OK);
 	}
 
 	@GetMapping("/{cno}")
-	public ResponseEntity<List<Turn>> getTurnByCompany(@PathVariable("cno") Long cno) {
+	public ResponseEntity<Optional<List<Turn>>> getTurnByCompany(@PathVariable("cno") Long cno) {
 		log.info("controller : get all turns by " + cno);
 
-		return new ResponseEntity<List<Turn>>(getTurnList(cno), HttpStatus.OK);
+		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.OK);
 	}
 
-	private List<Turn> getTurnList(Long cno) throws RuntimeException {
+	private Optional<List<Turn>> getTurnList(Long cno) throws RuntimeException {
 		log.info("getTurnList" + cno);
 
 		return turnService.getList(cno);
