@@ -19,5 +19,5 @@ public interface CompanyService {
 
 	public Page<Company> getList(PageVO page);
 
-	public Company readByCompanyId(String name);
+	public Optional<Company> readByCompanyId(String name);
 }

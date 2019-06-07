@@ -1,5 +1,6 @@
 package com.evaluation.controller;
 
+import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -14,7 +15,6 @@ import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
 import com.evaluation.service.TurnService;
 
-import org.springframework.http.HttpRequest;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -46,10 +46,15 @@ public class SurveyConroller {
     public String survey(String company, Model model) {
         log.info("====>survey by company" + company);
 
-        long cno = companyService.readByCompanyId(company).getCno();
-
-        model.addAttribute("company", companyService.readByCompanyId(company));
-        model.addAttribute("turns", turnService.getListInSurvey(cno));
+        // 회사에 관한 정보 찾고
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            long cno = origin.getCno();
+            model.addAttribute("company", origin);
+            // 회사 cno로 turn정보를 찾는다.
+            turnService.getListInSurvey(cno).ifPresent(turn -> {
+                model.addAttribute("turns", turn);
+            });
+        });
 
         return "/survey/index";
     }
@@ -65,7 +70,7 @@ public class SurveyConroller {
                 rttr.addAttribute("company", company);
             });
         });
-        
+
         Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
 
         if (evaluator.getPassword().equals(staff.getPassword())) {
@@ -90,6 +95,11 @@ public class SurveyConroller {
         return "redirect:/survey/";
     }
 
+    @GetMapping
+    public void contact() {
+
+    }
+
     @GetMapping("/main")
     public String main(String company, Long tno, Model model, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("====>turn main by company" + company);
@@ -100,12 +110,13 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
-        long cno = companyService.readByCompanyId(company).getCno();
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
         model.addAttribute("question", questionService.DistinctDivisionCountByTno(tno));
-        model.addAttribute("companyInfo", companyService.readByCompanyId(company));
         turnService.get(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });

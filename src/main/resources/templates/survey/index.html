@@ -33,6 +33,7 @@
             <p class="card-text">
               <select class="custom-select" name="tno">
                 <option th:each="turn:${turns}" th:value="${turn.tno}">[[${turn.title}]]</option>
+                <option>--</option>  
               </select>
             </p>
           </div>

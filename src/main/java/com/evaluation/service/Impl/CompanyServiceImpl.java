@@ -79,7 +79,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	// 회사이름으로 정보 불러오기 위함.
 	@Override
-	public Company readByCompanyId(String name) {
+	public Optional<Company> readByCompanyId(String name) {
 		log.info("compny read by name " + name);
 		return companyRepo.findByCompanyId(name);
 	}
