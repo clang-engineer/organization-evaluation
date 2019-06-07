@@ -31,7 +31,7 @@
                         <p class="card-text">
                             - [[${turn.title}]]
                         </p>
-                        <p class="card-text">[[${turn.info360.content}]]</p>
+                        <p class="card-text" th:utext="${turn.info360.content}"></p>
                         <a th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary">Survey start &rarr;</a>
                     </div>
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
