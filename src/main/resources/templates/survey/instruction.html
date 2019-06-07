@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<div th:fragment="instruction">
+    <!-- Modal -->
+    <div class="modal fade" id="instructionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-xl" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Survey instruction - Mistakes To Avoid</h5>
+                    <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button> -->
+                </div>
+                <div class="modal-body">
+
+
+                    <!-- arcodian -->
+                    <div class="mb-4" id="accordion">
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse1">#1 연쇄효과 (헤일로 효과, halo effect)</a>
+                                </h5>
+                            </div>
+                            <div id="collapse1" class="collapse show">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">한 평정요소에 대한 평정자의 판단이 연쇄적으로 다른 요소의 평정에도 영향을 주는 오류(=현혹효과, 후광효과)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">피평정자가 성실한 경우, 그런 인상이 창의성/지도력 등 전혀 성격이 다른 요소의 측정에도 영향을 미쳐 좋은 점수를 부여하게 되는 현상</footer>
+                                    </blockquote>
+
+                                    <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample1" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample1">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">강제선택법을 사용하여 평정요소 간의 연상효과를 가능한 한 배제</li>
+                                            <li class="list-group-item">각 평정요소별로 모든 피평정자를 순차적으로 평정</li>
+                                            <li class="list-group-item">유사한 평정요소를 멀리 떨어지게 하는 등 요소별 배열 순서에 유의</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse2">#2 분포상의 착오 (집중화경향(central tendecy), 관대화경향(tendecy of leniency), 엄격화경향(tendecy of strictness))</a>
+                                </h5>
+                            </div>
+                            <div id="collapse2" class="collapse hide">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">집중화 경향(central tendency) : 피평정자들에게 대부분 중간 수준의 점수를 주는 심리적 경향<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">평정상 의문이 있거나 피평정자에 관해 잘 모르는 경우, 모험을 피하려는 방편으로 모든 것이 평균이라는 평정을 하게 됨.</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">관대화 경향(tendency of leniency) : 피평정자를 실제 수준보다 관대하게 평가하는 경향<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">평정결과의 분포가 우수한 쪽에 집중되는 경향, 평정자들이 부하들과의 비공식집단적 유대 때문에 우수한 평점을 주게 됨.</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">엄격화 경향(tendency of strictness) : 피평정자를 실제 수준보다 낮게 평가하는 경향<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">평정결과의 분포가 열등한 쪽에 집중되는 경향</footer>
+                                    </blockquote>
+
+                                    <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample2" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample2">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">강제배분법을 활용</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse3">#3 규칙적(체계적) 오류(=일관적 착오, Systemetic error)</a>
+                                </h5>
+                            </div>
+                            <div id="collapse3" class="collapse hide">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">어떤 평정자가 다른 평정자들보다 언제나 좋은 점수 또는 나쁜 점수를 주게 됨으로써 나타나는 오류<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">평정자가 항상 관대화나 엄격화 경향을 보이는 것으로 평정기준이 높거나 낮은 데서 오는 규칙적/일관적 착오라고 함.</footer>
+                                    </blockquote>
+                                    <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample3" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample3">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">평가 후 조정(사후 조정)을 통한 해결</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse4">#4 총계적 오류 </a>
+                                </h5>
+                            </div>
+                            <div id="collapse4" class="collapse hide">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">평정자의 평정기준이 일정치 않아 관대화 및 엄격화 경향이 불규칙하게 나타나는 오류<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">규칙적 오류와 달리 총계적 오류발생 시 점수의 사후적 조정이 불가능함.</footer>
+                                    </blockquote>
+                                    <!-- <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample3" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample3">
+                                        <ul class="list-group">
+                                            <li class="list-group-item"></li>
+                                        </ul>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse5">#5 시간적 오류 (첫머리효과(primacy effect, 최초효과), 막바지효과(recency effect, 근접효과))</a>
+                                </h5>
+                            </div>
+                            <div id="collapse5" class="collapse hide">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">첫머리 효과(primacy effect, 최초효과)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">전체 기간의 근무성적을 평가하기보다는 초기의 업적에 영향을 크게 받는 효과</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">막바지 효과(recency effect, 근접효과)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">전체 기간의 근무성적을 평가하기보다는 최근의 실적이나 능력을 중심으로 평가하는 효과</footer>
+                                    </blockquote>
+                                    <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample5" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample5">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">독립된 평가센터의 설치/운영</li>
+                                            <li class="list-group-item">MBO 평정방식</li>
+                                            <li class="list-group-item">중요사건 기록법의 활용</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse6">#6 기타 평가 중에 발생할 수 있는 오류</a>
+                                </h5>
+                            </div>
+                            <div id="collapse6" class="collapse hide">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">유사성 오차(similarity error, 투사)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">평정자가 자기자신과 성향이 유사한 부하에게 후한 점수를 주는 오차</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">상동적 오차(stereo-typing error, 유형화의 착오)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">유형화(정형화/집단화)의 착오로 편견이나 선입견 또는 고정관념에 의한 오차, 피평가자가 속한 사회적 집단의 유형에 대한 지각이나 어떤 인식을 오랫동안 같은 상태로 일관되게 유지하려는 심리상태에서 기인</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">논리적 오차(logical error)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">평정요소 간 존재하는 논리적 상관관계에 의하여 생기는 오류, 어떤 평정요소가 특별히 좋거나 혹은 아주 낮은 점수를 받은 경우에 일반적인 상관관계에 있는 다른 요소도 높게 혹은 낮게 평정하는 경향</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">귀인적 편견<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">드러나는 행위를 기초로 해서 관찰자가 자신이나 피평가자의 내적 상태를 추론함으로써 발생하는 오류</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">선택적 지각의 착오<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">자기 기준 체계에 유리한 것만을 일관성 있게 추론함으로써 발생하는 오류</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">피그 말리온 효과(로젠탈 효과)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">자기충족적 예연효과를 의미하는 것으로 예언대로 행동하고 판단하게 되는 현상</footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">근본적 귀속의 착오(fundamental attribution error, 이기적 착오)<span class="badge badge-pill badge-secondary ml-2">정의</span></p>
+                                        <footer class="blockquote-footer">타인의 실패를 평가함에 있어서 상황적 요인의 영향은 과소평가하고 개인적 요인의 영향은 과대평가하는 경향. 반면에 타인의 성공을 평가할 때는 상황적 요인을 과대평가하고 개인적 요인은 과소평가하는 경향</footer>
+                                    </blockquote>
+                                    <!-- <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample6" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample6">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">독립된 평가센터의 설치/운영</li>
+                                            <li class="list-group-item">MBO 평정방식</li>
+                                            <li class="list-group-item">중요사건 기록법의 활용</li>
+                                        </ul>
+                                    </div> -->
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                        <!-- card -->
+                        <div class="card">
+                            <div class="card-header">
+                                <h5 class="mb-0">
+                                    <a data-toggle="collapse" href="#collapse7">#7 평정오류 시정방안</a>
+                                </h5>
+                            </div>
+                            <div id="collapse7" class="collapse hide">
+                                <div class="card-body">
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">평정자에 대한 사전교육 철저</p>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">강제배분법 사용</p>
+                                        <footer class="blockquote-footer">강제배분법 : 성적분포 비율을 미리 정해 놓는 방법
+                                            <br>(<i class="fas fa-arrows-alt-h"></i>강제선택법 : 유사하거나 상반되게 보이는 2개 또는 4～5개의 항목으로 구성된 각 기술 항목의 조 가운데서 피평정자의 특성에 가까운 것을 강제적으로 골라 표시하도록 하는 평정 방법)
+                                        </footer>
+                                    </blockquote>
+                                    <blockquote class="blockquote">
+                                        <p class="mb-0">사후적으로 표준값으로 환산하는 방법 이용</p>
+                                        <footer class="blockquote-footer">사후적을오 평정결과를 조정할 필요가 있을ㅇ 경우에는 표준값으로 환산하는 방법을 이용</footer>
+                                    </blockquote>
+                                    <p>
+                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample7" role="button">
+                                            Solution
+                                        </a>
+                                    </p>
+                                    <div class="collapse" id="collapseExample7">
+                                        <ul class="list-group">
+                                            <li class="list-group-item">독립된 평가센터의 설치/운영</li>
+                                            <li class="list-group-item">MBO 평정방식</li>
+                                            <li class="list-group-item">중요사건 기록법의 활용</li>
+                                        </ul>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <!-- card -->
+                    </div>
+                    <!-- ./arcodian -->
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+</div>
+s
+
+</html>
