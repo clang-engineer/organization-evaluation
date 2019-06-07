@@ -25,7 +25,7 @@
                         </p>
                         <hr>
                         <p class="card-text" th:utext="${turn.info360.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
+                        <a id="surveyStart" th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
@@ -81,7 +81,7 @@
                             <br>[[${companyInfo.hrManager}]] ([[${companyInfo.name}]])
                             <br>Tel : [[${companyInfo.hrManagerTel}]] 
                             </p>
-                            <p class="card-text">
+                            <p class="card-text m-0">
                             <label for="">
                                 시스템 관련 문의 : 
                             </label>
