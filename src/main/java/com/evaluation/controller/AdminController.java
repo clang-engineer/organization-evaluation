@@ -6,6 +6,7 @@ import com.evaluation.service.AdminService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -18,6 +19,7 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/admin/**")
 @Slf4j
+@Transactional
 public class AdminController {
 
     @Setter(onMethod_ = { @Autowired })
@@ -68,10 +70,12 @@ public class AdminController {
     public String remove(String uid, RedirectAttributes rttr) {
         log.info("delete " + uid);
 
-        adminService.remove(uid);
-
+        if (uid != null) {
+            adminService.remove(uid);
+        }
         rttr.addFlashAttribute("msg", "remove");
         return "redirect:/admin/list";
+
     }
 
     @GetMapping("/list")

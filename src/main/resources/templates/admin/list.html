@@ -83,6 +83,13 @@
 		$(document).ready(function () {
 			var formObj = $("#f1");
 
+			//admincontroller 삭제 에러 이슈로 로딩되면 바로 새로고침 한번 되도록함.
+			if (self.name != 'reload') {
+				self.name = 'reload';
+				self.location.reload(true);
+			}
+			else self.name = '';
+
 
 			//작업 메시지 세트
 			var msg = [[${ msg }]];
