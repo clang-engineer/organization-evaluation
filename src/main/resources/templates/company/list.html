@@ -1,6 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-	layout:decorate="~{/layout/layoutCompany}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
@@ -56,6 +55,7 @@
 								<th>Password</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
+								<th>User Page</th>
 								<th>Turn Info</th>
 
 							</tr>
@@ -68,6 +68,7 @@
 								<td>[[${company.password}]]</td>
 								<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 								<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+								<td><a th:href="${company.id}" class="userPage"><button type='button' class='btn btn-default'><i class='fas fa-users'></i></button></a></td>
 								<td><a th:href="${company.cno}" class="turnList">
 									<button type="button" class="btn btn-default">
 											<i class="fas fa-sitemap"></i>
@@ -201,6 +202,16 @@
 				formObj.attr("action", '/company/register');
 				formObj.submit();
 			})
+
+			$(".userPage").click(function (e) {
+				if (confirm("사용자 서베이 페이지로 이동하시겠습니까?")) {
+					e.preventDefault();
+					$("#f1").empty();
+					$("#f1").attr("action", '/survey/');
+					$("#f1").append("<input type='hidden' name='company' value='" + $(this).attr('href') + "'/>");
+					$("#f1").submit();
+				}
+			});
 		});
 
 		/* 			$(document).ready(function(){

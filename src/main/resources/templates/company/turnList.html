@@ -30,7 +30,6 @@
 								<th>Turn Type</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
-								<th>User Page</th>
 								<th>Turn Detail</th>
 							</tr>
 						</thead>
@@ -120,8 +119,7 @@
 						"<td>" + turnObj.types + "</td>" +
 						"<td>" + formatDate(turnObj.writeDate) + "</td>" +
 						"<td>" + formatDate(turnObj.updateDate) + "</td>" +
-						"<td><a data-type='survey' href='" + [[${ vo.id }]] + "'><button type='button' class='btn btn-default'><i class='fas fa-users'></i></button></a></td>" +
-						"<td><a data-type='detail' href='" + turnObj.tno + "'><button type='button' class='btn btn-default'><i class='fas fa-sitemap'></i></button></a></td>" +
+						"<td><a href='" + turnObj.tno + "'><button type='button' class='btn btn-default'><i class='fas fa-sitemap'></i></button></a></td>" +
 						"</tr>";
 				}
 
@@ -209,34 +207,21 @@
 
 			/* detail 버튼 */
 			$("#turnTable").on("click", "a", function (e) {
-				if ($(this).data("type") == 'detail') {
-
-					if (confirm("회차 상세 설정 화면으로 이동하시겠습니까?")) {
-						e.preventDefault();
-						$("#f1").empty();
-						$("#f1").attr("action", '/staff/list');
-						$("#f1").append("<input type='hidden' name='tno' value='" + $(this).attr('href') + "'/>");
-						$("#f1").submit();
-					} else {
-						return false;
-					}
-				} else if ($(this).data("type") == 'survey') {
-					if (confirm("사용자 서베이 페이지로 이동하시겠습니까?")) {
-						e.preventDefault();
-						$("#f1").empty();
-						$("#f1").attr("action", '/survey/');
-						$("#f1").append("<input type='hidden' name='company' value='" + $(this).attr('href') + "'/>");
-						$("#f1").submit();
-					} else {
-						return false;
-					}
+				if (confirm("회차 상세 설정 화면으로 이동하시겠습니까?")) {
+					e.preventDefault();
+					$("#f1").empty();
+					$("#f1").attr("action", '/staff/list');
+					$("#f1").append("<input type='hidden' name='tno' value='" + $(this).attr('href') + "'/>");
+					$("#f1").submit();
+				} else {
+					return false;
 				}
 			});
 
 			/* 행 클릭 시!! modify, delete turn */
 			$("#turnTable").on("click", "tr", function (e) {
-				var tds = $(this).find('td');
-				tno = tds.find('a').last().attr('href');
+				var tds = $(this).find('td')
+				tno = tds.find('a').attr('href');
 				turnTitleObj.val(tds[1].innerHTML);
 				checked_values(false);
 
