@@ -18,21 +18,28 @@
                     <div class="card mb-4">
                         <h5 class="card-header">본인평가</h5>
                         <div class="card-body">
-
                             <h5 class="card-title">Special title treatment</h5>
                             <p class="card-text">With supporting text below as a natural lead-in to additional content.</p>
                             <a href="#" class="btn btn-primary">Go Survey</a>
+                            <span th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='me'">
+                                <span th:if="${relation.finish}=='N'">
+                                    <button data-finish="N" th:data-name="${relation.evaluated.name}" th:data-evaluated="${relation.evaluated}" th:data-rno="${relation.rno}" class="btn btn-default">Go Survey</button>
+                                </span>
+                                <span th:if="${relation.finish}=='Y'" th:text="끝"></span>
+                                <span th:if="${relation.finish}=='T'" th:text="임시저장"></span>
+                            </span>
                         </div>
                     </div>
+                    <!-- 1차 평가자 리스트 card -->
                     <div class="card mb-4">
                         <h5 class="card-header">1차 평가자로서 평가할 대상
                             <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 직속 상사 입니다.</small>
                         </h5>
-                        <div class="card-body">
+                        <!-- card body -->
+                        <div class="card-body pb-0">
                             <table id="table" class="table">
                                 <thead class="thead-dark">
                                     <tr>
-                                        <th scope="col">#</th>
                                         <th scope="col">Name</th>
                                         <th scope="col">Department</th>
                                         <th scope="col">Division</th>
@@ -42,53 +49,22 @@
                                 </thead>
                                 <tbody>
                                     <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='1'">
-                                        <th scope="row">[[${status.index}+1]]</th>
                                         <td>[[${relation.evaluated.name}]]</td>
                                         <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
                                         <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
                                         <td>[[${relation.evaluated.level}]]</td>
                                         <td th:if="${relation.finish}=='N'">
-                                            <button data-finish="N" th:data-name="${relation.evaluated.name}" th:data-evaluated="${relation.evaluated}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
+                                            <button data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
                                         </td>
                                         <td th:if="${relation.finish}=='Y'" th:text="끝"></td>
                                         <td th:if="${relation.finish}=='T'" th:text="임시저장"></td>
                                     </tr>
                                 </tbody>
                             </table>
-
                         </div>
+                        <!-- ./card body -->
                     </div>
-                    <div class="card mb-4">
-                        <h5 class="card-header">2차 평가자로서 평가할 대상
-                            <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 차상위 상사 입니다.</small>
-                        </h5>
-                        <div class="card-body">
-                            <table class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">#</th>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Department</th>
-                                        <th scope="col">Division</th>
-                                        <th scope="col">Level</th>
-                                        <th scope="col">Survey</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="evaluated,status:${evaluatedList}" th:if="${evaluated.relation}=='2'">
-                                        <th scope="row">[[${status.index}+1]]</th>
-                                        <td>[[${evaluated.evaluated.name}]]</td>
-                                        <td>[[${evaluated.evaluated.department1}]]-[[${evaluated.evaluated.department2}]]</td>
-                                        <td>[[${evaluated.evaluated.division1}]]-[[${evaluated.evaluated.division2}]]</td>
-                                        <td>[[${evaluated.evaluated.level}]]</td>
-                                        <td th:if="${evaluated.finish}=='N'"><i class="fas fa-user-edit fa-fw"></i></td>
-                                        <td th:if="${evaluated.finish}=='T'" th:text="임시저장"></td>
-                                        <td th:if="${evaluated.finish}=='Y'" th:text="끝"></td>
-                                    </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    <!-- ./1차 평가자 리스트 -->
                 </div>
             </div>
         </div>
@@ -109,7 +85,6 @@
 
                 var finish = $(this).data("finish");
                 var rno = $(this).data("rno");
-                var evaluated = $(this).data("evaluated");
                 var name = $(this).data("name");
 
                 if (confirm(name + "님 설문페이지로 이동하시겠습니까?")) {

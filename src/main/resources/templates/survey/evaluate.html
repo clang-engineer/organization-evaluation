@@ -12,24 +12,27 @@
         <form id="f1" method="POST" th:action="@{submit}">
             <!-- card -->
             <div class="card mb-4">
+                <!-- card-header -->
                 <h5 class="card-header text-white bg-dark">객관식
                     <small class="float-md-right">[[${evaluated}]] 님에 대한 객관식 질의 입니다.</small>
                 </h5>
-                <div class="card-body mt-2 ml-3" th:each="category:${category}">
-                    <h5 class="card-title mb-4 ml-1">[[${category}]]</h5>
-                    <div class="ml-3 mb-5" th:each="question,status:${questionList}" th:if="${category}==${question[1]}">
+                <!-- ./card-header -->
+                <!-- card-body -->
+                <div class="card mt-3 mr-3 ml-3 mb-3" th:each="category:${category}">
+                    <h5 class="card-header bg-light mb-4">[[${category}]]</h5>
+                    <div class="card-body ml-3 mb-3" th:each="question,status:${questionList}" th:if="${category}==${question[1]}">
                         <h6 class="card-text mb-4">
                             [[${question[0]}]] - [[${question[2]}]]
                         </h6>
                         <div th:each="book,idx:${book}" class="mr-5 question">
                             <label>
-                                <!-- <input th:name="'q'+${status.count}" type="radio" th:value="${status.count}"> -->
                                 <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${idx.count}">
                                 [[${book}]]
                             </label>
                         </div>
                     </div>
                 </div>
+                <!-- card-body -->
             </div>
             <!-- ./card -->
             <!-- card -->
@@ -37,12 +40,13 @@
                 <h5 class="card-header text-white bg-dark">주관식
                     <small class="float-md-right">[[${evaluated}]] 님에 대한 주관식 질의 입니다.</small>
                 </h5>
-                <h6 class="card-body mt-2 ml-2" th:each="question, status:${commentList}">
-                    <div class="card-text mb-4">[[${status.count}]] - [[${question}]]</div>
-                    <!-- <textarea required th:name="'c'+${status.count}" class="form-control" rows="4"></textarea> -->
-                    <textarea required th:name="'c'+${status.count}" class="form-control" rows="4"></textarea>
-                    <p class="float-md-right" id="count_message">0/2000</p>
-                </h6>
+                <div class="card m-3">
+                    <div class="card-body" th:each="question, status:${commentList}">
+                        <div class="card-text">[[${status.count}]] - [[${question}]]</div>
+                        <textarea required th:name="'c'+${status.count}" class="form-control" rows="7"></textarea>
+                        <p class="float-md-right mb-0" id="count_message">0/2000</p>
+                    </div>
+                </div>
             </div>
             <!-- ./card -->
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -53,7 +57,8 @@
         </div>
         <!-- button -->
         <div class="row fixedbutton">
-            <div class="col-md-3">
+            <div class="col-md-2">
+
                 <div class="btn-group-vertical btn-group-lg">
                     <button class="btn btn-default"><i class="fas fa-pause-circle fa-2x"></i>
                         <div>Pause</div>
@@ -61,7 +66,7 @@
                     <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
                         <div>Top</div>
                     </button>
-
+                    <span class="badge badge-pill badge-warning">'[[${evaluated}]]'님에 대한 평가!</span>
                 </div>
             </div>
         </div>
@@ -91,11 +96,27 @@
             });
 
 
+            // load했을 때 버튼 사이즈
+            var win = $(this);
+            if (win.width() < 768) {
+                $('.btn-group-vertical').addClass('btn-group-sm');
+                $('.btn-group-vertical').removeClass('btn-group-xs');
+                $('.btn-group-vertical').removeClass('btn-group-lg');
+
+            } else if ((win.width() < 1200)) {
+                $('.btn-group-vertical').removeClass('btn-group-sm');
+                $('.btn-group-vertical').addClass('btn-group-xs');
+                $('.btn-group-vertical').removeClass('btn-group-lg');
+
+            } else {
+                $('.btn-group-vertical').removeClass('btn-group-sm');
+                $('.btn-group-vertical').removeClass('btn-group-xs');
+                $('.btn-group-vertical').addClass('btn-group-lg');
+            }
+
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
-                var win = $(this);
                 if (win.width() < 768) {
-                    console.log(1);
                     $('.btn-group-vertical').addClass('btn-group-sm');
                     $('.btn-group-vertical').removeClass('btn-group-xs');
                     $('.btn-group-vertical').removeClass('btn-group-lg');
@@ -115,8 +136,8 @@
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit").click(function (e) {
                 e.preventDefault();
-                formObj[0].checkValidity();
-                formObj[0].reportValidity();
+                // formObj[0].checkValidity();
+                // formObj[0].reportValidity();
                 // console.log($("formF").serializeArray());
                 // var data = $("form").serializeArray()
                 // formObj.append(data);

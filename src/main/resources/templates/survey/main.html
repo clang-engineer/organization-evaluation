@@ -23,8 +23,9 @@
                         <p class="card-text">
                             - [[${turn.title}]]
                         </p>
+                        <hr>
                         <p class="card-text" th:utext="${turn.info360.content}"></p>
-                        <a th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary">Survey start &rarr;</a>
+                        <a id="surveyStart" th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
@@ -86,7 +87,7 @@
                             </label>
                             <br>김영준
                             </p>
-                            <button id="instructionBtn" class="btn btn-xs float-md-right"><i class="fas fa-book-reader mr-2"></i>Survey instrunction</button>
+                            <button id="instructionBtn" class="btn btn-xs float-md-right" data-toggle="tooltip" data-placement="right" title="click!!"><i class="fas fa-book-reader mr-2"></i>Survey instrunction</button>
                     </div>
                 </div>
                 <!-- ./Side Widget -->
@@ -111,9 +112,17 @@
             $("#instructionBtn").click(function (e) {
                 console.log(1)
                 $("#instructionModal").modal("show");
-                $(".modal-content, .modal-dialog").css("height", "80%");
+                $(".modal-content, .modal-dialog").css("height", "85%");
                 $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
             });
+
+            //toolitip에 관한 설정
+            $('#instructionBtn,#surveyStart').tooltip('show');
+            //몇초 후에 사라짐
+            setTimeout(function () {
+                $('#instructionBtn,#surveyStart').tooltip('hide');
+            }, 2500);
+
         });
     </script>
 </th:block>
