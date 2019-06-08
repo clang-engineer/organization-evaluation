@@ -35,12 +35,10 @@
                 /* background: red; */
             }
 
-            .fixedbutton {
-                position: fixed;
-                bottom: 5%;
-                right: 0%;
+            #bottomGroup {
+                bottom: 7%;
+                right: 5%;
             }
-
         }
 
         @media (min-width:768px) {
@@ -48,23 +46,21 @@
                 /* background: orange; */
             }
 
-            .fixedbutton {
-                position: fixed;
-                bottom: 5%;
+            #bottomGroup {
+                bottom: 7%;
                 right: 5%;
             }
         }
 
         @media (min-width:992px) {
             .question {
-                display: inline;
+                displays: inline;
                 /* background: yellow; */
             }
 
-            .fixedbutton {
-                position: fixed;
-                bottom: 5%;
-                right: 8%;
+            #bottomGroup {
+                bottom: 7%;
+                right: 5%;
             }
         }
 
@@ -74,16 +70,31 @@
                 /* background: green; */
             }
 
-            .fixedbutton {
-                position: fixed;
-                bottom: 5%;
-                right: 15%;
+            #bottomGroup {
+                bottom: 7%;
+                right: 5%;
             }
         }
 
         #top {
             display: none;
         }
+
+
+        /* introduction 폰트 조정 */
+        blockquote p {
+            font-size: 1rem;
+        }
+
+        blockquote .blockquote-footer {
+            font-size: 0.9rem;
+        }
+
+        .card-body .collapse {
+            font-size: 0.9rem;
+        }
+
+        /* ./introduction 폰트 조정 */
 
         /* .fa-save{
             color: powderblue;
@@ -110,8 +121,9 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
 
-            <a class="navbar-brand" href="#">
-                <img src="http://placehold.it/150x50?text=Logo" alt="">
+            <a onclick="window.open(this.href, '_blank'); return false;" class="navbar-brand" th:href="${companyInfo?.homepage}" th:text="${companyInfo?.name}">
+
+                <!-- <img src="http://placehold.it/150x50?text=Logo" alt=""> -->
             </a>
             <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>

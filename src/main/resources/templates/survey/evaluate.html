@@ -57,22 +57,21 @@
         <div class="mt-3 mb-5 justify-content-md-center">
             <!-- <button id="btnSubmit" type="submit" class="btn btn-block btn-primary btn-lg">Submit</button> -->
         </div>
-        <!-- button -->
-        <div class="row fixedbutton">
-            <div class="col-md-2">
-
-                <div class="btn-group-vertical btn-group-lg">
-                    <button id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
-                        <div>Submit</div>
-                    </button>
-                    <button id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
-                        <div>Pause</div>
-                    </button>
-                    <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
-                        <div>Top</div>
-                    </button>
-                    <span class="badge badge-pill badge-warning">'[[${evaluated}]]'님에 대한 평가!</span>
-                </div>
+        <!-- button -->]
+        <div id="bottomGroup" class="position-fixed" align="center">
+            <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
+                <button id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
+                    <div>Submit</div>
+                </button>
+                <button id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
+                    <div>Pause</div>
+                </button>
+                <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+                    <div>Top</div>
+                </button>
+            </div>
+            <div>
+                <span class="badge badge-pill badge-warning">'[[${evaluated}]]'님에 대한 평가!</span>
             </div>
         </div>
         <!-- button -->
@@ -102,37 +101,44 @@
             // load했을 때 버튼 사이즈
             var win = $(this);
             if (win.width() < 768) {
-                $('.btn-group-vertical').addClass('btn-group-sm');
-                $('.btn-group-vertical').removeClass('btn-group-xs');
-                $('.btn-group-vertical').removeClass('btn-group-lg');
+                $('#bottomBtn').addClass('btn-group-sm');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-vertical');
 
             } else if ((win.width() < 1200)) {
-                $('.btn-group-vertical').removeClass('btn-group-sm');
-                $('.btn-group-vertical').addClass('btn-group-xs');
-                $('.btn-group-vertical').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-sm');
+                $('#bottomBtn').addClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-vertical');
 
             } else {
-                $('.btn-group-vertical').removeClass('btn-group-sm');
-                $('.btn-group-vertical').removeClass('btn-group-xs');
-                $('.btn-group-vertical').addClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-sm');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').addClass('btn-group-lg');
+                $('#bottomBtn').addClass('btn-group-vertical');
             }
 
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
                 if (win.width() < 768) {
-                    $('.btn-group-vertical').addClass('btn-group-sm');
-                    $('.btn-group-vertical').removeClass('btn-group-xs');
-                    $('.btn-group-vertical').removeClass('btn-group-lg');
+                    $('#bottomBtn').addClass('btn-group-sm');
+                    $('#bottomBtn').removeClass('btn-group-xs');
+                    $('#bottomBtn').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-vertical');
 
                 } else if ((win.width() < 1200)) {
-                    $('.btn-group-vertical').removeClass('btn-group-sm');
-                    $('.btn-group-vertical').addClass('btn-group-xs');
-                    $('.btn-group-vertical').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-sm');
+                    $('#bottomBtn').addClass('btn-group-xs');
+                    $('#bottomBtn').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-vertical');
 
                 } else {
-                    $('.btn-group-vertical').removeClass('btn-group-sm');
-                    $('.btn-group-vertical').removeClass('btn-group-xs');
-                    $('.btn-group-vertical').addClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-sm');
+                    $('#bottomBtn').removeClass('btn-group-xs');
+                    $('#bottomBtn').addClass('btn-group-lg');
+                    $('#bottomBtn').addClass('btn-group-vertical');
                 }
             });
 

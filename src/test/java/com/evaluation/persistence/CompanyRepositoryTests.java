@@ -2,6 +2,8 @@ package com.evaluation.persistence;
 
 import java.util.stream.IntStream;
 
+import com.evaluation.domain.Company;
+
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,8 +14,6 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import com.evaluation.domain.Company;
 
 import lombok.extern.slf4j.Slf4j;
 
