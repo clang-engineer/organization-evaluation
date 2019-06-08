@@ -20,14 +20,11 @@ import org.springframework.transaction.annotation.Transactional;
 public interface Relation360Repository
         extends CrudRepository<Relation360, Long>, QuerydslPredicateExecutor<Relation360> {
 
-    // 하나의 tno에 존재하는 모든 relation distinct에서 관계별로 셀 나누기 위해 사용
-    // @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=?1")
-    // public List<Relation360> findByTno(long tno);
-
     // 모든 테이블 가져오니 넘 느려서, 페이지에 표시되는 관련 관계자 정보만 가져오기로 함.
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluated.sno=?1 AND r.tno=?2")
     public List<Relation360> findByEvaulatedSno(long sno, long tno);
 
+    /* criteria 처리 필요 */
     // 하나의 tno에 존재하는 모든 relation 중 중복을 제거한 피평가자 실질적으로 페이징 처리됨.
     @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=?1 ORDER BY r.evaluated.sno ASC")
     public Page<Staff> getDistinctEvaluatedList(long tno, Pageable pageable);
@@ -39,6 +36,7 @@ public interface Relation360Repository
     // ecaluator 이름으로 검색했을 때의 유일값!
     @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.evaluator.name LIKE %?1% AND r.tno=?2")
     public Page<Staff> getDistinctEvaluatedListByEvaluator(String keyword, long tno, Pageable pageable);
+    /* ./criteria 처리 필요 */
 
     // 회차에 속하는 특정 evaluated정보 모두 삭제
     @Modifying

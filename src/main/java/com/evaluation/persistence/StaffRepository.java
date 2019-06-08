@@ -16,13 +16,11 @@ import com.querydsl.core.types.Predicate;
 
 public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPredicateExecutor<Staff> {
 
-	// 검색을 위한.. 나중에 criteria 작업 필요
-	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno ORDER BY s.name ASC")
-	public List<Staff> getAllStaffListByCno(@Param("cno") long cno);
-
+	// relation 설정 시 리스트에 등록 안된 피평가자 출력하기 위한
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno) ORDER BY s.sno ASC ")
 	public List<Staff> getStaffForEvaluated(@Param("cno") long cno, @Param("tno") long tno);
 
+	// relation 설정 시 평가자 출력하기 위해, 해당 피평가자에 대한 평가자에 속하지 않은 사람.
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
 	public List<Staff> getStaffForEvaluator(@Param("cno") long cno, @Param("tno") long tno, @Param("sno") long sno);
 
@@ -32,11 +30,11 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	@Query("DELETE FROM Staff s WHERE s.cno=?1")
 	public void deleteByCno(long cno);
 
-	// relation 설정할 때 직원 불러오기 위해! evaluated 위해
+	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluated 위해
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.email=?2")
 	public Staff findByCnoAndEmail(long cno, String email);
 
-	// relation 설정할 때 직원 불러오기 위해! evaluator 위해
+	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluator 위해
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.name=?2")
 	public Staff findByCnoAndName(long cno, String name);
 

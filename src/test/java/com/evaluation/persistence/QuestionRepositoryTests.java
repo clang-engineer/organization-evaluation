@@ -1,7 +1,6 @@
 package com.evaluation.persistence;
 
 import java.util.Arrays;
-import java.util.Iterator;
 import java.util.stream.IntStream;
 
 import javax.transaction.Transactional;

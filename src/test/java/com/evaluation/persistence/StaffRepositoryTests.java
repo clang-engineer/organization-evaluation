@@ -1,6 +1,5 @@
 package com.evaluation.persistence;
 
-import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.stream.IntStream;
@@ -78,15 +77,6 @@ public class StaffRepositoryTests {
 		log.info("----------------");
 		result.getContent().forEach(staff -> log.info("" + staff));
 
-	}
-
-	@Test
-	public void testGetAllList() {
-		List<Staff> result = staffRepo.getAllStaffListByCno(10);
-		log.info("===>>" + result);
-		result.forEach(staff -> {
-			log.info("===>" + staff.getName());
-		});
 	}
 
 	@Test
