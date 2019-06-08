@@ -33,5 +33,5 @@ public interface Relation360Service {
 
     public Staff findInEvaluator(long tno, String email);
 
-    public List<Relation360> findByEvaluator(long sno, long tno);
+    public Optional<List<Relation360>> findByEvaluator(long sno, long tno);
 }

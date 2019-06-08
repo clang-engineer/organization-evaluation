@@ -1,6 +1,7 @@
 package com.evaluation.persistence;
 
 import java.util.List;
+import java.util.Optional;
 
 import com.evaluation.domain.QRelation360;
 import com.evaluation.domain.Relation360;
@@ -57,7 +58,7 @@ public interface Relation360Repository
 
     // 로그인 식 출력되는 피평가자 리스트.
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluator.sno=?1 AND r.tno=?2")
-    public List<Relation360> findByEvaulaordSno(long sno, long tno);
+    public Optional<List<Relation360>> findByEvaulaordSno(long sno, long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 

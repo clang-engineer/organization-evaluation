@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import java.util.Iterator;
+import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
@@ -136,7 +136,15 @@ public class SurveyConroller {
 
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
-        model.addAttribute("evaluatedList", relation360Service.findByEvaluator(evaluator.getSno(), tno));
+
+        relation360Service.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
+            Set<String> relationList = new HashSet<>();
+            relation.forEach(origin -> {
+                relationList.add(origin.getRelation());
+            });
+            model.addAttribute("relationList", relationList);
+            model.addAttribute("evaluatedList", relation);
+        });
 
         return "/survey/list";
     }

@@ -127,9 +127,9 @@ public class Relation360ServiceImpl implements Relation360Service {
         return relation360Repo.findInEvaluator(tno, email);
     }
 
-    //로그인 했을 때 평가할 대상자 뽑기 위한 서비스
+    // 로그인 했을 때 평가할 대상자 뽑기 위한 서비스
     @Override
-    public List<Relation360> findByEvaluator(long sno, long tno) {
+    public Optional<List<Relation360>> findByEvaluator(long sno, long tno) {
         return relation360Repo.findByEvaulaordSno(sno, tno);
     }
 }
