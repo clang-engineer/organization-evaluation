@@ -85,10 +85,9 @@ public class QuestionRepositoryTests {
 
 	@Test
 	public void testDistinctDivision() {
-		Iterator qi = questionRepo.getDistinctDivisionCountByTno(1L).iterator();
-		while (qi.hasNext()) {
-			log.info("" + qi.next());
-		}
+		questionRepo.getDistinctDivisionCountByTno(1L).ifPresent(origin -> {
+			log.info("" + origin);
+		});
 	}
 
 	@Test

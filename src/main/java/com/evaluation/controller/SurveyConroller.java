@@ -110,16 +110,21 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
+        
         companyService.readByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-        model.addAttribute("question", questionService.DistinctDivisionCountByTno(tno));
+        questionService.DistinctDivisionCountByTno(tno).ifPresent(origin -> {
+            model.addAttribute("question", origin);
+        });
+
         turnService.get(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
+
         return "/survey/main";
     }
 

@@ -26,7 +26,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
 
     // 서베이 메인에 직군-계층 별 문항 수 표시하기 위한 쿼리
     @Query("SELECT q.division1, q.division2, COUNT(q.qno) FROM Question q WHERE tno=?1 GROUP BY q.division1, q.division2")
-    public List<List<String>> getDistinctDivisionCountByTno(long tno);
+    public Optional<List<List<String>>> getDistinctDivisionCountByTno(long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 
