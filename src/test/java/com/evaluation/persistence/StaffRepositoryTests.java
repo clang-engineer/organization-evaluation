@@ -113,33 +113,6 @@ public class StaffRepositoryTests {
 	}
 
 	@Test
-	public void testGetDistinctDepartmentListByCno() {
-		List<List<String>> result = new ArrayList<List<String>>();
-		staffRepo.getDistinctDepartmentListByCno(1L).forEach(arr -> result.add(arr));
-
-		result.forEach(data -> log.info("" + data.get(1)));
-		log.info("" + result);
-	}
-
-	@Test
-	public void testGetDistinctDivisionListByCno() {
-		List<List<String>> result = new ArrayList<List<String>>();
-		staffRepo.getDistinctDivisionListByCno(1L).forEach(arr -> result.add(arr));
-
-		result.forEach(data -> log.info("" + data.get(1)));
-		log.info("" + result);
-	}
-
-	@Test
-	public void testGetDistinctLevelListByCno() {
-		List<String> result = new ArrayList<String>();
-		staffRepo.getDistinctLevelListByCno(1L).forEach(arr -> result.add(arr));
-
-		result.forEach(data -> log.info("" + data));
-		log.info("" + result);
-	}
-
-	@Test
 	public void testFindByCnoAndName() {
 		log.info("" + staffRepo.findByCnoAndName(1, "이동영"));
 	}

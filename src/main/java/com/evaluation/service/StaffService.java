@@ -1,13 +1,12 @@
 package com.evaluation.service;
 
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
-
-import org.springframework.data.domain.Page;
 
 import com.evaluation.domain.Staff;
 import com.evaluation.vo.PageVO;
+
+import org.springframework.data.domain.Page;
 
 public interface StaffService {
 	public void register(Staff staff);
@@ -27,8 +26,6 @@ public interface StaffService {
 	public List<Staff> getEvaluatorList(long cno, long tno, long sno);
 
 	public void deleteByCno(long cno);
-
-	public Map<String, Object> getDistinctInfoListByCno(Long cno);
 
 	public void deleteDistinctInfoByCno(long cno);
 

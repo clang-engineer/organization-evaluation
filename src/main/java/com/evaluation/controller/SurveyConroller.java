@@ -134,6 +134,10 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
 
@@ -160,6 +164,10 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            rttr.addAttribute("companyInfo", origin);
+        });
+
         rttr.addAttribute("company", company);
         rttr.addAttribute("tno", tno);
         return "redirect:/survey/list";
@@ -172,6 +180,10 @@ public class SurveyConroller {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
+
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
 
         // 관계 정보가 존재하는 경우에 작동
         relation360Service.read(rno).ifPresent(relation -> {

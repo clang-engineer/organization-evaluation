@@ -1,11 +1,11 @@
 package com.evaluation.controller;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Collection;
+import java.util.HashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Optional;
+import java.util.Set;
+import java.util.TreeSet;
 
 import com.evaluation.domain.Department;
 import com.evaluation.domain.Division;
@@ -163,6 +163,10 @@ public class StaffController {
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
 
+		// 중복 제거 부서
+		Set<String> levList = new TreeSet<String>();
+		Set<List<String>> depList = new HashSet<List<String>>();
+		Set<List<String>> divList = new HashSet<List<String>>();
 		// 직원 등록
 		for (List<String> list : allData) {
 			if (iteration == 0) {
@@ -190,32 +194,35 @@ public class StaffController {
 			row.setUpdateId(staff.getUpdateId());
 
 			staffService.register(row);
+
+			// 중복제거 직급 생성
+			levList.add(list.get(2));
+			// 중복제거 부서 생성
+			List<String> tmpDep = new ArrayList<String>();
+			tmpDep.add(list.get(3));
+			tmpDep.add(list.get(4));
+			depList.add(tmpDep);
+			// 중복제거 부문 생성
+			List<String> tmpDiv = new ArrayList<String>();
+			tmpDiv.add(list.get(5));
+			tmpDiv.add(list.get(6));
+			divList.add(tmpDiv);
 		}
 
 		// level, department, division의 정보 우선 모두 제거. 이건 체크박스 여부에 관계없이 엑셀로 업로드 될 때 항상 실행.
 		staffService.deleteDistinctInfoByCno(cno);
 
-		// map으로 구성된 회원의 각 중복 제거 정보 서비스 객체에서 가져옴.
-		Map<String, Object> result = staffService.getDistinctInfoListByCno(cno);
-
-		// level map에서 꺼내고 list로 캐스팅 후에 db저장
-		Object levObj = result.get("level");
-		@SuppressWarnings("unchecked")
-		List<String> levList = (List<String>) convertObjectToList(levObj);
-		for (int i = 0; i < levList.size(); i++) {
+		// 중복 제거된 list에서 lev등록
+		levList.forEach(origin -> {
 			Level level = new Level();
 			level.setCno(cno);
-			level.setContent(levList.get(i));
+			level.setContent(origin);
 			level.setWriteId(staff.getWriteId());
 			level.setUpdateId(staff.getUpdateId());
-
 			levelService.register(level);
-		}
+		});
 
-		// department map에서 꺼내고 list로 캐스팅 후에 db저장
-		Object depObj = result.get("department");
-		@SuppressWarnings("unchecked")
-		List<List<String>> depList = (List<List<String>>) convertObjectToList(depObj);
+		// 중복 제거된 list에서 Dep등록
 		depList.forEach(data -> {
 			Department department = new Department();
 			department.setCno(cno);
@@ -227,10 +234,7 @@ public class StaffController {
 			departmentService.register(department);
 		});
 
-		// division map에서 꺼내고 list로 캐스팅 후에 db저장
-		Object divObj = result.get("division");
-		@SuppressWarnings("unchecked")
-		List<List<String>> divList = (List<List<String>>) convertObjectToList(divObj);
+		// 중복 제거된 list에서 Div등록
 		divList.forEach(data -> {
 			Division division = new Division();
 			division.setCno(cno);
@@ -243,17 +247,5 @@ public class StaffController {
 		});
 
 	}
-
-	/* cast Object to List function */
-	public static List<?> convertObjectToList(Object obj) {
-		List<?> list = new ArrayList<>();
-		if (obj.getClass().isArray()) {
-			list = Arrays.asList((Object[]) obj);
-		} else if (obj instanceof Collection) {
-			list = new ArrayList<>((Collection<?>) obj);
-		}
-		return list;
-	}
-	/* .cast Object to List function */
 
 }

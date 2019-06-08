@@ -32,16 +32,6 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	@Query("DELETE FROM Staff s WHERE s.cno=?1")
 	public void deleteByCno(long cno);
 
-	// 엑셀을 통한 직원 정보 입력 후, 중복 제거 한 직원 정보 각각 삽입하기 위한 쿼리
-	@Query("SELECT DISTINCT s.department1, s.department2 FROM Staff s WHERE s.cno=?1")
-	public List<List<String>> getDistinctDepartmentListByCno(long cno);
-
-	@Query("SELECT DISTINCT s.division1, s.division2 FROM Staff s WHERE s.cno=?1")
-	public List<List<String>> getDistinctDivisionListByCno(long cno);
-
-	@Query("SELECT DISTINCT s.level FROM Staff s WHERE s.cno=?1")
-	public List<String> getDistinctLevelListByCno(long cno);
-
 	// relation 설정할 때 직원 불러오기 위해! evaluated 위해
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.email=?2")
 	public Staff findByCnoAndEmail(long cno, String email);
