@@ -37,14 +37,16 @@ public class BookRepositoryTests {
 
 		Book book = new Book();
 		book.setTitle("매우 긍정 - 매우 부정");
-		List<String> contents = Arrays.asList("매우 그렇다", "그렇다", "보통이다", "그렇지 않다", "매우 그렇지 않다");
+		List<String> contents = Arrays.asList("매우 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "매우 그렇다");
 		book.setContents(contents);
+		book.setType("360Reply");
 		bookRepo.save(book);
 		
 		Book book2 = new Book();
 		book2.setTitle("아주 그렇다 - 아주 그렇지 않다");
-		contents = Arrays.asList("아주 그렇다", "그렇다", "보통이다", "그렇지 않다", "아주 그렇지 않다");
-		book2.setContents(contents);
+		List<String> contents1 = Arrays.asList("아주 그렇지 않다", "그렇지 않다", "보통이다", "그렇다", "아주 그렇다");
+		book2.setContents(contents1);
+		book2.setType("360Reply");
 		bookRepo.save(book2);
 	}
 

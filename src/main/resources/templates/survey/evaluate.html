@@ -62,10 +62,10 @@
             <div class="col-md-2">
 
                 <div class="btn-group-vertical btn-group-lg">
-                    <button id="btnSubmit" type="submit" class="btn btn-default"><i class="fas fa-share fa-2x"></i>
+                    <button id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
                         <div>Submit</div>
                     </button>
-                    <button class="btn btn-default"><i class="fas fa-pause-circle fa-2x"></i>
+                    <button id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
                         <div>Pause</div>
                     </button>
                     <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
@@ -82,9 +82,7 @@
 </div>
 <!-- ./div content -->
 
-</html>
-<th:block layout:fragment=" script">
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+<th:block layout:fragment="script">
     <script th:inline="javascript">
         /* documnet ready function */
         $(document).ready(function (e) {
@@ -141,12 +139,9 @@
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit").click(function (e) {
                 e.preventDefault();
-                // formObj[0].checkValidity();
-                // formObj[0].reportValidity();
-                // console.log($("formF").serializeArray());
-                // var data = $("form").serializeArray()
-                // formObj.append(data);
-                formObj.submit();
+                console.log(formObj[0].checkValidity());
+                console.log(formObj[0].reportValidity());
+                // formObj.submit();
             })
 
 
@@ -165,28 +160,18 @@
                 $('html, body').animate({ scrollTop: 0 }, 400);
                 return false;
             });
+
+
+            //toolitip에 관한 설정
+            $('#btnSubmit,#btnPause').tooltip('show');
+            //몇초 후에 사라짐
+            setTimeout(function () {
+                $('#btnSubmit,#btnPause').tooltip('hide');
+            }, 2500);
         });
         /* documnet ready function */
-
-        //make serializeObject는 serializeArray **https://kingbbode.tistory.com/28
-        jQuery.fn.serializeObject = function () {
-            var obj = null;
-            try {
-                if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
-                    var arr = this.serializeArray();
-                    if (arr) {
-                        obj = {};
-                        jQuery.each(arr, function () {
-                            obj[this.name] = this.value;
-                        });
-                    }
-                }
-            } catch (e) {
-                alert(e.message);
-            } finally { }
-            return obj;
-        }
-        //./make serializeObject는 serializeArray **https://kingbbode.tistory.com/28
-
     </script>
 </th:block>
+
+
+</html>
