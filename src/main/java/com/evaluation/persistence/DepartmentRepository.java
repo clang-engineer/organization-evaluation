@@ -1,7 +1,5 @@
 package com.evaluation.persistence;
 
-import java.util.List;
-
 import com.evaluation.domain.Department;
 import com.evaluation.domain.QDepartment;
 import com.querydsl.core.BooleanBuilder;
@@ -14,8 +12,6 @@ import org.springframework.data.repository.CrudRepository;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface DepartmentRepository extends CrudRepository<Department, Long>, QuerydslPredicateExecutor<Department> {
-    @Query("SELECT d FROM Department d WHERE d.cno=?1 AND d.dno>0 ORDER BY d.dno ASC")
-    public List<Department> getDepartmentOfCompany(long cno);
 
     // 부서정보 전체 삭제
     @Transactional

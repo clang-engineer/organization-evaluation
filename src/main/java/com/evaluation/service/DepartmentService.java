@@ -1,6 +1,5 @@
 package com.evaluation.service;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.evaluation.domain.Department;
@@ -19,6 +18,4 @@ public interface DepartmentService {
 	public void remove(long tno);
 
 	public Page<Department> getListWithPaging(long cno, PageVO vo);
-
-	public List<Department> getList(long cno);
 }

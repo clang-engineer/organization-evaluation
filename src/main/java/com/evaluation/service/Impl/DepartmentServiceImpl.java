@@ -1,6 +1,5 @@
 package com.evaluation.service.Impl;
 
-import java.util.List;
 import java.util.Optional;
 
 import com.evaluation.domain.Department;
@@ -54,14 +53,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         log.info("remove " + dno);
 
         departmentRepo.deleteById(dno);
-    }
-
-    @Override
-    public List<Department> getList(long cno) {
-        log.info("getList by " + cno);
-
-        List<Department> result = departmentRepo.getDepartmentOfCompany(cno);
-        return result;
     }
 
     @Override
