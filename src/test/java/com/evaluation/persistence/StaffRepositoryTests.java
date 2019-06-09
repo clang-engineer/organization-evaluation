@@ -2,6 +2,7 @@ package com.evaluation.persistence;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.evaluation.domain.Staff;
@@ -81,18 +82,18 @@ public class StaffRepositoryTests {
 
 	@Test
 	public void testGetAllStaffListExcludeEvaluated() {
-		List<Staff> result = staffRepo.getStaffForEvaluated(10, 9);
-		result.forEach(staff -> {
-			log.info("===>" + staff.getSno());
+		Optional<List<Staff>> result = staffRepo.getStaffForEvaluated(10, 9);
+		result.ifPresent(staff -> {
+			log.info("===>" + staff);
 		});
 
 	}
 
 	@Test
 	public void testGetAllStaffListExcludeEvaluator() {
-		List<Staff> result = staffRepo.getStaffForEvaluator(8, 8, 70);
-		result.forEach(staff -> {
-			log.info("===>" + staff.getSno());
+		Optional<List<Staff>> result = staffRepo.getStaffForEvaluator(8, 8, 70);
+		result.ifPresent(staff -> {
+			log.info("===>" + staff);
 		});
 
 	}

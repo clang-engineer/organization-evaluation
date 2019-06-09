@@ -149,18 +149,18 @@ public class StaffController {
 		model.addAttribute("result", new PageMaker<>(result));
 	}
 
-	@GetMapping("/evaluated/{tno}")
+	@GetMapping("/relation360/evaluated/{tno}")
 	@ResponseBody
-	public ResponseEntity<List<Staff>> getStaffForEvaluated(@PathVariable("tno") long tno) {
+	public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
 		log.info("get All Staff List Exclude Evaluated....");
 
 		long cno = turnService.get(tno).get().getCno();
 		return new ResponseEntity<>(staffService.getEvaluatedList(cno, tno), HttpStatus.OK);
 	}
 
-	@GetMapping("/evaluator/{tno}/{sno}")
+	@GetMapping("/relation360/evaluator/{tno}/{sno}")
 	@ResponseBody
-	public ResponseEntity<List<Staff>> getStaffForEvaluator(@PathVariable("tno") long tno,
+	public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluator(@PathVariable("tno") long tno,
 			@PathVariable("sno") long sno) {
 		log.info("get All Staff List....");
 
