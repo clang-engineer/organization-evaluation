@@ -10,6 +10,9 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
+import lombok.extern.slf4j.Slf4j;
+
+@Slf4j
 public class AboutExcel {
 
     public static List<List<String>> readExcel(MultipartFile uploadFile) {
@@ -27,6 +30,9 @@ public class AboutExcel {
             XSSFSheet sheet = workbook.getSheetAt(0);
             // 행의 수
             int rows = sheet.getPhysicalNumberOfRows();
+            // 열의 수 행 머릿글에서 열 숫자를 전체 행의 열의 수로 인지한다.
+            int cells = sheet.getRow(0).getLastCellNum();
+            log.info("====>cells" + cells);
             for (rowindex = 0; rowindex < rows; rowindex++) {
                 // 행을읽는다
                 XSSFRow row = sheet.getRow(rowindex);
@@ -34,8 +40,8 @@ public class AboutExcel {
                     List<String> tmpList = new ArrayList<String>();
                     // 셀의 수 getPhysicalNumberOfCells()은 개수카운팅에 문제가 있음... getLastCellNum으로!!
                     // int cells = row.getPhysicalNumberOfCells();
-                    int cells = row.getLastCellNum();
-                    for (columnindex = 0; columnindex <= cells; columnindex++) {
+                    // int cells = row.getLastCellNum();
+                    for (columnindex = 0; columnindex < cells; columnindex++) {
                         // 셀값을 읽는다
                         XSSFCell cell = row.getCell(columnindex);
                         String value = "";

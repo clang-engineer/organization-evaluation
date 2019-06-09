@@ -95,8 +95,7 @@
                                 </td>
                                 <td>
                                     <span class="evaluatorList" th:each="relation:${relationTable}">
-                                        <a th:href="${relation.rno}" data-relation="1" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='1'">
-                                            [[${relation.evaluator.name}]],
+                                        <a th:href="${relation.rno}" data-relation="1" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='1'" th:text="${relation?.evaluator?.name}+','">
                                         </a>
                                     </span>
                                     <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='1'" type="button">
@@ -105,8 +104,7 @@
                                 </td>
                                 <td>
                                     <span class="evaluatorList" th:each="relation:${relationTable}">
-                                        <a th:href="${relation.rno}" data-relation="2" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='2'">
-                                            [[${relation.evaluator.name}]],
+                                        <a th:href="${relation.rno}" data-relation="2" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='2'" th:text="${relation?.evaluator?.name}+','">
                                         </a>
                                     </span>
                                     <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='2'" type="button">
@@ -115,8 +113,7 @@
                                 </td>
                                 <td>
                                     <span class="evaluatorList" th:each="relation:${relationTable}">
-                                        <a th:href="${relation.rno}" data-relation="3" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='3'">
-                                            [[${relation.evaluator.name}]],
+                                        <a th:href="${relation.rno}" data-relation="3" th:if="${staff.sno}==${relation.evaluated.sno} and ${relation.relation}=='3'" th:text="${relation?.evaluator?.name}+','">
                                         </a>
                                     </span>
                                     <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='3'" type="button">

@@ -27,7 +27,7 @@ public interface StaffService {
 
 	public void deleteDistinctInfoByCno(long cno);
 
-	public Staff readByCnoAndEmail(long cno, String email);
+	public Optional<Staff> readByCnoAndEmail(long cno, String email);
 
-	public Staff readByCnoAndName(long cno, String name);
+	public Optional<Staff> readByCnoAndName(long cno, String name);
 }

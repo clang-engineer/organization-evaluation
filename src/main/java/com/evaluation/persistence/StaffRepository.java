@@ -23,7 +23,8 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 
 	// relation 설정 시 평가자 출력하기 위해, 해당 피평가자에 대한 평가자에 속하지 않은 사람.
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> getStaffForEvaluator(@Param("cno") long cno, @Param("tno") long tno, @Param("sno") long sno);
+	public Optional<List<Staff>> getStaffForEvaluator(@Param("cno") long cno, @Param("tno") long tno,
+			@Param("sno") long sno);
 
 	// 직원 전원 삭제
 	@Transactional
@@ -33,11 +34,11 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 
 	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluated 위해
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.email=?2")
-	public Staff findByCnoAndEmail(long cno, String email);
+	public Optional<Staff> findByCnoAndEmail(long cno, String email);
 
 	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluator 위해
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.name=?2")
-	public Staff findByCnoAndName(long cno, String name);
+	public Optional<Staff> findByCnoAndName(long cno, String name);
 
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 

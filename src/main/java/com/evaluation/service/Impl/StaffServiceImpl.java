@@ -114,12 +114,12 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Staff readByCnoAndEmail(long cno, String email) {
+	public Optional<Staff> readByCnoAndEmail(long cno, String email) {
 		return staffRepo.findByCnoAndEmail(cno, email);
 	}
 
 	@Override
-	public Staff readByCnoAndName(long cno, String name) {
+	public Optional<Staff> readByCnoAndName(long cno, String name) {
 		return staffRepo.findByCnoAndName(cno, name);
 	}
 }
