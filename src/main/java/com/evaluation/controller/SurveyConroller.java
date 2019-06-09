@@ -48,7 +48,7 @@ public class SurveyConroller {
 
         // 회사에 관한 정보 찾고
         companyService.readByCompanyId(company).ifPresent(origin -> {
-            long cno = origin.getCno();
+            long cno = origin.getCno(); 
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
             turnService.getListInSurvey(cno).ifPresent(turn -> {
@@ -71,16 +71,18 @@ public class SurveyConroller {
             });
         });
 
-        Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
+        // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
+        relation360Service.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
+            if (evaluator.getPassword().equals(staff.getPassword())) {
+                HttpSession session = request.getSession();
+                session.setAttribute("evaluator", evaluator);
+            }
+        });
+        
+        rttr.addAttribute("tno", tno);
 
-        if (evaluator.getPassword().equals(staff.getPassword())) {
-            rttr.addAttribute("tno", tno);
-            HttpSession session = request.getSession();
-            session.setAttribute("evaluator", evaluator);
-            return "redirect:/survey/main";
-        } else {
-            return "redirect:/survey/";
-        }
+        // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
+        return "redirect:/survey/main";
     }
 
     @PostMapping("/logout")
@@ -112,7 +114,7 @@ public class SurveyConroller {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
-        
+
         companyService.readByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });

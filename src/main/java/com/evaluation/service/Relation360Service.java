@@ -19,8 +19,6 @@ public interface Relation360Service {
 
     public void remove(Long rno);
 
-    // public List<Relation360> getAllList(long tno);
-
     public Page<Relation360> getListWithPaging(long tno, PageVO vo);
 
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
@@ -31,7 +29,7 @@ public interface Relation360Service {
 
     public Optional<List<Relation360>> findRelationByEvaulatedSno(long sno, long tno);
 
-    public Staff findInEvaluator(long tno, String email);
+    public Optional<Staff> findInEvaluator(long tno, String email);
 
     public Optional<List<Relation360>> findByEvaluator(long sno, long tno);
 }

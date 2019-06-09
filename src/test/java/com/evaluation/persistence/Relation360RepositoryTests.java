@@ -146,7 +146,7 @@ public class Relation360RepositoryTests {
 
     @Test
     public void findInEvaluator() {
-        log.info(relation360Repo.findInEvaluator(1L, "youm.huh@siliconmitus.com").getName());
+        log.info("" + relation360Repo.findInEvaluator(1L, "youm.huh@siliconmitus.com").isPresent());
     }
 
     @Test

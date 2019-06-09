@@ -123,7 +123,7 @@ public class Relation360ServiceImpl implements Relation360Service {
 
     // 회차에 속하는 평가자이면 로그인 true로 하기 위한 서비스
     @Override
-    public Staff findInEvaluator(long tno, String email) {
+    public Optional<Staff> findInEvaluator(long tno, String email) {
         return relation360Repo.findInEvaluator(tno, email);
     }
 

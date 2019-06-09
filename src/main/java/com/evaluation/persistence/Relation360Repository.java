@@ -52,7 +52,7 @@ public interface Relation360Repository
 
     // 로그인 할 때 사용 회차에 있는 평가자면 로그인
     @Query("SELECT DISTINCT r.evaluator FROM Relation360 r WHERE r.tno=?1 AND r.evaluator.email=?2")
-    public Staff findInEvaluator(long tno, String email);
+    public Optional<Staff> findInEvaluator(long tno, String email);
 
     // 로그인 식 출력되는 피평가자 리스트.
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluator.sno=?1 AND r.tno=?2")
