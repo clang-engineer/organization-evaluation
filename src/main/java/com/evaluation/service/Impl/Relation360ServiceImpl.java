@@ -115,7 +115,7 @@ public class Relation360ServiceImpl implements Relation360Service {
     }
 
     @Override
-    public List<Relation360> findRelationByEvaulatedSno(long sno, long tno) {
+    public Optional<List<Relation360>> findRelationByEvaulatedSno(long sno, long tno) {
         log.info("findRelationByEvaulatedSno " + sno);
 
         return relation360Repo.findByEvaulatedSno(sno, tno);

@@ -137,7 +137,11 @@ public class Relation360RepositoryTests {
 
     @Test
     public void testFindEvaluatorByEvaulatedSno() {
-        relation360Repo.findByEvaulatedSno(47972L, 1L).forEach(origin -> log.info("" + origin.getEvaluator().getSno()));
+        relation360Repo.findByEvaulatedSno(47972L, 1L).ifPresent(origin -> {
+            origin.forEach(relation -> {
+                log.info("" + relation.getRno());
+            });
+        });
     }
 
     @Test

@@ -86,11 +86,12 @@ public class Relation360Controller {
         // 출력된 피평가자들의 sno로 relation table을 만듬.
         List<Relation360> relationTable = new ArrayList<>();
         result.getContent().forEach(origin -> {
-            List<Relation360> tmpList = relation360Service.findRelationByEvaulatedSno(origin.getSno(), tno);
-            relationTable.addAll(tmpList);
+            relation360Service.findRelationByEvaulatedSno(origin.getSno(), tno).ifPresent(tmpList -> {
+                relationTable.addAll(tmpList);
+            });
         });
+        
         model.addAttribute("relationTable", relationTable);
-
     }
 
     @PostMapping("/removeRow")

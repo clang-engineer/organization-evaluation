@@ -29,7 +29,7 @@ public interface Relation360Service {
 
     public void deleteAllRelationByTno(long tno);
 
-    public List<Relation360> findRelationByEvaulatedSno(long sno, long tno);
+    public Optional<List<Relation360>> findRelationByEvaulatedSno(long sno, long tno);
 
     public Staff findInEvaluator(long tno, String email);
 
