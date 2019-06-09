@@ -83,15 +83,36 @@ public class Relation360Controller {
         Page<Staff> result = relation360Service.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
-        // 출력된 피평가자들의 sno로 relation table을 만듬.
-        List<Relation360> relationTable = new ArrayList<>();
-        result.getContent().forEach(origin -> {
-            relation360Service.findRelationByEvaulatedSno(origin.getSno(), tno).ifPresent(tmpList -> {
-                relationTable.addAll(tmpList);
+        // 화면에 표시되는 피평가자들의 관계별 relationTable만들기
+        List<Relation360> relationMe = new ArrayList<>();
+        List<Relation360> relation1 = new ArrayList<>();
+        List<Relation360> relation2 = new ArrayList<>();
+        List<Relation360> relation3 = new ArrayList<>();
+        result.getContent().forEach(evaluated -> {
+            relation360Service.findRelationByEvaulatedSno(evaluated.getSno(), tno).ifPresent(relation -> {
+                relation.forEach(origin -> {
+                    switch (origin.getRelation()) {
+                    case "me":
+                        relationMe.add(origin);
+                        break;
+                    case "1":
+                        relation1.add(origin);
+                        break;
+                    case "2":
+                        relation2.add(origin);
+                        break;
+                    case "3":
+                        relation3.add(origin);
+                        break;
+                    }
+                });
             });
         });
-        
-        model.addAttribute("relationTable", relationTable);
+
+        model.addAttribute("relationMe", relationMe);
+        model.addAttribute("relation1", relation1);
+        model.addAttribute("relation2", relation2);
+        model.addAttribute("relation3", relation3);
     }
 
     @PostMapping("/removeRow")
@@ -187,13 +208,13 @@ public class Relation360Controller {
                 relation360.setEvaluated(evaluated);
                 relation360.setTno(tno);
                 relation360.setRelation(relation);
-                //평가자 정보 못 찾으면 null할당
+                // 평가자 정보 못 찾으면 null할당
                 if (!origin.isPresent()) {
                     relation360.setEvaluator(null);
                 }
                 // 평가자 정보 찾았으면 할당
                 origin.ifPresent(evaluator -> {
-                    //본인 이름이 평가자 정보에 들어있을 때는 null할당
+                    // 본인 이름이 평가자 정보에 들어있을 때는 null할당
                     if (evaluated.equals(evaluator)) {
                         evaluator = null;
                     }
