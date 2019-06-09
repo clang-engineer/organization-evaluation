@@ -129,32 +129,9 @@
 	</form>
 
 	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Staff</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<input type="file" name="uploadFile">
-					</div>
-					<div class="form-group">
-						<label class="checkbox-inline">
-							<input type="checkbox" name="deleteList"> 기존 설정 삭제 후 입력
-						</label>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
-					<button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
+	<div th:insert="~{common/modal::fileUpload}"></div>
 	<!-- ./Modal -->
+
 
 	<div id="viewLoading">
 		<img src="/img/loading.gif" />
@@ -175,10 +152,13 @@
 			var tno = [[${ tno }]];
 			var writeId = [[${ #authentication.name }]];
 			//modal 사용 변수 선언
-			var modal = $("#myModal");
+			var modal = $("#fileUpload");
+			var modalTitle = modal.find("#modalTitle");
 			var modalDeleteList = modal.find("input[name='deleteList']");
 			var modalRegisterBtn = $("#modalRegisterBtn");
 			var modalCloseBtn = $("#modalCloseBtn");
+
+			modalTitle.text("Staff Upload");
 
 			if (history.state == null) {
 				if (msg == 'register') {
@@ -226,6 +206,7 @@
 			//등록 버튼 클릭 시
 			$("#register").click(function (e) {
 				e.preventDefault();
+
 				console.log(this);
 				formObj.attr("action", './register');
 				formObj.submit();
@@ -234,9 +215,11 @@
 			//xlRegister 클릭 시
 			$("#xlRegister").click(function (e) {
 				e.preventDefault();
+
+
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalRegisterBtn.show();
-				$("#myModal").modal("show");
+				modal.modal("show");
 			});
 
 			//modal내의 register 클릭 시
@@ -249,7 +232,6 @@
 
 				if (!checkExtension(files[0].name, files[0].size)) {
 					return false;
-
 				}
 
 				formData.append("uploadFile", files[0]);
@@ -269,7 +251,7 @@
 					type: 'POST',
 					success: function (result) {
 						alert("등록 완료 하였습니다.");
-						$("#myModal").modal("hide");
+						modal.modal("hide");
 						window.location.reload();
 					}, error: function (request, status, error) {
 						alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
@@ -277,13 +259,16 @@
 				});
 			});
 
-			$('#viewLoading').hide();
+			modalCloseBtn.on("click", function (e) {
+				modal.modal('hide');
+			});
 
+			$('#viewLoading').hide();
 
 
 		}).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
 			console.log('ajax start');
-			$("#myModal").modal("hide");
+			$("#fileUpload").modal("hide");
 			$('#viewLoading').show();
 		}).ajaxStop(function () {        // ajax 통신 완료 callback (로딩바 hide)
 			console.log('ajax end');

@@ -1,6 +1,74 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
 
+<!-- basic -->
+<div th:fragment="basic">
+    <!-- Modal -->
+    <div class="modal fade" id="basicModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 id="modal-title">Title</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label id="modal-label1">Content1</label>
+                        <input class="form-control" name="modalContent1" value="New Content">
+                    </div>
+                    <div class="form-group">
+                        <label id="modal-label2">Content2</label>
+                        <input class="form-control" name="modalContent2" value="New Content">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
+                    <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
+</div>
+<!--./basic -->
+
+<!-- fileUpload -->
+<div th:fragment="fileUpload">
+    <!-- Modal -->
+    <div class="modal fade" id="fileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Title</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <input type="file" name="uploadFile">
+                    </div>
+                    <div class="form-group">
+                        <label class="checkbox-inline">
+                            <input type="checkbox" name="deleteList"> 기존 설정 삭제 후 입력
+                        </label>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ./Modal -->
+</div>
+<!--./fileUpload -->
+
+<!-- instruction -->
 <div th:fragment="instruction">
     <!-- Modal -->
     <div class="modal fade" id="instructionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
@@ -9,8 +77,8 @@
                 <div class="modal-header">
                     <h5 class="modal-title" id="exampleModalLabel">Survey instruction - Mistakes To Avoid</h5>
                     <!-- <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button> -->
+                                <span aria-hidden="true">&times;</span>
+                            </button> -->
                 </div>
                 <div class="modal-body">
 
@@ -124,15 +192,15 @@
                                         <footer class="blockquote-footer">규칙적 오류와 달리 총계적 오류발생 시 점수의 사후적 조정이 불가능함.</footer>
                                     </blockquote>
                                     <!-- <p>
-                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample3" role="button">
-                                            Solution
-                                        </a>
-                                    </p>
-                                    <div class="collapse" id="collapseExample3">
-                                        <ul class="list-group">
-                                            <li class="list-group-item"></li>
-                                        </ul>
-                                    </div> -->
+                                            <a class="btn btn-success" data-toggle="collapse" href="#collapseExample3" role="button">
+                                                Solution
+                                            </a>
+                                        </p>
+                                        <div class="collapse" id="collapseExample3">
+                                            <ul class="list-group">
+                                                <li class="list-group-item"></li>
+                                            </ul>
+                                        </div> -->
                                 </div>
                             </div>
                         </div>
@@ -208,17 +276,17 @@
                                         <footer class="blockquote-footer">타인의 실패를 평가함에 있어서 상황적 요인의 영향은 과소평가하고 개인적 요인의 영향은 과대평가하는 경향. 반면에 타인의 성공을 평가할 때는 상황적 요인을 과대평가하고 개인적 요인은 과소평가하는 경향</footer>
                                     </blockquote>
                                     <!-- <p>
-                                        <a class="btn btn-success" data-toggle="collapse" href="#collapseExample6" role="button">
-                                            Solution
-                                        </a>
-                                    </p>
-                                    <div class="collapse" id="collapseExample6">
-                                        <ul class="list-group">
-                                            <li class="list-group-item">독립된 평가센터의 설치/운영</li>
-                                            <li class="list-group-item">MBO 평정방식</li>
-                                            <li class="list-group-item">중요사건 기록법의 활용</li>
-                                        </ul>
-                                    </div> -->
+                                            <a class="btn btn-success" data-toggle="collapse" href="#collapseExample6" role="button">
+                                                Solution
+                                            </a>
+                                        </p>
+                                        <div class="collapse" id="collapseExample6">
+                                            <ul class="list-group">
+                                                <li class="list-group-item">독립된 평가센터의 설치/운영</li>
+                                                <li class="list-group-item">MBO 평정방식</li>
+                                                <li class="list-group-item">중요사건 기록법의 활용</li>
+                                            </ul>
+                                        </div> -->
                                 </div>
                             </div>
                         </div>
@@ -261,6 +329,6 @@
     </div>
     <!-- Modal -->
 </div>
-s
+<!-- instruction -->
 
 </html>

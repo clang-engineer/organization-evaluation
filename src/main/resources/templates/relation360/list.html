@@ -305,7 +305,7 @@
 
                 $(".modal-dialog").removeClass("modal-xl");
                 $(".modal-content, .modal-dialog, .modal-body").removeAttr("style");
-                $("#myModal").modal("show");
+                modal.modal("show");
             });
 
             //피평가자 등록 버튼 클릭 시
@@ -326,7 +326,7 @@
                 $(".file-group").hide();
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
-                $("#myModal").modal("show");
+                modal.modal("show");
             });
 
             //평가자 등록 버튼 클릭 시
@@ -352,7 +352,7 @@
                 $(".file-group").hide();
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
-                $("#myModal").modal("show");
+                modal.modal("show");
             });
 
             //xlRegister 클릭 시
@@ -368,7 +368,7 @@
 
                 $(".modal-dialog").removeClass("modal-xl");
                 $(".modal-content, .modal-dialog, .modal-body").removeAttr("style");
-                $("#myModal").modal("show");
+                modal.modal("show");
             });
 
             //modal내의 register 클릭 시
@@ -406,7 +406,7 @@
                         type: 'POST',
                         success: function (result) {
                             alert("등록 완료 하였습니다.");
-                            $("#myModal").modal("hide");
+                            modal.modal("hide");
 
                             //parameter 제거 -> tno추가 하고 리로드
                             url = window.location.href.split("?")[0];
@@ -499,7 +499,7 @@
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRemoveBtn.show();
 
-                $("#myModal").modal("show");
+                modal.modal("show");
             });
 
             function showEvaluatedList(tno) {
