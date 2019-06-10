@@ -33,8 +33,8 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	public void deleteByCno(long cno);
 
 	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluated 위해
-	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.email=?2")
-	public Optional<Staff> findByCnoAndEmail(long cno, String email);
+	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.email=:email")
+	public Optional<Staff> findByEmail(@Param("email") String email);
 
 	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluator 위해
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.name=?2")
