@@ -70,36 +70,11 @@
 		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 	</form>
 
-	<!-- Modal -->
-	<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Comment</h4>
-					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
-					</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label>Comment</label>
-						<input class="form-control" name="modalContent1" value="New Content">
-					</div>
-					<!-- <div class="form-group">
-						<label>level2</label>
-						<input class="form-control" name="modalContent2" value="New Content">
-					</div> -->
-				</div>
-				<div class="modal-footer">
-					<button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
-					<button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
-					<button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
-					<button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
-				</div>
 
-			</div>
-		</div>
-	</div>
+	<!-- Modal -->
+	<div th:insert="~{common/modal::basic}"></div>
 	<!-- ./Modal -->
+
 </div>
 
 
@@ -108,13 +83,20 @@
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			//modal 사용 변수 선언
-			var modal = $("#myModal");
+			var modal = $("#basicModal");
+			var modalTitle = modal.find("#modalTitle");
+			var modalLabel1 = modal.find("#modalLabel1");
+			var modalLabel2 = modal.find("#modalLabel2");
 			var modalContent1 = modal.find("input[name='modalContent1']");
-			// var modalContent2 = modal.find("input[name='modalContent2']");
+			var modalContent2 = modal.find("input[name='modalContent2']");
 			var modalModifyBtn = $("#modalModifyBtn");
 			var modalRemoveBtn = $("#modalRemoveBtn");
 			var modalRegisterBtn = $("#modalRegisterBtn");
 			var modalCloseBtn = $("#modalCloseBtn");
+
+			modalLabel1.text("Comment");
+			modalLabel2.hide();
+			modalContent2.hide();
 
 			var msg = [[${ msg }]];
 			var authName = [[${ #authentication.name }]];
@@ -155,28 +137,37 @@
 			//디테일 버튼 클릭 시
 			$(".detail").click(function (e) {
 				e.preventDefault();
+
+				//모달 data
 				detailNo = $(this).attr("href");
-				content = $(this).closest("tr").children().eq(1).text();
-				// lev2 = $(this).closest("tr").children().eq(2).text();
-				modalContent1.val(content);
-				// modalContent2.val(lev2);
 				modal.data("idx", detailNo);
 
+				//모달 text
+				modalTitle.text("Comment Modify or Delete");
+				content = $(this).closest("tr").children().eq(1).text();
+				modalContent1.val(content);
+
+				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalModifyBtn.show();
 				modalRemoveBtn.show();
 
-				$("#myModal").modal("show");
+				modal.modal("show");
 			});
 
 			//등록 버튼 클릭 시
 			$("#register").click(function (e) {
 				e.preventDefault();
 
+				//모달 text
+				modalTitle.text("Comment Register");
 				modal.find("input").val("");
+
+				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalRegisterBtn.show();
-				$("#myModal").modal("show");
+
+				modal.modal("show");
 			});
 
 			//modal내의 register 클릭 시

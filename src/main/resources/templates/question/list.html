@@ -123,9 +123,8 @@
 
 
     <!-- Modal -->
-    <div th:insert="~{common/modal::fileUpload}"></div>
+    <div th:insert="~{common/modal::basic}"></div>
     <!-- ./Modal -->
-
 
     <!-- MD/Modal -->
     <div id="viewLoading">
@@ -144,14 +143,16 @@
 
             var tno = [[${ tno }]];
             var writeId = [[${ #authentication.name }]];
+
             //modal 사용 변수 선언
-            var modal = $("#fileUpload");
-			var modalTitle = modal.find("#modalTitle");
-            var modalDeleteList = modal.find("input[name='deleteList']");
+            var modal = $("#basicModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalBody = modal.find("#modalBody");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
+
             var modalRegisterBtn = $("#modalRegisterBtn");
             var modalCloseBtn = $("#modalCloseBtn");
-
-			modalTitle.text("Question Upload");
 
             if (history.state == null) {
                 if (msg == 'register') {
@@ -207,6 +208,17 @@
             //xlRegister 클릭 시
             $("#xlRegister").click(function (e) {
                 e.preventDefault();
+
+                //모달 text
+                modalTitle.text("Question xl Upload")
+
+                //모달 layout
+                modalGroupContent1.hide();
+                modalGroupContent2.hide();
+                modalBody.find(".file-group").remove();
+                modalBody.append("<div class='file-group'><div class='form-group'><input type='file' class='form-control-file' name='uploadFile'></div><div class='form-group'><label class='checkbox-inline'><input type='checkbox' name='deleteList'> 기존 설정 삭제 후 입력</label></div></div>");
+
+                //모달 button
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
                 modal.modal("show");
@@ -220,6 +232,7 @@
 
                 var inputFile = $("input[name='uploadFile']");
                 var files = inputFile[0].files;
+                var modalDeleteList = modal.find("input[name='deleteList']");
 
                 if (!checkExtension(files[0].name, files[0].size)) {
                     return false;
@@ -251,14 +264,14 @@
                 });
             });
 
-			modalCloseBtn.on("click", function (e) {
-				modal.modal('hide');
-			});
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
 
             $('#viewLoading').hide();
         }).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
             console.log('ajax start');
-            $("#fileUpload").modal("hide");
+            $("#basicModal").modal("hide");
             $('#viewLoading').show();
         }).ajaxStop(function () {        // ajax 통신 완료 callback (로딩바 hide)
             console.log('ajax end');

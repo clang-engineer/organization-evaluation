@@ -174,16 +174,19 @@
 			//디테일 버튼 클릭 시
 			$(".detail").click(function (e) {
 				e.preventDefault();
-				
-				modalTitle.text("Department Modify or Delete");
 
+				//모달 data
 				detailNo = $(this).attr("href");
+				modal.data("idx", detailNo);
+
+				//모달 text
+				modalTitle.text("Department Modify or Delete");
 				dep1 = $(this).closest("tr").children().eq(1).text();
 				dep2 = $(this).closest("tr").children().eq(2).text();
 				modalContent1.val(dep1);
 				modalContent2.val(dep2);
-				modal.data("idx", detailNo);
 
+				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalModifyBtn.show();
 				modalRemoveBtn.show();
@@ -195,9 +198,11 @@
 			$("#register").click(function (e) {
 				e.preventDefault();
 
+				//모달 text
 				modalTitle.text("Department Register");
-
 				modal.find("input").val("");
+
+				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalRegisterBtn.show();
 				modal.modal("show");

@@ -59,7 +59,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Page<Department> getListWithPaging(long cno, PageVO vo) {
         log.info("getListWithPaging by " + cno);
 
-        Pageable page = vo.makePageable(1, "dno");
+        Pageable page = vo.makePageable(1, "department1");
         Page<Department> result = departmentRepo
                 .findAll(departmentRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);
         return result;

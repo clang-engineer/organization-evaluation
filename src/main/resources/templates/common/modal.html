@@ -8,17 +8,17 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h4 id="modal-title">Title</h4>
+                    <h4 class="modal-title" id="modalTitle">Title</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
                     </button>
                 </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label id="modal-label1">Content1</label>
+                <div class="modal-body" id="modalBody">
+                    <div class="form-group" id="content1">
+                        <label id="modalLabel1">Content1</label>
                         <input class="form-control" name="modalContent1" value="New Content">
                     </div>
-                    <div class="form-group">
-                        <label id="modal-label2">Content2</label>
+                    <div class="form-group" id="content2">
+                        <label id="modalLabel2">Content2</label>
                         <input class="form-control" name="modalContent2" value="New Content">
                     </div>
                 </div>
@@ -35,38 +35,6 @@
     <!-- Modal -->
 </div>
 <!--./basic -->
-
-<!-- fileUpload -->
-<div th:fragment="fileUpload">
-    <!-- Modal -->
-    <div class="modal fade" id="fileUpload" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title" id="modalTitle">Title</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <input type="file" name="uploadFile">
-                    </div>
-                    <div class="form-group">
-                        <label class="checkbox-inline">
-                            <input type="checkbox" name="deleteList"> 기존 설정 삭제 후 입력
-                        </label>
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
-                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
-                </div>
-            </div>
-        </div>
-    </div>
-    <!-- ./Modal -->
-</div>
-<!--./fileUpload -->
 
 <!-- instruction -->
 <div th:fragment="instruction">

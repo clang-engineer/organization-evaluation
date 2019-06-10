@@ -175,15 +175,18 @@
 			$(".detail").click(function (e) {
 				e.preventDefault();
 
-				modalTitle.text("Division Modify or Delete");
-
+				//모달 data
 				detailNo = $(this).attr("href");
+				modal.data("idx", detailNo);
+
+				//모달 text
+				modalTitle.text("Division Modify or Delete");
 				dev1 = $(this).closest("tr").children().eq(1).text();
 				dev2 = $(this).closest("tr").children().eq(2).text();
 				modalContent1.val(dev1);
 				modalContent2.val(dev2);
-				modal.data("idx", detailNo);
 
+				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalModifyBtn.show();
 				modalRemoveBtn.show();
@@ -195,11 +198,14 @@
 			$("#register").click(function (e) {
 				e.preventDefault();
 
+				//모달 text
 				modalTitle.text("Division Register");
 
+				//모달 button
 				modal.find("input").val("");
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalRegisterBtn.show();
+				
 				modal.modal("show");
 			});
 

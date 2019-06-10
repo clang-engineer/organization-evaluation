@@ -137,12 +137,12 @@
                         <a class="nav-link" th:href="@{list(company=${company},tno=${tno})}">Survey</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="contact.html">Contact</a>
+                        <a class="nav-link" th:href="@{contact(company=${company},tno=${tno})}">Contact</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <i class="fas fa-user-circle fa-fw"></i>
-                            <span>[[${session.evaluator.name}]]님</span>
+                            <span th:text="${session?.evaluator?.name}"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                             <a class="dropdown-item" href="blog-home-2.html">Profile</a>
@@ -177,7 +177,7 @@
                 </div>
                 <!-- ./modal-header -->
                 <!-- modal-body -->
-                <div class="modal-body">[[${session.evaluator.name}]]님의 계정에서 로그아웃 하시겠습니까?</div>
+                <div class="modal-body">[[${session?.evaluator?.name}]]님의 계정에서 로그아웃 하시겠습니까?</div>
                 <div class="modal-footer">
                     <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
                     <button id="logOut" class="btn btn-primary">Logout</button>

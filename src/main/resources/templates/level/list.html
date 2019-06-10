@@ -171,15 +171,16 @@
 			$(".detail").click(function (e) {
 				e.preventDefault();
 
-				modalTitle.text("Level Modify or Delete");
-
+				//모달 data
 				detailNo = $(this).attr("href");
-				content = $(this).closest("tr").children().eq(1).text();
-				// lev2 = $(this).closest("tr").children().eq(2).text();
-				modalContent1.val(content);
-				// modalContent2.val(lev2);
 				modal.data("idx", detailNo);
 
+				//모달 text
+				modalTitle.text("Level Modify or Delete");
+				content = $(this).closest("tr").children().eq(1).text();
+				modalContent1.val(content);
+
+				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalModifyBtn.show();
 				modalRemoveBtn.show();
@@ -191,11 +192,14 @@
 			$("#register").click(function (e) {
 				e.preventDefault();
 
+				//모달 text
 				modalTitle.text("Level Register");
 
+				//모달 button
 				modal.find("input").val("");
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalRegisterBtn.show();
+
 				modal.modal("show");
 			});
 

@@ -60,7 +60,7 @@ public class DivisionServiceImpl implements DivisionService {
     public Page<Division> getListWithPaging(long cno, PageVO vo) {
         log.info("getListWithPaging by " + cno);
 
-        Pageable page = vo.makePageable(1, "dno");
+        Pageable page = vo.makePageable(1, "division1");
         Page<Division> result = divisionRepo.findAll(divisionRepo.makePredicate(vo.getType(), vo.getKeyword(), cno),
                 page);
         return result;

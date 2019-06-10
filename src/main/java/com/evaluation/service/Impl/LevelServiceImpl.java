@@ -58,7 +58,7 @@ public class LevelServiceImpl implements LevelService {
     public Page<Level> getListWithPaging(long cno, PageVO vo) {
         log.info("getListWithPaging by " + cno);
 
-        Pageable page = vo.makePageable(1, "lno");
+        Pageable page = vo.makePageable(1, "content");
         Page<Level> result = levelRepo.findAll(levelRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);
         return result;
     }
