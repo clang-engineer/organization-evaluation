@@ -50,43 +50,9 @@
 		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
 	</form>
 
-	<!-- modal -->
-	<div id="myModal" class="modal fade" role="dialog">
-		<div class="modal-dialog">
-			<div class="modal-content">
-				<div class="modal-header">
-					<h4 class="modal-title">Modal Header</h4>
-					<button type="button" class="close" data-dismiss="modal">&times;</button>
-				</div>
-				<div class="modal-body">
-					<div class="form-group">
-						<label for="">Turn Title</label>
-						<input type="text" class="form-control" name="turnTitle" />
-					</div>
-					<div class="form-group">
-						<label for="">Turn Type</label>
-						<div class="checkbox">
-							<label class="checkbox-inline">
-								<input type="checkbox" id="checkbox1" name="turnType" value="360"> 360 Survey
-							</label> &nbsp;
-							<label class="checkbox-inline">
-								<input type="checkbox" id="checkbox2" name="turnType" value="MBO"> MBO
-							</label>
-						</div>
-					</div>
-				</div>
-				<div class="modal-footer">
-					<button id="modalBtn" class="btn btn-info">Save</button>
-					<span th:if="(${vo.writeId} eq ${#authentication.name}) or ${#authorization.expression('hasRole(''ADMIN'')')}">
-							<button id="delModalBtn" class="btn btn-danger">Delete</button>
-						</span>
-					<button id="modalCloseBtn" type="button" class="btn btn-default border" data-dismiss="modal">Close</button>
-				</div>
-			</div>
-		</div>
-	</div>
-	<!-- /.modal -->
-
+	<!-- Modal -->
+	<div th:insert="~{common/modal::basic}"></div>
+	<!-- ./Modal -->
 
 
 	<!-- /.container-fluid -->
@@ -97,6 +63,31 @@
 	<script th:inline="javascript">
 		$(document).ready(function (e) {
 
+			//modal 사용 변수 선언
+			var modal = $("#basicModal");
+			var modalTitle = modal.find("#modalTitle");
+			var modalBody = modal.find("#modalBody");
+			var modalLabel1 = modal.find("#modalLabel1");
+			var modalLabel2 = modal.find("#modalLabel2");
+			var modalContent1 = modal.find("input[name='modalContent1']");
+			var modalContent2 = modal.find("input[name='modalContent2']");
+			var modalGroupContent1 = modal.find("#content1");
+			var modalGroupContent2 = modal.find("#content2");
+			var modalModifyBtn = $("#modalModifyBtn");
+			var modalRemoveBtn = $("#modalRemoveBtn");
+			var modalRegisterBtn = $("#modalRegisterBtn");
+			var modalCloseBtn = $("#modalCloseBtn");
+
+			modalBody.append("<div class='form-group'>" +
+				"<label>Turn Type</label>" +
+				"<div class='checkbox'>" +
+				"<label class='checkbox-inline'><input type='checkbox' id='checkbox1' name='turnType' value='360'> 360 Survey</label>" +
+				" &nbsp;" +
+				"<label class='checkbox-inline'><input type='checkbox' id='checkbox2' name='turnType' value='MBO'> MBO</label>" +
+				"</div></div>");
+			modalGroupContent2.remove();
+			modalLabel1.text("Title");
+
 			var cno = '[[${cno}]]';
 			var tno;
 			var csrf = JSON.parse('[[${_csrf}]]');
@@ -105,7 +96,6 @@
 			(function () {
 				turnManager.getAll(cno, printList);
 			})();
-
 
 			function printList(list) {
 				if (list == null) {
@@ -131,7 +121,6 @@
 						"<td><a href='" + turnObj.tno + "'><button type='button' class='btn btn-default'><i class='fas fa-sitemap'></i></button></a></td>" +
 						"</tr>";
 				}
-
 				$("#turnTable").html(str);
 			}
 
@@ -151,41 +140,46 @@
 				return formatedTime;
 			}
 
-
 			/* modal 창 */
 			$("#addTurnBtn").on('click', function () {
-				turnTitleObj.val('');
+				modalContent1.val('');
 				checked_values(false);
 
-				$("#myModal").modal("show");
-				$(".modal-title").text("Add Turn");
-				mode = "ADD";
+				//모달 button
+				modal.find("button[id!='modalCloseBtn']").hide();
+				modalRegisterBtn.show();
+
+				//modalTitle
+				modalTitle.text("Register Turn");
+				modalContent1.val("");
+
+				modal.modal("show");
 			});
 
-
-			var turnTitleObj = $("input[name='turnTitle']");
-
-			/* add turn */
-			$("#modalBtn").click(function () {
-				var turnTitle = turnTitleObj.val();
+			/* modal register click시  */
+			modalRegisterBtn.click(function () {
+				var turnTitle = modalContent1.val();
 				var cno = '[[${cno}]]';
 				var turnType = get_chked_values();
 
-				if (mode == 'ADD') {
-					var obj = { title: turnTitle, types: turnType, cno: cno, csrf: csrf };
-					turnManager.add(obj, function (list) {
-						alert("새로운 회차가 등록 되었습니다.");
-						afterAll(list)
-					});
-				} else if (mode == 'MOD') {
-					var obj = { title: turnTitle, types: turnType, cno: cno, tno: tno, csrf: csrf }
-					turnManager.update(obj, function (list) {
-						alert("회차 정보가 수정되었습니다.");
-						afterAll(list);
-					});
-				};
+				var obj = { title: turnTitle, types: turnType, cno: cno, csrf: csrf };
+				turnManager.add(obj, function (list) {
+					alert("새로운 회차가 등록 되었습니다.");
+					afterAll(list);
+				});
 			});
 
+			modalModifyBtn.click(function (e) {
+				var turnTitle = modalContent1.val();
+				var cno = '[[${cno}]]';
+				var turnType = get_chked_values();
+
+				var obj = { title: turnTitle, types: turnType, cno: cno, tno: tno, csrf: csrf }
+				turnManager.update(obj, function (list) {
+					alert("회차 정보가 수정되었습니다.");
+					afterAll(list);
+				});
+			});
 
 			/* add시 check box 값 취합 */
 			function get_chked_values() {
@@ -197,17 +191,18 @@
 						types_cnt++;
 					}
 				});
-
 				return types_array;
 			}
 
+			// 입력 후 처리
 			function afterAll(list) {
 				printList(list);
-				$("#myModal").modal("hide");
-				turnTitleObj.val('');
+				modal.modal("hide");
+				modalContent1.val('');
 				checked_values(false);
 			}
 
+			//체크 해제
 			function checked_values(boolean) {
 				$('input:checkbox[name=turnType]').each(function () {
 					$(this).prop('checked', boolean);
@@ -231,10 +226,9 @@
 			$("#turnTable").on("click", "tr", function (e) {
 				var tds = $(this).find('td')
 				tno = tds.find('a').attr('href');
-				turnTitleObj.val(tds[1].innerHTML);
+				modalContent1.val(tds[1].innerHTML);
 				checked_values(false);
 
-				mode = 'MOD';
 				switch (tds[2].innerHTML) {
 					case '360':
 						$("#checkbox1").prop('checked', true);
@@ -245,15 +239,23 @@
 					case '360,MBO', 'MBO,360':
 						checked_values(true);
 				}
-				$("#myModal").modal("show");
-				$(".modal-title").text("Modify/Delete Turn");
 
-				$("input[name='turnTitle']").focus();
+				//모달 layout
+				modalContent1.focus();
 
+				//모달 text
+				modalTitle.text("Modify/Delete Turn");
+
+				//모달 button
+				modal.find("button[id!='modalCloseBtn']").hide();
+				modalModifyBtn.show();
+				modalRemoveBtn.show();
+
+				modal.modal("show");
 			});
 
 			/* modal 창에서 삭제 버튼 눌렀을 때 동작 */
-			$("#delModalBtn").on("click", function () {
+			modalRemoveBtn.on("click", function () {
 				if (delchk() == true) {
 					var obj = { cno: cno, tno: tno, csrf: csrf }
 					turnManager.remove(obj, function (list) {
@@ -273,14 +275,13 @@
 				}
 			}
 
-
 			$("#companyListBtn").on("click", function (e) {
 				$("#f1").submit();
 			});
 
 			//close button click 시
-			$("#modalCloseBtn").on("click", function (e) {
-				$("#myModal").modal('hide');
+			modalCloseBtn.on("click", function (e) {
+				modal.modal('hide');
 			});
 
 		});

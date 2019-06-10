@@ -48,35 +48,10 @@
     </div>
     <!-- /.container-fluid -->
 
+
     <!-- Modal -->
-    <div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h4 class="modal-title">CONTENT MODAL</h4>
-                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
-                    </button>
-                </div>
-                <div class="modal-body">
-                    <div class="form-group">
-                        <label>CONTENT</label>
-                        <input class="form-control" name="content" value="New Content">
-                    </div>
-                </div>
-                <div class="modal-footer">
-                    <span sec:authorize="hasRole('ROLE_ADMIN')">
-                        <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
-                        <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
-                        <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
-                    </span>
-                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
-                </div>
-
-            </div>
-        </div>
-    </div>
+    <div th:insert="~{common/modal::basic}"></div>
     <!-- ./Modal -->
-
 </div>
 
 <th:block layout:fragment="script">
@@ -89,8 +64,14 @@
             var csrf = JSON.parse('[[${_csrf}]]');
 
             //modal 사용 변수 선언
-            var modal = $("#myModal");
-            var modalContent = modal.find("input[name='content']");
+            var modal = $("#basicModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalLabel1 = modal.find("#modalLabel1");
+            var modalLabel2 = modal.find("#modalLabel2");
+            var modalContent = modal.find("input[name='modalContent1']");
+            var modalContent2 = modal.find("input[name='modalContent2']");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
             var modalModifyBtn = $("#modalModifyBtn");
             var modalRemoveBtn = $("#modalRemoveBtn");
             var modalRegisterBtn = $("#modalRegisterBtn");
@@ -122,10 +103,20 @@
 
             //register버튼 클릭 시
             $("#bookRegister").on('click', function (e) {
+
+                //모달 text
+                modalTitle.text("Content register");
+                modalLabel1.text("'index+1'이 해당 문항의 점수가 됩니다.")
                 modal.find("input").val("");
+
+                //모달 layout
+                modalGroupContent2.hide();
+
+                // 모달 button
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
-                $("#myModal").modal("show");
+
+                modal.modal("show");
             });
 
             //modal내의 register 클릭 시
@@ -153,14 +144,26 @@
                 }
                 contentService.read(param, function (result) {
                     modalContent.val(result);
-                    modal.data("idx", idxValue);
 
-                    modal.find("button[id!='modalCloseBtn']").hide();
-                    modalModifyBtn.show();
-                    modalRemoveBtn.show();
-
-                    $("#myModal").modal("show");
                 });
+
+                //모달 data
+                modal.data("idx", idxValue);
+
+                //모달 text
+                modalTitle.text("Content modify or remove");
+                modalLabel1.text("'index+1'이 해당 문항의 점수가 됩니다.")
+                modal.find("input").val("");
+
+                //모달 layout
+                modalGroupContent2.hide();
+
+                // 모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalModifyBtn.show();
+                modalRemoveBtn.show();
+
+                modal.modal("show");
             });
 
             //모달 내의 수정 버튼 클릭 시..

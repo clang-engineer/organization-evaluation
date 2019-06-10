@@ -44,7 +44,7 @@ public class CompanyController {
 		log.info("controller : company register post " + vo);
 
 		companyService.register(vo);
-		rttr.addFlashAttribute("msg", "success");
+		rttr.addFlashAttribute("msg", "register");
 
 		return "redirect:/company/list";
 	}
