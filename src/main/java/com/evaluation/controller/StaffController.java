@@ -7,6 +7,7 @@ import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
 
+import com.evaluation.domain.Admin;
 import com.evaluation.domain.Department;
 import com.evaluation.domain.Division;
 import com.evaluation.domain.Level;
@@ -170,17 +171,16 @@ public class StaffController {
 
 	@PostMapping("/upload")
 	@ResponseBody
-	public void xlUpload(long tno, Staff staff, Boolean deleteList, MultipartFile uploadFile, Model model) {
+	public void xlUpload(long tno, Admin admin, MultipartFile uploadFile, Model model) {
 
 		log.info("read file" + uploadFile);
-		log.info("" + deleteList);
 
 		long cno = turnService.get(tno).get().getCno();
-		if (deleteList == true) {
-			// 관계 모두 삭제하고 등록
-			relation360Service.deleteAllRelationByTno(tno);
-			staffService.deleteByCno(cno);
-		}
+		// if (deleteList == true) {
+		// 관계 모두 삭제하고 등록
+		// relation360Service.deleteAllRelationByTno(tno);
+		// staffService.deleteByCno(cno);
+		// }
 
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
@@ -212,10 +212,17 @@ public class StaffController {
 				row.setPassword(list.get(8));
 			}
 			row.setTelephone(list.get(9));
-			row.setWriteId(staff.getWriteId());
-			row.setUpdateId(staff.getUpdateId());
+			row.setWriteId(admin.getWriteId());
+			row.setUpdateId(admin.getUpdateId());
 
-			staffService.register(row);
+			// 새로 등록할지 업데이트할지 선택
+			Optional<Staff> tmpStaff = staffService.readByEmail(list.get(7));
+			if (tmpStaff.isPresent()) {
+				row.setSno(tmpStaff.get().getSno());
+				staffService.modify(row);
+			} else {
+				staffService.register(row);
+			}
 
 			// 중복제거 직급 생성
 			levList.add(list.get(2));
@@ -239,8 +246,8 @@ public class StaffController {
 			Level level = new Level();
 			level.setCno(cno);
 			level.setContent(origin);
-			level.setWriteId(staff.getWriteId());
-			level.setUpdateId(staff.getUpdateId());
+			level.setWriteId(admin.getWriteId());
+			level.setUpdateId(admin.getUpdateId());
 			levelService.register(level);
 		});
 
@@ -250,8 +257,8 @@ public class StaffController {
 			department.setCno(cno);
 			department.setDepartment1(data.get(0));
 			department.setDepartment2(data.get(1));
-			department.setWriteId(staff.getWriteId());
-			department.setUpdateId(staff.getUpdateId());
+			department.setWriteId(admin.getWriteId());
+			department.setUpdateId(admin.getUpdateId());
 
 			departmentService.register(department);
 		});
@@ -262,8 +269,8 @@ public class StaffController {
 			division.setCno(cno);
 			division.setDivision1(data.get(0));
 			division.setDivision2(data.get(1));
-			division.setWriteId(staff.getWriteId());
-			division.setUpdateId(staff.getUpdateId());
+			division.setWriteId(admin.getWriteId());
+			division.setUpdateId(admin.getUpdateId());
 
 			divisionService.register(division);
 		});

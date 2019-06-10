@@ -224,7 +224,7 @@
 				modalGroupContent1.hide();
 				modalGroupContent2.hide();
 				modalBody.find(".file-group").remove();
-				modalBody.append("<div class='file-group'><div class='form-group'><input type='file' class='form-control-file' name='uploadFile'></div><div class='form-group'><label class='checkbox-inline'><input type='checkbox' name='deleteList'> 기존 설정 삭제 후 입력</label></div></div>");
+				modalBody.append("<div class='file-group'><div class='form-group'><input type='file' class='form-control-file' name='uploadFile'></div><div class='form-group'></div></div>");
 
 				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
@@ -250,7 +250,6 @@
 				formData.append("writeId", writeId);
 				formData.append("updateId", writeId);
 				formData.append("tno", tno);
-				formData.append("deleteList", modalDeleteList.prop('checked'));
 
 				$.ajax({
 					url: '/staff/upload',
