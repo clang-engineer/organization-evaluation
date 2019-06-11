@@ -132,4 +132,14 @@ public class Relation360ServiceImpl implements Relation360Service {
     public Optional<List<Relation360>> findByEvaluator(long sno, long tno) {
         return relation360Repo.findByEvaulaordSno(sno, tno);
     }
+
+    @Override
+    public Optional<List<Relation360>> findAllbyTno(long tno) {
+        return relation360Repo.findAllbyTno(tno);
+    }
+
+
+    public List<Staff> findDintinctEavluatedbyTno(long tno) {
+        return relation360Repo.findDintinctEavluatedbyTno(tno);
+    }
 }

@@ -189,11 +189,6 @@ public class StaffController {
 		log.info("read file" + uploadFile);
 
 		long cno = turnService.get(tno).get().getCno();
-		// if (deleteList == true) {
-		// 관계 모두 삭제하고 등록
-		// relation360Service.deleteAllRelationByTno(tno);
-		// staffService.deleteByCno(cno);
-		// }
 
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
@@ -208,6 +203,12 @@ public class StaffController {
 				iteration++;
 				continue;
 			}
+
+			// 메일 주소 이상시 건너뛰기
+			if (!(list.get(1).contains("@") && list.get(1).contains("."))) {
+				throw new IllegalArgumentException("메일 주소에 이상 문자가 포함되어있습니다.");
+			}
+
 			log.info("" + list);
 			Staff row = new Staff();
 			row.setCno(cno);
@@ -302,7 +303,7 @@ public class StaffController {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
 			String format_time = format.format(System.currentTimeMillis());
 
-			String fileName = URLEncoder.encode(company + format_time);
+			String fileName = URLEncoder.encode(company + "_staff_" + format_time);
 			response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
 			staffService.readBycno(cno).ifPresent(list -> {
 				XSSFWorkbook workbook = new XSSFWorkbook();

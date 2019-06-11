@@ -153,4 +153,25 @@ public class Relation360RepositoryTests {
     public void testFindByEvaulaordSno() {
         log.info("" + relation360Repo.findByEvaulaordSno(2L, 1L));
     }
+
+    @Test
+    public void findAllByTno() {
+        relation360Repo.findAllbyTno(1L).ifPresent(list -> {
+            list.forEach(relation -> {
+                log.info("" + relation.getRno());
+            });
+        });
+    }
+
+    @Test
+    public void findAllDistinctByTno() {
+        // relation360Repo.findAllDintinctbyTno(1L).ifPresent(list -> {
+        //     list.forEach(staff -> {
+        //         log.info("" + staff.getName());
+        //     });
+        // });
+        relation360Repo.findDintinctEavluatedbyTno(1L).forEach(staff -> {
+            log.info("" + staff.getName());
+        });
+    }
 }

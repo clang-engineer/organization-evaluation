@@ -185,7 +185,7 @@ public class QuestionController {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
             String format_time = format.format(System.currentTimeMillis());
 
-            String fileName = URLEncoder.encode(company + format_time);
+            String fileName = URLEncoder.encode(company + "_question_" + format_time);
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
             questionService.findAllByTno(tno).ifPresent(list -> {
                 XSSFWorkbook workbook = new XSSFWorkbook();

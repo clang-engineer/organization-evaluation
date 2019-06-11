@@ -15,6 +15,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface Relation360Repository
@@ -57,6 +58,14 @@ public interface Relation360Repository
     // 로그인 식 출력되는 피평가자 리스트.
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluator.sno=?1 AND r.tno=?2")
     public Optional<List<Relation360>> findByEvaulaordSno(long sno, long tno);
+
+    // xl 다운로드를 위한 turn에 속하는 전체 관계
+    @Query("SELECT r FROM Relation360 r WHERE r.tno=:tno")
+    public Optional<List<Relation360>> findAllbyTno(@Param("tno") Long tno);
+
+    // xl 다운로드를 위한 turn에 속하는 중복제거 피평가자, Optional로는 변환 오류 발생. Distinct는 안되는 듯.?
+    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno")
+    public List<Staff> findDintinctEavluatedbyTno(@Param("tno") Long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 
