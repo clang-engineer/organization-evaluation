@@ -15,6 +15,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class AboutExcel {
 
+    // xlsx 읽어들이는 함수
     public static List<List<String>> readExcel(MultipartFile uploadFile) {
         List<List<String>> ret = new ArrayList<List<String>>();
 
@@ -32,7 +33,6 @@ public class AboutExcel {
             int rows = sheet.getPhysicalNumberOfRows();
             // 열의 수 행 머릿글에서 열 숫자를 전체 행의 열의 수로 인지한다.
             int cells = sheet.getRow(0).getLastCellNum();
-            log.info("====>cells" + cells);
             for (rowindex = 0; rowindex < rows; rowindex++) {
                 // 행을읽는다
                 XSSFRow row = sheet.getRow(rowindex);
@@ -84,4 +84,44 @@ public class AboutExcel {
 
         return ret;
     }
+
+    // xlsx 쓰기 함수
+    public static XSSFWorkbook writeExcel(List<List<String>> list) {
+        // 워크북 생성
+        XSSFWorkbook workbook = new XSSFWorkbook();
+        // 워크시트 생성
+        XSSFSheet sheet = workbook.createSheet("data");
+        // 행 생성
+        XSSFRow row = sheet.createRow(0);
+        // 쎌 생성
+        XSSFCell cell;
+
+        // 리스트의 size 만큼 row를 생성
+        for (int rowIdx = 0; rowIdx < list.size(); rowIdx++) {
+
+            List<String> body = list.get(rowIdx);
+            // 행 생성
+            row = sheet.createRow(rowIdx);
+
+            for (int i = 0; i < body.size(); i++) {
+                cell = row.createCell(i);
+                cell.setCellValue(body.get(i));
+            }
+        }
+
+        return workbook;
+        // 입력된 내용 파일로 쓰기
+        // excel 파일 저장
+        // try {
+        // File xlFile = new File("C:/test/" + name + ".xlsx");
+        // FileOutputStream fileOut = new FileOutputStream(xlFile);
+        // workbook.write(fileOut);
+        // fileOut.close();
+        // } catch (FileNotFoundException e) {
+        // e.printStackTrace();
+        // } catch (IOException e) {
+        // e.printStackTrace();
+        // }
+    }
+
 }

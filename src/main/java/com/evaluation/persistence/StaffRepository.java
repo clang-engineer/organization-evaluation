@@ -40,6 +40,10 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.name=?2")
 	public Optional<Staff> findByCnoAndName(long cno, String name);
 
+	// xl파일로 다운 위해
+	@Query("SELECT s FROM Staff s WHERE s.cno=:cno")
+	public Optional<List<Staff>> findByCno(@Param("cno") Long cno);
+
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
 
 		BooleanBuilder builder = new BooleanBuilder();

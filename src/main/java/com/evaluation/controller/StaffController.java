@@ -1,11 +1,14 @@
 package com.evaluation.controller;
 
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.TreeSet;
+
+import javax.servlet.http.HttpServletResponse;
 
 import com.evaluation.domain.Admin;
 import com.evaluation.domain.Department;
@@ -14,6 +17,7 @@ import com.evaluation.domain.Level;
 import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.function.RandomPassword;
+import com.evaluation.persistence.StaffRepository;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.DivisionService;
@@ -24,6 +28,7 @@ import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -61,6 +66,8 @@ public class StaffController {
 	DivisionService divisionService;
 
 	Relation360Service relation360Service;
+
+	StaffRepository staffRepo;
 
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {
@@ -277,4 +284,50 @@ public class StaffController {
 
 	}
 
+	//
+	@GetMapping(value = "/test")
+	@ResponseBody
+	public void test(HttpServletResponse response) {
+		response.setContentType("application/vnd.ms-excel");
+		response.setHeader("Content-Disposition", "attachment; filename=filename.xlsx");
+
+		staffRepo.findByCno(1L).ifPresent(list -> {
+			XSSFWorkbook workbook = new XSSFWorkbook();
+			List<List<String>> xlList = new ArrayList<List<String>>();
+			List<String> header = new ArrayList<String>();
+
+			header.add("이름");
+			header.add("이메일");
+			header.add("부문");
+			header.add("부서");
+			header.add("직급");
+
+			xlList.add(header);
+
+			for (int i = 0; i < list.size(); i++) {
+				List<String> tmpList = new ArrayList<String>();
+				tmpList.add(list.get(i).getName());
+				tmpList.add(list.get(i).getEmail());
+				tmpList.add(list.get(i).getDepartment1());
+				tmpList.add(list.get(i).getDepartment2());
+				tmpList.add(list.get(i).getLevel());
+				xlList.add(tmpList);
+			}
+
+			workbook = AboutExcel.writeExcel(xlList);
+
+			try {
+				workbook.write(response.getOutputStream());
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+
+			try {
+				workbook.close();
+			} catch (IOException e) {
+				e.printStackTrace();
+			}
+
+		});
+	}
 }

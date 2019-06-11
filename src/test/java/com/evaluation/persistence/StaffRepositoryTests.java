@@ -1,5 +1,6 @@
 package com.evaluation.persistence;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
@@ -113,7 +114,31 @@ public class StaffRepositoryTests {
 		log.info("" + staffRepo.findByEmail("choij@dwchem.co.kr"));
 	}
 
-	// relation 설정할 때 직원 불러오기 위해! evaluator 위해
-	// public Staff findByCnoEqualAndNameEqual(long cno, String email);
+	@Test
+	public void xlWriteTest() {
+
+		staffRepo.findByCno(1L).ifPresent(list -> {
+			List<List<String>> xlList = new ArrayList<List<String>>();
+			List<String> header = new ArrayList<String>();
+			header.add("이름");
+			header.add("이메일");
+			header.add("부문");
+			header.add("부서");
+			header.add("직급");
+			xlList.add(header);
+			for (int i = 0; i < list.size(); i++) {
+				List<String> tmpList = new ArrayList<String>();
+				tmpList.add(list.get(i).getName());
+				tmpList.add(list.get(i).getEmail());
+				tmpList.add(list.get(i).getDepartment1());
+				tmpList.add(list.get(i).getDepartment2());
+				tmpList.add(list.get(i).getLevel());
+				xlList.add(tmpList);
+			}
+
+			// AboutExcel.writeExcel("test", xlList);
+		});
+
+	}
 
 }
