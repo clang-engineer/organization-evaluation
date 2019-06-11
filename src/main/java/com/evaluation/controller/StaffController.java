@@ -193,10 +193,6 @@ public class StaffController {
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
 
-		// 중복 제거 부서
-		Set<String> levList = new TreeSet<String>();
-		Set<List<String>> depList = new HashSet<List<String>>();
-		Set<List<String>> divList = new HashSet<List<String>>();
 		// 직원 등록
 		for (List<String> list : allData) {
 			if (iteration == 0) {
@@ -237,19 +233,30 @@ public class StaffController {
 				staffService.register(row);
 			}
 
-			// 중복제거 직급 생성
-			levList.add(list.get(2));
-			// 중복제거 부서 생성
-			List<String> tmpDep = new ArrayList<String>();
-			tmpDep.add(list.get(3));
-			tmpDep.add(list.get(4));
-			depList.add(tmpDep);
-			// 중복제거 부문 생성
-			List<String> tmpDiv = new ArrayList<String>();
-			tmpDiv.add(list.get(5));
-			tmpDiv.add(list.get(6));
-			divList.add(tmpDiv);
 		}
+
+		// 중복 제거 부서
+		Set<String> levList = new TreeSet<String>();
+		Set<List<String>> depList = new HashSet<List<String>>();
+		Set<List<String>> divList = new HashSet<List<String>>();
+
+		// 회사에 속한 전 직원 정보 중복제거 하기
+		staffService.readBycno(cno).ifPresent(origin -> {
+			origin.forEach(staff -> {
+				// 중복제거 직급 생성
+				levList.add(staff.getLevel());
+				// 중복제거 부서 생성
+				List<String> tmpDep = new ArrayList<String>();
+				tmpDep.add(staff.getDepartment1());
+				tmpDep.add(staff.getDepartment2());
+				depList.add(tmpDep);
+				// 중복제거 부문 생성
+				List<String> tmpDiv = new ArrayList<String>();
+				tmpDiv.add(staff.getDivision1());
+				tmpDiv.add(staff.getDivision2());
+				divList.add(tmpDiv);
+			});
+		});
 
 		// level, department, division의 정보 우선 모두 제거. 이건 체크박스 여부에 관계없이 엑셀로 업로드 될 때 항상 실행.
 		staffService.deleteDistinctInfoByCno(cno);
