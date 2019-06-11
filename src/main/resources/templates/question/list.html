@@ -21,7 +21,7 @@
             <!-- search box -->
             <div class="row" style="margin-top: 20px; margin-left: 7px;">
                 <div class="col-md-9">
-                    <button id="xlTemplate" class="btn btn-info">Excel Template</button>
+                    <button id="xlDownload" class="btn btn-info">Excel Download</button>
                     <button id="xlRegister" class="btn btn-success">Excel Register</button>
                     <button id="register" class="btn btn-success">Register</button>
                 </div>
@@ -51,33 +51,33 @@
                         <thead>
                             <tr>
                                 <th>No</th>
+                                <th>Catogory</th>
+                                <th>Order Idx</th>
+                                <th>Question</th>
                                 <th>Division1</th>
                                 <th>Division2</th>
-                                <th>Order Idx</th>
-                                <th>Catogory</th>
-                                <th>Question</th>
                                 <th>Detail</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr>
                                 <th>No</th>
+                                <th>Catogory</th>
+                                <th>Order Idx</th>
+                                <th>Question</th>
                                 <th>Division1</th>
                                 <th>Division2</th>
-                                <th>Order Idx</th>
-                                <th>Catogory</th>
-                                <th>Question</th>
                                 <th>Detail</th>
                             </tr>
                         </tfoot>
                         <tbody>
                             <tr th:each="question,status:${result.content}">
                                 <td>[[${idxpageNum-1}*10+${status.count}]]</td>
+                                <td>[[${question.category}]]</td>
+                                <td>[[${question.idx}]]</td>
+                                <td>[[${question.Item}]]</td>
                                 <td>[[${question.division1}]]</td>
                                 <td>[[${question.division2}]]</td>
-                                <td>[[${question.idx}]]</td>
-                                <td>[[${question.category}]]</td>
-                                <td>[[${question.Item}]]</td>
                                 <td><a th:href="${question.qno}" class="questionDetail">
                                         <button type="button" class="btn btn-default"><i class="fas fa-pen"></i></button>
                                     </a></td>
@@ -266,6 +266,13 @@
 
             modalCloseBtn.on("click", function (e) {
                 modal.modal('hide');
+            });
+
+            //xl 다운로드 함수
+            $("#xlDownload").click(function (e) {
+                formObj.attr("action", "xlDownload");
+                formObj.attr("method", "POST");
+                formObj.submit();
             });
 
             $('#viewLoading').hide();

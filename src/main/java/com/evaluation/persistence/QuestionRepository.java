@@ -12,6 +12,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface QuestionRepository extends CrudRepository<Question, Long>, QuerydslPredicateExecutor<Question> {
@@ -27,6 +28,10 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
     // 서베이 메인에 직군-계층 별 문항 수 표시하기 위한 쿼리
     @Query("SELECT q.division1, q.division2, COUNT(q.qno) FROM Question q WHERE tno=?1 GROUP BY q.division1, q.division2")
     public Optional<List<List<String>>> getDistinctDivisionCountByTno(long tno);
+
+    // xl파일로 질문 다운로드 위해
+    @Query("SELECT q FROM Question q WHERE tno=:tno")
+    public Optional<List<Question>> findByTno(@Param("tno") long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 

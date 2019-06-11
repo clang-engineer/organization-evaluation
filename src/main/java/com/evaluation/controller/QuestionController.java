@@ -1,17 +1,26 @@
 package com.evaluation.controller;
 
+import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.servlet.http.HttpServletResponse;
+
+import com.evaluation.domain.Company;
 import com.evaluation.domain.Question;
 import com.evaluation.function.AboutExcel;
+import com.evaluation.service.CompanyService;
 import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.StaffService;
+import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -22,22 +31,24 @@ import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import lombok.Setter;
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/question/*")
 @Slf4j
+@AllArgsConstructor
 public class QuestionController {
 
-    @Setter(onMethod_ = { @Autowired })
     QuestionService questionService;
 
-    @Setter(onMethod_ = { @Autowired })
     StaffService staffService;
 
-    @Setter(onMethod_ = { @Autowired })
     DistinctInfoService distinctInfoservice;
+
+    TurnService turnService;
+
+    CompanyService companyService;
 
     @GetMapping("/register")
     public void register(long tno, PageVO vo, Model model) {
@@ -161,4 +172,59 @@ public class QuestionController {
         }
     }
 
+    @PostMapping(value = "/xlDownload")
+    @ResponseBody
+    public void xlDown(long tno, HttpServletResponse response) {
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            String company = companyService.get(cno).map(Company::getName).orElse("etc");
+
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
+            String format_time = format.format(System.currentTimeMillis());
+
+            String fileName = URLEncoder.encode(company + format_time);
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
+            questionService.findAllByTno(tno).ifPresent(list -> {
+                XSSFWorkbook workbook = new XSSFWorkbook();
+                List<List<String>> xlList = new ArrayList<List<String>>();
+                List<String> header = new ArrayList<String>();
+
+                header.add("요소");
+                header.add("번호");
+                header.add("항목");
+                header.add("직군");
+                header.add("계층");
+
+                xlList.add(header);
+
+                for (int i = 0; i < list.size(); i++) {
+                    List<String> tmpList = new ArrayList<String>();
+                    tmpList.add(list.get(i).getCategory());
+                    tmpList.add(Integer.toString(list.get(i).getIdx()));
+                    tmpList.add(list.get(i).getItem());
+                    tmpList.add(list.get(i).getDivision1());
+                    tmpList.add(list.get(i).getDivision2());
+                    xlList.add(tmpList);
+                }
+
+                workbook = AboutExcel.writeExcel(xlList);
+
+                try {
+                    workbook.write(response.getOutputStream());
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                try {
+                    workbook.close();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+
+            });
+        });
+    }
 }

@@ -83,4 +83,8 @@ public class QuestionServiceImpl implements QuestionService {
 
 		return questionRepo.getListByDivision(tno, division1, division2);
 	}
+
+	public Optional<List<Question>> findAllByTno(long tno) {
+		return questionRepo.findByTno(tno);
+	}
 }

@@ -24,4 +24,6 @@ public interface QuestionService {
 	public Optional<List<List<String>>> DistinctDivisionCountByTno(long tno);
 
 	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
+
+	public Optional<List<Question>> findAllByTno(long tno);
 }

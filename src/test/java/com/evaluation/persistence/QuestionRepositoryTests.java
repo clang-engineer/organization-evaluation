@@ -93,4 +93,13 @@ public class QuestionRepositoryTests {
 	public void testGetListByDivision() {
 		questionRepo.getListByDivision(1L, "실리콘마이터스", "임원").ifPresent(list -> log.info("" + list));
 	}
+
+	@Test
+	public void testGetAllQuestionInTurn() {
+		questionRepo.findByTno(1L).ifPresent(origin -> {
+			origin.forEach(question -> {
+				log.info("" + question);
+			});
+		});
+	}
 }
