@@ -1,6 +1,8 @@
 package com.evaluation.controller;
 
 import java.io.IOException;
+import java.net.URLEncoder;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,6 +13,7 @@ import java.util.TreeSet;
 import javax.servlet.http.HttpServletResponse;
 
 import com.evaluation.domain.Admin;
+import com.evaluation.domain.Company;
 import com.evaluation.domain.Department;
 import com.evaluation.domain.Division;
 import com.evaluation.domain.Level;
@@ -18,6 +21,7 @@ import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.function.RandomPassword;
 import com.evaluation.persistence.StaffRepository;
+import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.DivisionService;
@@ -52,6 +56,8 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 @Transactional
 public class StaffController {
+
+	CompanyService companyService;
 
 	StaffService staffService;
 
@@ -206,24 +212,23 @@ public class StaffController {
 			Staff row = new Staff();
 			row.setCno(cno);
 			row.setName(list.get(0));
-			row.setId(list.get(1));
+			row.setEmail(list.get(1));
 			row.setLevel(list.get(2));
 			row.setDepartment1(list.get(3));
 			row.setDepartment2(list.get(4));
 			row.setDivision1(list.get(5));
 			row.setDivision2(list.get(6));
-			row.setEmail(list.get(7));
-			if (list.get(8) == null || list.get(8) == "N") {
+			if (list.get(7) == null || list.get(7) == "N") {
 				row.setPassword(RandomPassword.numberGen(6, 2));
 			} else {
-				row.setPassword(list.get(8));
+				row.setPassword(list.get(7));
 			}
-			row.setTelephone(list.get(9));
+			row.setTelephone(list.get(8));
 			row.setWriteId(admin.getWriteId());
 			row.setUpdateId(admin.getUpdateId());
 
 			// 새로 등록할지 업데이트할지 선택
-			Optional<Staff> tmpStaff = staffService.readByEmail(list.get(7));
+			Optional<Staff> tmpStaff = staffService.readByEmail(list.get(1));
 			if (tmpStaff.isPresent()) {
 				row.setSno(tmpStaff.get().getSno());
 				staffService.modify(row);
@@ -284,50 +289,66 @@ public class StaffController {
 
 	}
 
-	//
-	@GetMapping(value = "/test")
+	@PostMapping(value = "/xlDownload")
 	@ResponseBody
-	public void test(HttpServletResponse response) {
-		response.setContentType("application/vnd.ms-excel");
-		response.setHeader("Content-Disposition", "attachment; filename=filename.xlsx");
+	public void xlDown(long tno, HttpServletResponse response) {
 
-		staffRepo.findByCno(1L).ifPresent(list -> {
-			XSSFWorkbook workbook = new XSSFWorkbook();
-			List<List<String>> xlList = new ArrayList<List<String>>();
-			List<String> header = new ArrayList<String>();
+		turnService.get(tno).ifPresent(origin -> {
+			long cno = origin.getCno();
 
-			header.add("이름");
-			header.add("이메일");
-			header.add("부문");
-			header.add("부서");
-			header.add("직급");
+			String company = companyService.get(cno).map(Company::getName).orElse("etc");
+			response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+			response.setCharacterEncoding("UTF-8");
+			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
+			String format_time = format.format(System.currentTimeMillis());
 
-			xlList.add(header);
+			String fileName = URLEncoder.encode(company + format_time);
+			response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
+			staffService.readBycno(cno).ifPresent(list -> {
+				XSSFWorkbook workbook = new XSSFWorkbook();
+				List<List<String>> xlList = new ArrayList<List<String>>();
+				List<String> header = new ArrayList<String>();
 
-			for (int i = 0; i < list.size(); i++) {
-				List<String> tmpList = new ArrayList<String>();
-				tmpList.add(list.get(i).getName());
-				tmpList.add(list.get(i).getEmail());
-				tmpList.add(list.get(i).getDepartment1());
-				tmpList.add(list.get(i).getDepartment2());
-				tmpList.add(list.get(i).getLevel());
-				xlList.add(tmpList);
-			}
+				header.add("이름");
+				header.add("이메일");
+				header.add("직책");
+				header.add("부문");
+				header.add("부서");
+				header.add("직군");
+				header.add("계층");
+				header.add("패스워드");
+				header.add("전화번호");
 
-			workbook = AboutExcel.writeExcel(xlList);
+				xlList.add(header);
 
-			try {
-				workbook.write(response.getOutputStream());
-			} catch (Exception e) {
-				e.printStackTrace();
-			}
+				for (int i = 0; i < list.size(); i++) {
+					List<String> tmpList = new ArrayList<String>();
+					tmpList.add(list.get(i).getName());
+					tmpList.add(list.get(i).getEmail());
+					tmpList.add(list.get(i).getLevel());
+					tmpList.add(list.get(i).getDepartment1());
+					tmpList.add(list.get(i).getDepartment2());
+					tmpList.add(list.get(i).getDivision1());
+					tmpList.add(list.get(i).getDivision2());
+					tmpList.add(list.get(i).getPassword());
+					tmpList.add(list.get(i).getTelephone());
+					xlList.add(tmpList);
+				}
 
-			try {
-				workbook.close();
-			} catch (IOException e) {
-				e.printStackTrace();
-			}
+				workbook = AboutExcel.writeExcel(xlList);
 
+				try {
+					workbook.write(response.getOutputStream());
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
+
+				try {
+					workbook.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			});
 		});
 	}
 }

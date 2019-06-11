@@ -30,4 +30,6 @@ public interface StaffService {
 	public Optional<Staff> readByEmail(String email);
 
 	public Optional<Staff> readByCnoAndName(long cno, String name);
+
+	public Optional<List<Staff>> readBycno(long cno);
 }
