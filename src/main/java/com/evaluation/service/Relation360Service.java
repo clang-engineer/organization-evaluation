@@ -19,13 +19,9 @@ public interface Relation360Service {
 
     public void remove(Long rno);
 
-    public Page<Relation360> getListWithPaging(long tno, PageVO vo);
+    // public Page<Relation360> getListWithPaging(long tno, PageVO vo);
 
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
-
-    public void deleteEvaluatedInfo(long tno, long sno);
-
-    public void deleteAllRelationByTno(long tno);
 
     public Optional<List<Relation360>> findRelationByEvaulatedSno(long sno, long tno);
 

@@ -11,12 +11,10 @@ import com.querydsl.core.types.Predicate;
 
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
-import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
-import org.springframework.transaction.annotation.Transactional;
 
 public interface Relation360Repository
         extends CrudRepository<Relation360, Long>, QuerydslPredicateExecutor<Relation360> {
@@ -39,18 +37,6 @@ public interface Relation360Repository
     public Page<Staff> getDistinctEvaluatedListByEvaluator(String keyword, long tno, Pageable pageable);
     /* ./criteria 처리 필요 */
 
-    // 회차에 속하는 특정 evaluated정보 모두 삭제
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Relation360 r WHERE r.rno>0 AND r.tno=?1 AND r.evaluated.sno=?2")
-    public void deleteEvaluatedInfo(long tno, long sno);
-
-    // 회차에 속하는 모든 realtion 삭제
-    @Modifying
-    @Transactional
-    @Query("DELETE FROM Relation360 r WHERE r.rno>0 AND r.tno=?1")
-    public void deleteAllRelationByTno(long tno);
-
     // 로그인 할 때 사용 회차에 있는 평가자면 로그인
     @Query("SELECT DISTINCT r.evaluator FROM Relation360 r WHERE r.tno=?1 AND r.evaluator.email=?2")
     public Optional<Staff> findInEvaluator(long tno, String email);
@@ -63,7 +49,7 @@ public interface Relation360Repository
     @Query("SELECT r FROM Relation360 r WHERE r.tno=:tno")
     public Optional<List<Relation360>> findAllbyTno(@Param("tno") Long tno);
 
-    // xl 다운로드를 위한 turn에 속하는 중복제거 피평가자, Optional로는 변환 오류 발생. Distinct는 안되는 듯.?
+    // xl 다운로드를 위한 turn에 속하는 중복제거 피평가자, Optional로는 변환 오류 발생. Distinct는 안되는 듯.? 위에 유사함수 있지만 페이지 처리 때문에 따로 만듬.
     @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno")
     public List<Staff> findDintinctEavluatedbyTno(@Param("tno") Long tno);
 

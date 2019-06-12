@@ -119,22 +119,6 @@ public class Relation360RepositoryTests {
         // log.info("" + result.getContent());
     }
 
-    // @Test
-    // public void getAllRelationTest() {
-    // List<Relation360> result = relation360Repo.findByTno(9L);
-    // result.forEach(list -> log.info("" + list.getRno()));
-    // }
-
-    @Test
-    public void deleteEvaluatedInfo() {
-        relation360Repo.deleteEvaluatedInfo(8L, 28L);
-    }
-
-    @Test
-    public void testDeleteAllByTno() {
-        relation360Repo.deleteAllRelationByTno(1L);
-    }
-
     @Test
     public void testFindEvaluatorByEvaulatedSno() {
         relation360Repo.findByEvaulatedSno(47972L, 1L).ifPresent(origin -> {

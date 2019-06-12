@@ -129,7 +129,11 @@ public class Relation360Controller {
     public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
         log.info("deleteEvaluatedInfo by " + tno);
 
-        relation360Service.deleteEvaluatedInfo(tno, sno);
+        relation360Service.findRelationByEvaulatedSno(sno, tno).ifPresent(list -> {
+            list.forEach(relation -> {
+                relation360Service.remove(relation.getRno());
+            });
+        });
 
         rttr.addFlashAttribute("msg", "remove");
         rttr.addAttribute("tno", tno);
@@ -149,7 +153,11 @@ public class Relation360Controller {
         long cno = turnService.get(tno).get().getCno();
 
         if (deleteList == true) {
-            relation360Service.deleteAllRelationByTno(tno);
+            relation360Service.findAllbyTno(tno).ifPresent(list -> {
+                list.forEach(relation -> {
+                    relation360Service.remove(relation.getRno());
+                });
+            });
         }
 
         int iteration = 0;

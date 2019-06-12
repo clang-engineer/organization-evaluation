@@ -62,24 +62,6 @@ public class Relation360ServiceImpl implements Relation360Service {
         relation360Repo.deleteById(rno);
     }
 
-    // @Override
-    // public List<Relation360> getAllList(long tno) {
-    // List<Relation360> result = relation360Repo.findByTno(tno);
-    // return result;
-    // }
-
-    @Override
-    public Page<Relation360> getListWithPaging(long tno, PageVO vo) {
-        log.info("getList : " + tno + vo);
-
-        Pageable page = vo.makePageable(1, "rno");
-
-        Page<Relation360> result = relation360Repo
-                .findAll(relation360Repo.makePredicate(vo.getType(), vo.getKeyword(), tno), page);
-
-        return result;
-    }
-
     @Override
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo) {
         log.info("getDistinctEvaluatedList : " + tno + vo);
@@ -98,20 +80,6 @@ public class Relation360ServiceImpl implements Relation360Service {
             result = relation360Repo.getDistinctEvaluatedListByEvaluator(keyword, tno, page);
         }
         return result;
-    }
-
-    @Override
-    public void deleteEvaluatedInfo(long tno, long sno) {
-        log.info("deleteEvaluatedInfo " + tno + sno);
-
-        relation360Repo.deleteEvaluatedInfo(tno, sno);
-    }
-
-    @Override
-    public void deleteAllRelationByTno(long tno) {
-        log.info("deleteAllRelationByTno " + tno);
-
-        relation360Repo.deleteAllRelationByTno(tno);
     }
 
     @Override
@@ -137,7 +105,6 @@ public class Relation360ServiceImpl implements Relation360Service {
     public Optional<List<Relation360>> findAllbyTno(long tno) {
         return relation360Repo.findAllbyTno(tno);
     }
-
 
     public List<Staff> findDintinctEavluatedbyTno(long tno) {
         return relation360Repo.findDintinctEavluatedbyTno(tno);
