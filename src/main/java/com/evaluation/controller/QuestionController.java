@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -138,7 +138,7 @@ public class QuestionController {
         model.addAttribute("result", new PageMaker<>(result));
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/xlUpload")
     @ResponseBody
     public void xlUpload(Question question, Boolean deleteList, MultipartFile uploadFile, Model model) {
 
@@ -185,10 +185,15 @@ public class QuestionController {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
             String format_time = format.format(System.currentTimeMillis());
 
-            String fileName = URLEncoder.encode(company + "_question_" + format_time);
+            String fileName = "default";
+            try {
+                fileName = URLEncoder.encode(company + "_question_" + format_time, "UTF-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
             questionService.findAllByTno(tno).ifPresent(list -> {
-                XSSFWorkbook workbook = new XSSFWorkbook();
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 
@@ -210,17 +215,11 @@ public class QuestionController {
                     xlList.add(tmpList);
                 }
 
-                workbook = AboutExcel.writeExcel(xlList);
-
                 try {
+                    XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
                     workbook.write(response.getOutputStream());
-                } catch (Exception e) {
-                    e.printStackTrace();
-                }
-
-                try {
                     workbook.close();
-                } catch (IOException e) {
+                } catch (Exception e) {
                     e.printStackTrace();
                 }
 

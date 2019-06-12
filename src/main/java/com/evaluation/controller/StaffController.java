@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -182,7 +182,7 @@ public class StaffController {
 		return new ResponseEntity<>(staffService.getEvaluatorList(cno, tno, sno), HttpStatus.OK);
 	}
 
-	@PostMapping("/upload")
+	@PostMapping("/xlUpload")
 	@ResponseBody
 	public void xlUpload(long tno, Admin admin, MultipartFile uploadFile, Model model) {
 
@@ -310,10 +310,16 @@ public class StaffController {
 			SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
 			String format_time = format.format(System.currentTimeMillis());
 
-			String fileName = URLEncoder.encode(company + "_staff_" + format_time);
+			String fileName = "default";
+			try {
+				fileName = URLEncoder.encode(company + "_staff_" + format_time, "UTF-8");
+			} catch (UnsupportedEncodingException e1) {
+				e1.printStackTrace();
+			}
+
 			response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
 			staffService.readBycno(cno).ifPresent(list -> {
-				XSSFWorkbook workbook = new XSSFWorkbook();
+
 				List<List<String>> xlList = new ArrayList<List<String>>();
 				List<String> header = new ArrayList<String>();
 
@@ -343,19 +349,14 @@ public class StaffController {
 					xlList.add(tmpList);
 				}
 
-				workbook = AboutExcel.writeExcel(xlList);
-
 				try {
+					XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
 					workbook.write(response.getOutputStream());
+					workbook.close();
 				} catch (Exception e) {
 					e.printStackTrace();
 				}
 
-				try {
-					workbook.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
 			});
 		});
 	}

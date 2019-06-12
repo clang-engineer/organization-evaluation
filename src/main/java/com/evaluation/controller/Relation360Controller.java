@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import java.io.IOException;
+import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -141,7 +141,7 @@ public class Relation360Controller {
         return "redirect:/relation360/list";
     }
 
-    @PostMapping("/upload")
+    @PostMapping("/xlUpload")
     @ResponseBody
     public void xlUpload(long tno, Boolean deleteList, MultipartFile uploadFile, Model model) {
         log.info("read file" + uploadFile);
@@ -165,7 +165,7 @@ public class Relation360Controller {
             }
 
             // 피평가자 정보 공통설정
-            String email = list.get(2);
+            String email = list.get(1);
             Optional<Staff> origin = staffService.readByEmail(email);
 
             if (!origin.isPresent()) {
@@ -175,7 +175,7 @@ public class Relation360Controller {
             origin.ifPresent(evaluated -> {
 
                 // 본인 평가 설정
-                if (list.get(8).equals("Y")) {
+                if (list.get(7).equals("Y")) {
                     Relation360 relation360 = new Relation360();
 
                     relation360.setEvaluated(evaluated);
@@ -187,11 +187,11 @@ public class Relation360Controller {
                 }
 
                 // 1차 고과자 설정
-                insertEvaluator(list, tno, cno, 9, "1", evaluated);
+                insertEvaluator(list, tno, cno, 8, "1", evaluated);
                 // 2차 고과자 설정
-                insertEvaluator(list, tno, cno, 10, "2", evaluated);
+                insertEvaluator(list, tno, cno, 9, "2", evaluated);
                 // 3차 고과자 설정
-                insertEvaluator(list, tno, cno, 11, "3", evaluated);
+                insertEvaluator(list, tno, cno, 10, "3", evaluated);
             });
         }
     }
@@ -249,13 +249,19 @@ public class Relation360Controller {
             SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
             String format_time = format.format(System.currentTimeMillis());
 
-            String fileName = URLEncoder.encode(company +"_relation360_"+ format_time);
+            String fileName = "default";
+            try {
+                fileName = URLEncoder.encode(company + "_relation360_" + format_time, "UTF-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
 
             List<List<String>> xlList = new ArrayList<List<String>>();
             List<String> header = new ArrayList<String>();
 
-            header.add("idx");
+            // header.add("idx");
             header.add("이름");
             header.add("이메일");
             header.add("직책");
@@ -272,15 +278,14 @@ public class Relation360Controller {
 
             // 일단 중복제거한 피평가자 명단 가져오고
             List<Staff> evaluatedList = relation360Service.findDintinctEavluatedbyTno(tno);
-            XSSFWorkbook workbook = new XSSFWorkbook();
 
             evaluatedList.forEach(evaluated -> {
                 List<String> tmpList = new ArrayList<String>();
 
                 // foreach에서 index를 얻기 위한..
-                int index = evaluatedList.indexOf(evaluated);
+                // int index = evaluatedList.indexOf(evaluated);
+                // tmpList.add(Integer.toString(index + 1));
 
-                tmpList.add(Integer.toString(index + 1));
                 tmpList.add(evaluated.getName());
                 tmpList.add(evaluated.getEmail());
                 tmpList.add(evaluated.getLevel());
@@ -337,19 +342,15 @@ public class Relation360Controller {
                 }
                 xlList.add(tmpList);
             });
-            workbook = AboutExcel.writeExcel(xlList);
 
             try {
+                XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
                 workbook.write(response.getOutputStream());
+                workbook.close();
             } catch (Exception e) {
                 e.printStackTrace();
             }
 
-            try {
-                workbook.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
         });
     }
 }

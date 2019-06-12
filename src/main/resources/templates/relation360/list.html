@@ -49,9 +49,9 @@
                             <tr>
                                 <th>Idx</th>
                                 <th>Name</th>
+                                <th>Level</th>
                                 <th>Department1</th>
                                 <th>Department2</th>
-                                <th>Level</th>
                                 <th>Division1</th>
                                 <th>Division1</th>
                                 <th>본인</th>
@@ -65,9 +65,9 @@
                             <tr>
                                 <th>Idx</th>
                                 <th>Name</th>
+                                <th>Level</th>
                                 <th>Department1</th>
                                 <th>Department2</th>
-                                <th>Level</th>
                                 <th>Division1</th>
                                 <th>Division1</th>
                                 <th>본인</th>
@@ -81,9 +81,9 @@
                             <tr th:each="staff,status:${result.content}">
                                 <td>[[${idxpageNum-1}*10+${status.count}]]</td>
                                 <td>[[${staff.name}]]</td>
+                                <td>[[${staff.level}]]</td>
                                 <td>[[${staff.department1}]]</td>
                                 <td>[[${staff.department2}]]</td>
-                                <td>[[${staff.level}]]</td>
                                 <td>[[${staff.division1}]]</td>
                                 <td>[[${staff.division2}]]</td>
                                 <td>
@@ -289,7 +289,7 @@
                 modalGroupContent2.hide();
                 $(".file-group").remove();
                 modalGroupContent1.find("table").remove();
-                modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>id</th><th>department1</th><th>department2</th><th>level</th></tr><tbody id='radioBody'></tbody></table>");
+                modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>email</th><th>level</th><th>department1</th><th>department2</th></tr><tbody id='radioBody'></tbody></table>");
 
                 showEvaluatedList(tno);
 
@@ -324,7 +324,7 @@
                 modalGroupContent2.hide();
                 $(".file-group").remove();
                 modalGroupContent1.find("table").remove();
-                modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>id</th><th>department1</th><th>department2</th><th>level</th></tr><tbody id='radioBody'></tbody></table>");
+                modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>email</th><th>level</th><th>department1</th><th>department2</th></tr><tbody id='radioBody'></tbody></table>");
 
                 var sno = $(this).data("evaluated");
                 showEvaluatorList({ tno: tno, sno: sno });
@@ -397,7 +397,7 @@
                     formData.append("deleteList", modalDeleteList.prop('checked'));
 
                     $.ajax({
-                        url: '/relation360/upload',
+                        url: '/relation360/xlUpload',
                         processData: false,
                         contentType: false,
                         beforeSend: function (xhr) {
@@ -508,10 +508,10 @@
                     for (var i = 0, len = list.length || 0; i < len; i++) {
                         str += "<tr><td><input type='radio' name='evaluated' value='" + list[i].sno + "'></td>";
                         str += "<td>" + list[i].name + "</td>";
-                        str += "<td>" + list[i].id + "</td>";
+                        str += "<td>" + list[i].email + "</td>";
+                        str += "<td>" + (list[i].level || '') + "</td>";
                         str += "<td>" + (list[i].department1 || '') + "</td>";
-                        str += "<td>" + (list[i].department2 || '') + "</td>";
-                        str += "<td>" + (list[i].level || '') + "</td></tr>";
+                        str += "<td>" + (list[i].department2 || '') + "</td></tr>";
                     }
                     $("#radioBody").html(str);
                 });
@@ -528,10 +528,10 @@
                     for (var i = 0, len = list.length || 0; i < len; i++) {
                         str += "<tr><td><input type='radio' name='evaluator' value='" + list[i].sno + "'></td>";
                         str += "<td>" + list[i].name + "</td>";
-                        str += "<td>" + list[i].id + "</td>";
+                        str += "<td>" + list[i].email + "</td>";
+                        str += "<td>" + (list[i].level || '') + "</td>";
                         str += "<td>" + (list[i].department1 || '') + "</td>";
-                        str += "<td>" + (list[i].department2 || '') + "</td>";
-                        str += "<td>" + (list[i].level || '') + "</td></tr>";
+                        str += "<td>" + (list[i].department2 || '') + "</td></tr>";
                     }
                     $("#radioBody").html(str);
                 });
