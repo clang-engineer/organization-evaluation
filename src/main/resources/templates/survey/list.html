@@ -2,8 +2,6 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
 <!-- div content -->
 <div layout:fragment="content">
-
-
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
@@ -21,18 +19,24 @@
                         <div class="card-body">
                             <h5 class="card-title">Self Evaluation</h5>
                             <p class="card-text">추후, 동일 문항에 대한 본인과 타인의 관점을 비교해보세요. 이는 본인 성장, 상호 갈등 회복등의 계기가 될 수 있습니다.</p>
-                            <a href="#" class="btn btn-primary">Go Survey</a>
                             <span th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='me'">
-                                <span th:if="${relation.finish}=='N'">
-                                    <button data-finish="N" th:data-name="${relation.evaluated.name}" th:data-evaluated="${relation.evaluated}" th:data-rno="${relation.rno}" class="btn btn-default">Go Survey</button>
-                                </span>
-                                <span th:if="${relation.finish}=='Y'" th:text="끝"></span>
-                                <span th:if="${relation.finish}=='T'" th:text="임시저장"></span>
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <button th:if="${relation.finish}=='N'" data-finish="N" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-primary">Go Survey</button>
+                                                    <button th:if="${relation.finish}=='T'" data-finish="T" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-danger">임시 저장</button>
+                                                    <button th:if="${relation.finish}=='Y'" data-finish="Y" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-secondary" disabled>제출 완료</button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
                             </span>
                         </div>
                     </div>
                     <!-- ./본인평가 -->
-                    <!-- 1차 평가자 리스트 card -->
+                    <!-- 1차 평가자 리스트 card 1차 평가자가 평가자 중에 존재하는 경우만 실행 -->
                     <div class="card mb-4" th:if="${#lists.contains(relationList,'1')}">
                         <h5 class="card-header">1차 평가자로서 평가할 대상
                             <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
@@ -55,11 +59,11 @@
                                         <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
                                         <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
                                         <td>[[${relation.evaluated.level}]]</td>
-                                        <td th:if="${relation.finish}=='N'">
-                                            <button data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
+                                        <td>
+                                            <button th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
+                                            <button th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-pause fa-fw"></i></button>
+                                            <button th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default" disabled><i class="fas fa-lock fa-fw"></i></button>
                                         </td>
-                                        <td th:if="${relation.finish}=='Y'" th:text="끝"></td>
-                                        <td th:if="${relation.finish}=='T'" th:text="임시저장"></td>
                                     </tr>
                                 </tbody>
                             </table>
@@ -77,10 +81,33 @@
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 
+    <!-- Modal -->
+    <div th:insert="~{common/modal::basic}"></div>
+    <!-- ./Modal -->
+    
 </html>
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function (e) {
+
+            //modal 사용 변수 선언
+            var modal = $("#basicModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalBody = modal.find("#modalBody");
+            var modalLabel1 = modal.find("#modalLabel1");
+            var modalLabel2 = modal.find("#modalLabel2");
+            var modalContent1 = modal.find("input[name='modalContent1']");
+            var modalContent2 = modal.find("input[name='modalContent2']");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+            modalLabel1.hide();
+            modalGroupContent2.hide();
+
             var formObj = $("#f1");
 
             $("table").on("click", "button", function (e) {
@@ -89,13 +116,36 @@
                 var rno = $(this).data("rno");
                 var name = $(this).data("name");
 
-                if (confirm(name + "님 설문페이지로 이동하시겠습니까?")) {
-                    formObj.append("<input type='hidden' name='rno' value='" + rno + "'/>");
-                    $("#f1").submit();
+                //모달 data
+                modal.data("rno", rno);
+
+                //모달 text
+                modalTitle.text("Start Evaluation")
+                if (name == "본인") {
+                    modalContent1.val("본인 평가 페이지로 이동합니다.");
                 } else {
-                    return false;
+                    modalContent1.val(name + "님에 대한 평가 페이지로 이동합니다.");
                 }
+                modalContent1.attr("readonly", "true");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show().text("Go Survey");
+
+                modal.modal('show');
             })
+
+            //modal 등록 버튼 클릭 시
+            modalRegisterBtn.click(function (e) {
+                formObj.append("<input type='hidden' name='rno' value='" + modal.data("rno") + "'/>");
+                formObj.submit();
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
+
         });
     </script>
 </th:block>

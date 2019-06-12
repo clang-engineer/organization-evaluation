@@ -2,6 +2,11 @@
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
 <!-- div content -->
 <div layout:fragment="content">
+    <style>
+        .modal-label {
+            font-size: 0.9rem;
+        }
+    </style>
     <!-- container -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
@@ -11,10 +16,10 @@
         <!-- form -->
         <form id="f1" method="POST" th:action="@{submit}">
             <!-- card -->
-            <div class="card mb-4">
+            <div class="card mb-4" th:if="${category!=null}">
                 <!-- card-header -->
                 <h5 class="card-header text-white bg-dark">객관식
-                    <small class="float-md-right">[[${evaluated}]] 님에 대한 객관식 질의 입니다.</small>
+                    <small class="float-md-right">[[${relation.evaluated.name}]] 님에 대한 객관식 질의 입니다.</small>
                 </h5>
                 <!-- ./card-header -->
                 <!-- card-body -->
@@ -27,7 +32,7 @@
                         <div class="qparent">
                             <div th:each="book,idx:${book}" class="mr-5 question">
                                 <label>
-                                    <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${idx.count}">
+                                    <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${idx.count}" th:checked="${idx.count}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
                                     [[${book}]]
                                 </label>
                             </div>
@@ -38,32 +43,34 @@
             </div>
             <!-- ./card -->
             <!-- card -->
-            <div class="card mb-3 essay">
+            <div class="card mb-3 essay" th:if="${#lists.size(commentList)}>0 and ${relation.relation!='me'}">
                 <h5 class="card-header text-white bg-dark">주관식
-                    <small class="float-md-right">[[${evaluated}]] 님에 대한 주관식 질의 입니다.</small>
+                    <small class="float-md-right">[[${relation.evaluated.name}]] 님에 대한 주관식 질의 입니다.</small>
                 </h5>
                 <div class="card m-3">
                     <div class="card-body" th:each="question, status:${commentList}">
                         <div class="card-text mb-3">[[${status.count}]] - [[${question}]]</div>
-                        <textarea required th:name="'c'+${status.count}" class="form-control" rows="7"></textarea>
+                        <textarea required th:name="'c'+${status.count}" class="form-control" rows="7" th:text="${relation?.comments?.get('c'+status.count)}" th:disabled="${relation.finish}=='Y'">
+                        </textarea>
                         <p class="float-md-right mb-0" id="count_message">0/2000</p>
                     </div>
                 </div>
             </div>
             <!-- ./card -->
+            <input type="hidden" name="rno" th:value="${relation.rno}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         </form>
         <!-- ./form -->
         <div class="mt-3 mb-5 justify-content-md-center">
             <!-- <button id="btnSubmit" type="submit" class="btn btn-block btn-primary btn-lg">Submit</button> -->
         </div>
-        <!-- button -->]
+        <!-- button -->
         <div id="bottomGroup" class="position-fixed" align="center">
             <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
-                <button id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
+                <button th:if="${relation.finish}!='Y'" id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
                     <div>Submit</div>
                 </button>
-                <button id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
+                <button th:if="${relation.finish}!='Y'" id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
                     <div>Pause</div>
                 </button>
                 <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
@@ -71,13 +78,16 @@
                 </button>
             </div>
             <div>
-                <span class="badge badge-pill badge-warning">'[[${evaluated}]]'님에 대한 평가!</span>
+                <span class="badge badge-pill badge-warning">'[[${relation.evaluated.name}]]'님에 대한 평가!</span>
             </div>
         </div>
         <!-- button -->
 
     </div>
     <!-- ./container -->
+    <!-- Modal -->
+    <div th:insert="~{common/modal::basic}"></div>
+    <!-- ./Modal -->
 </div>
 <!-- ./div content -->
 
@@ -85,6 +95,28 @@
     <script th:inline="javascript">
         /* documnet ready function */
         $(document).ready(function (e) {
+
+            //modal 사용 변수 선언
+            var modal = $("#basicModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalBody = modal.find("#modalBody");
+            var modalLabel1 = modal.find("#modalLabel1");
+            var modalLabel2 = modal.find("#modalLabel2");
+            var modalContent1 = modal.find("input[name='modalContent1']");
+            var modalContent2 = modal.find("input[name='modalContent2']");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+            modalLabel1.hide();
+            modalContent2.hide();
+            modalRegisterBtn.text("Submit");
+
+            var evaluatedName = [[${ relation.evaluated.name }]];
+
             var formObj = $("#f1");
             var csrf = JSON.parse('[[${_csrf}]]');
 
@@ -145,11 +177,69 @@
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit").click(function (e) {
                 e.preventDefault();
-                console.log(formObj[0].checkValidity());
-                console.log(formObj[0].reportValidity());
-                // formObj.submit();
+
+                //form 꽉 찾는지 확인하기
+                if (!(formObj[0].checkValidity())) {
+                    formObj[0].reportValidity();
+                    return false;
+                }
+
+                //모달 data
+                modal.data("finish", "Y");
+
+                //modal Text
+                modalTitle.text("Submit Evaluation");
+
+                //모달 layout
+                modalContent1.val(evaluatedName + "님에 대한 평가를 최종 제출합니다.");
+                modalLabel2.text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.");
+                modalContent1.attr("readonly", "true");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+
+                modal.modal('show');
             })
 
+            $("#btnPause").click(function (e) {
+                e.preventDefault();
+
+                //모달 data
+                modal.data("finish", "T");
+
+                //modal Text
+                modalTitle.text("Pause Evaluation");
+
+                //모달 layout
+                modalContent1.val(evaluatedName + "님에 대한 평가를 임시 저장합니다.");
+                modalLabel2.text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.");
+                modalContent1.attr("readonly", "true");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+
+                modal.modal('show');
+            });
+
+            //Register button에 대한 동작
+            modalRegisterBtn.click(function (e) {
+                switch (modal.data("finish")) {
+                    case "Y":
+                        formObj.append("<input type='hidden' name='finish' value='Y'>");
+                        break;
+                    case "T":
+                        formObj.append("<input type='hidden' name='finish' value='T'>");
+                        break;
+                }
+                formObj.submit();
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
 
             //탑 버튼 나중에 나오도록
             $(window).scroll(function () {

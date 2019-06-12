@@ -1,5 +1,6 @@
 package com.evaluation.controller;
 
+import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedHashSet;
 import java.util.Map;
@@ -16,6 +17,7 @@ import com.evaluation.service.Relation360Service;
 import com.evaluation.service.TurnService;
 
 import org.springframework.stereotype.Controller;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -30,6 +32,7 @@ import lombok.extern.slf4j.Slf4j;
 @RequestMapping("/survey/*")
 @Slf4j
 @AllArgsConstructor
+@Transactional
 public class SurveyConroller {
 
     CompanyService companyService;
@@ -200,8 +203,8 @@ public class SurveyConroller {
 
         // 관계 정보가 존재하는 경우에 작동
         relation360Service.read(rno).ifPresent(relation -> {
-            model.addAttribute("rno", rno);
-            model.addAttribute("evaluated", relation.getEvaluated().getName());
+            // 평가자 이름 + 본인 평가일 대 주관식 지우기 위함.
+            model.addAttribute("relation", relation);
 
             // 회차에 속하는 comment list를 추가하기 위한.
             turnService.get(relation.getTno()).ifPresent(turn -> {
@@ -229,7 +232,43 @@ public class SurveyConroller {
     }
 
     @PostMapping("/submit")
-    public void submit(@RequestParam Map<String, String> answer) {
-        log.info("" + answer);
+    public String submit(long rno, String finish, @RequestParam Map<String, String> answer, RedirectAttributes rttr) {
+        log.info("" + answer + rno + finish);
+
+        relation360Service.read(rno).ifPresent(origin -> {
+            Set<Map.Entry<String, String>> entries = answer.entrySet();
+            Map<String, Integer> tmpAnswers = new HashMap<String, Integer>();
+            Map<String, String> tmpComments = new HashMap<String, String>();
+            // 전체 맵에서 객관식과 주관식 나누기
+            for (Map.Entry<String, String> entry : entries) {
+                if (entry.getKey().substring(0, 1).equals("q")) {
+                    tmpAnswers.put(entry.getKey(), Integer.parseInt(entry.getValue()));
+                } else if (entry.getKey().substring(0, 1).equals("c")) {
+                    tmpComments.put(entry.getKey(), entry.getValue());
+                }
+            }
+
+            // relation객체를 만든 후 수정 함수로 보내기
+            origin.setAnswers(tmpAnswers);
+            origin.setComments(tmpComments);
+
+            // 저장 상태 고르기
+            origin.setFinish(finish);
+
+            relation360Service.modify(origin);
+
+            // redirect 속성 만들기
+            long tno = origin.getTno();
+            turnService.get(tno).ifPresent(turn -> {
+                long cno = turn.getCno();
+                companyService.get(cno).ifPresent(company -> {
+                    rttr.addAttribute("company", company.getId());
+                    rttr.addFlashAttribute("companyInfo", company);
+                    rttr.addAttribute("tno", tno);
+                });
+            });
+        });
+
+        return "redirect:/survey/list";
     }
 }
