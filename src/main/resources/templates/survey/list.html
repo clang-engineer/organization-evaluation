@@ -8,7 +8,6 @@
         <h1 class="mt-5 mb-3">Blog Home One
             <small>Subheading</small>
         </h1>
-        [[${relationList}]]
         <div class="row">
             <!-- Blog Entries Column -->
             <div class="card-body">
@@ -37,38 +36,42 @@
                     </div>
                     <!-- ./본인평가 -->
                     <!-- 1차 평가자 리스트 card 1차 평가자가 평가자 중에 존재하는 경우만 실행 -->
-                    <div class="card mb-4" th:if="${#lists.contains(relationList,'1')}">
-                        <h5 class="card-header">1차 평가자로서 평가할 대상
-                            <small class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
-                        </h5>
-                        <!-- card body -->
-                        <div class="card-body pb-0">
-                            <table id="table" class="table">
-                                <thead class="thead-dark">
-                                    <tr>
-                                        <th scope="col">Name</th>
-                                        <th scope="col">Department</th>
-                                        <th scope="col">Division</th>
-                                        <th scope="col">Level</th>
-                                        <th scope="col">Survey</th>
-                                    </tr>
-                                </thead>
-                                <tbody>
-                                    <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='1'">
-                                        <td>[[${relation.evaluated.name}]]</td>
-                                        <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
-                                        <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
-                                        <td>[[${relation.evaluated.level}]]</td>
-                                        <td>
-                                            <button th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
-                                            <button th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-pause fa-fw"></i></button>
-                                            <button th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default" disabled><i class="fas fa-lock fa-fw"></i></button>
-                                        </td>
-                                    </tr>
-                                </tbody>
-                            </table>
+                    <div th:with="relationArray = ${ {'1', '2', '3'} }">
+                        <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
+                            <h5 class="card-header">[[${r}]]차 평가자로서 평가할 대상
+                                <small th:if="${r}=='1'" class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
+                                <small th:if="${r}=='2'" class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
+                                <small th:if="${r}=='3'" class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
+                            </h5>
+                            <!-- card body -->
+                            <div class="card-body pb-0">
+                                <table id="table" class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Department</th>
+                                            <th scope="col">Division</th>
+                                            <th scope="col">Level</th>
+                                            <th scope="col">Survey</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}==${r}">
+                                            <td>[[${relation.evaluated.name}]]</td>
+                                            <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
+                                            <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
+                                            <td>[[${relation.evaluated.level}]]</td>
+                                            <td>
+                                                <button th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
+                                                <button th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-pause fa-fw"></i></button>
+                                                <button th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default" disabled><i class="fas fa-lock fa-fw"></i></button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <!-- ./card body -->
                         </div>
-                        <!-- ./card body -->
                     </div>
                     <!-- ./1차 평가자 리스트 -->
                 </div>
