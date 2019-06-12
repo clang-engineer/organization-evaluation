@@ -165,6 +165,7 @@ public class QuestionController {
             row.setItem(list.get(2));
             row.setDivision1(list.get(3));
             row.setDivision2(list.get(4));
+            row.setRatio(Double.parseDouble(list.get(5)));
             row.setWriteId(question.getWriteId());
             row.setUpdateId(question.getUpdateId());
 
@@ -202,6 +203,7 @@ public class QuestionController {
                 header.add("항목");
                 header.add("직군");
                 header.add("계층");
+                header.add("비중");
 
                 xlList.add(header);
 
@@ -212,6 +214,7 @@ public class QuestionController {
                     tmpList.add(list.get(i).getItem());
                     tmpList.add(list.get(i).getDivision1());
                     tmpList.add(list.get(i).getDivision2());
+                    tmpList.add(Double.toString(list.get(i).getRatio()));
                     xlList.add(tmpList);
                 }
 

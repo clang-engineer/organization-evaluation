@@ -21,6 +21,17 @@
                 <form id="f1" th:action="@{modify}" method="POST">
                     <input type="hidden" name="qno" th:value="${question.qno}">
                     <div class="form-group">
+                        <label>Category</label>
+                        <select name="category" class="form-control">
+                            <option value="">--</option>
+                            <option th:each="res:${distinctInfo.category}" th:text="${res}" th:value="${res}" th:selected="${res}==${question.category}"></option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <label>Order Idx</label>
+                        <input type="text" class="form-control" name="idx" th:value="${question.idx}">
+                    </div>
+                    <div class="form-group">
                         <label>Division1</label>
                         <select name="division1" class="form-control">
                             <option value="">--</option>
@@ -35,19 +46,12 @@
                         </select>
                     </div>
                     <div class="form-group">
-                        <label>Order Idx</label>
-                        <input type="text" class="form-control" name="idx" th:value="${question.idx}">
-                    </div>
-                    <div class="form-group">
-                        <label>Category</label>
-                        <select name="category" class="form-control">
-                            <option value="">--</option>
-                            <option th:each="res:${distinctInfo.category}" th:text="${res}" th:value="${res}" th:selected="${res}==${question.category}"></option>
-                        </select>
-                    </div>
-                    <div class="form-group">
                         <label>Question</label>
                         <input type="text" class="form-control" name="item" th:value="${question.item}">
+                    </div>
+                    <div class="form-group">
+                        <label>Ratio</label>
+                        <input type="text" class="form-control" name="ratio" th:value="${question.ratio}">
                     </div>
                     <input type="hidden" name="updateId" th:value="${#authentication.name}">
                 </form>

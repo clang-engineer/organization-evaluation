@@ -39,11 +39,12 @@ public class QuestionServiceImpl implements QuestionService {
 		log.info("modify " + question);
 
 		questionRepo.findById(question.getQno()).ifPresent(origin -> {
+			origin.setCategory(question.getCategory());
+			origin.setIdx(question.getIdx());
+			origin.setItem(question.getItem());
 			origin.setDivision1(question.getDivision1());
 			origin.setDivision2(question.getDivision2());
-			origin.setIdx(question.getIdx());
-			origin.setCategory(question.getCategory());
-			origin.setItem(question.getItem());
+			origin.setRatio(question.getRatio());
 			origin.setUpdateId(question.getUpdateId());
 			questionRepo.save(origin);
 		});

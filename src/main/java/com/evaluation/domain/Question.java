@@ -33,6 +33,8 @@ public class Question {
     private String division1;
     private String division2;
 
+    private Double ratio;
+
     private String writeId;
     private String updateId;
 
