@@ -44,7 +44,6 @@ public class StaffRepositoryTests {
 			IntStream.range(1, 31).forEach(i -> {
 				Staff staff = new Staff();
 				staff.setEmail("testemail" + num + i + "@test.com");
-				staff.setId("test id" + i);
 				staff.setPassword("test id" + i);
 				staff.setName("test id" + i);
 				staff.setDepartment1("test id" + i);

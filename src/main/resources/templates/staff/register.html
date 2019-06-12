@@ -30,10 +30,6 @@
 						<input type="email" class="form-control" name="email" required>
 					</div>
 					<div class="form-group">
-						<label>Id</label>
-						<input type="id" class="form-control" name="id" placeholder="">
-					</div>
-					<div class="form-group">
 						<label>Password</label>
 						<input type="text" class="form-control" name="password">
 					</div>
@@ -43,6 +39,13 @@
 					<div class="form-group">
 						<label>Telephone</label>
 						<input class="form-control" type="tel" name="telephone" placeholder="000-0000-0000">
+					</div>
+					<div class="form-group">
+						<label>Level</label>
+						<select name="level" class="form-control">
+							<option value="">--</option>
+							<option th:each="res:${distinctInfo.level}" th:text="${res}" th:value="${res}"></option>
+						</select>
 					</div>
 					<div class="form-group">
 						<label>Department1</label>
@@ -56,13 +59,6 @@
 						<select name="department2" class="form-control">
 							<option value="">--</option>
 							<option th:each="res:${distinctInfo.department2}" th:text="${res}" th:value="${res}"></option>
-						</select>
-					</div>
-					<div class="form-group">
-						<label>Level</label>
-						<select name="level" class="form-control">
-							<option value="">--</option>
-							<option th:each="res:${distinctInfo.level}" th:text="${res}" th:value="${res}"></option>
 						</select>
 					</div>
 					<div class="form-group">

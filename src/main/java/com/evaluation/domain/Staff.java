@@ -27,7 +27,6 @@ public class Staff {
 
 	@Column(unique = true, nullable = false)
 	private String email;
-	private String id;
 	private String password;
 	private String name;
 	private String telephone;

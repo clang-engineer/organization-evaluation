@@ -52,7 +52,6 @@ public class StaffServiceImpl implements StaffService {
 		staffRepo.findById(staff.getSno()).ifPresent(origin -> {
 			origin.setEmail(staff.getEmail());
 			origin.setName(staff.getName());
-			origin.setId(staff.getId());
 			origin.setPassword(staff.getPassword());
 			origin.setDepartment1(staff.getDepartment1());
 			origin.setDepartment2(staff.getDepartment2());

@@ -34,7 +34,6 @@ public class StaffServiceTests {
 
 		Staff staff = new Staff();
 		staff.setEmail("test2@test.com");
-		staff.setId("service test id");
 		staff.setPassword("service test pwd");
 		staff.setName("service test name");
 		staff.setDepartment1("department1");
@@ -60,7 +59,6 @@ public class StaffServiceTests {
 
 		Optional<Staff> result = staffService.read(1L);
 		Staff staff = result.get();
-		staff.setId("service test modify id");
 		staff.setPassword("service test modify pwd");
 		staff.setName("service test modify name");
 		staff.setDepartment1("modify department1");
