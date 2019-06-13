@@ -2,6 +2,10 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
+
 import com.evaluation.domain.Relation360;
 import com.evaluation.domain.Staff;
 import com.evaluation.vo.PageVO;
@@ -12,6 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.data.domain.Page;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
@@ -19,6 +24,7 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
+@Transactional
 public class Relation360ServiceTests {
 
     @Setter(onMethod_ = { @Autowired })
@@ -68,10 +74,24 @@ public class Relation360ServiceTests {
         result.getContent().forEach(staff -> log.info("" + staff.getSno()));
     }
 
-    // @Test
-    // public void findByTnoTests() {
-    //     List<Relation360> result = relation360Service.getAllList(10L);
-    //     result.forEach(origin -> log.info("" + origin.getRno()));
-    // }
+    @Test
+    @Transactional
+    public void getSurveyReultTest() {
+        relation360Service.findAllbyTno(1L).ifPresent(list -> {
+            Set<String> answerKey = new HashSet<String>();
+            for (int i = 0; i < list.size(); i++) {
+                // answer를 위한
+                Set<Map.Entry<String, Integer>> entries = list.get(i).getAnswers().entrySet();
+                for (Map.Entry<String, Integer> entry : entries) {
+                    answerKey.add(entry.getKey());
+                }
+
+                // log.info("" + list.get(i).getAnswers().get("q1"));
+                // for (String key : answerKey) {
+                // }
+            }
+            log.info("" + answerKey);
+        });
+    }
 
 }

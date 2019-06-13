@@ -6,9 +6,8 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
-import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.List;
-import java.util.Map;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletResponse;
@@ -16,6 +15,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.evaluation.domain.Company;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
+import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
 import com.evaluation.service.TurnService;
 
@@ -41,6 +41,8 @@ public class ProgressController {
     TurnService turnService;
 
     CompanyService companyService;
+
+    QuestionService questionService;
 
     @GetMapping("/survey")
     public void survey(long tno, Model model) {
@@ -124,7 +126,7 @@ public class ProgressController {
         });
     }
 
-    @GetMapping("/survey/result")
+    @PostMapping("/survey/result")
     @ResponseBody
     public void surveyResultDownload(long tno, HttpServletResponse response) {
 
@@ -159,38 +161,25 @@ public class ProgressController {
                 header.add("관계");
                 header.add("평가자");
                 header.add("임시저장");
+                header.add("입력일");
 
-                // 키에서 header 추출하기
-                Set<String> answerKeySet = new HashSet<String>();
-                for (int i = 0; i < list.size(); i++) {
-                    // answer를 위한
-                    Set<Map.Entry<String, Integer>> entries = list.get(i).getAnswers().entrySet();
-                    for (Map.Entry<String, Integer> entry : entries) {
-                        log.info("" + entry.getKey());
-                        answerKeySet.add(entry.getKey());
+                // question중 문항 idx 중복 제거 최대값 구해서 해당 값들을 열 머릿글로 구성한다. 순서대로 입력하려고 linkedHashSet사용
+                Set<String> answerKeySet = new LinkedHashSet<String>();
+                questionService.findAllByTno(tno).ifPresent(qlist -> {
+                    for (int i = 0; i < qlist.size(); i++) {
+                        answerKeySet.add('q' + Integer.toString(qlist.get(i).getIdx()));
                     }
-                }
-                List<String> answerKeyList = new ArrayList<String>(answerKeySet);
+                });
+                header.addAll(answerKeySet);
 
-                // q뺀 문자열 정렬
-                questionSort(answerKeyList);
-                header.addAll(answerKeyList);
-
-                // 키에서 header 추출하기
-                Set<String> commentKeySet = new HashSet<String>();
-                for (int i = 0; i < list.size(); i++) {
-                    // answer를 위한
-                    Set<Map.Entry<String, String>> entries = list.get(i).getComments().entrySet();
-                    for (Map.Entry<String, String> entry : entries) {
-                        log.info("" + entry.getKey());
-                        answerKeySet.add(entry.getKey());
+                // comment는 size로 키 추정.
+                Set<String> commentKeySet = new LinkedHashSet<String>();
+                turnService.get(tno).ifPresent(turn -> {
+                    for (int i = 0; i < turn.getComments().size(); i++) {
+                        commentKeySet.add("c" + (i + 1));
                     }
-                }
-                List<String> commentKeyList = new ArrayList<String>(commentKeySet);
-
-                // q뺀 문자열 정렬
-                questionSort(commentKeyList);
-                header.addAll(commentKeyList);
+                });
+                header.addAll(commentKeySet);
 
                 xlList.add(header);
 
@@ -206,8 +195,27 @@ public class ProgressController {
                     tmpList.add(list.get(i).getRelation());
                     tmpList.add(list.get(i).getEvaluator().getEmail());
                     tmpList.add(list.get(i).getFinish());
-                    for (String key : answerKeyList) {
-                        tmpList.add("" + list.get(i).getAnswers().get(key));
+                    //입력시간은 N가 아닌 것들만 입력 해준다!
+                    if (list.get(i).getFinish().equals("N")) {
+                        tmpList.add("-");
+                    } else {
+                        tmpList.add("" + list.get(i).getUpdateDate());
+                    }
+                    //answer를 위에서 만든 key로 for문 돌린다.
+                    for (String key : answerKeySet) {
+                        if (list.get(i).getAnswers().get(key) == null) {
+                            tmpList.add("");
+                        } else {
+                            tmpList.add("" + list.get(i).getAnswers().get(key));
+                        }
+                    }
+                    //comment를 위에서 만든 key로 for문 돌린다.
+                    for (String key : commentKeySet) {
+                        if (list.get(i).getComments().get(key) == null) {
+                            tmpList.add("");
+                        } else {
+                            tmpList.add("" + list.get(i).getComments().get(key));
+                        }
                     }
                     xlList.add(tmpList);
                 }
@@ -223,18 +231,19 @@ public class ProgressController {
             });
         });
     }
-
-    public void questionSort(List<String> list) {
-        Collections.sort(list, new Comparator<String>() {
-            @Override
-            public int compare(String s1, String s2) {
-                if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
-                    return -1;
-                } else if (Integer.parseInt(s1.substring(1)) > Integer.parseInt(s2.substring(1))) {
-                    return 1;
-                }
-                return 0;
-            }
-        });
-    }
+    
+    //커스텀 sort를 위한
+    // public void questionSort(List<String> list) {
+    //     Collections.sort(list, new Comparator<String>() {
+    //         @Override
+    //         public int compare(String s1, String s2) {
+    //             if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
+    //                 return -1;
+    //             } else if (Integer.parseInt(s1.substring(1)) > Integer.parseInt(s2.substring(1))) {
+    //                 return 1;
+    //             }
+    //             return 0;
+    //         }
+    //     });
+    // }
 }
