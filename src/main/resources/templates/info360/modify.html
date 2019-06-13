@@ -23,18 +23,18 @@
 					<input type="hidden" name="tno" th:value="${tno}" />
 					<div class="form-group">
 						<label>Survey Title</label>
-						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${info360.title}">
+						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${info360?.title}">
 					</div>
 					<div class="form-group">
 						<label>Content</label>
-						<textarea id="content" name="content" class="form-control" rows="5" th:text="${info360.content}"></textarea>
+						<textarea id="content" name="content" class="form-control" rows="5" th:text="${info360?.content}"></textarea>
 					</div>
 
 					<div class="form-group">
 						<label>Reply Type</label> <select class="form-control" name="replyCode">
 							<option>--</option>
 							<span th:each="book:${bookReply}">
-								<option th:selected="${book.bno}==${info360.replyCode}" th:value="${book.bno}">[[${book.title}]]</option>
+								<option th:selected="${book?.bno}==${info360?.replyCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
 							</span>
 						</select>
 					</div>
@@ -42,11 +42,11 @@
 					<!-- date time picker -->
 					<div class="form-group">
 						<label for="">시작일</label>
-						<input class="form-control" type="datetime-local" th:value="${info360.startDate}" name="startDate">
+						<input class="form-control" type="datetime-local" th:value="${info360?.startDate}" name="startDate">
 					</div>
 					<div class="form-group">
 						<label for="">종료일</label>
-						<input class="form-control" type="datetime-local" th:value="${info360.endDate}" name="endDate">
+						<input class="form-control" type="datetime-local" th:value="${info360?.endDate}" name="endDate">
 					</div>
 					<!--./ date time picker -->
 
@@ -54,10 +54,10 @@
 						<label>Status</label>
 						<select class="form-control" name="status">
 							<option>--</option>
-							<option value="setting" th:selected="${info360.status}=='setting'">설정 중</option>
-							<option value="survey" th:selected="${info360.status}=='survey'">평가 진행</option>
-							<option value="count" th:selected="${info360.status}=='count'">평가 집계</option>
-							<option value="inactivation" th:selected="${info360.status}=='inactivation'">비활성화</option>
+							<option value="setting" th:selected="${info360?.status}=='setting'">설정 중</option>
+							<option value="survey" th:selected="${info360?.status}=='survey'">평가 진행</option>
+							<option value="count" th:selected="${info360?.status}=='count'">평가 집계</option>
+							<option value="inactivation" th:selected="${info360?.status}=='inactivation'">비활성화</option>
 						</select>
 					</div>
 

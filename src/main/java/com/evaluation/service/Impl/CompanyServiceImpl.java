@@ -64,8 +64,12 @@ public class CompanyServiceImpl implements CompanyService {
 	public void remove(long cno) {
 		log.info("compny+turn delete " + cno);
 
-		turnRepo.deleteByCno(cno);
 		companyRepo.deleteById(cno);
+		turnRepo.getTurnsOfCompany(cno).ifPresent(turnList -> {
+			turnList.forEach(turn -> {
+				turnRepo.deleteById(turn.getTno());
+			});
+		});
 	}
 
 	@Override

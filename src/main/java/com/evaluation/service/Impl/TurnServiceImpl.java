@@ -28,18 +28,6 @@ public class TurnServiceImpl implements TurnService {
 	public void register(Turn turn) {
 		log.info("service : turn register " + turn);
 
-		if (turn.getTypes().contains("360")) {
-			InfoSurvey info360 = new InfoSurvey();
-			info360.setTitle("-");
-			turn.setInfo360(info360);
-		}
-
-		if (turn.getTypes().contains("MBO")) {
-			InfoSurvey infoMbo = new InfoSurvey();
-			infoMbo.setTitle("-");
-			turn.setInfoMbo(infoMbo);
-		}
-
 		turnRepo.save(turn);
 	}
 
@@ -56,27 +44,6 @@ public class TurnServiceImpl implements TurnService {
 		turnRepo.findById(turn.getTno()).ifPresent(origin -> {
 			origin.setTitle(turn.getTitle());
 			origin.setTypes(turn.getTypes());
-
-			// 기본 정보에 기본값 세팅하기 위한 분기 if문
-			if (!turn.getTypes().contains("360")) {
-				origin.setInfo360(null);
-			}
-
-			if (!turn.getTypes().contains("MBO")) {
-				origin.setInfoMbo(null);
-			}
-
-			if (turn.getTypes().contains("360") && (turn.getInfo360() == null)) {
-				InfoSurvey info360 = new InfoSurvey();
-				info360.setTitle("-");
-				origin.setInfo360(info360);
-			}
-
-			if (turn.getTypes().contains("MBO") && (turn.getInfoMbo() == null)) {
-				InfoSurvey infoMbo = new InfoSurvey();
-				infoMbo.setTitle("-");
-				origin.setInfoMbo(infoMbo);
-			}
 
 			turnRepo.save(origin);
 		});
