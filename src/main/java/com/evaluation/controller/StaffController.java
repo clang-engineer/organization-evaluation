@@ -123,6 +123,9 @@ public class StaffController {
 	public String modify(Staff staff, long tno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff modify post by " + staff.getName());
 
+		long cno = turnService.get(tno).get().getCno();
+		staff.setCno(cno);
+
 		staffService.modify(staff);
 
 		rttr.addFlashAttribute("msg", "modify");

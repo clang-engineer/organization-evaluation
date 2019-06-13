@@ -50,6 +50,7 @@ public class StaffServiceImpl implements StaffService {
 		log.info("service : staff modify " + staff);
 
 		staffRepo.findById(staff.getSno()).ifPresent(origin -> {
+			origin.setCno(staff.getCno());
 			origin.setEmail(staff.getEmail());
 			origin.setName(staff.getName());
 			origin.setPassword(staff.getPassword());
