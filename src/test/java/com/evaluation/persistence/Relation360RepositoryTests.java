@@ -150,12 +150,21 @@ public class Relation360RepositoryTests {
     @Test
     public void findAllDistinctByTno() {
         // relation360Repo.findAllDintinctbyTno(1L).ifPresent(list -> {
-        //     list.forEach(staff -> {
-        //         log.info("" + staff.getName());
-        //     });
+        // list.forEach(staff -> {
+        // log.info("" + staff.getName());
+        // });
         // });
         relation360Repo.findDintinctEavluatedbyTno(1L).forEach(staff -> {
             log.info("" + staff.getName());
+        });
+    }
+
+    @Test
+    public void name() {
+        relation360Repo.progressOfSurevey(1L).ifPresent(list -> {
+            list.forEach(origin -> {
+                log.info("" + origin);
+            });
         });
     }
 }

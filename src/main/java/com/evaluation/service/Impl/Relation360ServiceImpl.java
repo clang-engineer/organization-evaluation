@@ -106,7 +106,13 @@ public class Relation360ServiceImpl implements Relation360Service {
         return relation360Repo.findAllbyTno(tno);
     }
 
+    @Override
     public List<Staff> findDintinctEavluatedbyTno(long tno) {
         return relation360Repo.findDintinctEavluatedbyTno(tno);
     }
+
+    @Override
+    public Optional<List<List<String>>> progressOfSurevey(long tno) {
+        return relation360Repo.progressOfSurevey(tno);
+    };
 }
