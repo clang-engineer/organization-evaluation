@@ -55,7 +55,7 @@ public interface Relation360Repository
     public List<Staff> findDintinctEavluatedbyTno(@Param("tno") Long tno);
 
     // 평가현황을 위한 쿼리 count if 부분이 해결이 안돼서 native쿼리를 사용함.
-    @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, count(if(finish='Y',rno,null))/count(*) as ratio FROM tbl_relation360 as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
+    @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*))*100 as ratio FROM tbl_relation360 as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
     public Optional<List<List<String>>> progressOfSurevey(@Param("tno") long tno);
 
     public default Predicate makePredicate(String type, String keyword, Long tno) {

@@ -78,7 +78,8 @@
                 </button>
             </div>
             <div>
-                <span class="badge badge-pill badge-warning">'[[${relation.evaluated.name}]]'님에 대한 평가!</span>
+                <span th:if="${relation.relation}!='me'" class="badge badge-pill badge-warning">'[[${relation.evaluated.name}]]'님에 대한 평가</span>
+                <span th:if="${relation.relation}=='me'" class="badge badge-pill badge-warning">'[[${relation.evaluated.name}]]'님 본인 평가</span>
             </div>
         </div>
         <!-- button -->

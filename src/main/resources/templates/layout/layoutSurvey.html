@@ -60,7 +60,7 @@
 
             #bottomGroup {
                 bottom: 7%;
-                right: 5%;
+                right: 8%;
             }
         }
 
@@ -72,7 +72,7 @@
 
             #bottomGroup {
                 bottom: 7%;
-                right: 5%;
+                right: 8%;
             }
         }
 
@@ -213,7 +213,7 @@
     <script>
         $("#logOut").click(function (e) {
             e.preventDefault();
-            alert("success");
+            alert("[[${session?.evaluator?.name}]]님의 계정에서 성공적으로 로그아웃 했습니다.");
             $("form").submit();
         })
     </script>

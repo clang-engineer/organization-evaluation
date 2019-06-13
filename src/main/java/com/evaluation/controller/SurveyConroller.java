@@ -201,18 +201,19 @@ public class SurveyConroller {
             model.addAttribute("companyInfo", origin);
         });
 
+        // 회차에 속하는 comment list를 추가하기 위한.
+        turnService.get(tno).ifPresent(turn -> {
+            model.addAttribute("commentList", turn.getComments());
+            // 회답지 추가
+            bookService.read(turn.getInfo360().getReplyCode()).ifPresent(book -> {
+                model.addAttribute("book", book.getContents());
+            });
+        });
+
         // 관계 정보가 존재하는 경우에 작동
         relation360Service.read(rno).ifPresent(relation -> {
-            // 평가자 이름 + 본인 평가일 대 주관식 지우기 위함.
+            // 관계에 대한 정보 추가
             model.addAttribute("relation", relation);
-
-            // 회차에 속하는 comment list를 추가하기 위한.
-            turnService.get(relation.getTno()).ifPresent(turn -> {
-                model.addAttribute("commentList", turn.getComments());
-                bookService.read(turn.getInfo360().getReplyCode()).ifPresent(book -> {
-                    model.addAttribute("book", book.getContents());
-                });
-            });
 
             // 개인의 division 정보와 일치하는 객관식 list를 추가하기 위한
             Staff evaluated = new Staff();
@@ -235,19 +236,19 @@ public class SurveyConroller {
     public String submit(long rno, String finish, @RequestParam Map<String, String> answer, RedirectAttributes rttr) {
         log.info("" + answer + rno + finish);
 
-        relation360Service.read(rno).ifPresent(origin -> {
-            Set<Map.Entry<String, String>> entries = answer.entrySet();
-            Map<String, Integer> tmpAnswers = new HashMap<String, Integer>();
-            Map<String, String> tmpComments = new HashMap<String, String>();
-            // 전체 맵에서 객관식과 주관식 나누기
-            for (Map.Entry<String, String> entry : entries) {
-                if (entry.getKey().substring(0, 1).equals("q")) {
-                    tmpAnswers.put(entry.getKey(), Integer.parseInt(entry.getValue()));
-                } else if (entry.getKey().substring(0, 1).equals("c")) {
-                    tmpComments.put(entry.getKey(), entry.getValue());
-                }
+        // 전체 맵에서 객관식과 주관식 나누기
+        Set<Map.Entry<String, String>> entries = answer.entrySet();
+        Map<String, Integer> tmpAnswers = new HashMap<String, Integer>();
+        Map<String, String> tmpComments = new HashMap<String, String>();
+        for (Map.Entry<String, String> entry : entries) {
+            if (entry.getKey().substring(0, 1).equals("q")) {
+                tmpAnswers.put(entry.getKey(), Integer.parseInt(entry.getValue()));
+            } else if (entry.getKey().substring(0, 1).equals("c")) {
+                tmpComments.put(entry.getKey(), entry.getValue());
             }
+        }
 
+        relation360Service.read(rno).ifPresent(origin -> {
             // relation객체를 만든 후 수정 함수로 보내기
             origin.setAnswers(tmpAnswers);
             origin.setComments(tmpComments);
