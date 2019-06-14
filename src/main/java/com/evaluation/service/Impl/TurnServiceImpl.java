@@ -4,7 +4,6 @@ import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.InfoSurvey;
 import com.evaluation.domain.Turn;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.TurnService;

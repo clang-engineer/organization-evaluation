@@ -4,8 +4,7 @@ import java.io.UnsupportedEncodingException;
 import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Collections;
-import java.util.Comparator;
+import java.util.Arrays;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
@@ -28,12 +27,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/progress/**")
 @AllArgsConstructor
-@Slf4j
 public class ProgressController {
 
     Relation360Service relation360Service;
@@ -101,6 +98,8 @@ public class ProgressController {
 
                 xlList.add(header);
 
+                int completeCount = 0;
+                int totalCount = 0;
                 for (int i = 0; i < list.size(); i++) {
                     List<String> tmpList = new ArrayList<String>();
                     tmpList.add(list.get(i).get(0));
@@ -112,7 +111,20 @@ public class ProgressController {
                     tmpList.add(list.get(i).get(6));
                     tmpList.add(list.get(i).get(7));
                     xlList.add(tmpList);
+
+                    completeCount += Integer.parseInt(list.get(i).get(5));
+                    totalCount += Integer.parseInt(list.get(i).get(6));
                 }
+
+                // 엑셀 바닥글 설정
+                List<String> footer = new ArrayList<String>();
+                String[] space = { "-", "-", "-", "-" };
+                footer.addAll(Arrays.asList(space));
+                footer.add("Total");
+                footer.add(Integer.toString(completeCount));
+                footer.add(Integer.toString(totalCount));
+                footer.add(Integer.toString((completeCount / totalCount) * 100));
+                xlList.add(footer);
 
                 try {
                     XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
@@ -195,13 +207,13 @@ public class ProgressController {
                     tmpList.add(list.get(i).getRelation());
                     tmpList.add(list.get(i).getEvaluator().getEmail());
                     tmpList.add(list.get(i).getFinish());
-                    //입력시간은 N가 아닌 것들만 입력 해준다!
+                    // 입력시간은 N가 아닌 것들만 입력 해준다!
                     if (list.get(i).getFinish().equals("N")) {
                         tmpList.add("-");
                     } else {
                         tmpList.add("" + list.get(i).getUpdateDate());
                     }
-                    //answer를 위에서 만든 key로 for문 돌린다.
+                    // answer를 위에서 만든 key로 for문 돌린다.
                     for (String key : answerKeySet) {
                         if (list.get(i).getAnswers().get(key) == null) {
                             tmpList.add("");
@@ -209,7 +221,7 @@ public class ProgressController {
                             tmpList.add("" + list.get(i).getAnswers().get(key));
                         }
                     }
-                    //comment를 위에서 만든 key로 for문 돌린다.
+                    // comment를 위에서 만든 key로 for문 돌린다.
                     for (String key : commentKeySet) {
                         if (list.get(i).getComments().get(key) == null) {
                             tmpList.add("");
@@ -231,19 +243,20 @@ public class ProgressController {
             });
         });
     }
-    
-    //커스텀 sort를 위한
+
+    // 커스텀 sort를 위한
     // public void questionSort(List<String> list) {
-    //     Collections.sort(list, new Comparator<String>() {
-    //         @Override
-    //         public int compare(String s1, String s2) {
-    //             if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
-    //                 return -1;
-    //             } else if (Integer.parseInt(s1.substring(1)) > Integer.parseInt(s2.substring(1))) {
-    //                 return 1;
-    //             }
-    //             return 0;
-    //         }
-    //     });
+    // Collections.sort(list, new Comparator<String>() {
+    // @Override
+    // public int compare(String s1, String s2) {
+    // if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
+    // return -1;
+    // } else if (Integer.parseInt(s1.substring(1)) >
+    // Integer.parseInt(s2.substring(1))) {
+    // return 1;
+    // }
+    // return 0;
+    // }
+    // });
     // }
 }

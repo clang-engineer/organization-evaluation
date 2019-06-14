@@ -46,7 +46,7 @@ public interface Relation360Repository
     public Optional<List<Relation360>> findByEvaulaordSno(long sno, long tno);
 
     // xl 다운로드를 위한 turn에 속하는 전체 관계
-    @Query("SELECT r FROM Relation360 r WHERE r.tno=:tno")
+    @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno")
     public Optional<List<Relation360>> findAllbyTno(@Param("tno") Long tno);
 
     // xl 다운로드를 위한 turn에 속하는 중복제거 피평가자, Optional로는 변환 오류 발생. Distinct는 안되는 듯.? 위에
