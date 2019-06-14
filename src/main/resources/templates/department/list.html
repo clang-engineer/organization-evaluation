@@ -3,7 +3,6 @@
 
 <div layout:fragment="content">
 	<div class="container-fluid">
-
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
@@ -50,6 +49,7 @@
 								<th>Name</th>
 								<th>Department1</th>
 								<th>Department2</th>
+								<th>Team Leader</th>
 								<th>Detail</th>
 							</tr>
 						</thead>
@@ -58,6 +58,7 @@
 								<th>Name</th>
 								<th>Department1</th>
 								<th>Department2</th>
+								<th>Team Leader</th>
 								<th>Detail</th>
 							</tr>
 						</tfoot>
@@ -66,9 +67,17 @@
 								<td>[[${idxpageNum-1}*10+${status.count}]]</td>
 								<td>[[${department.department1}]]</td>
 								<td>[[${department.department2}]]</td>
+								<td><a th:href="${department.dno}" class="leader">
+										<span th:each="leader:${leaderList}" th:if="${leader.sno}==${department?.leader?.sno}">
+											[[${leader?.name}]] - [[${leader?.level}]] : [[${department?.leader?.title}]]
+										</span>
+										<button type="button" class="btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>	
+									</a>
+								</td>
 								<td><a th:href="${department.dno}" class="detail">
 										<button type="button" class="btn btn-default"><i class="fas fa-pen"></i></button>
-									</a></td>
+									</a>
+								</td>
 							</tr>
 						</tbody>
 					</table>
@@ -253,6 +262,16 @@
 					return false;
 				}
 			}
+
+			//leader 버튼 클릭시
+			$(".leader").on("click", function (e) {
+				e.preventDefault();
+
+				var dno = $(this).attr("href");
+				formObj.attr("action", "./leader").attr("method", "get");
+				formObj.append("<input type='hidden' name='dno' value='" + dno + "'/>");
+				formObj.submit();
+			});
 
 		});
 	</script>
