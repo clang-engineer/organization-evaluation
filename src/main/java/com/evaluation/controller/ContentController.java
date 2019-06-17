@@ -3,6 +3,7 @@ package com.evaluation.controller;
 import java.util.List;
 
 import com.evaluation.domain.Book;
+import com.evaluation.domain.Content;
 import com.evaluation.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -28,11 +29,11 @@ public class ContentController {
     private BookService bookService;
 
     @PostMapping("/{bno}")
-    public ResponseEntity<List<String>> addContent(@PathVariable("bno") int bno, @RequestBody String content) {
+    public ResponseEntity<List<Content>> addContent(@PathVariable("bno") int bno, @RequestBody Content content) {
         log.info("add Content");
 
         Book book = bookService.read(bno).get();
-        List<String> contents = book.getContents();
+        List<Content> contents = book.getContents();
         contents.add(content);
         book.setContents(contents);
 
@@ -42,18 +43,18 @@ public class ContentController {
     }
 
     @GetMapping("/{bno}/{idx}")
-    public ResponseEntity<String> read(@PathVariable("bno") int bno, @PathVariable("idx") int idx) {
-        String content = bookService.read(bno).get().getContents().get(idx);
+    public ResponseEntity<Content> read(@PathVariable("bno") int bno, @PathVariable("idx") int idx) {
+        Content content = bookService.read(bno).get().getContents().get(idx);
         return new ResponseEntity<>(content, HttpStatus.OK);
     }
 
     @PutMapping("/{bno}/{idx}")
-    public ResponseEntity<List<String>> modify(@PathVariable("bno") int bno, @PathVariable("idx") int idx,
-            @RequestBody String content) {
+    public ResponseEntity<List<Content>> modify(@PathVariable("bno") int bno, @PathVariable("idx") int idx,
+            @RequestBody Content content) {
         log.info("modify Content");
 
         Book book = bookService.read(bno).get();
-        List<String> contents = book.getContents();
+        List<Content> contents = book.getContents();
         contents.set(idx, content);
         book.setContents(contents);
 
@@ -63,11 +64,11 @@ public class ContentController {
     }
 
     @DeleteMapping("/{bno}/{idx}")
-    public ResponseEntity<List<String>> delete(@PathVariable("bno") int bno, @PathVariable("idx") int idx) {
+    public ResponseEntity<List<Content>> delete(@PathVariable("bno") int bno, @PathVariable("idx") int idx) {
         log.info("delete Content");
 
         Book book = bookService.read(bno).get();
-        List<String> contents = book.getContents();
+        List<Content> contents = book.getContents();
         contents.remove(idx);
         book.setContents(contents);
 
@@ -77,12 +78,12 @@ public class ContentController {
     }
 
     @GetMapping("/{bno}")
-    public ResponseEntity<List<String>> getContents(@PathVariable("bno") int bno) {
+    public ResponseEntity<List<Content>> getContents(@PathVariable("bno") int bno) {
         log.info("get contents");
         return new ResponseEntity<>(getContentsByBook(bno), HttpStatus.OK);
     }
 
-    private List<String> getContentsByBook(int bno) {
+    private List<Content> getContentsByBook(int bno) {
         return bookService.read(bno).get().getContents();
     }
 

@@ -4,7 +4,7 @@ var contentService = (function () {
         $.ajax({
             type: 'post',
             url: '/contents/' + param.bno,
-            data: param.content,
+            data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
@@ -40,8 +40,8 @@ var contentService = (function () {
         $.ajax({
             type: 'put',
             url: '/contents/' + param.bno + "/" + param.idx,
-            // data: JSON.stringify(param.content),
-            data: param.content,
+            data: JSON.stringify(param),
+            // data: param.content,
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)

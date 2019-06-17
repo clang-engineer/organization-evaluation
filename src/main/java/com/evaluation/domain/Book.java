@@ -38,8 +38,7 @@ public class Book {
 	@ElementCollection
 	@CollectionTable(name = "tbl_book_contents", joinColumns = @JoinColumn(name = "book_bno"))
 	@OrderColumn(name = "content_idx")
-	@Column(name = "content")
-	private List<String> contents;
+	private List<Content> contents;
 
 	private String writeId;
 	private String updateId;
