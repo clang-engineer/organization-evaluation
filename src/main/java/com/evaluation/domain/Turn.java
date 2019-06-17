@@ -79,8 +79,15 @@ public class Turn {
 	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoMbo")),
 			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoMbo", length = 2000)),
 			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "weightCode", column = @Column(table = "tbl_turn_infoMbo")),
 			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_infoMbo")),
 			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_infoMbo")),
-			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_infoMbo")) })
-	private InfoSurvey infoMbo;
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step1Start", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step1End", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step2Start", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step2End", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step3Start", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step3End", column = @Column(table = "tbl_turn_infoMbo")) })
+	private InfoMbo infoMbo;
 }
