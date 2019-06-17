@@ -12,7 +12,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class InfoMbo {
+public class InfoMBO {
 
 	private String title;
 	private String content;

@@ -1,8 +1,8 @@
 package com.evaluation.controller;
 
-import com.evaluation.domain.InfoMbo;
+import com.evaluation.domain.InfoMBO;
 import com.evaluation.service.BookService;
-import com.evaluation.service.InfoMboService;
+import com.evaluation.service.InfoMBOService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
@@ -16,46 +16,46 @@ import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/infoMbo/*")
+@RequestMapping("/infoMBO/*")
 @Slf4j
-public class InfoMboController {
+public class InfoMBOController {
 
 	@Setter(onMethod_ = { @Autowired })
-	private InfoMboService infoMboService;
+	private InfoMBOService infoMBOService;
 
 	@Setter(onMethod_ = { @Autowired })
 	private BookService bookService;
 
 	@GetMapping("/read")
 	public void view(long tno, Model model) {
-		log.info("infoMbo read get " + tno);
+		log.info("infoMBO read get " + tno);
 
 		model.addAttribute("tno", tno);
-		bookService.listFindByType("MboReply").ifPresent(origin -> {
+		bookService.listFindByType("MBOReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
-		model.addAttribute("infoMbo", infoMboService.read(tno));
+		model.addAttribute("infoMBO", infoMBOService.read(tno));
 	}
 
 	@GetMapping("/modify")
 	public void modify(long tno, Model model) {
-		log.info("infoMbo modify get" + tno);
+		log.info("infoMBO modify get" + tno);
 
 		model.addAttribute("tno", tno);
-		bookService.listFindByType("MboReply").ifPresent(origin -> {
+		bookService.listFindByType("MBOReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
-		model.addAttribute("infoMbo", infoMboService.read(tno));
+		model.addAttribute("infoMBO", infoMBOService.read(tno));
 	}
 
 	@PostMapping("/modify")
-	public String modify(long tno, InfoMbo infoMbo, RedirectAttributes rttr) {
-		log.info("controller : infoMbo modify post " + infoMbo);
+	public String modify(long tno, InfoMBO infoMBO, RedirectAttributes rttr) {
+		log.info("controller : infoMBO modify post " + infoMBO);
 
-		log.info("" + infoMbo.getStartDate());
-		infoMboService.modify(tno, infoMbo);
+		log.info("" + infoMBO.getStartDate());
+		infoMBOService.modify(tno, infoMBO);
 
 		rttr.addAttribute("tno", tno);
-		return "redirect:/infoMbo/read";
+		return "redirect:/infoMBO/read";
 	}
 }

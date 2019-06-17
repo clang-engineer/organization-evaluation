@@ -23,18 +23,18 @@
 					<input type="hidden" name="tno" th:value="${tno}" />
 					<div class="form-group">
 						<label>MBO Title</label>
-						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoMbo?.title}">
+						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoMBO?.title}">
 					</div>
 					<div class="form-group">
 						<label>Content</label>
-						<textarea id="content" name="content" class="form-control" rows="5" th:text="${infoMbo?.content}"></textarea>
+						<textarea id="content" name="content" class="form-control" rows="5" th:text="${infoMBO?.content}"></textarea>
 					</div>
 
 					<div class="form-group">
 						<label>Reply Type</label> <select class="form-control" name="replyCode">
 							<option value="">--</option>
 							<span th:each="book:${bookReply}">
-								<option th:selected="${book?.bno}==${infoMbo?.replyCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
+								<option th:selected="${book?.bno}==${infoMBO?.replyCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
 							</span>
 						</select>
 					</div>
@@ -43,7 +43,7 @@
 						<label>Weight Type</label> <select class="form-control" name="weightCode">
 							<option value="">--</option>
 							<span th:each="book:${bookReply}">
-								<option th:selected="${book?.bno}==${infoMbo?.weightCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
+								<option th:selected="${book?.bno}==${infoMBO?.weightCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
 							</span>
 						</select>
 					</div>
@@ -52,10 +52,10 @@
 						<label>Status</label>
 						<select class="form-control" name="status">
 							<option value="">--</option>
-							<option value="setting" th:selected="${infoMbo?.status}=='setting'">설정 중</option>
-							<option value="survey" th:selected="${infoMbo?.status}=='survey'">평가 진행</option>
-							<option value="count" th:selected="${infoMbo?.status}=='count'">평가 집계</option>
-							<option value="inactivation" th:selected="${infoMbo?.status}=='inactivation'">비활성화</option>
+							<option value="setting" th:selected="${infoMBO?.status}=='setting'">설정 중</option>
+							<option value="survey" th:selected="${infoMBO?.status}=='survey'">평가 진행</option>
+							<option value="count" th:selected="${infoMBO?.status}=='count'">평가 집계</option>
+							<option value="inactivation" th:selected="${infoMBO?.status}=='inactivation'">비활성화</option>
 						</select>
 					</div>
 					<!-- period table -->
@@ -72,23 +72,23 @@
 							<tbody>
 								<tr>
 									<th scope="row">운영 기간</th>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.startDate}" name="startDate"></td>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.endDate}" name="endDate"> </td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.startDate}" name="startDate"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.endDate}" name="endDate"> </td>
 								</tr>
 								<tr>
 									<th scope="row">Plan(목표설정기간)</th>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step1Start}" name="step1Start"></td>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step1End}" name="step1End"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.step1Start}" name="step1Start"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.step1End}" name="step1End"></td>
 								</tr>
 								<tr>
 									<th scope="row">Do(중간운영기간)</th>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step2Start}" name="step2Start"></td>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step2End}" name="step2End"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.step2Start}" name="step2Start"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.step2End}" name="step2End"></td>
 								</tr>
 								<tr>
 									<th scope="row">See(평가기간)</th>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step3Start}" name="step3Start"></td>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step3End}" name="step3End"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.step3Start}" name="step3Start"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${infoMBO?.step3End}" name="step3End"></td>
 								</tr>
 							</tbody>
 						</table>
