@@ -23,10 +23,13 @@ import com.evaluation.vo.PageVO;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -123,6 +126,25 @@ public class Relation360Controller {
         model.addAttribute("relation1", relation1);
         model.addAttribute("relation2", relation2);
         model.addAttribute("relation3", relation3);
+    }
+
+    @GetMapping("/evaluated/{tno}")
+    @ResponseBody
+    public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
+        log.info("get All Staff List Exclude Evaluated....");
+
+        long cno = turnService.get(tno).get().getCno();
+        return new ResponseEntity<>(staffService.get360EvaluatedList(cno, tno), HttpStatus.OK);
+    }
+
+    @GetMapping("/evaluator/{tno}/{sno}")
+    @ResponseBody
+    public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluator(@PathVariable("tno") long tno,
+            @PathVariable("sno") long sno) {
+        log.info("get All Staff List....");
+
+        long cno = turnService.get(tno).get().getCno();
+        return new ResponseEntity<>(staffService.get360EvaluatorList(cno, tno, sno), HttpStatus.OK);
     }
 
     @PostMapping("/removeRow")
@@ -307,19 +329,20 @@ public class Relation360Controller {
                 List<String> relation2 = new ArrayList<String>();
                 List<String> relation3 = new ArrayList<String>();
                 relation360Service.findAllbyTno(tno).get().forEach(relation -> {
+                    String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName).orElse("null");
                     if (evaluated.getSno() == relation.getEvaluated().getSno()) {
                         switch (relation.getRelation()) {
                         case "me":
-                            relationMe.add(relation.getEvaluator().getName());
+                            relationMe.add(evaluator);
                             break;
                         case "1":
-                            relation1.add(relation.getEvaluator().getName());
+                            relation1.add(evaluator);
                             break;
                         case "2":
-                            relation2.add(relation.getEvaluator().getName());
+                            relation2.add(evaluator);
                             break;
                         case "3":
-                            relation3.add(relation.getEvaluator().getName());
+                            relation3.add(evaluator);
                             break;
                         }
                     }

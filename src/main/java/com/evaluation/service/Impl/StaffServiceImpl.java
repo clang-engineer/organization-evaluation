@@ -82,18 +82,34 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Optional<List<Staff>> getEvaluatedList(long cno, long tno) {
+	public Optional<List<Staff>> get360EvaluatedList(long cno, long tno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.getStaffForEvaluated(cno, tno);
+		Optional<List<Staff>> result = staffRepo.get360Evaluated(cno, tno);
 		return result;
 	}
 
 	@Override
-	public Optional<List<Staff>> getEvaluatorList(long cno, long tno, long sno) {
+	public Optional<List<Staff>> get360EvaluatorList(long cno, long tno, long sno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.getStaffForEvaluator(cno, tno, sno);
+		Optional<List<Staff>> result = staffRepo.get360Evaluator(cno, tno, sno);
+		return result;
+	}
+
+	@Override
+	public Optional<List<Staff>> getMBOEvaluatedList(long cno, long tno) {
+		log.info("get EvaluatedList list by " + cno);
+
+		Optional<List<Staff>> result = staffRepo.getMBOEvaluated(cno, tno);
+		return result;
+	}
+
+	@Override
+	public Optional<List<Staff>> getMBOEvaluatorList(long cno, long tno, long sno) {
+		log.info("get EvaluatedList list by " + cno);
+
+		Optional<List<Staff>> result = staffRepo.getMBOEvaluator(cno, tno, sno);
 		return result;
 	}
 

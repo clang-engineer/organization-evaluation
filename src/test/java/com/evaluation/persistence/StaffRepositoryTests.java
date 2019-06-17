@@ -82,7 +82,7 @@ public class StaffRepositoryTests {
 
 	@Test
 	public void testGetAllStaffListExcludeEvaluated() {
-		Optional<List<Staff>> result = staffRepo.getStaffForEvaluated(10, 9);
+		Optional<List<Staff>> result = staffRepo.get360Evaluated(10, 9);
 		result.ifPresent(staff -> {
 			log.info("===>" + staff);
 		});
@@ -91,7 +91,7 @@ public class StaffRepositoryTests {
 
 	@Test
 	public void testGetAllStaffListExcludeEvaluator() {
-		Optional<List<Staff>> result = staffRepo.getStaffForEvaluator(8, 8, 70);
+		Optional<List<Staff>> result = staffRepo.get360Evaluator(8, 8, 70);
 		result.ifPresent(staff -> {
 			log.info("===>" + staff);
 		});

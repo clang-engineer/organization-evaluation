@@ -3,7 +3,7 @@ console.log("Relation Staff Module...")
 var relationService = (function () {
 
     function getEvaluatedList(tno, callback, error) {
-        $.getJSON("/staff/relation360/evaluated/" + tno, function (data) {
+        $.getJSON("/relation360/evaluated/" + tno, function (data) {
             if (callback) {
                 callback(data);
             }
@@ -15,7 +15,7 @@ var relationService = (function () {
     };
 
     function getEvaluatorList(param, callback, error) {
-        $.getJSON("/staff/relation360/evaluator/" + param.tno + "/" + param.sno, function (data) {
+        $.getJSON("/relation360/evaluator/" + param.tno + "/" + param.sno, function (data) {
             if (callback) {
                 callback(data);
             }

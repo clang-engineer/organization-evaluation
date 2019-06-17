@@ -19,9 +19,13 @@ public interface StaffService {
 
 	public Page<Staff> getList(long cno, PageVO vo);
 
-	public Optional<List<Staff>> getEvaluatedList(long cno, long tno);
+	public Optional<List<Staff>> get360EvaluatedList(long cno, long tno);
 
-	public Optional<List<Staff>> getEvaluatorList(long cno, long tno, long sno);
+	public Optional<List<Staff>> get360EvaluatorList(long cno, long tno, long sno);
+
+	public Optional<List<Staff>> getMBOEvaluatedList(long cno, long tno);
+
+	public Optional<List<Staff>> getMBOEvaluatorList(long cno, long tno, long sno);
 
 	public void deleteByCno(long cno);
 

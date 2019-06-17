@@ -34,13 +34,10 @@ import com.evaluation.vo.PageVO;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
@@ -166,24 +163,6 @@ public class StaffController {
 		model.addAttribute("result", new PageMaker<>(result));
 	}
 
-	@GetMapping("/relation360/evaluated/{tno}")
-	@ResponseBody
-	public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
-		log.info("get All Staff List Exclude Evaluated....");
-
-		long cno = turnService.get(tno).get().getCno();
-		return new ResponseEntity<>(staffService.getEvaluatedList(cno, tno), HttpStatus.OK);
-	}
-
-	@GetMapping("/relation360/evaluator/{tno}/{sno}")
-	@ResponseBody
-	public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluator(@PathVariable("tno") long tno,
-			@PathVariable("sno") long sno) {
-		log.info("get All Staff List....");
-
-		long cno = turnService.get(tno).get().getCno();
-		return new ResponseEntity<>(staffService.getEvaluatorList(cno, tno, sno), HttpStatus.OK);
-	}
 
 	@PostMapping("/xlUpload")
 	@ResponseBody
