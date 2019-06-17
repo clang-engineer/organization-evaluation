@@ -145,7 +145,7 @@
                             <span th:text="${session?.evaluator?.name}"></span>
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
-                            <a class="dropdown-item" href="blog-home-2.html">Profile</a>
+                            <a class="dropdown-item" th:href="@{profile(company=${company},tno=${tno})}">Profile</a>
                             <div class="dropdown-divider"></div>
                             <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
                         </div>

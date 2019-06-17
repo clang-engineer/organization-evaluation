@@ -272,4 +272,15 @@ public class SurveyConroller {
 
         return "redirect:/survey/list";
     }
+
+    @GetMapping("/profile")
+    public void profile(String company, long tno, HttpServletRequest request, Model model) {
+
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
+    }
 }

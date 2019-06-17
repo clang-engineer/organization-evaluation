@@ -62,6 +62,20 @@ public class BookRepositoryTests {
 		book2.setType("360Reply");
 		bookRepo.save(book2);
 
+		Book book3 = new Book();
+		book3.setTitle("매우 우수하다 - 매우 부족하다");
+		List<Content> contents3 = new ArrayList<Content>();
+		contents3.clear();
+		contents3.add(new Content("매우 부족하다", 1));
+		contents3.add(new Content("부족하다", 2));
+		contents3.add(new Content("보통이다", 3));
+		contents3.add(new Content("우수", 4));
+		contents3.add(new Content("매우 우수하다", 5));
+
+		book3.setContents(contents3);
+		book3.setType("360Reply");
+		bookRepo.save(book3);
+
 	}
 
 	@Test
