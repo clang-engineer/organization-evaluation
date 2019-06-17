@@ -238,11 +238,11 @@ public class SurveyConroller {
 
         // 전체 맵에서 객관식과 주관식 나누기
         Set<Map.Entry<String, String>> entries = answer.entrySet();
-        Map<String, Integer> tmpAnswers = new HashMap<String, Integer>();
+        Map<String, Double> tmpAnswers = new HashMap<String, Double>();
         Map<String, String> tmpComments = new HashMap<String, String>();
         for (Map.Entry<String, String> entry : entries) {
             if (entry.getKey().substring(0, 1).equals("q")) {
-                tmpAnswers.put(entry.getKey(), Integer.parseInt(entry.getValue()));
+                tmpAnswers.put(entry.getKey(), Double.parseDouble(entry.getValue()));
             } else if (entry.getKey().substring(0, 1).equals("c")) {
                 tmpComments.put(entry.getKey(), entry.getValue());
             }

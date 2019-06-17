@@ -32,8 +32,8 @@
                         <div class="qparent">
                             <div th:each="book,idx:${book}" class="mr-5 question">
                                 <label>
-                                    <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${idx.count}" th:checked="${idx.count}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
-                                    [[${book}]]
+                                    <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${book.ratio}" th:checked="${idx.count}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
+                                    [[${book.name}]]
                                 </label>
                             </div>
                         </div>

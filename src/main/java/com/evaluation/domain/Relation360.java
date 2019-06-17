@@ -47,7 +47,7 @@ public class Relation360 {
     @MapKeyColumn(name = "answer_key")
     @Column(name = "answer_value")
     @OrderBy(clause = "answer_key asc")
-    private Map<String, Integer> answers;
+    private Map<String, Double> answers;
 
     @ElementCollection
     @CollectionTable(name = "tbl_relation360_comments", joinColumns = @JoinColumn(name = "relation_rno"))

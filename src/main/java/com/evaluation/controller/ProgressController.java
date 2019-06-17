@@ -209,14 +209,14 @@ public class ProgressController {
                     tmpList.add(list.get(i).getFinish());
                     // 입력시간은 N가 아닌 것들만 입력 해준다!
                     if (list.get(i).getFinish().equals("N")) {
-                        tmpList.add("-");
+                        tmpList.add(null);
                     } else {
                         tmpList.add("" + list.get(i).getUpdateDate());
                     }
                     // answer를 위에서 만든 key로 for문 돌린다.
                     for (String key : answerKeySet) {
                         if (list.get(i).getAnswers().get(key) == null) {
-                            tmpList.add("");
+                            tmpList.add(null);
                         } else {
                             tmpList.add("" + list.get(i).getAnswers().get(key));
                         }
@@ -224,7 +224,7 @@ public class ProgressController {
                     // comment를 위에서 만든 key로 for문 돌린다.
                     for (String key : commentKeySet) {
                         if (list.get(i).getComments().get(key) == null) {
-                            tmpList.add("");
+                            tmpList.add(null);
                         } else {
                             tmpList.add("" + list.get(i).getComments().get(key));
                         }

@@ -81,8 +81,8 @@ public class Relation360ServiceTests {
             Set<String> answerKey = new HashSet<String>();
             for (int i = 0; i < list.size(); i++) {
                 // answer를 위한
-                Set<Map.Entry<String, Integer>> entries = list.get(i).getAnswers().entrySet();
-                for (Map.Entry<String, Integer> entry : entries) {
+                Set<Map.Entry<String, Double>> entries = list.get(i).getAnswers().entrySet();
+                for (Map.Entry<String, Double> entry : entries) {
                     answerKey.add(entry.getKey());
                 }
 

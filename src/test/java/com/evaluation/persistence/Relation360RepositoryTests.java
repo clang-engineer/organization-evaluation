@@ -62,12 +62,12 @@ public class Relation360RepositoryTests {
                 } else if (i % 4 == 3) {
                     relation360.setRelation("3");
                 }
-                Map<String, Integer> answers = new HashMap<String, Integer>();
-                answers.put("q1", 1);
-                answers.put("q2", 2);
-                answers.put("q3", 3);
-                answers.put("q4", 4);
-                answers.put("q5", 5);
+                Map<String, Double> answers = new HashMap<String, Double>();
+                answers.put("q1", 1.0);
+                answers.put("q2", 2.0);
+                answers.put("q3", 3.0);
+                answers.put("q4", 4.0);
+                answers.put("q5", 5.0);
                 relation360.setAnswers(answers);
 
                 Map<String, String> comments = new HashMap<String, String>();

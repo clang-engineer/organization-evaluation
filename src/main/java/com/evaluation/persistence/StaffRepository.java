@@ -41,7 +41,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	public Optional<Staff> findByCnoAndName(long cno, String name);
 
 	// xl파일로 다운 위해
-	@Query("SELECT s FROM Staff s WHERE s.cno=:cno")
+	@Query("SELECT s FROM Staff s WHERE s.cno=:cno ORDER BY s.name ASC")
 	public Optional<List<Staff>> findByCno(@Param("cno") Long cno);
 
 	public default Predicate makePredicate(String type, String keyword, Long cno) {
