@@ -19,5 +19,7 @@ public interface TurnService {
 
 	public Optional<List<Turn>> getListInSurvey(Long cno);
 
+	public Optional<List<Turn>> getListInMBO(Long cno);
+
 	public void commentRegister(Turn turn);
 }

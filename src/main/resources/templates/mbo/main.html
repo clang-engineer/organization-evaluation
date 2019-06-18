@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<!-- div content -->
+<div layout:fragment="content">
+
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        <h2 class="mb-5">Survey Overall info
+            <small>Subheading</small>
+        </h2>
+
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="col-md-8">
+                <!-- Blog Post -->
+                <div class="card mb-4">
+                    <!-- card-body -->
+                    <div class="card-body mb-1">
+                        <h4 class="card-title">
+                            [[${turn?.infoMBO?.title}]]
+                        </h4>
+                        <p class="card-text">
+                            - [[${turn?.title}]]
+                        </p>
+                        <hr>
+                        <p class="card-text" th:utext="${turn?.infoMBO?.content}"></p>
+                        <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
+                    </div>
+                    <!-- ./card-body -->
+                    <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
+                    </div>
+                </div>
+                <!-- ./Blog Post -->
+            </div>  
+            <!-- Blog Entries Column -->    
+
+
+            <!-- Sidebar Widgets Column -->
+            <div class="col-md-4">
+
+                <!-- Search Widget -->
+                <div class="card mb-4" style="align-content: center">
+                    <h5 class="card-header">Survey Period</h5>
+                    <div class="card-body">
+                        <div>
+                            시작일 : <span th:text="${#temporals.format(turn?.infoMBO?.startDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                        </div>
+                        ~
+                        종료일 : <span th:text="${#temporals.format(turn?.infoMBO?.endDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                    </div>
+                </div>
+                <!--./ Search Widget -->
+
+
+                <!-- Categories Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header">Question</h5>
+                    <div class="card-body">
+                        <div class="row">
+                            <div class="col-lg-10">
+                                <ul class="list-unstyled mb-0">
+                                    <li th:each="question,index:${question}">
+                                        [[${question[0]}]] - [[${question[1]}]] ([[${question[2]}]]문항)
+                                    </li>
+                                </ul>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!--./ Categories Widget -->
+                
+                <!-- Side Widget -->
+                <div class="card my-4">
+                    <h5 class="card-header">Help</h5>
+                    <div class="card-body">
+                            <p class="card-text">
+                            <label for="">
+                                인사 정보 관련 문의 : 
+                            </label>
+                            <br>[[${companyInfo.hrManager}]] ([[${companyInfo.name}]])
+                            <br>Tel : [[${companyInfo.hrManagerTel}]] 
+                            </p>
+                            <p class="card-text m-0">
+                            <label for="">
+                                시스템 관련 문의 : 
+                            </label>
+                            <br>김영준
+                            </p>
+                            <button id="instructionBtn" class="btn btn-xs float-md-right" data-toggle="tooltip" data-placement="right" title="click!!"><i class="fas fa-book-reader mr-2"></i>Survey instrunction</button>
+                    </div>
+                </div>
+                <!-- ./Side Widget -->
+            </div>
+            <!--./ Sidebar Widgets Column -->
+        </div>
+        <!-- /.row -->
+
+    </div>
+    <!-- /.container -->
+
+    <div th:insert="~{common/modal::instruction}"></div>
+</div>
+<!-- ./div content -->
+
+
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function (e) {
+            $("#instructionBtn").click(function (e) {
+                console.log(1)
+                $("#instructionModal").modal("show");
+                $(".modal-content, .modal-dialog").css("height", "85%");
+                $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
+            });
+
+            //toolitip에 관한 설정
+            $('#instructionBtn,#surveyStart').tooltip('show');
+            //몇초 후에 사라짐
+            setTimeout(function () {
+                $('#instructionBtn,#surveyStart').tooltip('hide');
+            }, 2500);
+
+        });
+    </script>
+</th:block>
+
+</html>
