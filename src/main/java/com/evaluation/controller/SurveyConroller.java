@@ -14,6 +14,7 @@ import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
+import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 
 import org.springframework.stereotype.Controller;
@@ -44,6 +45,8 @@ public class SurveyConroller {
     QuestionService questionService;
 
     BookService bookService;
+
+    StaffService staffService;
 
     @GetMapping("/")
     public String survey(String company, Model model) {
@@ -274,7 +277,7 @@ public class SurveyConroller {
     }
 
     @GetMapping("/profile")
-    public void profile(String company, long tno, HttpServletRequest request, Model model) {
+    public void profile(String company, long tno, Model model) {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -282,5 +285,37 @@ public class SurveyConroller {
             model.addAttribute("companyInfo", origin);
         });
 
+    }
+
+    @GetMapping("/modify")
+    public void modify(String company, long tno, Model model) {
+
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
+    }
+
+    @PostMapping("/modify")
+    public String modify(Staff staff, String company, long tno, RedirectAttributes rttr, HttpServletRequest request) {
+        staffService.readByEmail(staff.getEmail()).ifPresent(origin -> {
+            long sno = origin.getSno();
+            log.info("===>" + sno);
+            staff.setSno(sno);
+            staffService.modify(staff);
+
+            HttpSession session = request.getSession();
+            session.setAttribute("evaluator", staff);
+        });
+
+        rttr.addAttribute("company", company);
+        rttr.addAttribute("tno", tno);
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            rttr.addFlashAttribute("companyInfo", origin);
+        });
+
+        return "redirect:/survey/profile";
     }
 }
