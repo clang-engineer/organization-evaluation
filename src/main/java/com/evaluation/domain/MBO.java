@@ -26,10 +26,11 @@ public class MBO {
     private long mno;
 
     private String title;
+    @Column(name = "content", length = 2000)
     private String content;
 
-    private String ratio;
-    private String finish;
+    private Double ratio;
+    private String finish = "N";
 
     private String writeId;
     private String updateId;
