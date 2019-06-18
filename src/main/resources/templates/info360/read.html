@@ -36,16 +36,6 @@
 						</select>
 					</div>
 
-					<!-- date time picker -->
-					<div class="form-group">
-						<label for="">시작일</label>
-						<input class="form-control" type="datetime-local" th:value="${info360?.startDate}" name="startDate" readonly>
-					</div>
-					<div class="form-group">
-						<label for="">종료일</label>
-						<input class="form-control" type="datetime-local" th:value="${info360?.endDate}" name="endDate" readonly>
-					</div>
-					<!--./ date time picker -->
 					<div class="form-group">
 						<label>Status</label>
 						<select class="form-control" name="status">
@@ -56,6 +46,29 @@
 							<option value="inactivation" th:selected="${info360?.status}=='inactivation'">비활성화</option>
 						</select>
 					</div>
+
+					<!-- period table -->
+					<div class="table-responsive">
+						<label for="">기간 설정</label>
+						<table class="table table-bordered">
+							<thead class="thead-dark">
+								<tr>
+									<th scope="col">#</th>
+									<th scope="col">Start</th>
+									<th scope="col">End</th>
+								</tr>
+							</thead>
+							<tbody>
+								<tr>
+									<th scope="row">운영 기간</th>
+									<td><input class="form-control" type="datetime-local" th:value="${info360?.startDate}" name="startDate"></td>
+									<td> <input class="form-control" type="datetime-local" th:value="${info360?.endDate}" name="endDate"> </td>
+								</tr>
+							</tbody>
+						</table>
+					</div>
+					<!-- ./period table -->
+
 
 				</fieldset>
 				<div class="form-group">

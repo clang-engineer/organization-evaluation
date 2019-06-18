@@ -23,9 +23,13 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <button th:if="${relation.finish}=='N'" data-finish="N" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-primary">Go Survey</button>
-                                                    <button th:if="${relation.finish}=='T'" data-finish="T" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-danger">임시 저장</button>
-                                                    <button th:if="${relation.finish}=='Y'" data-finish="Y" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-secondary" disabled>제출 완료</button>
+                                                    <button th:if="${relation.finish}=='N'" data-finish="N" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="실시 전 입니다.">Go Survey</button>
+                                                    <button th:if="${relation.finish}=='T'" data-finish="T" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다.">임시 저장</button>
+                                                    <button th:if="${relation.finish}=='Y'" data-finish="Y" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-secondary" disabled>
+                                                        <span data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다.">
+                                                            제출 완료
+                                                        </span>
+                                                    </button>
                                                 </td>
                                             </tr>
 
@@ -62,9 +66,9 @@
                                             <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
                                             <td>[[${relation.evaluated.level}]]</td>
                                             <td>
-                                                <button th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw"></i></button>
-                                                <button th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-pause fa-fw"></i></button>
-                                                <button th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default" disabled><i class="fas fa-lock fa-fw"></i></button>
+                                                <button th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
+                                                <button th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
+                                                <button th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -218,6 +222,19 @@
                 $('html, body').animate({ scrollTop: 0 }, 400);
                 return false;
             });
+
+
+            //서베이 툴팁!
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip('show');
+            })
+            setTimeout(function () {
+                $('[data-toggle="tooltip"]').tooltip('hide');
+            }, 1500);
+
+            $(function () {
+                $('[data-toggle="tooltip2"]').tooltip()
+            })
         });
     </script>
 </th:block>
