@@ -53,7 +53,9 @@
 						<select class="form-control" name="status">
 							<option value="">--</option>
 							<option value="setting" th:selected="${infoMBO?.status}=='setting'">설정 중</option>
-							<option value="survey" th:selected="${infoMBO?.status}=='survey'">평가 진행</option>
+							<option value="plan" th:selected="${infoMBO?.status}=='plan'">목표 설정</option>
+							<option value="do" th:selected="${infoMBO?.status}=='do'">중간 운영</option>
+							<option value="see" th:selected="${infoMBO?.status}=='see'">평가 진행</option>
 							<option value="count" th:selected="${infoMBO?.status}=='count'">평가 집계</option>
 							<option value="inactivation" th:selected="${infoMBO?.status}=='inactivation'">비활성화</option>
 						</select>
