@@ -1,0 +1,95 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutMBO}">
+<!-- div content -->
+<div layout:fragment="content">
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        <h2 class="mb-4">Survey List
+            <small>Subheading</small>
+        </h2>
+
+        <div>
+            <button class="btn float-right" type="submit"><i class="fas fa-plus-circle">목표추가</i></button>
+        </div>
+
+        <table class="table">
+            <thead class="thead-dark">
+                <tr>
+                    <th style="width: 5%" scope="col">#</th>
+                    <th style="width: 40%" scope="col">목표</th>
+                    <th style="width: 40%" scope="col">달성기준</th>
+                    <th style="width: 5%" scope="col">비중%</th>
+                    <th style="width: 5%" scope="col">수정</th>
+                    <th style="width: 5%" scope="col">댓글</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <th scope="row" style="line-height:150px;">1</th>
+                    <td class="align-middle text-left">Mark</td>
+                    <td class="align-middle text-left">Otto</td>
+                    <td class="align-middle">@mdo</td>
+                    <td class="align-middle text-middle">
+                        <button class="btn btn-default btn-lg">
+                            <i class="fas fa-eraser"></i>
+                        </button>
+                    </td>
+                    <td class="align-middle text-middle">
+                        <button class="btn btn-default btn-lg" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr class="collapse" id="collapseExample">
+                    <td>
+                        <div class="collapse" id="collapseExample">
+                            ㄴ
+                        </div>
+                    </td>
+                    <td colspan="5" class="text-left">
+                        <div class="collapse" id="collapseExample">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                        </div>
+                    </td>
+                </tr>
+                <tr>
+                    <th scope="row" style="line-height:150px;">2</th>
+                    <td class="align-middle text-left">Mark</td>
+                    <td class="align-middle text-left">Otto</td>
+                    <td class="align-middle text-left">@mdo</td>
+                    <td class="align-middle">
+                        <button class="btn btn-default btn-lg">
+                            <i class="fas fa-eraser"></i>
+                        </button>
+                    </td>
+                    <td class="align-middle">
+                        <button class="btn btn-default btn-lg" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                            <i class="fas fa-comment-dots"></i>
+                        </button>
+                    </td>
+                </tr>
+                <tr class="collapse" id="collapseExample">
+                    <td>
+                        <div class="collapse" id="collapseExample">
+                            ㄴ
+                        </div>
+                    </td>
+                    <td colspan="5" class="text-left">
+                        <div class="collapse" id="collapseExample">
+                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
+                        </div>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+
+    </div>
+    <!-- ./Page Content -->
+</div>
+
+</html>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+    </script>
+</th:block>

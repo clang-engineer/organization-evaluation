@@ -1,5 +1,8 @@
 package com.evaluation.controller;
 
+import java.util.HashSet;
+import java.util.Set;
+
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
@@ -72,7 +75,6 @@ public class MBOController {
 
         // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
         relationMBOService.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
-            rttr.addAttribute("sno", evaluator.getSno());
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
@@ -108,14 +110,17 @@ public class MBOController {
     }
 
     @GetMapping("/main")
-    public String main(String company, Long tno, long sno, Model model, HttpServletRequest request,
-            RedirectAttributes rttr) {
+    public String main(String company, Long tno, Model model, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("====>turn main by company" + company);
 
         HttpSession session = request.getSession();
+        long sno;
         if (session.getAttribute("evaluator") == null) {
             rttr.addAttribute("company", company);
             return "redirect:/mbo/";
+        } else {
+            Staff staff = (Staff) session.getAttribute("evaluator");
+            sno = staff.getSno();
         }
 
         model.addAttribute("company", company);
@@ -136,4 +141,71 @@ public class MBOController {
         return "/mbo/main";
     }
 
+    @GetMapping("/list")
+    public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
+        log.info("====>turn list by company" + company);
+        HttpSession session = request.getSession();
+        Staff evaluator = (Staff) session.getAttribute("evaluator");
+
+        if (evaluator == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/mbo/";
+        }
+
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
+        model.addAttribute("tno", tno);
+        model.addAttribute("company", company);
+
+        relationMBOService.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
+            Set<String> relationList = new HashSet<>();
+            relation.forEach(origin -> {
+                relationList.add(origin.getRelation());
+            });
+            model.addAttribute("relationList", relationList);
+            model.addAttribute("evaluatedList", relation);
+        });
+
+        turnService.get(tno).ifPresent(turn -> {
+            model.addAttribute("turn", turn);
+        });
+        
+        return "/mbo/list";
+    }
+
+    // 새로 고침시 리스트로 복귀하기 위한 매핑
+    // @GetMapping("/manage")
+    public String evaluate(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
+        log.info("" + tno);
+
+        HttpSession session = request.getSession();
+        if (session.getAttribute("evaluator") == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey/";
+        }
+
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            rttr.addAttribute("companyInfo", origin);
+        });
+
+        rttr.addAttribute("company", company);
+        rttr.addAttribute("tno", tno);
+        return "redirect:/survey/list";
+    }
+
+    // @PostMapping("/manage")
+    @GetMapping("/manage")
+    public void evaluate(Long sno, long tno, String company, Model model) {
+        log.info("" + sno);
+
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
+
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
+    }
 }

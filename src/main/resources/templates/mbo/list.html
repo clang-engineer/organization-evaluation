@@ -1,0 +1,239 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutMBO}">
+<!-- div content -->
+<div layout:fragment="content">
+    <!-- Page Content -->
+    <div class="container">
+        <!-- Page Heading/Breadcrumbs -->
+        <h2 class="mb-5">Survey List
+            <small>Subheading</small>
+        </h2>
+        <div class="row">
+            <!-- Blog Entries Column -->
+            <div class="card-body p-0">
+                <div class="col-md-12">
+                    <!-- 본인평가 -->
+                    <div class="card mb-4" th:if="${#lists.contains(relationList,'me')}">
+                        <h5 class="card-header">본인 목표 관리</h5>
+                        <div class="card-body">
+                            <h5 class="card-title">Own Object</h5>
+                            <p class="card-text">본인 목표를 작성합니다.</p>
+                            <span th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='me'">
+                                    <table>
+                                        <tbody>
+                                            <tr>
+                                                <td>
+                                                    <button data-finish="N" data-name="본인" th:data-sno="${relation.evaluated.sno}" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="실시 전 입니다.">Go Survey</button>
+                                                        <span data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다.">
+                                                        </span>
+                                                    </button>
+                                                </td>
+                                            </tr>
+
+                                        </tbody>
+                                    </table>
+                            </span>
+                        </div>
+                    </div>
+                    <!-- ./본인평가 -->
+                    <!-- 1차 평가자 리스트 card 1차 평가자가 평가자 중에 존재하는 경우만 실행 -->
+                    <div th:with="relationArray = ${ {'1', '2', '3'} }">
+                        <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
+                            <h5 class="card-header">[[${r}]]차 평가자로서 목표관리 대상
+                                <small th:if="${r}=='1'" class="float-right">[[${session.evaluator.name}]] 님은 아래 대상자의 직속상사 입니다.</small>
+                                <small th:if="${r}=='2'" class="float-right">[[${session.evaluator.name}]] 님은 아래 대상자의 차상위상사 입니다.</small>
+                                <small th:if="${r}=='3'" class="float-right">[[${session.evaluator.name}]] 님은 아래 대상자의 차차상위상사 입니다.</small>
+                            </h5>
+                            <!-- card body -->
+                            <div class="card-body pb-0">
+                                <table id="table" class="table">
+                                    <thead class="thead-dark">
+                                        <tr>
+                                            <th scope="col">Name</th>
+                                            <th scope="col">Department</th>
+                                            <th scope="col">Division</th>
+                                            <th scope="col">Level</th>
+                                            <th scope="col">작성률</th>
+                                            <th scope="col">MBO</th>
+                                            <th scope="col">면담시트</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}==${r}">
+                                            <td>[[${relation.evaluated.name}]]</td>
+                                            <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
+                                            <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
+                                            <td>[[${relation.evaluated.level}]]</td>
+                                            <td></td>
+                                            <td>
+                                                <button th:data-name="${relation.evaluated.name}" th:data-sno="${relation.evaluated.sno}" class="btn btn-default"><i class="fas fa-book"></i></button>
+                                            </td>
+                                            <td></td>
+                                        </tr>
+                                    </tbody>    
+                                </table>
+                            </div>
+                            <!-- ./card body -->
+                        </div>
+                    </div>
+                    <!-- ./1차 평가자 리스트 -->
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- ./div content -->
+<!-- button -->
+<div id="bottomGroup" class="position-fixed" align="center">
+    <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
+        <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+            <div>Top</div>
+        </button>
+    </div>
+</div>
+<!-- button -->
+
+    <form id="f1" th:action="@{manage(company=${company},tno=${tno})}" method="POST">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
+
+    <!-- Modal -->
+    <div th:insert="~{common/modal::basic}"></div>
+    <!-- ./Modal -->
+    
+</html>
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function (e) {
+
+            //modal 사용 변수 선언
+            var modal = $("#basicModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalBody = modal.find("#modalBody");
+            var modalLabel1 = modal.find("#modalLabel1");
+            var modalLabel2 = modal.find("#modalLabel2");
+            var modalContent1 = modal.find("input[name='modalContent1']");
+            var modalContent2 = modal.find("input[name='modalContent2']");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+            modalLabel1.hide();
+            modalGroupContent2.hide();
+
+            var formObj = $("#f1");
+
+            $("table").on("click", "button", function (e) {
+
+                var finish = $(this).data("finish");
+                var rno = $(this).data("rno");
+                var name = $(this).data("name");
+
+                //모달 data
+                modal.data("rno", rno);
+
+                //모달 text
+                modalTitle.text("목표 List")
+                if (name == "본인") {
+                    modalContent1.val("본인 목표 관리 페이지로 이동합니다.");
+                } else {
+                    modalContent1.val(name + "님에 대한 목표 관리 페이지로 이동합니다.");
+                }
+                modalContent1.attr("readonly", "true");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show().text("Go Survey");
+
+                modal.modal('show');
+            })
+
+            //modal 등록 버튼 클릭 시
+            modalRegisterBtn.click(function (e) {
+                formObj.append("<input type='hidden' name='sno' value='" + modal.data("sno") + "'/>");
+                formObj.submit();
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
+
+
+            // load했을 때 버튼 사이즈
+            var win = $(this);
+            if (win.width() < 768) {
+                $('#bottomBtn').addClass('btn-group-sm');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-vertical');
+
+            } else if ((win.width() < 1200)) {
+                $('#bottomBtn').removeClass('btn-group-sm');
+                $('#bottomBtn').addClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-vertical');
+
+            } else {
+                $('#bottomBtn').removeClass('btn-group-sm');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').addClass('btn-group-lg');
+                $('#bottomBtn').addClass('btn-group-vertical');
+            }
+
+            //버튼 크기 조정을 위한 클래스 부여
+            $(window).on('resize', function () {
+                if (win.width() < 768) {
+                    $('#bottomBtn').addClass('btn-group-sm');
+                    $('#bottomBtn').removeClass('btn-group-xs');
+                    $('#bottomBtn').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-vertical');
+
+                } else if ((win.width() < 1200)) {
+                    $('#bottomBtn').removeClass('btn-group-sm');
+                    $('#bottomBtn').addClass('btn-group-xs');
+                    $('#bottomBtn').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-vertical');
+
+                } else {
+                    $('#bottomBtn').removeClass('btn-group-sm');
+                    $('#bottomBtn').removeClass('btn-group-xs');
+                    $('#bottomBtn').addClass('btn-group-lg');
+                    $('#bottomBtn').addClass('btn-group-vertical');
+                }
+            });
+
+
+            //탑 버튼 나중에 나오도록
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 200) {
+                    $('#top').fadeIn();
+                } else {
+                    $('#top').fadeOut();
+                }
+            });
+
+            //스크롤 부드럽게 이동
+            $('#top').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 400);
+                return false;
+            });
+
+
+            //서베이 툴팁!
+            $(function () {
+                $('[data-toggle="tooltip"]').tooltip('show');
+            })
+            setTimeout(function () {
+                $('[data-toggle="tooltip"]').tooltip('hide');
+            }, 1500);
+
+            $(function () {
+                $('[data-toggle="tooltip2"]').tooltip()
+            })
+        });
+    </script>
+</th:block>

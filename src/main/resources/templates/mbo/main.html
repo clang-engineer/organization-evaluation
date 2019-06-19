@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutMBO}">
 <!-- div content -->
 <div layout:fragment="content">
 
@@ -9,7 +9,6 @@
         <h2 class="mb-5">MBO Overall info
             <small>Subheading</small>
         </h2>
-
         <div class="row">
             <!-- Blog Entries Column -->
             <div class="col-md-8">
@@ -73,12 +72,12 @@
                                 <tr>
                                     <th scope="col" class="align-middle">전체기간</th>
                                     <td class="align-middle">
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.startDate, 'yyyy/MM')}">startTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.startDate, 'yy/MM/dd')}">startTime</span>
                                         ~
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.endDate, 'yyyy/MM')}">EndTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.endDate, 'yy/MM/dd')}">EndTime</span>
                                     </td>
                                 </tr>
-                                <tr>
+                                <tr id="step1">
                                     <th scope="col" class="align-middle">Plan(목표설정)</th>
                                     <td class="align-middle">
                                         <span th:text="${#temporals.format(turn?.infoMBO?.step1Start, 'MM-dd')}">startTime</span>
@@ -86,15 +85,15 @@
                                         <span th:text="${#temporals.format(turn?.infoMBO?.step1End, 'MM-dd')}">EndTime</span>
                                     </td>
 								</tr>
-                                <tr>
-                                    <th scope="col" class="align-middle">Do(목표점검)</th>
+                                <tr id="step2">
+                                    <th scope="col" class="align-middle">Do(목표수행)</th>
                                     <td class="align-middle">
                                         <span th:text="${#temporals.format(turn?.infoMBO?.step2Start, 'MM-dd')}">startTime</span>
                                         ~
                                         <span th:text="${#temporals.format(turn?.infoMBO?.step2End, 'MM-dd')}">EndTime</span>
                                     </td>
 								</tr>
-                                <tr>
+                                <tr id="step3">
                                     <th scope="col" class="align-middle">See(목표평가)</th>
                                     <td class="align-middle">
                                         <span th:text="${#temporals.format(turn?.infoMBO?.step3Start, 'MM-dd')}">startTime</span>
@@ -177,6 +176,21 @@
             modal.find("button[id!='modalCloseBtn']").hide();
             modalRegisterBtn.show();
 
+            //mbo 기간 정보 표시
+            var status = [[${ turn.infoMBO.status }]];
+            switch (status) {
+                case "plan":
+                    $("#step1").attr("class", "table-info").attr("data-toggle", "tooltip").attr("data-placement", "right").attr("title", "현재 진행 중인 단계 입니다.");
+                    break;
+                case "do":
+                    $("#step2").attr("class", "table-info").attr("data-toggle", "tooltip").attr("data-placement", "right").attr("title", "현재 진행 중인 단계 입니다.");
+                    break;
+                case "see":
+                    $("#step3").attr("class", "table-info").attr("data-toggle", "tooltip").attr("data-placement", "right").attr("title", "현재 진행 중인 단계 입니다.");
+                    break;
+            }
+
+
             $("#instructionBtn").click(function (e) {
                 $("#instructionModal").modal("show");
                 $(".modal-content, .modal-dialog").css("height", "85%");
@@ -184,7 +198,7 @@
             });
 
             //toolitip에 관한 설정
-            $('#instructionBtn,#surveyStart,.dep-card').tooltip('show');
+            $('#instructionBtn,#surveyStart,.dep-card,#step1,#step2,#step3').tooltip('show');
             //몇초 후에 사라짐
             setTimeout(function () {
                 $('#instructionBtn,#surveyStart,.dep-card').tooltip('hide');
