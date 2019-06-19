@@ -68,10 +68,10 @@
 								<td>[[${department.department1}]]</td>
 								<td>[[${department.department2}]]</td>
 								<td><a th:href="${department.dno}" class="leader">
-										<span th:each="leader:${leaderList}" th:if="${leader.sno}==${department?.leader?.sno}">
-											[[${leader?.name}]] - [[${leader?.level}]] : [[${department?.leader?.title}]]
+										<span th:each="leader:${leaderList}" th:if="${leader.staff.sno}==${department?.leader?.sno} AND ${department.dno}==${leader.dno}">
+											[[${leader?.staff.name}]] - [[${leader?.staff.level}]] : [[${department?.leader?.title 	}]]
 										</span>
-										<button type="button" class="btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>	
+										<button type="button" class="btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
 									</a>
 								</td>
 								<td><a th:href="${department.dno}" class="detail">

@@ -92,16 +92,24 @@ public class DepartmentController {
         Page<Department> result = departmentService.getListWithPaging(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
-        List<Staff> leader = new ArrayList<Staff>();
+        List<StaffAndDno> leader = new ArrayList<StaffAndDno>();
         result.getContent().forEach(department -> {
             if (department.getLeader() != null) {
                 staffService.read(department.getLeader().getSno()).ifPresent(staff -> {
-                    leader.add(staff);
+                    StaffAndDno staffAndDno = new StaffAndDno();
+                    staffAndDno.staff = staff;
+                    staffAndDno.dno = department.getDno();
+                    leader.add(staffAndDno);
                 });
             }
         });
         model.addAttribute("leaderList", leader);
 
+    }
+
+    public class StaffAndDno {
+        public Staff staff;
+        public Long dno;
     }
 
     @GetMapping("/leader")
