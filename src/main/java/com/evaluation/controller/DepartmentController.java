@@ -2,6 +2,7 @@ package com.evaluation.controller;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import com.evaluation.domain.Department;
 import com.evaluation.domain.Leader;
@@ -13,11 +14,17 @@ import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -152,5 +159,25 @@ public class DepartmentController {
         rttr.addAttribute("keyword", vo.getKeyword());
 
         return "redirect:/department/list";
+    }
+
+    @GetMapping("/{dno}")
+    @ResponseBody
+    public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
+        Department department = Optional.ofNullable(departmentService.read(dno)).map(Optional::get).orElse(null);
+        return new ResponseEntity<>(department, HttpStatus.OK);
+    }
+
+    @PutMapping("/{dno}")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
+
+        departmentService.read(dno).ifPresent(origin -> {
+            origin.getLeader().setTitle(leader.getTitle());
+            origin.getLeader().setContent(leader.getContent());
+            departmentService.modify(origin);
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 }

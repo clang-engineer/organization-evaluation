@@ -72,10 +72,10 @@ public class MBOController {
 
         // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
         relationMBOService.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
+            rttr.addAttribute("sno", evaluator.getSno());
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
-                rttr.addAttribute("sno", evaluator.getSno());
             }
         });
 

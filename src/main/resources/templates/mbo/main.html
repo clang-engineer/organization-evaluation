@@ -41,16 +41,14 @@
 
                 <!-- Categories Widget -->
                 <div class="card mb-4" th:if="${department}!=null">
-                    <h5 class="card-header">Deparment</h5>
+                    <h5 class="card-header dep-card" data-html="true" data-toggle="tooltip" data-placement="right" title="목표를 팀원들과 <br> 공유 합니다.">Deparment</h5>
                         <div class="card-body">
                             <div class="row">
                                 <div class="col-12">
                                     <ul class="list-unstyled mb-0">
                                         <li th:each="department,index:${department}">
-                                            <div class="float-right">
-                                                [[${department.department1}]] - [[${department.department2}]]
-                                                팀 목표 설정<button data-dno="${dno}" class="btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
-                                            </div>
+                                            [[${department.department1}]] - [[${department.department2}]]
+                                            팀 목표 설정<button th:data-dno="${department.dno}" class="department btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
                                         </li>
                                     </ul>
                                 </div>
@@ -142,6 +140,7 @@
     <!-- /.container -->
 
     <div th:insert="~{common/modal::instruction}"></div>
+    <div th:insert="~{common/modal::content}"></div>
 </div>
 <!-- ./div content -->
 
@@ -149,21 +148,89 @@
 
 
 <th:block layout:fragment="script">
+    <script type="text/javascript" src="/public/js/department.js"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
+            var csrf = JSON.parse('[[${_csrf}]]');
+
+            //modal 사용 변수 선언
+            var modal = $("#contentModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalBody = modal.find("#modalBody");
+            var modalLabel1 = modal.find("#modalLabel1");
+            var modalLabel2 = modal.find("#modalLabel2");
+            var modalContent1 = modal.find("input[name='modalContent1']");
+            var modalContent2 = modal.find("textarea[name='modalContent2']");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+            modalTitle.text("팀 목표 입력");
+            modalLabel1.text("제목");
+            modalLabel2.text("내용");
+
+
+            // 모달 button
+            modal.find("button[id!='modalCloseBtn']").hide();
+            modalRegisterBtn.show();
+
             $("#instructionBtn").click(function (e) {
-                console.log(1)
                 $("#instructionModal").modal("show");
                 $(".modal-content, .modal-dialog").css("height", "85%");
                 $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
             });
 
             //toolitip에 관한 설정
-            $('#instructionBtn,#surveyStart').tooltip('show');
+            $('#instructionBtn,#surveyStart,.dep-card').tooltip('show');
             //몇초 후에 사라짐
             setTimeout(function () {
-                $('#instructionBtn,#surveyStart').tooltip('hide');
+                $('#instructionBtn,#surveyStart,.dep-card').tooltip('hide');
             }, 2500);
+
+            $(".department").click(function (e) {
+
+                dno = $(this).data('dno');
+                departmentService.read(dno, function (result) {
+                    modalTitle.text(result.department2 + "팀 목표 설정");
+                    modalContent1.val(result.leader.title);
+                    modalContent2.text(result.leader.content);
+                });
+
+                //모달 data
+                modal.data("dno", dno);
+                modal.modal("show");
+            });
+
+            modalRegisterBtn.click(function (e) {
+                dno = modal.data("dno");
+                var param = {
+                    dno: dno,
+                    title: modalContent1.val(),
+                    content: modalContent2.val(),
+                    csrf: csrf
+                }
+
+                departmentService.modify(param, function (result) {
+                    alert("수정 되었습니다.");
+                    modal.modal("hide");
+                });
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
+
+
+            //글자 수 카운터
+            modalGroupContent2.on("keyup", "textarea", function (e) {
+                var maxLength = 2000;
+                var length = $(this).val().length;
+                $(this).next().html(length + "/2000");
+            });
 
         });
     </script>
