@@ -5,6 +5,7 @@ import javax.servlet.http.HttpSession;
 
 import com.evaluation.domain.Staff;
 import com.evaluation.service.CompanyService;
+import com.evaluation.service.DepartmentService;
 import com.evaluation.service.MBOService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.RelationMBOService;
@@ -37,6 +38,8 @@ public class MBOController {
     RelationMBOService relationMBOService;
 
     QuestionService questionService;
+
+    DepartmentService departmentService;
 
     @GetMapping("/")
     public String survey(String company, Model model) {
@@ -72,11 +75,11 @@ public class MBOController {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
+                rttr.addAttribute("sno", evaluator.getSno());
             }
         });
 
         rttr.addAttribute("tno", tno);
-
         // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
         return "redirect:/mbo/main";
     }
@@ -90,7 +93,7 @@ public class MBOController {
 
         rttr.addAttribute("company", company);
 
-        return "redirect:/survey/";
+        return "redirect:/mbo/";
     }
 
     @GetMapping("/contact")
@@ -105,7 +108,8 @@ public class MBOController {
     }
 
     @GetMapping("/main")
-    public String main(String company, Long tno, Model model, HttpServletRequest request, RedirectAttributes rttr) {
+    public String main(String company, Long tno, long sno, Model model, HttpServletRequest request,
+            RedirectAttributes rttr) {
         log.info("====>turn main by company" + company);
 
         HttpSession session = request.getSession();
@@ -119,10 +123,10 @@ public class MBOController {
 
         companyService.readByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
-        });
-
-        questionService.DistinctDivisionCountByTno(tno).ifPresent(origin -> {
-            model.addAttribute("question", origin);
+            long cno = origin.getCno();
+            departmentService.findByCnoSno(cno, sno).ifPresent(list -> {
+                model.addAttribute("department", list);
+            });
         });
 
         turnService.get(tno).ifPresent(turn -> {

@@ -55,7 +55,8 @@
 								<th>Password</th>
 								<th>Write Date</th>
 								<th>Update Date</th>
-								<th>User Page</th>
+								<th>360 Page</th>
+								<th>MBO Page</th>
 								<th>Turn Info</th>
 
 							</tr>
@@ -68,7 +69,8 @@
 								<td>[[${company.password}]]</td>
 								<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
 								<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-								<td><a th:href="${company.id}" class="userPage"><button type='button' class='btn btn-default'><i class='fas fa-users'></i></button></a></td>
+								<td><a th:href="${company.id}" class="userPage" data-type="360"><button type='button' class='btn btn-default'><i class='fas fa-users'></i></button></a></td>
+								<td><a th:href="${company.id}" class="userPage" data-type="MBO"><button type='button' class='btn btn-default'><i class='fas fa-map-marked-alt'></i></button></a></td>
 								<td><a th:href="${company.cno}" class="turnList">
 									<button type="button" class="btn btn-default">
 											<i class="fas fa-sitemap"></i>
@@ -183,10 +185,16 @@
 			})
 
 			$(".userPage").click(function (e) {
+				var type = $(this).data("type");
+
 				if (confirm("사용자 서베이 페이지로 이동하시겠습니까?")) {
 					e.preventDefault();
 					$("#f1").empty();
-					$("#f1").attr("action", '/survey/');
+					if (type == "360") {
+						$("#f1").attr("action", '/survey/');
+					} else if (type == "MBO") {
+						$("#f1").attr("action", '/mbo/');
+					}
 					$("#f1").append("<input type='hidden' name='company' value='" + $(this).attr('href') + "'/>");
 					$("#f1").submit();
 				} else {

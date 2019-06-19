@@ -1,5 +1,8 @@
 package com.evaluation.persistence;
 
+import java.util.List;
+import java.util.Optional;
+
 import com.evaluation.domain.Department;
 import com.evaluation.domain.QDepartment;
 import com.querydsl.core.BooleanBuilder;
@@ -9,9 +12,14 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.data.repository.query.Param;
 import org.springframework.transaction.annotation.Transactional;
 
 public interface DepartmentRepository extends CrudRepository<Department, Long>, QuerydslPredicateExecutor<Department> {
+
+    // 팀별 목표 설정하기 위해 팀장인 팀이 있는지 확인
+    @Query("SELECT d FROM Department d WHERE d.cno=:cno AND d.leader.sno=:sno")
+    public Optional<List<Department>> findByCnoSno(@Param("cno") long cno, @Param("sno") long sno);
 
     // 부서정보 전체 삭제
     @Transactional

@@ -6,7 +6,7 @@
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-5">Survey Overall info
+        <h2 class="mb-5">MBO Overall info
             <small>Subheading</small>
         </h2>
 
@@ -39,36 +39,78 @@
             <!-- Sidebar Widgets Column -->
             <div class="col-md-4">
 
+                <!-- Categories Widget -->
+                <div class="card mb-4" th:if="${department}!=null">
+                    <h5 class="card-header">Deparment</h5>
+                        <div class="card-body">
+                            <div class="row">
+                                <div class="col-12">
+                                    <ul class="list-unstyled mb-0">
+                                        <li th:each="department,index:${department}">
+                                            <div class="float-right">
+                                                [[${department.department1}]] - [[${department.department2}]]
+                                                팀 목표 설정<button data-dno="${dno}" class="btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
+                                            </div>
+                                        </li>
+                                    </ul>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <!--./ Categories Widget -->
+
                 <!-- Search Widget -->
                 <div class="card mb-4" style="align-content: center">
-                    <h5 class="card-header">Survey Period</h5>
-                    <div class="card-body">
-                        <div>
-                            시작일 : <span th:text="${#temporals.format(turn?.infoMBO?.startDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
-                        </div>
-                        ~
-                        종료일 : <span th:text="${#temporals.format(turn?.infoMBO?.endDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                    <h5 class="card-header">MBO Period</h5>
+                    <div class="card-bod p-0">
+                    <table class="table table-borderd text-nowrap">
+							<thead class="">
+								<tr>
+									<!-- <th scope="col">Plan</th>
+									<th scope="col">Do</th>
+									<th scope="col">See</th> -->
+								</tr>
+							</thead>
+							<tbody>
+                                <tr>
+                                    <th scope="col" class="align-middle">전체기간</th>
+                                    <td class="align-middle">
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.startDate, 'yyyy/MM')}">startTime</span>
+                                        ~
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.endDate, 'yyyy/MM')}">EndTime</span>
+                                    </td>
+                                </tr>
+                                <tr>
+                                    <th scope="col" class="align-middle">Plan(목표설정)</th>
+                                    <td class="align-middle">
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.step1Start, 'MM-dd')}">startTime</span>
+                                        ~
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.step1End, 'MM-dd')}">EndTime</span>
+                                    </td>
+								</tr>
+                                <tr>
+                                    <th scope="col" class="align-middle">Do(목표점검)</th>
+                                    <td class="align-middle">
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.step2Start, 'MM-dd')}">startTime</span>
+                                        ~
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.step2End, 'MM-dd')}">EndTime</span>
+                                    </td>
+								</tr>
+                                <tr>
+                                    <th scope="col" class="align-middle">See(목표평가)</th>
+                                    <td class="align-middle">
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.step3Start, 'MM-dd')}">startTime</span>
+                                        ~
+                                        <span th:text="${#temporals.format(turn?.infoMBO?.step3End, 'MM-dd')}">EndTime</span>
+                                    </td>
+								</tr>
+							</tbody>
+                        </table>
                     </div>
                 </div>
                 <!--./ Search Widget -->
 
 
-                <!-- Categories Widget -->
-                <div class="card my-4">
-                    <h5 class="card-header">Question</h5>
-                    <div class="card-body">
-                        <div class="row">
-                            <div class="col-lg-10">
-                                <ul class="list-unstyled mb-0">
-                                    <li th:each="question,index:${question}">
-                                        [[${question[0]}]] - [[${question[1]}]] ([[${question[2]}]]문항)
-                                    </li>
-                                </ul>
-                            </div>
-                        </div>
-                    </div>
-                </div>
-                <!--./ Categories Widget -->
                 
                 <!-- Side Widget -->
                 <div class="card my-4">

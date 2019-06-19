@@ -1,5 +1,6 @@
 package com.evaluation.service.Impl;
 
+import java.util.List;
 import java.util.Optional;
 
 import com.evaluation.domain.Department;
@@ -63,5 +64,10 @@ public class DepartmentServiceImpl implements DepartmentService {
         Page<Department> result = departmentRepo
                 .findAll(departmentRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);
         return result;
+    }
+
+    @Override
+    public Optional<List<Department>> findByCnoSno(long cno, long sno) {
+        return departmentRepo.findByCnoSno(cno, sno);
     }
 }

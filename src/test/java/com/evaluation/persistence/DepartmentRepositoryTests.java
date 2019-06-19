@@ -11,9 +11,12 @@ import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
+import lombok.extern.slf4j.Slf4j;
+
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Commit
+@Slf4j
 public class DepartmentRepositoryTests {
 
     @Autowired
@@ -25,7 +28,7 @@ public class DepartmentRepositoryTests {
         IntStream.range(1, 11).forEach(i -> {
 
             Department department = new Department();
-            department.setDepartment1("dep1" + i);  
+            department.setDepartment1("dep1" + i);
             department.setDepartment2("dep2" + i);
             department.setCno(99L);
             departmentRepo.save(department);
@@ -54,4 +57,10 @@ public class DepartmentRepositoryTests {
     // result.getContent().forEach(company -> log.info("" + company));
     // }
 
+    @Test
+    public void name() {
+        departmentRepo.findByCnoSno(4L,1117L).ifPresent(list -> list.forEach(dep -> {
+            log.info("" + dep.getDno());
+        }));
+    }
 }
