@@ -25,9 +25,11 @@ public class MBO {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long mno;
 
-    private String title;
-    @Column(name = "content", length = 2000)
-    private String content;
+    @Column(name = "object", length = 2000)
+    private String object;
+    
+    @Column(name = "process", length = 2000)
+    private String process;
 
     private Double ratio;
     private String finish = "N";

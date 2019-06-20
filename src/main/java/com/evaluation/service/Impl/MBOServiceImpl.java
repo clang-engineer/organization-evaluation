@@ -40,8 +40,8 @@ public class MBOServiceImpl implements MBOService {
         log.info("modify " + mbo);
 
         mboRepo.findById(mbo.getMno()).ifPresent(origin -> {
-            origin.setTitle(mbo.getTitle());
-            origin.setContent(mbo.getContent());
+            origin.setObject(mbo.getObject());
+            origin.setProcess(mbo.getProcess());
             origin.setRatio(mbo.getRatio());
             origin.setFinish(mbo.getFinish());
             origin.setUpdateId(mbo.getUpdateId());

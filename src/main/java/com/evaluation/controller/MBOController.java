@@ -196,8 +196,8 @@ public class MBOController {
     }
 
     // @PostMapping("/manage")
-    @GetMapping("/manage")
-    public void evaluate(Long sno, long tno, String company, Model model) {
+    @GetMapping("/object")
+    public void object  (Long sno, long tno, String company, Model model) {
         log.info("" + sno);
 
         model.addAttribute("company", company);

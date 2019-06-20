@@ -92,7 +92,7 @@
 </div>
 <!-- button -->
 
-    <form id="f1" th:action="@{manage(company=${company},tno=${tno})}" method="POST">
+    <form id="f1" th:action="@{object(company=${company},tno=${tno})}" method="POST">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 

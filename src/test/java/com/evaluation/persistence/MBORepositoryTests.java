@@ -32,8 +32,8 @@ public class MBORepositoryTests {
     public void insertTest() {
 
         MBO mbo = new MBO();
-        mbo.setTitle("목표 1");
-        mbo.setContent("12월까지 땡땡을 한다.");
+        mbo.setObject("목표 1");
+        mbo.setProcess("12월까지 땡땡을 한다.");
         mbo.setRatio(0.1);
         mbo.setFinish("Y");
         mbo.setTno(1L);
