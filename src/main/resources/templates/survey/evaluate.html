@@ -26,15 +26,13 @@
                 <div class="card mt-3 mr-3 ml-3 mb-3" th:each="category:${category}">
                     <h5 class="card-header bg-light mb-4">[[${category}]]</h5>
                     <div class="card-body ml-3 mb-3" th:each="question,status:${questionList}" th:if="${category}==${question[1]}">
-                        <h6 class="card-text mb-4">
+                        <h6 class="card-text pb-2 mb-4">
                             [[${question[0]}]] - [[${question[2]}]]
                         </h6>
                         <div class="qparent">
-                            <div th:each="book,idx:${book}" class="mr-5 question">
-                                <label>
-                                    <input class="mr-2 mb-3" th:name="'q'+${status.count}" type="radio" required th:value="${book.ratio}" th:checked="${idx.count}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
-                                    [[${book.name}]]
-                                </label>
+                            <div th:each="book,idx:${book}" class="mr-5 mb-4 question custom-control custom-radio">
+                                <input class="mr-2  custom-control-input" th:id="'q'+${question[0]}+${idx.count}" th:name="'q'+${status.count}" type="radio" required th:value="${book.ratio}" th:checked="${book.ratio}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
+                                <label class="custom-control-label" th:for="'q'+${question[0]}+${idx.count}">[[${book.name}]]</label>
                             </div>
                         </div>
                     </div>
