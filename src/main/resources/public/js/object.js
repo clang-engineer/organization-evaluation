@@ -24,7 +24,7 @@ var objectService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("/contents/" + param.bno + "/" + param.idx,
+        $.get("/object/" + param.mno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var objectService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/contents/' + param.bno + "/" + param.idx,
+            url: '/object/' + param.mno,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var objectService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '/contents/' + param.bno + "/" + param.idx,
+            url: '/object/' + param.mno,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },

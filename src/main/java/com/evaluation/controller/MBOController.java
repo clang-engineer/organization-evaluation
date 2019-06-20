@@ -1,17 +1,20 @@
 package com.evaluation.controller;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.MBOService;
-import com.evaluation.service.QuestionService;
 import com.evaluation.service.RelationMBOService;
+import com.evaluation.service.ReplyService;
 import com.evaluation.service.TurnService;
 
 import org.springframework.stereotype.Controller;
@@ -34,13 +37,13 @@ public class MBOController {
 
     MBOService mboService;
 
+    ReplyService replyService;
+
     CompanyService companyService;
 
     TurnService turnService;
 
     RelationMBOService relationMBOService;
-
-    QuestionService questionService;
 
     DepartmentService departmentService;
 
@@ -171,19 +174,19 @@ public class MBOController {
         turnService.get(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
-        
+
         return "/mbo/list";
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    // @GetMapping("/manage")
-    public String evaluate(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
+    // @GetMapping("/object")
+    public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
             rttr.addAttribute("company", company);
-            return "redirect:/survey/";
+            return "redirect:/mbo/";
         }
 
         companyService.readByCompanyId(company).ifPresent(origin -> {
@@ -192,12 +195,12 @@ public class MBOController {
 
         rttr.addAttribute("company", company);
         rttr.addAttribute("tno", tno);
-        return "redirect:/survey/list";
+        return "redirect:/mbo/list";
     }
 
-    // @PostMapping("/manage")
+    // @PostMapping("/object")
     @GetMapping("/object")
-    public void object  (Long sno, long tno, String company, Model model) {
+    public void object(Long sno, long tno, String company, Model model) {
         log.info("" + sno);
 
         model.addAttribute("company", company);
@@ -205,6 +208,18 @@ public class MBOController {
 
         companyService.readByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
+        });
+
+        mboService.listByTnoSno(tno, sno).ifPresent(list -> {
+            model.addAttribute("objectList", list);
+
+            List<Reply> replyList = new ArrayList<>();
+            for (int i = 0; i < list.size(); i++) {
+                replyService.listByMbo(list.get(i).getMno()).ifPresent(origin -> {
+                    replyList.addAll(origin);
+                });
+            }
+            model.addAttribute("replyList", replyList);
         });
 
     }

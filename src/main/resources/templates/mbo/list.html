@@ -93,6 +93,7 @@
 <!-- button -->
 
     <form id="f1" th:action="@{object(company=${company},tno=${tno})}" method="POST">
+        <input type="hidden" th:valu="${turn?.infoMBO?.status}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 
@@ -128,11 +129,11 @@
             $("table").on("click", "button", function (e) {
 
                 var finish = $(this).data("finish");
-                var rno = $(this).data("rno");
+                var sno = $(this).data("sno");
                 var name = $(this).data("name");
 
                 //모달 data
-                modal.data("rno", rno);
+                modal.data("sno", sno);
 
                 //모달 text
                 modalTitle.text("목표 List")

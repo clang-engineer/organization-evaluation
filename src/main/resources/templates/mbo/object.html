@@ -12,47 +12,68 @@
         <div>
             <button id="addObject" class="btn float-right" type="submit"><i class="fas fa-plus-circle">목표추가</i></button>
         </div>
+        <!-- [[${objectList}]] -->
 
         <table class="table">
             <thead class="thead-dark">
                 <tr>
                     <th style="width: 5%" scope="col">#</th>
-                    <th style="width: 40%" scope="col">목표</th>
-                    <th style="width: 40%" scope="col">달성기준</th>
+                    <th style="width: 30%" scope="col">목표</th>
+                    <th style="width: 50%" scope="col">달성기준</th>
                     <th style="width: 5%" scope="col">비중%</th>
                     <th style="width: 5%" scope="col">수정</th>
                     <th style="width: 5%" scope="col">댓글</th>
                 </tr>
             </thead>
-            <tbody>
+            <tbody th:each="object,status:${objectList}">
+                <!-- object -->
                 <tr>
-                    <th scope="row" style="line-height:150px;">1</th>
-                    <td class="align-middle text-left">Mark</td>
-                    <td class="align-middle text-left">Otto</td>
-                    <td class="align-middle">@mdo</td>
+                    <th scope="row" style="line-height:150px;">[[${status.count}]]</th>
+                    <td class="text-left" style="white-space:pre-line">[[${object?.object}]]</td>
+                    <td class="text-left" style="white-space:pre-line">[[${object?.process}]]</td>
+                    <td class="align-middle">[[${#numbers.formatPercent(object.ratio,0,0)}]]</td>
                     <td class="align-middle text-middle">
-                        <button class="btn btn-default btn-lg">
+                        <button class="btn btn-default btn-lg modifyObject" th:data-mno="${object.mno}" >
                             <i class="fas fa-eraser"></i>
-                        </button>
+                        </button>   
                     </td>
                     <td class="align-middle text-middle">
-                        <button class="btn btn-default btn-lg" data-toggle="collapse" href="#collapseExample" role="button" aria-expanded="false" aria-controls="collapseExample">
+                        <button class="btn btn-default btn-lg" data-toggle="collapse" th:href="'#collapse' +${object.mno}" role="button" aria-expanded="false" aria-controls="collapseExample">
                             <i class="fas fa-comment-dots"></i>
                         </button>
                     </td>
                 </tr>
-                <tr class="collapse table-active" id="collapseExample">
+                <!-- ./object -->
+                <!-- reply -->
+                <tr th:each="reply:${replyList}" th:if="${reply.mno}==${object.mno}" class="collapse" th:id="collapse+${object.mno}">
                     <td>
-                        <div class="collapse" id="collapseExample">
-                            <i class="fab fa-replyd fa-lg"></i>
+                        <div class="collapse" th:id="collapse+${object.mno}">
+                            <i class="fab fa-replyd fa-lg">
+                            </i>
+                        </div>
+                        
+                    </td>
+                    <td colspan="4" class="text-left">
+                        <div class="collapse" th:id="collapse+${object.mno}">
+                            [[${reply?.comment}]]
                         </div>
                     </td>
-                    <td colspan="5" class="text-left">
-                        <div class="collapse" id="collapseExample">
-                            Anim pariatur cliche reprehenderit, enim eiusmod high life accusamus terry richardson ad squid. Nihil anim keffiyeh helvetica, craft beer labore wes anderson cred nesciunt sapiente ea proident.
-                        </div>
+                    <td>
+                        [[${reply.updateDate}]]
+                        <i class="fas fa-eraser"></i>
                     </td>
                 </tr>
+                <tr class="collapse" th:id="collapse+${object.mno}">
+                    <td colspan="5" class="align-middle text-middle">
+                    <div class="form-group">
+                        <input type="text" class="form-control form-inline" placeholder="Enter Reply">
+                    </div>
+                </td>
+                <td>
+                    <button type="button" class="btn btn-primary btn-sm">등록</button>
+                </td>
+                </tr>
+                <!-- ./reply -->
             </tbody>
         </table>
 
@@ -175,6 +196,60 @@
                 });
             });
 
+            $("table").on("click", ".modifyObject", function (e) {
+                var mno = $(this).data("mno");
+                modal.data("mno", mno);
+
+                var param = {
+                    mno: mno
+                }
+                objectService.read(param, function (result) {
+                    modalContent1.val(result.object);
+                    modalContent2.val(result.process);
+                    modalContent3.val(result.ratio);
+                });
+
+                // 모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalModifyBtn.show();
+                modalRemoveBtn.show();
+
+                modal.modal("show");
+            });
+
+            modalModifyBtn.click(function (e) {
+                var mno = modal.data("mno");
+                var param = {
+                    mno: mno,
+                    object: modalContent1.val(),
+                    process: modalContent2.val(),
+                    ratio: modalContent3.val(),
+                    csrf: csrf
+                }
+
+                objectService.modify(param, function (result) {
+                    alert("수정 되었습니다.");
+                    modal.modal("hide");
+                });
+            });
+
+            modalRemoveBtn.click(function (e) {
+                var mno = modal.data("mno");
+                var param = {
+                    mno: mno,
+                    csrf: csrf
+                }
+                
+                if (delchk() == true) {
+                    objectService.remove(param, function (result) {
+                        alert("삭제 되었습니다.");
+                        modal.modal("hide");
+                    });
+                } else {
+                    return;
+                };
+            });
+
             //close button click 시
             modalCloseBtn.on("click", function (e) {
                 modal.modal('hide');
@@ -186,6 +261,14 @@
                 $(this).next().html(length + "/1500");
             });
 
+
+            function delchk() {
+                if (confirm("삭제하시겠습니까?")) {
+                    return true;
+                } else {
+                    return false;
+                }
+            }
         });
 
     </script>
