@@ -169,6 +169,14 @@ public class MBOController {
             });
             model.addAttribute("relationList", relationList);
             model.addAttribute("evaluatedList", relation);
+
+            List<List<String>> ratioList = new ArrayList<>();
+            relation.forEach(origin -> {
+                mboService.ratioByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(ratio -> {
+                    ratioList.addAll(ratio);
+                });
+            });
+            model.addAttribute("ratioList", ratioList);
         });
 
         turnService.get(tno).ifPresent(turn -> {
@@ -179,7 +187,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    // @GetMapping("/object")
+    @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -190,7 +198,7 @@ public class MBOController {
         }
 
         companyService.readByCompanyId(company).ifPresent(origin -> {
-            rttr.addAttribute("companyInfo", origin);
+            rttr.addFlashAttribute("companyInfo", origin);
         });
 
         rttr.addAttribute("company", company);
@@ -198,10 +206,10 @@ public class MBOController {
         return "redirect:/mbo/list";
     }
 
-    // @PostMapping("/object")
-    @GetMapping("/object")
-    public void object(Long sno, long tno, String company, Model model) {
-        log.info("" + sno);
+    // @GetMapping("/object")
+    @PostMapping("/object")
+    public void object(Long rno, long tno, String company, Model model) {
+        log.info("" + rno);
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -210,16 +218,23 @@ public class MBOController {
             model.addAttribute("companyInfo", origin);
         });
 
-        mboService.listByTnoSno(tno, sno).ifPresent(list -> {
-            model.addAttribute("objectList", list);
+        relationMBOService.read(rno).ifPresent(relation -> {
+            // 관계에 대한 정보 추가
+            model.addAttribute("relation", relation);
 
-            List<Reply> replyList = new ArrayList<>();
-            for (int i = 0; i < list.size(); i++) {
-                replyService.listByMbo(list.get(i).getMno()).ifPresent(origin -> {
-                    replyList.addAll(origin);
-                });
-            }
-            model.addAttribute("replyList", replyList);
+            // 피평가자의 목표 가져오기, 피평가자 sno와 tno로
+            mboService.listByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(list -> {
+                model.addAttribute("objectList", list);
+
+                // 댓글 리스트 목록으로 만들어 전달하기 현재 목표리스트의 mno와 일치하는 댓글만
+                List<Reply> replyList = new ArrayList<>();
+                for (int i = 0; i < list.size(); i++) {
+                    replyService.listByMbo(list.get(i).getMno()).ifPresent(origin -> {
+                        replyList.addAll(origin);
+                    });
+                }
+                model.addAttribute("replyList", replyList);
+            });
         });
 
     }

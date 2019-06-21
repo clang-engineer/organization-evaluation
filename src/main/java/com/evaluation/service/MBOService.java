@@ -15,4 +15,6 @@ public interface MBOService {
     public void remove(long mno);
 
     public Optional<List<MBO>> listByTnoSno(long tno, long sno);
+
+    public Optional<List<List<String>>> ratioByTnoSno(long tno, long sno);
 }

@@ -51,4 +51,13 @@ public class MBORepositoryTests {
         });
 
     }
+
+    @Test
+    public void getRatioTest() {
+        mboRepo.ratioByTnoSno(4L, 1114L).ifPresent(list -> {
+            list.forEach(ratio -> {
+                log.info("" + ratio);
+            });
+        });
+    }
 }

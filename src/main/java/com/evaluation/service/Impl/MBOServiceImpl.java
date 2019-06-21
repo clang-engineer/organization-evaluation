@@ -63,4 +63,12 @@ public class MBOServiceImpl implements MBOService {
 
         return mboRepo.listByTnoSno(tno, sno);
     }
+
+    @Override
+    public Optional<List<List<String>>> ratioByTnoSno(long tno, long sno) {
+        log.info("ratio by" + tno + sno);
+
+        return mboRepo.ratioByTnoSno(tno, sno);
+    }
+
 }

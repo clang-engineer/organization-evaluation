@@ -10,11 +10,12 @@
         </h2>
 
         <div>
+            <!-- <button th:if="${session.evaluator.sno}==${sno}" id="addObject" class="btn float-right" type="submit"><i class="fas fa-plus-circle">목표추가</i></button> -->
             <button id="addObject" class="btn float-right" type="submit"><i class="fas fa-plus-circle">목표추가</i></button>
         </div>
         <!-- [[${objectList}]] -->
 
-        <table class="table">
+        <table class="table table-bordered">
             <thead class="thead-dark">
                 <th class="text-nowrap" style="width: 5%" scope="col">#</th>
                 <th class="text-nowrap" style="width: 40%" scope="col">목표</th>
@@ -77,6 +78,26 @@
         </table>
 
     </div>
+       <!-- button -->
+       <div id="bottomGroup" class="position-fixed" align="center">
+        <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
+            <button th:if="${relation?.finish}!='Y'" id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
+                <div>Submit</div>
+            </button>
+            <button th:if="${relation?.finish}!='Y'" id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
+                <div>Pause</div>
+            </button>
+            <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+                <div>Top</div>
+            </button>
+        </div>
+        <div>
+            <span th:if="${relation?.relation}!='me'" class="badge badge-pill badge-warning">'[[${relation?.evaluated?.name}]]'님 목표 관리</span>
+            <span th:if="${relation?.relation}=='me'" class="badge badge-pill badge-warning">'[[${relation?.evaluated?.name}]]'님 본인 목표 관리</span>
+        </div>
+    </div>
+    <!-- button -->
+    
     <!-- ./Page Content -->
     <div th:insert="~{common/modal::object}"></div>
     <div th:insert="~{common/modal::basic}"></div>
@@ -145,14 +166,15 @@
                 modalContent2.val("");
                 modalContent3.val("0");
                 //모달 button
-                modal.find("button[id!='modalCloseBtAAn']").hide();
+                modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
 
             });
 
             var tno = [[${ tno }]];
-            var sno = [[${ session?.evaluator ?.sno }]];
-            var evaluator = [[${ session.evaluator.email }]];
+            var sno = [[${ relation.evaluated.sno }]];
+            var sessionName = [[${ session.evaluator.name }]];
+
 
             modalRegisterBtn.click(function (e) {
                 var param = {
@@ -161,8 +183,8 @@
                     object: modalContent1.val(),
                     process: modalContent2.val(),
                     ratio: modalContent3.val(),
-                    writeId: evaluator,
-                    updateId: evaluator,
+                    writeId: sessionName,
+                    updateId: sessionName,
                     finish: 'Y',
                     csrf: csrf
                 }
@@ -222,7 +244,7 @@
                     object: modalContent1.val(),
                     process: modalContent2.val(),
                     ratio: modalContent3.val(),
-                    updateId: evaluator,
+                    updateId: sessionName,
                     csrf: csrf
                 }
 
@@ -264,8 +286,8 @@
                     sno: sno,
                     mno: mno,
                     comment: comment,
-                    writeId: evaluator,
-                    updateId: evaluator,
+                    writeId: sessionName,
+                    updateId: sessionName,
                     csrf: csrf
                 }
 
@@ -318,7 +340,7 @@
                 var param = {
                     rno: rno,
                     comment: $("#basicModal").find("input[name='modalContent1']").val(),
-                    updateId: evaluator,
+                    updateId: sessionName,
                     csrf: csrf
                 }
                 replyService.modify(param, function (result) {
@@ -359,6 +381,73 @@
                 $(this).next().html(length + "/1500");
             });
 
+
+            // load했을 때 버튼 사이즈
+            var win = $(this);
+            if (win.width() < 768) {
+                $('#bottomBtn').addClass('btn-group-sm');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-vertical');
+
+            } else if ((win.width() < 1200)) {
+                $('#bottomBtn').removeClass('btn-group-sm');
+                $('#bottomBtn').addClass('btn-group-xs');
+                $('#bottomBtn').removeClass('btn-group-lg');
+                $('#bottomBtn').removeClass('btn-group-vertical');
+
+            } else {
+                $('#bottomBtn').removeClass('btn-group-sm');
+                $('#bottomBtn').removeClass('btn-group-xs');
+                $('#bottomBtn').addClass('btn-group-lg');
+                $('#bottomBtn').addClass('btn-group-vertical');
+            }
+
+            //버튼 크기 조정을 위한 클래스 부여
+            $(window).on('resize', function () {
+                if (win.width() < 768) {
+                    $('#bottomBtn').addClass('btn-group-sm');
+                    $('#bottomBtn').removeClass('btn-group-xs');
+                    $('#bottomBtn').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-vertical');
+
+                } else if ((win.width() < 1200)) {
+                    $('#bottomBtn').removeClass('btn-group-sm');
+                    $('#bottomBtn').addClass('btn-group-xs');
+                    $('#bottomBtn').removeClass('btn-group-lg');
+                    $('#bottomBtn').removeClass('btn-group-vertical');
+
+                } else {
+                    $('#bottomBtn').removeClass('btn-group-sm');
+                    $('#bottomBtn').removeClass('btn-group-xs');
+                    $('#bottomBtn').addClass('btn-group-lg');
+                    $('#bottomBtn').addClass('btn-group-vertical');
+                }
+            });
+
+            //탑 버튼 나중에 나오도록
+            $(window).scroll(function () {
+                if ($(this).scrollTop() > 1000) {
+                    $('#top').fadeIn();
+                } else {
+                    $('#top').fadeOut();
+                }
+            });
+
+            //스크롤 부드럽게 이동
+            $('#top').click(function () {
+                $('html, body').animate({ scrollTop: 0 }, 400);
+                return false;
+            });
+
+
+            //toolitip에 관한 설정
+            $('#btnSubmit,#btnPause').tooltip('show');
+            //몇초 후에 사라짐
+            setTimeout(function () {
+                $('#btnSubmit,#btnPause').tooltip('hide');
+            }, 2500);
 
             function delchk() {
                 if (confirm("삭제하시겠습니까?")) {
