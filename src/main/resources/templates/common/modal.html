@@ -71,8 +71,63 @@
     <!-- Modal -->
 </div>
 <!--./content -->
+
+
+<!--Object -->
+<div th:fragment="object">
+    <!-- Modal -->
+    <div class="modal fade" id="contentModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h4 class="modal-title" id="modalTitle">Title</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;
+                    </button>
+                </div>
+                <div class="modal-body" id="modalBody">
+                    <div class="form-group" id="content1">
+                        <label class="modal-label" id="modalLabel1">Content1</label>
+                        <textarea class="form-control" name="modalContent1" rows="3"></textarea>
+                        <p class="float-md-right mb-0" id="count_message">0/1500</p>
+                    </div>
+                    <div class="form-group" id="content2">
+                        <label class="modal-label" id="modalLabel2">Content2</label>
+                        <textarea class="form-control" name="modalContent2" rows="10"></textarea>
+                        <p class="float-md-right mb-0" id="count_message">0/1500</p>
+                    </div>
+                    <div class="form-group" id="content3">
+                        <label class="modal-label" id="modalLabel3">Content3</label>
+                        <div class="input-group mb-3">
+                            <div class="input-group-prepend">
+                                <button class="btn btn-outline-secondary" type="button">Button</button>
+                            </div>
+                            <select class="custom-select" name="modalContent3">
+                                <option selected>Choose...</option>
+                                <option value="0.05">5%</option>
+                                <option value="0.05">5%</option>
+                                <option value="0.05">5%</option>
+                                <option value="0.05">5%</option>
+                                <option value="0.05">5%</option>
+                                <option value="0.05">5%</option>
+                                <option value="0.05">5%</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button id="modalModifyBtn" type="button" class="btn btn-warning">Modify</button>
+                    <button id="modalRemoveBtn" type="button" class="btn btn-danger">Remove</button>
+                    <button id="modalRegisterBtn" type="button" class="btn btn-primary">Register</button>
+                    <button id="modalCloseBtn" type="button" class="btn btn-default border">Close</button>
+                </div>
+
+            </div>
+        </div>
+    </div>
+    <!-- Modal -->
 </div>
-<!-- ./div content -->
+<!--./Object -->
+
 <!-- instruction -->
 <div th:fragment="instruction">
     <!-- Modal -->

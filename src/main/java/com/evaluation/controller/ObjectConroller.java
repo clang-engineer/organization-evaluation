@@ -28,11 +28,11 @@ public class ObjectConroller {
     MBOService mboService;
 
     @PostMapping("/")
-    public ResponseEntity<HttpStatus> register(@RequestBody MBO mbo) {
+    public ResponseEntity<MBO> register(@RequestBody MBO mbo) {
         log.info("add object ");
 
         mboService.register(mbo);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 
     @GetMapping("/{mno}")
@@ -54,9 +54,10 @@ public class ObjectConroller {
 
     @DeleteMapping("/{mno}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("mno") long mno) {
-        log.info("delete " +  mno);
+        log.info("delete " + mno);
 
         mboService.remove(mno);
         return new ResponseEntity<>(HttpStatus.OK);
     }
+
 }

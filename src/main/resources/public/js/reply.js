@@ -1,9 +1,9 @@
-var objectService = (function () {
+var replyService = (function () {
     function register(param, callback, error) {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: '/object',
+            url: '/reply/',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var objectService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("/object/" + param.mno,
+        $.get("/reply/" + param.rno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,9 +39,8 @@ var objectService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/object/' + param.mno,
+            url: '/reply/',
             data: JSON.stringify(param),
-            // data: param.content,
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
@@ -62,7 +61,7 @@ var objectService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '/object/' + param.mno,
+            url: '/reply/' + param.rno,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
@@ -79,11 +78,24 @@ var objectService = (function () {
         });
     }
 
+    function getList(bno, callback, error) {
+        $.getJSON("/contents/" + bno,
+            function (data) {
+                if (callback) {
+                    callback(data);
+                }
+            }).fail(function (xhr, status, err) {
+                if (error) {
+                    error();
+                }
+            });
+    }
 
     return {
         register: register,
         read: read,
         modify: modify,
-        remove: remove
+        remove: remove,
+        getList: getList
     };
 })();
