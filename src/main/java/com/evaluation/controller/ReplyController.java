@@ -28,15 +28,15 @@ public class ReplyController {
     ReplyService replyService;
 
     @PostMapping("/")
-    public ResponseEntity<HttpStatus> register(@RequestBody Reply reply) {
+    public ResponseEntity<Reply> register(@RequestBody Reply reply) {
         log.info("add object ");
 
         replyService.register(reply);
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(reply, HttpStatus.OK);
     }
 
     @GetMapping("/{rno}")
-    public ResponseEntity<Reply> register(@PathVariable("rno") long rno) {
+    public ResponseEntity<Reply> read(@PathVariable("rno") long rno) {
         log.info("read object ");
 
         Reply reply = Optional.ofNullable(replyService.read(rno)).map(Optional::get).orElse(null);

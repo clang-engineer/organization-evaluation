@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import com.evaluation.domain.MBO;
 import com.evaluation.service.MBOService;
+import com.evaluation.service.ReplyService;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -26,6 +27,8 @@ import lombok.extern.slf4j.Slf4j;
 public class ObjectConroller {
 
     MBOService mboService;
+
+    ReplyService replyService;
 
     @PostMapping("/")
     public ResponseEntity<MBO> register(@RequestBody MBO mbo) {
@@ -57,6 +60,13 @@ public class ObjectConroller {
         log.info("delete " + mno);
 
         mboService.remove(mno);
+
+        replyService.listByMbo(mno).ifPresent(list -> {
+            list.forEach(reply -> {
+                replyService.remove(reply.getRno());
+            });
+        });
+
         return new ResponseEntity<>(HttpStatus.OK);
     }
 

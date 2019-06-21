@@ -16,9 +16,9 @@
 
         <table class="table">
             <thead class="thead-dark">
-                <th class="text-nowrap" style="width: 2%" scope="col">#</th>
-                <th class="text-nowrap" style="width: 30%" scope="col">목표</th>
-                <th class="text-nowrap" style="width: 50%" scope="col">달성기준</th>
+                <th class="text-nowrap" style="width: 5%" scope="col">#</th>
+                <th class="text-nowrap" style="width: 40%" scope="col">목표</th>
+                <th class="text-nowrap" style="width: 40%" scope="col">달성기준</th>
                 <th class="text-nowrap" style="width: 5%" scope="col">비중%</th>
                 <th class="text-nowrap" style="width: 5%" scope="col">수정</th>
                 <th class="text-nowrap" style="width: 5%" scope="col">댓글</th>
@@ -27,10 +27,11 @@
                 <div th:each="object,status:${objectList}">
                     <!-- object -->
                     <tr>
-                        <th scope="row" style="line-height:150px;">[[${status.count}]]</th>
+                        <!-- <th scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
+                        <th scope="row" style="line-height:150px;">[[${object.mno}]]</th>
                         <td class="text-left" style="white-space:pre-line">[[${object?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.process}]]</td>
-                        <td class="align-middle">[[${#numbers.formatPercent(object.ratio,0,0)}]]</td>
+                        <td class="ratio align-middle">[[${#numbers.formatPercent(object.ratio,0,0)}]]</td>
                         <td class="align-middle text-middle">
                             <button class="btn btn-default btn-lg modifyObject" th:data-mno="${object.mno}"><i class="fas fa-eraser"></i></button>
                         </td>
@@ -51,26 +52,26 @@
                         <td colspan="4" class="text-left">
                             <div class="collapse" th:id="collapse+${object.mno}">
                                 [[${reply?.comment}]]
-                                <div class="float-right">
-                                    [[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yyyy/MM/dd HH:mm:ss')}]] 
+                                <!-- 본인이면 아이디 안 붙도록 -->
+                                <div th:if="${session.evaluator.email}==${updateId}" class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
+                                <div th:else="${session.evaluator.email}!=${updateId}" class="float-right">[[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
                             </div>
-                        </div>
-                    </td>
-                    <td>
-                        <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify"><i class="fas fa-times"></i></button>
-                    </td>
-                </tr>
-                <tr class="collapse" th:id="collapse+${object.mno}">
-                    <td colspan="5" class="align-middle text-middle">
-                        <div class="form-group">
-                            <input type="text" class="form-control form-inline" placeholder="Enter Reply">
-                        </div>
-                    </td>
-                    <td>
-                        <button type="button" th:data-mno="${object.mno}" class="btn btn-primary btn-sm replyRegister">등록</button>
-                    </td>
-                </tr>
-                <!-- ./reply -->
+                        </td>
+                        <td>
+                            <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify"><i class="fas fa-times"></i></button>
+                        </td>
+                    </tr>
+                    <tr class="collapse table-primary" th:id="collapse+${object.mno}">
+                        <td colspan="5" class="align-middle text-middle">
+                            <div class="form-group">
+                                <input type="text" class="form-control form-inline" placeholder="Enter Reply">
+                            </div>
+                        </td>
+                        <td>
+                            <button type="button" th:data-mno="${object.mno}" class="btn btn-primary btn-sm replyRegister">등록</button>
+                        </td>
+                    </tr>
+                    <!-- ./reply -->
             </div>
             </tbody>
         </table>
@@ -113,13 +114,38 @@
             modalLabel3.text("비중");
 
 
+            //modal select 초기화
+            function modalSelectInit(now) {
+                modalContent3.html("");
+                var sum = 0;
+                $('tr').children('.ratio').each(function () {
+                    var value = parseInt($(this).text());
+                    sum = (value > 0) ? sum + value : sum + 0;
+                });
+                console.log(sum);
+                sum = 100 - sum;
+                if (now != null) {
+                    sum = sum + now;
+                }
+                var num = sum / 5;
+                var str;
+                for (var i = 0; i <= num; i++) {
+                    str += "<option value='" + 0.05 * i + "'>" + Math.floor(0.05 * i * 100) + "%</option>";
+                }
+                modalContent3.html(str);
+            }
+
+
+
             $("#addObject").click(function (e) {
+                modalSelectInit();
+
                 modal.modal("show");
                 modalContent1.val("");
                 modalContent2.val("");
-                modalContent3.val("");
+                modalContent3.val("0");
                 //모달 button
-                modal.find("button[id!='modalCloseBtn']").hide();
+                modal.find("button[id!='modalCloseBtAAn']").hide();
                 modalRegisterBtn.show();
 
             });
@@ -155,10 +181,14 @@
                     var str = "<tr><th scope='row' style='line-height:150px;'>" + (max + 1) + "</th>"
                         + "<td class='text-left' style = 'white-space:pre-line'>" + result.object + "</td >"
                         + "<td class='text-left' style='white-space:pre-line'>" + result.process + "</td>"
-                        + "<td class='align-middle' >" + result.ratio * 100 + '%' + "</td >"
-                        + "<td class='align-middle text-middle' ><button class='btn btn-default btn-lg modifyObject' th: data-mno='" + result.mno + "' ><i class='fas fa-eraser'></i></button></td >"
-                        + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' th: href=''#collapse' +" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comment-dots'></i></button></td >"
-                        + "</tr >";
+                        + "<td class='ratio align-middle' >" + Math.floor(result.ratio * 100) + '%' + "</td >"
+                        + "<td class='align-middle text-middle' ><button class='btn btn-default btn-lg modifyObject' data-mno='" + result.mno + "' ><i class='fas fa-eraser'></i></button></td >"
+                        + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' href='#collapse" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comment-dots'></i></button></td >"
+                        + "</tr >"
+                        + "<tr class='collapse' id='collapse" + result.mno + "'><td colspan='5' class='align-middle text-middle'><div class='form-group'><input type='text' class='form-control form-inline' placeholder='Enter Reply'></div></td>"
+                        + "<td><button type='button' data-mno='" + result.mno + "' class='btn btn-primary btn-sm replyRegister'>등록</button></td>"
+                        + "</tr>;"
+
                     $('table tbody').append(str);
                     modal.modal('hide');
                 });
@@ -167,11 +197,11 @@
             $("table").on("click", ".modifyObject", function (e) {
                 var mno = $(this).data("mno");
                 modal.data("mno", mno);
-                console.log(mno);
                 var param = {
                     mno: mno
                 }
                 objectService.read(param, function (result) {
+                    modalSelectInit(result.ratio * 100);
                     modalContent1.val(result.object);
                     modalContent2.val(result.process);
                     modalContent3.val(result.ratio);
@@ -199,10 +229,9 @@
                 objectService.modify(param, function (result) {
                     alert("수정 되었습니다.");
 
-
                     $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(0).text(modalContent1.val());
                     $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(1).text(modalContent2.val());
-                    $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(2).text(modalContent3.val() * 100 + '%');
+                    $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(2).text(Math.floor(modalContent3.val() * 100) + '%');
                     modal.modal("hide");
                 });
             });
@@ -218,6 +247,7 @@
                     objectService.remove(param, function (result) {
                         alert("삭제 되었습니다.");
                         $('table').find("button[data-mno=" + mno + "]").parent().parent().remove();
+                        $('table').find("tr[id='collapse" + mno + "']").remove();
                         modal.modal("hide");
                     });
                 } else {
@@ -242,6 +272,14 @@
                 replyService.register(param, function (result) {
                     alert("정상적으로 등록되었습니다.");
                     modal.find("input").val("");
+                    var currentDate = new Date();
+                    var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comments'></i></div></td>"
+                        + "<td colspan='4' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + displayTime(currentDate) + "</div></div></td>"
+                        + "<td><button type='button' data-rno='" + result.rno + "' class='btn btn-default btn-sm replyModify'><i class='fas fa-times'></i></button></td ></tr >";
+                    $('table').find("tr[id='collapse" + mno + "']").last().before(str);
+
+                    $('table').find("tr[id='collapse" + mno + "']").parent().find('input').val('');
+
                     modal.modal('hide');
                 });
             });
@@ -283,7 +321,6 @@
                     updateId: evaluator,
                     csrf: csrf
                 }
-                console.log(param);
                 replyService.modify(param, function (result) {
                     alert("수정 되었습니다.");
                     $("#basicModal").modal("hide");
@@ -300,6 +337,7 @@
                 if (delchk() == true) {
                     replyService.remove(param, function (result) {
                         alert("삭제 되었습니다.");
+                        $('table').find("button[data-rno=" + rno + "]").parent().parent().remove();
                         $("#basicModal").modal("hide");
                     });
                 } else {
@@ -310,6 +348,9 @@
             //close button click 시
             modalCloseBtn.on("click", function (e) {
                 modal.modal('hide');
+            });
+            $("#basicModal").on("click", function (e) {
+                $("#basicModal").modal('hide');
             });
 
             //글자 수 카운터
@@ -326,6 +367,29 @@
                     return false;
                 }
             }
+
+            //시간 표시 함수
+            function displayTime(timeValue) {
+                var today = new Date();
+                var gap = today.getTime() - timeValue;
+
+                var dateObj = new Date(timeValue);
+                var str = "";
+
+                if (gap < (1000 * 60 * 60 * 24)) {
+                    var hh = dateObj.getHours();
+                    var mi = dateObj.getMinutes();
+                    var ss = dateObj.getSeconds();
+
+                    return [(hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi, ':', (ss > 9 ? '' : '0') + ss].join('');
+                } else {
+                    var yy = dateObj.getFullYear();
+                    var mm = dateObj.getMonth() + 1;
+                    var dd = dateObj.getDate();
+
+                    return [yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd].join('');
+                }
+            };
         });
 
     </script>
