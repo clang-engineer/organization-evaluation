@@ -23,9 +23,9 @@
                                         <tbody>
                                             <tr>
                                                 <td>
-                                                    <button th:if="${relation.finish}=='N'" data-finish="N" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-primary" data-toggle="tooltip" data-placement="right" title="실시 전 입니다.">Go Survey</button>
-                                                    <button th:if="${relation.finish}=='T'" data-finish="T" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-danger" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다.">임시 저장</button>
-                                                    <button th:if="${relation.finish}=='Y'" data-finish="Y" data-name="본인" th:data-rno="${relation.rno}" class="btn btn-secondary" disabled>
+                                                    <button class="btn btn-primary" th:data-rno="${relation.rno}" th:if="${relation.finish}=='N'" data-finish="N" data-name="본인" data-toggle="tooltip" data-placement="right" title="실시 전 입니다.">Go Survey</button>
+                                                    <button class="btn btn-danger" th:data-rno="${relation.rno}" th:if="${relation.finish}=='T'" data-finish="T" data-name="본인" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다.">임시 저장</button>
+                                                    <button class="btn btn-secondary" th:data-rno="${relation.rno}" th:if="${relation.finish}=='Y'" data-finish="Y" data-name="본인"disabled>
                                                         <span data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다.">
                                                             제출 완료
                                                         </span>
@@ -43,13 +43,13 @@
                     <div th:with="relationArray = ${ {'1', '2', '3'} }">
                         <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
                             <h5 class="card-header">[[${r}]]차 평가자로서 평가할 대상
-                                <small th:if="${r}=='1'" class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
-                                <small th:if="${r}=='2'" class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
-                                <small th:if="${r}=='3'" class="float-md-right">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
+                                <small class="float-md-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
+                                <small class="float-md-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
+                                <small class="float-md-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
                             </h5>
                             <!-- card body -->
                             <div class="card-body pb-0">
-                                <table id="table" class="table">
+                                <table class="table" id="table">
                                     <thead class="thead-dark">
                                         <tr>
                                             <th scope="col">Name</th>
@@ -61,14 +61,14 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}==${r}">
-                                            <td>[[${relation.evaluated.name}]]</td>
-                                            <td>[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
-                                            <td>[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
-                                            <td>[[${relation.evaluated.level}]]</td>
-                                            <td>
-                                                <button th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
-                                                <button th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
-                                                <button th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" th:data-rno="${relation.rno}" class="btn btn-default" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
+                                            <td class="align-middle">[[${relation.evaluated.name}]]</td>
+                                            <td class="align-middle">[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
+                                            <td class="align-middle">[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
+                                            <td class="align-middle">[[${relation.evaluated.level}]]</td>
+                                            <td class="align-middle">
+                                                <button class="btn btn-default" th:data-rno="${relation.rno}" th:if="${relation.finish}=='N'" data-finish="N" th:data-name="${relation.evaluated.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
+                                                <button class="btn btn-default" th:data-rno="${relation.rno}" th:if="${relation.finish}=='T'" data-finish="T" th:data-name="${relation.evaluated.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
+                                                <button class="btn btn-default" th:data-rno="${relation.rno}" th:if="${relation.finish}=='Y'" data-finish="Y" th:data-name="${relation.evaluated.name}" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -84,9 +84,9 @@
     </div>
     <!-- ./div content -->
 <!-- button -->
-<div id="bottomGroup" class="position-fixed" align="center">
-    <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
-        <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
+<div class="position-fixed" id="bottomGroup" >
+    <div class="btn-group btn-group btn-group-lg" id="bottomBtn">
+        <button class="btn btn-default" id="top"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
             <div>Top</div>
         </button>
     </div>
