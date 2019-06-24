@@ -36,7 +36,7 @@
                                             <tr>
                                                 <td>
                                                     <button class="btn btn-primary" th:if="${turn?.infoMBO?.status}!='see'" data-type="mbo" th:data-rno="${relation.rno}" data-name="본인" data-toggle="tooltip" data-placement="right" title="본인 목표 관리 페이지로 이동">Go to my MBO!</button>
-                                                    <span>
+                                                    <span th:if="${turn?.infoMBO?.status}=='see'" >
                                                         <button class="btn btn-primary" th:if="${relation.finish}=='N'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="N" data-toggle="tooltip" data-placement="right" title="실시 전 입니다.">Go to my MBO!</button>
                                                         <button class="btn btn-danger" th:if="${relation.finish}=='T'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="T" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다.">임시 저장</button>
                                                         <button class="btn btn-secondary" th:if="${relation.finish}=='Y'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="Y" disabled>
@@ -68,10 +68,10 @@
                                             <th class="text-nowrap" style="width: 15%" scope="col">Department</th>
                                             <th class="text-nowrap" style="width: 15%" scope="col">Division</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col">Level</th>
-                                            <th class="text-nowrap" style="width: 10%" scope="col">작성률</th>
+                                            <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}!='see'">작성률</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}!='see'">MBO</th>
+                                            <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}=='see'">목표평가</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col">면담시트</th>
-                                            <th class="text-nowrap" style="width: 10%" scope="col">목표평가</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -86,18 +86,18 @@
                                                 </div>
                                             </td>
                                             <!-- 목표 설정 버튼 열 -->
-                                            <td class="align-items-center align-middle">
+                                            <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}!='see'">
                                                 <button class="btn btn-default" data-type="mbo" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
+                                            </td>
+                                            <!-- 평가 버튼 열 -->
+                                            <td th:if="${turn.infoMBO?.status}=='see'">
+                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='N'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
+                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='T'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
+                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='Y'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
                                             </td>
                                             <!-- 면담 시트 버튼 열 -->
                                             <td class="align-items-center align-middle">
                                                 <button class="btn btn-default" data-type="note" th:data-step="${turn?.infoMBO?.status}" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-scroll fa-fw"></i></button>
-                                            </td>
-                                            <!-- 평가 버튼 열 -->
-                                            <td>
-                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='N'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
-                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='T'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
-                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='Y'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
                                             </td>
                                         </tr>
                                     </tbody>    
@@ -206,13 +206,13 @@
                         var contentModal = $("#contentModal");
                         var step = $(this).data("step");
                         //모달 text
-                        contentModal.find("#modalTitle").html(step.toUpperCase() + " <small>단계 면담 시트</small>");
+                        contentModal.find("#modalTitle").html("MBO STEP " + step.toUpperCase() + " <small> 면담 시트</small>");
                         contentModal.find("#modalLabel1").text("대상자");
                         contentModal.find("#modalLabel2").text("Note");
                         contentModal.find("textarea[name=modalContent2]").attr("placeholder", "면담 내용 작성 전 입니다.");
                         contentModal.find("textarea[name=modalContent2]").val("");
                         //모달 layOut
-                        contentModal.find("input[name=modalContent1]").attr("readonly", "true").val(name+"님");
+                        contentModal.find("input[name=modalContent1]").attr("readonly", "true").val(name + "님");
                         //모달 button
                         contentModal.find("button[id!='modalCloseBtn']").hide();
                         contentModal.find("button[id='modalRegisterBtn']").show();

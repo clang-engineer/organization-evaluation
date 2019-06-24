@@ -161,7 +161,7 @@
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
                             </div>
-                            <a th:unless="${session.evaluator}" class="dropdown-item" th:href="@{/survey/(company=${company})}">Login</a>
+                            <a th:unless="${session.evaluator}" class="dropdown-item" th:href="@{/mbo/(company=${company})}">Login</a>
                         </div>
                     </li>
                 </ul>
