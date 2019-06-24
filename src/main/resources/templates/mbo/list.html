@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutMBO}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutMBO}">
 <!-- div content -->
 <div layout:fragment="content">
     <style>
@@ -84,12 +85,15 @@
                                                     <div class="progress-bar" th:each="ratio:${ratioList}" th:if="${ratio[0]}==${relation.evaluated.sno}" role="progressbar" th:style="'width:'+ ${ratio[2]}*100 +'%'" aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(ratio[2],0,0)}]]</div>
                                                 </div>
                                             </td>
+                                            <!-- 목표 설정 버튼 열 -->
                                             <td class="align-items-center align-middle">
                                                 <button class="btn btn-default" data-type="mbo" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
                                             </td>
+                                            <!-- 면담 시트 버튼 열 -->
                                             <td class="align-items-center align-middle">
-                                                <button class="btn btn-default" data-type="note" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-scroll fa-fw"></i></button>
+                                                <button class="btn btn-default" data-type="note" th:data-step="${turn?.infoMBO?.status}" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-scroll fa-fw"></i></button>
                                             </td>
+                                            <!-- 평가 버튼 열 -->
                                             <td>
                                                 <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='N'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
                                                 <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='T'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
@@ -125,12 +129,16 @@
 
     <!-- Modal -->
     <div th:insert="~{common/modal::basic}"></div>
+    <div th:insert="~{common/modal::content}"></div>
     <!-- ./Modal -->
     
 </html>
 <th:block layout:fragment="script">
+    <script type="text/javascript" src="/public/js/note.js"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
+
+            var csrf = JSON.parse('[[${_csrf}]]');
 
             //modal 사용 변수 선언
             var modal = $("#basicModal");
@@ -152,16 +160,23 @@
 
             var formObj = $("#f1");
 
+            //링크 버튼 별 동작을 나누기 위해 switch문을 사용하였다.
             $("table").on("click", "button", function (e) {
 
+                //공통 적으로 사용하는 변수 관계번호, 이름, 버튼타입
                 var rno = $(this).data("rno");
                 var name = $(this).data("name");
                 var type = $(this).data("type");
-                console.log(type);
+
                 //모달 data
                 modal.data("rno", rno);
 
+                //목표 Layout
+                modalContent1.attr("readonly", "true");
+                modal.find("button[id!='modalCloseBtn']").hide();
+
                 switch (type) {
+                    //type이 mbo일 경우 목표관리 페이지로 이동.
                     case "mbo":
                         modalTitle.text("MBO List")
                         if (name == "본인") {
@@ -169,13 +184,12 @@
                         } else {
                             modalContent1.val(name + "님 목표 페이지로 이동합니다.");
                         }
-                        //목표 Layout
-                        modalContent1.attr("readonly", "true");
-                        modal.find("button[id!='modalCloseBtn']").hide();
+
                         //목표 text
                         modalRegisterBtn.text("Go MBO!").show();
                         modal.modal('show');
                         break;
+                    //type이 survey일 경우, mbo와 마찬가지로 목표관리 페이지로 이동. 허나 모달의 text를 구분 짓기 위해 case문을 나눔,
                     case "survey":
                         modalTitle.text("MBO Evaluation")
                         if (name == "본인") {
@@ -183,14 +197,38 @@
                         } else {
                             modalContent1.val(name + "님 평가 페이지로 이동합니다.");
                         }
-                        //목표 Layout
-                        modalContent1.attr("readonly", "true");
-                        modal.find("button[id!='modalCloseBtn']").hide();
                         //목표 text
                         modalRegisterBtn.text("Go Evaluation!").show();
                         modal.modal('show');
                         break;
+                    /* type이 note일 경우, 새로운 모달을 사용하도록 함. contentModal을 생성해서 사용, noteService를 통한 ajax사용.*/
                     case "note":
+                        var contentModal = $("#contentModal");
+                        var step = $(this).data("step");
+                        //모달 text
+                        contentModal.find("#modalTitle").html(step.toUpperCase() + " <small>단계 면담 시트</small>");
+                        contentModal.find("#modalLabel1").text("대상자");
+                        contentModal.find("#modalLabel2").text("Note");
+                        contentModal.find("textarea[name=modalContent2]").attr("placeholder", "면담 내용 작성 전 입니다.");
+                        contentModal.find("textarea[name=modalContent2]").val("");
+                        //모달 layOut
+                        contentModal.find("input[name=modalContent1]").attr("readonly", "true").val(name+"님");
+                        //모달 button
+                        contentModal.find("button[id!='modalCloseBtn']").hide();
+                        contentModal.find("button[id='modalRegisterBtn']").show();
+                        //모달 data
+                        contentModal.data("rno", rno);
+                        contentModal.data("step", step);
+
+                        //ajax read by noteService function
+                        var param = {
+                            rno: rno,
+                            step: step
+                        }
+                        noteService.read(param, function (result) {
+                            contentModal.find("textarea[name=modalContent2]").val(result);
+                        });
+                        contentModal.modal("show");
                         break;
                 }
 
@@ -208,6 +246,28 @@
                 modal.modal('hide');
             });
 
+            //면담 시트 등록!! ajax register by noteService function
+            $("#contentModal").find("button[id='modalRegisterBtn']").click(function (e) {
+                var contentModal = $("#contentModal");
+                var rno = contentModal.data("rno");
+                var step = contentModal.data("step");
+                var note = contentModal.find("textarea[name=modalContent2]").val();
+                var param = {
+                    rno: rno,
+                    step: step,
+                    note: note,
+                    csrf: csrf
+                }
+                noteService.register(param, function (result) {
+                    alert("등록 되었습니다.");
+                    contentModal.modal("hide");
+                });
+            });
+
+            //close button click 시
+            $("#contentModal").find("button[id='modalCloseBtn']").on("click", function (e) {
+                $("#contentModal").modal('hide');
+            });
 
             // load했을 때 버튼 사이즈
             var win = $(this);

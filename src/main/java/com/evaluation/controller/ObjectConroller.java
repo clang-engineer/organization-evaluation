@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+// 목표 REST하기 위한 컨트롤러!!
 @RestController
 @RequestMapping("/object/**")
 @Slf4j
@@ -39,7 +40,7 @@ public class ObjectConroller {
     }
 
     @GetMapping("/{mno}")
-    public ResponseEntity<MBO> register(@PathVariable("mno") long mno) {
+    public ResponseEntity<MBO> read(@PathVariable("mno") long mno) {
         log.info("add object ");
 
         MBO mbo = Optional.ofNullable(mboService.read(mno)).map(Optional::get).orElse(null);

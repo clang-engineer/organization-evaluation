@@ -3,6 +3,7 @@ package com.evaluation.controller;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -17,19 +18,23 @@ import com.evaluation.service.RelationMBOService;
 import com.evaluation.service.ReplyService;
 import com.evaluation.service.TurnService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/mbo/**")
+@RequestMapping("/mbo/*")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -206,7 +211,7 @@ public class MBOController {
         return "redirect:/mbo/list";
     }
 
-    // @GetMapping("/object")
+    // 목표와 목표댓글을 불러오기 위한
     @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
@@ -236,6 +241,32 @@ public class MBOController {
                 model.addAttribute("replyList", replyList);
             });
         });
-
     }
+
+    // 면담 내용을 쓰기 위한 REST!!!
+    @PostMapping("/note/{rno}/{step}")
+    public ResponseEntity<HttpStatus> noteCreate(@PathVariable("rno") long rno, @PathVariable("step") String step,
+            String note) {
+        log.info("" + note);
+
+        relationMBOService.read(rno).ifPresent(origin -> {
+            origin.getComments().put(step, note);
+            relationMBOService.modify(origin);
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    // 면담 내용을 읽기 위한 REST!!!
+    @GetMapping("/note/{rno}/{step}")
+    @ResponseBody
+    public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
+        log.info("read" + rno + step);
+        
+        Optional<String> object = Optional.ofNullable(relationMBOService.read(rno).get().getComments().get(step));
+        String note = object.get();
+
+        return new ResponseEntity<String>(note, HttpStatus.OK);
+    }
+
 }
