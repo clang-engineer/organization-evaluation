@@ -47,18 +47,18 @@ public class ObjectConroller {
         return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 
-    @PutMapping("/{step}/{mno}")
-    public ResponseEntity<HttpStatus> modify(@PathVariable("step") String step, @PathVariable("mno") long mno,
+    @PutMapping("/{mno}/{step}")
+    public ResponseEntity<HttpStatus> modify(@PathVariable("mno") long mno, @PathVariable("step") String step,
             @RequestBody MBO mbo) {
         log.info("modify " + step);
 
-        // plan 단계가 아니면 기존 객체 복사해서 finish N으로 등록해놈, 기록 남김!
+        // plan 단계가 아니면 기존 객체 복사해서 finish M으로 등록해놈, 기록 남김! 수정은 M 삭제는 D
         if (!step.equals("plan")) {
             mboService.read(mno).ifPresent(origin -> {
                 try {
                     MBO tmp = (MBO) origin.clone();
                     tmp.setMno(0);
-                    tmp.setFinish("N");
+                    tmp.setFinish("M");
                     mboService.register(tmp);
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
@@ -72,12 +72,37 @@ public class ObjectConroller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    @DeleteMapping("/{mno}")
-    public ResponseEntity<HttpStatus> delete(@PathVariable("mno") long mno) {
+    @DeleteMapping("/{mno}/{step}")
+    public ResponseEntity<HttpStatus> delete(@PathVariable("mno") long mno, @PathVariable("step") String step) {
         log.info("delete " + mno);
 
+        // plan 단계가 아니면 기존 객체 복사해서 finish D으로 등록해놈, 기록 남김! 수정은 M 삭제는 D
+        if (!step.equals("plan")) {
+            mboService.read(mno).ifPresent(origin -> {
+                try {
+                    MBO tmp = (MBO) origin.clone();
+                    tmp.setMno(0);
+                    tmp.setFinish("D");
+                    mboService.register(tmp);
+
+                    // 댓글 mno 수정하기
+                    replyService.listByMbo(mno).ifPresent(list -> {
+                        list.forEach(reply -> {
+                            reply.setMno(tmp.getMno());
+                            replyService.modify(reply);
+                        });
+                    });
+                    log.info("================>" + tmp.getMno());
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 동록 후에는 해당 mno원본 삭제함
         mboService.remove(mno);
 
+        // 단계가 어디든 게시물이 삭제되면 댓글은 삭제되도록 함.
         replyService.listByMbo(mno).ifPresent(list -> {
             list.forEach(reply -> {
                 replyService.remove(reply.getRno());

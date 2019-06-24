@@ -39,7 +39,7 @@ var objectService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/object/' + param.step + '/' + param.mno,
+            url: '/object/' + param.mno + '/' + param.step,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var objectService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '/object/' + param.mno,
+            url: '/object/' + param.mno + '/' + param.step,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
