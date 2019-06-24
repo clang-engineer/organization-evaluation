@@ -39,7 +39,7 @@ var objectService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/object/' + param.mno,
+            url: '/object/' + param.step + '/' + param.mno,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",

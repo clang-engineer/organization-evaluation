@@ -47,10 +47,26 @@ public class ObjectConroller {
         return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 
-    @PutMapping("/{mno}")
-    public ResponseEntity<HttpStatus> modify(@PathVariable("mno") long mno, @RequestBody MBO mbo) {
-        log.info("modify " + mno);
+    @PutMapping("/{step}/{mno}")
+    public ResponseEntity<HttpStatus> modify(@PathVariable("step") String step, @PathVariable("mno") long mno,
+            @RequestBody MBO mbo) {
+        log.info("modify " + step);
 
+        // plan 단계가 아니면 기존 객체 복사해서 finish N으로 등록해놈, 기록 남김!
+        if (!step.equals("plan")) {
+            mboService.read(mno).ifPresent(origin -> {
+                try {
+                    MBO tmp = (MBO) origin.clone();
+                    tmp.setMno(0);
+                    tmp.setFinish("N");
+                    mboService.register(tmp);
+                } catch (CloneNotSupportedException e) {
+                    e.printStackTrace();
+                }
+            });
+        }
+
+        // 단계가 어찌됐던 수정은 함
         mboService.modify(mbo);
 
         return new ResponseEntity<>(HttpStatus.OK);

@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "tbl_MBO")
-public class MBO {
+public class MBO implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -27,12 +27,14 @@ public class MBO {
 
     @Column(name = "object", length = 2000)
     private String object;
-    
+
     @Column(name = "process", length = 2000)
     private String process;
 
     private Double ratio;
-    private String finish = "N";
+
+    // final이라는 이름으로 변수 하고 싶은데 스프링 상수 이므로 불가능! finish로
+    private String finish = "Y";
 
     private String writeId;
     private String updateId;
@@ -46,4 +48,9 @@ public class MBO {
     private long tno;
     @Column(name = "staff_sno")
     private long sno;
+
+    //mbo복사해서 쓰기 위해서, do단계에서 수정 시 기존 것 finish N으로 기록하기 위해!
+    public Object clone() throws CloneNotSupportedException {
+        return super.clone();
+    }
 }
