@@ -70,6 +70,7 @@
                                             <th class="text-nowrap" style="width: 10%" scope="col">Level</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}!='see'">작성률</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}!='see'">MBO</th>
+                                            <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}=='see'">본인평가</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO?.status}=='see'">목표평가</th>
                                             <th class="text-nowrap" style="width: 10%" scope="col">면담시트</th>
                                         </tr>
@@ -88,6 +89,11 @@
                                             <!-- 목표 설정 버튼 열 -->
                                             <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}!='see'">
                                                 <button class="btn btn-default" data-type="mbo" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
+                                            </td>
+                                            <!-- 평가 버튼 열 -->
+                                            <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}=='see'">
+                                                <span th:if="${relation.finish}=='N'">실시 전</span>
+                                                <span th:if="${relation.finish}=='Y'">완료</span>
                                             </td>
                                             <!-- 평가 버튼 열 -->
                                             <td th:if="${turn.infoMBO?.status}=='see'">
