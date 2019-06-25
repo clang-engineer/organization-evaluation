@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutMBO}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutMBO}">
 <!-- div content -->
 <div layout:fragment="content">
     <!-- Page Content -->
@@ -9,36 +10,56 @@
             <small>Subheading</small>
         </h2>
 
-        <div>
+        <div th:if="${turn.infoMBO.status}!='see'">
             <!-- <button th:if="${session.evaluator.sno}==${sno}" id="addObject" class="btn float-right" type="submit"><i class="fas fa-plus-circle">목표추가</i></button> -->
             <button id="addObject" class="btn float-right" type="submit"><i class="fas fa-plus-circle">목표추가</i></button>
         </div>
-        <!-- [[${objectList}]] -->
-
-        <table class="table table-bordered">
+        <table class="table" id="objectListTable">
             <thead class="thead-dark">
                 <th class="text-nowrap" style="width: 5%" scope="col">#</th>
                 <th class="text-nowrap" style="width: 40%" scope="col">목표</th>
                 <th class="text-nowrap" style="width: 40%" scope="col">달성기준</th>
-                <th class="text-nowrap" style="width: 5%" scope="col">비중%</th>
-                <th class="text-nowrap" style="width: 5%" scope="col">수정</th>
-                <th class="text-nowrap" style="width: 5%" scope="col">댓글</th>
+                <th class="text-nowrap" style="width: 2%" scope="col">비중%</th>
+                <th class="text-nowrap" style="width: 2%" scope="col" th:if="${turn.infoMBO.status}!='see'">수정</th>
+                <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO.status}=='see'">본인평가</th>
+                <th class="text-nowrap" style="width: 10%" scope="col" th:if="${turn.infoMBO.status}=='see' and ${relation.relation}!='me'">상사평가</th>
+                <th class="text-nowrap" style="width: 2%" scope="col">댓글</th>
             </thead>
             <tbody>
-                <div th:each="object,status:${objectList}">
+                <div th:each="object,status:${objectList}" th:if="${object.finish}=='Y'">
+
                     <!-- object -->
                     <tr>
-                        <!-- <th scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
-                        <th scope="row" style="line-height:150px;">[[${object.mno}]]</th>
+                        <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th>
+                        <!-- <th scope="row" style="line-height:150px;">[[${object.mno}]]</th> -->
                         <td class="text-left" style="white-space:pre-line">[[${object?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object.ratio,0,0)}]]</td>
-                        <td class="align-middle text-middle">
+                        <td class="align-middle text-middle"  th:if="${turn.infoMBO.status}!='see'">
                             <button class="btn btn-default btn-lg modifyObject" th:data-mno="${object.mno}"><i class="fas fa-eraser"></i></button>
                         </td>
+                        <!-- 본인평가 -->
+                        <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see'">
+                            <select class="form-control" th:name="${status.count}" th:disabled="${relation.relation}!='me'">
+                                <option value="">--</option>
+                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
+                                    [[${reply.name}]]
+                                </option>
+                            </select>
+                        </td>
+                        <!-- 상사평가 -->
+                        <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' and ${relation.relation}!='me'">
+                            <select class="form-control" th:name="${status.count}">
+                                <option value="">--</option>
+                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
+                                    [[${reply.name}]]
+                                </option>
+                            </select>
+                        </td>
+                        <!-- 댓글 collapse -->
                         <td class="align-middle text-middle">
                             <button class="btn btn-default btn-lg" data-toggle="collapse" th:href="'#collapse' +${object.mno}" role="button" aria-expanded="false" aria-controls="collapseExample">
-                                <i class="fas fa-comment-dots"></i>
+                                <i class="fas fa-comments"></i>
                             </button>
                         </td>
                     </tr>
@@ -47,23 +68,23 @@
                     <tr th:each="reply:${replyList}" th:if="${reply.mno}==${object.mno}" class="collapse" th:id="collapse+${object.mno}">
                         <td>
                             <div class="collapse" th:id="collapse+${object.mno}">
-                                <i class="fas fa-comments"></i>
+                                <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                             </div>
                         </td>
-                        <td colspan="4" class="text-left">
+                        <td th:colspan="${turn.infoMBO.status}!='see'?'4':'6'" class="text-left">
                             <div class="collapse" th:id="collapse+${object.mno}">
+                                [[${reply.rno}]]
                                 [[${reply?.comment}]]
                                 <!-- 본인이면 아이디 안 붙도록 -->
-                                <div th:if="${session.evaluator.email}==${updateId}" class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
-                                <div th:else="${session.evaluator.email}!=${updateId}" class="float-right">[[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
+                                <div class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
                             </div>
                         </td>
-                        <td>
+                        <td th:if="${turn.infoMBO.status}!='see'">
                             <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify"><i class="fas fa-times"></i></button>
                         </td>
                     </tr>
-                    <tr class="collapse table-primary" th:id="collapse+${object.mno}">
-                        <td colspan="5" class="align-middle text-middle">
+                    <tr class="collapse table-primary" th:id="collapse+${object.mno}" th:if="${turn.infoMBO.status}!='see'">
+                        <td colspan=5 class="align-middle text-middle">
                             <div class="form-group">
                                 <input type="text" class="form-control form-inline" placeholder="Enter Reply">
                             </div>
@@ -73,7 +94,10 @@
                         </td>
                     </tr>
                     <!-- ./reply -->
-            </div>
+                </div>
+                        <div th:each="object,status:${removedList}">
+                            [[${object?.object}+${object.finish}]]
+                        </div>
             </tbody>
         </table>
 
@@ -81,10 +105,10 @@
        <!-- button -->
        <div id="bottomGroup" class="position-fixed" align="center">
         <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
-            <button th:if="${relation?.finish}!='Y'" id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
+            <button th:if="${turn.infoMBO.status}=='see' AND ${relation?.finish}!='Y'" id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
                 <div>Submit</div>
             </button>
-            <button th:if="${relation?.finish}!='Y'" id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
+            <button th:if="${turn.infoMBO.status}=='see' AND ${relation?.finish}!='Y'" id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
                 <div>Pause</div>
             </button>
             <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
@@ -134,6 +158,8 @@
             modalLabel2.text("달성기준");
             modalLabel3.text("비중");
 
+            //테이블 지정
+            var objectListTable = $('#objectListTable');
 
             //modal select 초기화
             function modalSelectInit(now) {
@@ -156,25 +182,26 @@
                 modalContent3.html(str);
             }
 
-
-
+            //목표 추가 버튼 누 눌렀을 때
             $("#addObject").click(function (e) {
+                //select 초기화
                 modalSelectInit();
 
-                modal.modal("show");
+                //모달 text
                 modalContent1.val("");
                 modalContent2.val("");
                 modalContent3.val("0");
+
                 //모달 button
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show();
 
+                modal.modal("show");
             });
 
             var tno = [[${ tno }]];
             var sno = [[${ relation.evaluated.sno }]];
-            var sessionName = [[${ session.evaluator.name }]];
-
+            var sessionId = [[${ session.evaluator.email }]];
 
             modalRegisterBtn.click(function (e) {
                 var param = {
@@ -183,51 +210,62 @@
                     object: modalContent1.val(),
                     process: modalContent2.val(),
                     ratio: modalContent3.val(),
-                    writeId: sessionName,
-                    updateId: sessionName,
+                    writeId: sessionId,
+                    updateId: sessionId,
                     finish: 'Y',
                     csrf: csrf
                 }
 
                 objectService.register(param, function (result) {
-                    alert("정상적으로 등록되었습니다.");
-                    modal.find("input").val("");
-
                     //인덱스의 최대값 찾기.
                     var max = 0;
-                    $('tr').children('th').each(function () {
+                    // $('tr').children('th').each(function () {
+                    $("th[name='objectCount']").each(function () {
                         var value = parseInt($(this).text());
                         max = (value > max) ? value : max;
                     });
 
-                    var str = "<tr><th scope='row' style='line-height:150px;'>" + (max + 1) + "</th>"
+                    //목표 행 생성.
+                    var str = "<tr><th name='objectCount' scope='row' style='line-height:150px;'>" + (max + 1) + "</th>"
                         + "<td class='text-left' style = 'white-space:pre-line'>" + result.object + "</td >"
                         + "<td class='text-left' style='white-space:pre-line'>" + result.process + "</td>"
                         + "<td class='ratio align-middle' >" + Math.floor(result.ratio * 100) + '%' + "</td >"
                         + "<td class='align-middle text-middle' ><button class='btn btn-default btn-lg modifyObject' data-mno='" + result.mno + "' ><i class='fas fa-eraser'></i></button></td >"
-                        + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' href='#collapse" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comment-dots'></i></button></td >"
+                        + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' href='#collapse" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comments'></i></button></td >"
                         + "</tr >"
                         + "<tr class='collapse' id='collapse" + result.mno + "'><td colspan='5' class='align-middle text-middle'><div class='form-group'><input type='text' class='form-control form-inline' placeholder='Enter Reply'></div></td>"
                         + "<td><button type='button' data-mno='" + result.mno + "' class='btn btn-primary btn-sm replyRegister'>등록</button></td>"
                         + "</tr>;"
 
-                    $('table tbody').append(str);
+                    objectListTable.append(str);
+
+                    //모달 text 초기화
+                    modal.find("input").val("");
+
                     modal.modal('hide');
+                    alert("정상적으로 등록되었습니다.");
                 });
             });
 
-            $("table").on("click", ".modifyObject", function (e) {
+            //테이블 내의 각 목표 행 modify 클릭 했을 때
+            objectListTable.on("click", ".modifyObject", function (e) {
+                //data 불러오기
                 var mno = $(this).data("mno");
-                modal.data("mno", mno);
+
                 var param = {
                     mno: mno
                 }
+
+                //ajax 호출
                 objectService.read(param, function (result) {
                     modalSelectInit(result.ratio * 100);
                     modalContent1.val(result.object);
                     modalContent2.val(result.process);
                     modalContent3.val(result.ratio);
                 });
+
+                //모달 data 설정
+                modal.data("mno", mno);
 
                 // 모달 button
                 modal.find("button[id!='modalCloseBtn']").hide();
@@ -237,39 +275,51 @@
                 modal.modal("show");
             });
 
+            //모달 내의 목표 수정 버튼 클릭 했을 때
             modalModifyBtn.click(function (e) {
                 var mno = modal.data("mno");
+                var step = [[${ turn.infoMBO.status }]];
+
+                //변수 넘길 때 목표관련 데이터 외에 step을 같이 넘겨서 스텝에 따른 동작 다르게
                 var param = {
                     mno: mno,
                     object: modalContent1.val(),
                     process: modalContent2.val(),
                     ratio: modalContent3.val(),
-                    updateId: sessionName,
+                    updateId: sessionId,
+                    step: step,
                     csrf: csrf
                 }
 
+                //ajax 호출
                 objectService.modify(param, function (result) {
                     alert("수정 되었습니다.");
 
-                    $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(0).text(modalContent1.val());
-                    $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(1).text(modalContent2.val());
-                    $('table').find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(2).text(Math.floor(modalContent3.val() * 100) + '%');
+                    objectListTable.find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(0).text(modalContent1.val());
+                    objectListTable.find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(1).text(modalContent2.val());
+                    objectListTable.find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(2).text(Math.floor(modalContent3.val() * 100) + '%');
                     modal.modal("hide");
                 });
             });
 
+            //모달 내의 삭제 머튼 눌렀을 때
             modalRemoveBtn.click(function (e) {
                 var mno = modal.data("mno");
+                var step = [[${ turn.infoMBO.status }]];
+
+                //변수 넘길 때 목표관련 데이터 외에 step을 같이 넘겨서 스텝에 따른 동작 다르게
                 var param = {
                     mno: mno,
+                    step: step,
                     csrf: csrf
                 }
 
+                //ajax 호출
                 if (delchk() == true) {
                     objectService.remove(param, function (result) {
                         alert("삭제 되었습니다.");
-                        $('table').find("button[data-mno=" + mno + "]").parent().parent().remove();
-                        $('table').find("tr[id='collapse" + mno + "']").remove();
+                        objectListTable.find("button[data-mno=" + mno + "]").parent().parent().remove();
+                        objectListTable.find("tr[id='collapse" + mno + "']").remove();
                         modal.modal("hide");
                     });
                 } else {
@@ -278,7 +328,8 @@
             });
 
 
-            $("table").on("click", ".replyRegister", function (e) {
+            // 댓글 등록 버튼 클릭했을 때 등록하기
+            objectListTable.on("click", ".replyRegister", function (e) {
                 var mno = $(this).data("mno");
                 var comment = $(this).parent().parent().find("input").val();
 
@@ -286,40 +337,43 @@
                     sno: sno,
                     mno: mno,
                     comment: comment,
-                    writeId: sessionName,
-                    updateId: sessionName,
+                    writeId: sessionId,
+                    updateId: sessionId,
                     csrf: csrf
                 }
 
+                //ajax 호출
                 replyService.register(param, function (result) {
                     alert("정상적으로 등록되었습니다.");
                     modal.find("input").val("");
-                    var currentDate = new Date();
-                    var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comments'></i></div></td>"
-                        + "<td colspan='4' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + displayTime(currentDate) + "</div></div></td>"
+                    var currentDate = new Date(result.writeDate);
+                    var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comment-dots fa-flip-horizontal'></i></div></td>"
+                        + "<td colspan='4' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div></div></td>"
                         + "<td><button type='button' data-rno='" + result.rno + "' class='btn btn-default btn-sm replyModify'><i class='fas fa-times'></i></button></td ></tr >";
-                    $('table').find("tr[id='collapse" + mno + "']").last().before(str);
 
-                    $('table').find("tr[id='collapse" + mno + "']").parent().find('input').val('');
+                    objectListTable.find("tr[id='collapse" + mno + "']").last().before(str);
+                    objectListTable.find("tr[id='collapse" + mno + "']").parent().find('input').val('');
 
                     modal.modal('hide');
                 });
             });
 
-            $("table").on("click", ".replyModify", function (e) {
+            //댓글 수정 버튼 클릭했을 때 읽어오기
+            objectListTable.on("click", ".replyModify", function (e) {
                 var rno = $(this).data("rno");
-                var replyer = [[${ session.evaluator.email }]];
 
                 var param = {
-                    rno: rno,
+                    rno: rno
                 }
+
+                //ajax호출
                 replyService.read(param, function (result) {
                     $("#basicModal").find("input[name='modalContent1']").val(result.comment);
                 });
 
                 //모달 value
                 $("#basicModal").data("rno", rno);
-                $("#basicModal").find("input[name='modalContent2']").attr("readonly", "true").val(replyer);
+                $("#basicModal").find("input[name='modalContent2']").attr("readonly", "true").val(sessionId);
 
                 //모달 text
                 $("#basicModal").find("#modalTitle").text("Reply Modify/Delete");
@@ -334,21 +388,32 @@
                 $("#basicModal").modal("show");
             });
 
+            // 댓글 모달 내 수정 버튼 클릭 했을 때 수정하기
             $("#basicModal").find("#modalModifyBtn").click(function (e) {
                 var rno = $("#basicModal").data("rno");
 
                 var param = {
                     rno: rno,
                     comment: $("#basicModal").find("input[name='modalContent1']").val(),
-                    updateId: sessionName,
+                    updateId: sessionId,
                     csrf: csrf
                 }
+
+                //ajax 호출
                 replyService.modify(param, function (result) {
                     alert("수정 되었습니다.");
+                    var currentDate = new Date(result.writeDate);
+                    var str = "<div class='collpse show' th:id='collapse'" + result.mno + ">"
+                        + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div>"
+                        + "</div>";
+
+                    objectListTable.find("button[data-rno=" + rno + "]").parent().parent().find('td').eq(1).html(str);
+
                     $("#basicModal").modal("hide");
                 });
             });
 
+            // 댓글 모달 내 삭제 버튼 클릭 했을 때 수정하기
             $("#basicModal").find("#modalRemoveBtn").click(function (e) {
                 var rno = $("#basicModal").data("rno");
                 var param = {
@@ -356,10 +421,11 @@
                     csrf: csrf
                 }
 
+                //삭제 여부 한번 더 확인하고 ajax 호출
                 if (delchk() == true) {
                     replyService.remove(param, function (result) {
                         alert("삭제 되었습니다.");
-                        $('table').find("button[data-rno=" + rno + "]").parent().parent().remove();
+                        objectListTable.find("button[data-rno=" + rno + "]").parent().parent().remove();
                         $("#basicModal").modal("hide");
                     });
                 } else {
@@ -371,7 +437,9 @@
             modalCloseBtn.on("click", function (e) {
                 modal.modal('hide');
             });
-            $("#basicModal").on("click", function (e) {
+
+            //댓글 모달 close버튼 클릭시
+            $("#basicModal").find("#modalCloseBtn").on("click", function (e) {
                 $("#basicModal").modal('hide');
             });
 
@@ -449,6 +517,7 @@
                 $('#btnSubmit,#btnPause').tooltip('hide');
             }, 2500);
 
+            //delete 체크 함수
             function delchk() {
                 if (confirm("삭제하시겠습니까?")) {
                     return true;

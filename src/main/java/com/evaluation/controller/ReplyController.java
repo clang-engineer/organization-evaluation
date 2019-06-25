@@ -1,7 +1,5 @@
 package com.evaluation.controller;
 
-import java.util.Optional;
-
 import com.evaluation.domain.Reply;
 import com.evaluation.service.ReplyService;
 
@@ -32,25 +30,24 @@ public class ReplyController {
         log.info("add object ");
 
         replyService.register(reply);
-        return new ResponseEntity<>(reply, HttpStatus.OK);
+
+        return new ResponseEntity<>(replyService.read(reply.getRno()).get(), HttpStatus.OK);
     }
 
     @GetMapping("/{rno}")
     public ResponseEntity<Reply> read(@PathVariable("rno") long rno) {
         log.info("read object ");
 
-        Reply reply = Optional.ofNullable(replyService.read(rno)).map(Optional::get).orElse(null);
-
-        return new ResponseEntity<>(reply, HttpStatus.OK);
+        return new ResponseEntity<>(replyService.read(rno).get(), HttpStatus.OK);
     }
 
     @PutMapping("/")
-    public ResponseEntity<HttpStatus> modify(@RequestBody Reply reply) {
+    public ResponseEntity<Reply> modify(@RequestBody Reply reply) {
         log.info("modify " + reply);
 
         replyService.modify(reply);
 
-        return new ResponseEntity<>(HttpStatus.OK);
+        return new ResponseEntity<>(replyService.read(reply.getRno()).get(), HttpStatus.OK);
     }
 
     @DeleteMapping("/{rno}")
