@@ -254,14 +254,25 @@ public class MBOController {
             // 피평가자의 목표 가져오기, 피평가자 sno와 tno로
             mboService.listByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(list -> {
                 // finish Y인 목록과 N인 목록 구분 지음.
-                List<MBO> objectList = new LinkedList<MBO>();
-                List<MBO> removedList = new LinkedList<MBO>();
+                List<ObjectWithReplyNum> objectList = new LinkedList<ObjectWithReplyNum>();
+                List<ObjectWithReplyNum> removedList = new LinkedList<ObjectWithReplyNum>();
 
                 for (int i = 0; i < list.size(); i++) {
+
+                    //댓글 수와 목표를 묶은 객체를 만들어서 list에 추가함.
+                    ObjectWithReplyNum object = new ObjectWithReplyNum();
+                    //목표를 추가하고
+                    object.mbo = list.get(i);
+                    //목표에 해당하는 댓글수를 가져와서 추가하고
+                    replyService.listByMbo(list.get(i).getMno()).ifPresent(origin -> {
+                        object.replyNum = origin.size();
+                    });
+
+                    //삭제,수정 된 목표와 아닌 것을 구분하고
                     if (list.get(i).getFinish().equals("Y")) {
-                        objectList.add(list.get(i));
+                        objectList.add(object);
                     } else {
-                        removedList.add(list.get(i));
+                        removedList.add(object);
                     }
                 }
 
@@ -278,6 +289,14 @@ public class MBOController {
                 model.addAttribute("replyList", replyList);
             });
         });
+    }
+
+    /**
+     * 댓글수를 같이 가져가기 위한 내부 클래스
+     */
+    public class ObjectWithReplyNum {
+        public MBO mbo;
+        public int replyNum;
     }
 
     // 면담 내용을 쓰기 위한 REST!!!

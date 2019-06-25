@@ -12,10 +12,12 @@ import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.Setter;
+import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Commit
+@Slf4j
 public class ReplyRepositoryTests {
 
     @Setter(onMethod_ = { @Autowired })
@@ -33,5 +35,10 @@ public class ReplyRepositoryTests {
         reply.setMno(1L);
 
         replyRepo.save(reply);
+    }
+
+    @Test
+    public void name() {
+        log.info("====>"+replyRepo.listByMno(218).get().size());
     }
 }
