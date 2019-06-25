@@ -2,6 +2,7 @@ package com.evaluation.controller;
 
 import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -9,8 +10,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.evaluation.domain.MBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
+import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.MBOService;
@@ -40,17 +43,19 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class MBOController {
 
-    MBOService mboService;
-
-    ReplyService replyService;
+    BookService bookService;
 
     CompanyService companyService;
 
-    TurnService turnService;
+    DepartmentService departmentService;
+
+    MBOService mboService;
 
     RelationMBOService relationMBOService;
 
-    DepartmentService departmentService;
+    ReplyService replyService;
+
+    TurnService turnService;
 
     @GetMapping("/")
     public String survey(String company, Model model) {
@@ -192,7 +197,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    @GetMapping("/object")
+    // @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -212,7 +217,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    @PostMapping("/object")
+    @GetMapping("/object")
+    // @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -223,13 +229,44 @@ public class MBOController {
             model.addAttribute("companyInfo", origin);
         });
 
+        turnService.get(tno).ifPresent(turn -> {
+            model.addAttribute("turn", turn);
+        });
+
+        turnService.get(tno).ifPresent(turn -> {
+            // 평가 단계에서 회답지 추가
+            if (turn.getInfoMBO().getStatus().equals("see")) {
+                // 회답지 추가
+                bookService.read(turn.getInfoMBO().getReplyCode()).ifPresent(book -> {
+                    model.addAttribute("replyCodeList", book.getContents());
+                });
+                // 가중치 추가
+                bookService.read(turn.getInfoMBO().getReplyCode()).ifPresent(book -> {
+                    model.addAttribute("weightCodeList", book.getContents());
+                });
+            }
+        });
+
         relationMBOService.read(rno).ifPresent(relation -> {
             // 관계에 대한 정보 추가
             model.addAttribute("relation", relation);
 
             // 피평가자의 목표 가져오기, 피평가자 sno와 tno로
             mboService.listByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(list -> {
-                model.addAttribute("objectList", list);
+                // finish Y인 목록과 N인 목록 구분 지음.
+                List<MBO> objectList = new LinkedList<MBO>();
+                List<MBO> removedList = new LinkedList<MBO>();
+
+                for (int i = 0; i < list.size(); i++) {
+                    if (list.get(i).getFinish().equals("Y")) {
+                        objectList.add(list.get(i));
+                    } else {
+                        removedList.add(list.get(i));
+                    }
+                }
+
+                model.addAttribute("objectList", objectList);
+                model.addAttribute("removedList", removedList);
 
                 // 댓글 리스트 목록으로 만들어 전달하기 현재 목표리스트의 mno와 일치하는 댓글만
                 List<Reply> replyList = new ArrayList<>();
@@ -262,7 +299,7 @@ public class MBOController {
     @ResponseBody
     public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
         log.info("read" + rno + step);
-        
+
         Optional<String> object = Optional.ofNullable(relationMBOService.read(rno).get().getComments().get(step));
         String note = object.get();
 
