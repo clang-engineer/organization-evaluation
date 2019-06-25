@@ -27,10 +27,10 @@
             </thead>
             <tbody>
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
-
                     <!-- object -->
                     <tr>
-                        <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th>
+                        <th name="objectCount" scope="row" style="line-height:150px;">[[${object?.mbo?.mno}]]</th>
+                        <!-- <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
@@ -59,7 +59,9 @@
                         <td class="align-middle text-middle">
                             <button class="btn btn-default btn-lg" data-toggle="collapse" th:href="'#collapse' +${object?.mbo?.mno}" role="button" aria-expanded="false" aria-controls="collapseExample">
                                 <i class="fas fa-comments"></i>
-                                [[${object?.replyNum}]]
+                                <small name="replyNum">
+                                    [[${object?.replyNum}]]
+                                </small> 
                             </button>
                         </td>
                     </tr>
@@ -95,9 +97,6 @@
                     </tr>
                     <!-- ./reply -->
                 </div>
-                        <div th:each="object,status:${removedList}">
-                            [[${object?.mbo?.object}+${object?.mbo?.finish}]]
-                        </div>
             </tbody>
         </table>
 
@@ -133,6 +132,8 @@
     <script type="text/javascript" src="/public/js/reply.js"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
+
+
 
             var csrf = JSON.parse('[[${_csrf}]]');
 
@@ -231,7 +232,7 @@
                         + "<td class='text-left' style='white-space:pre-line'>" + result.process + "</td>"
                         + "<td class='ratio align-middle' >" + Math.floor(result.ratio * 100) + '%' + "</td >"
                         + "<td class='align-middle text-middle' ><button class='btn btn-default btn-lg modifyObject' data-mno='" + result.mno + "' ><i class='fas fa-eraser'></i></button></td >"
-                        + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' href='#collapse" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comments'></i></button></td >"
+                        + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' href='#collapse" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comments'></i><small name='replyNum'>0</small></button></td >"
                         + "</tr >"
                         + "<tr class='collapse' id='collapse" + result.mno + "'><td colspan='5' class='align-middle text-middle'><div class='form-group'><input type='text' class='form-control form-inline' placeholder='Enter Reply'></div></td>"
                         + "<td><button type='button' data-mno='" + result.mno + "' class='btn btn-primary btn-sm replyRegister'>등록</button></td>"
@@ -344,8 +345,6 @@
 
                 //ajax 호출
                 replyService.register(param, function (result) {
-                    alert("정상적으로 등록되었습니다.");
-                    modal.find("input").val("");
                     var currentDate = new Date(result.writeDate);
                     var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comment-dots fa-flip-horizontal'></i></div></td>"
                         + "<td colspan='4' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div></div></td>"
@@ -354,6 +353,13 @@
                     objectListTable.find("tr[id='collapse" + mno + "']").last().before(str);
                     objectListTable.find("tr[id='collapse" + mno + "']").parent().find('input').val('');
 
+                    //댓글 갯수 표시 늘이기. !! 등록 후에 댓글숫자 늘려야함. rno로 연결 되어있기 때문에!! 
+                    var id = objectListTable.find("button[data-rno=" + result.rno + "]").parent().parent().attr('id');
+                    var replyNum = objectListTable.find("button[href='#" + id + "']").find('small');
+                    replyNum.text(parseInt(replyNum.text()) + 1);
+
+                    alert("정상적으로 등록되었습니다.");
+                    modal.find("input").val("");
                     modal.modal('hide');
                 });
             });
@@ -413,6 +419,7 @@
                 });
             });
 
+
             // 댓글 모달 내 삭제 버튼 클릭 했을 때 수정하기
             $("#basicModal").find("#modalRemoveBtn").click(function (e) {
                 var rno = $("#basicModal").data("rno");
@@ -424,14 +431,24 @@
                 //삭제 여부 한번 더 확인하고 ajax 호출
                 if (delchk() == true) {
                     replyService.remove(param, function (result) {
-                        alert("삭제 되었습니다.");
+                        //댓글 갯수 줄이기. 먼저 줄이고 행 삭제해야함. 순서 중요!  
+                        var id = objectListTable.find("button[data-rno=" + rno + "]").parent().parent().attr('id');
+                        var replyNum = objectListTable.find("button[href='#" + id + "']").find('small');
+                        replyNum.text(parseInt(replyNum.text()) - 1);
+
+                        //댓글 행 삭제하기
                         objectListTable.find("button[data-rno=" + rno + "]").parent().parent().remove();
+
                         $("#basicModal").modal("hide");
+
+                        alert("삭제 되었습니다.");
                     });
                 } else {
                     return;
                 };
             });
+
+
 
             //close button click 시
             modalCloseBtn.on("click", function (e) {
