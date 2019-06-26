@@ -10,7 +10,6 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.evaluation.domain.Company;
 import com.evaluation.domain.MBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;

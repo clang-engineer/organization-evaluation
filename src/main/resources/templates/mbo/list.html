@@ -137,7 +137,7 @@
 
     <!-- Modal -->
     <div th:insert="~{common/modal::basic}"></div>
-    <div th:insert="~{common/modal::content}"></div>
+    <div th:insert="~{common/object::content}"></div>
     <!-- ./Modal -->
     
 </html>
@@ -167,6 +167,7 @@
             modalGroupContent2.hide();
 
             $("#contentModal").find("#content2").append("<p class='float-md-right mb-0' id='count_message'>0/2000</p>");
+
             //글자 수 카운터
             $("#contentModal").on("keyup", "textarea", function (e) {
                 var maxLength = 2000;
@@ -223,7 +224,7 @@
                         var step = $(this).data("step");
                         //모달 text
                         contentModal.find("#modalTitle").html("MBO " + step.toUpperCase() + " <small> 면담 시트</small>");
-                        contentModal.find("#modalLabel1").text("대상자");
+                        contentModal.find("#modalLabel1").text("Name");
                         contentModal.find("#modalLabel2").text("Note");
                         contentModal.find("textarea[name=modalContent2]").attr("placeholder", "면담 내용 작성 전 입니다.");
                         contentModal.find("textarea[name=modalContent2]").val("");
@@ -279,6 +280,31 @@
                     contentModal.modal("hide");
                 });
             });
+
+            //라디오로 이전 면담 볼수 있도록
+            $("input:radio[name=modalContent3]").click(function () {
+                var now = [[${ turn?.infoMBO ?.status}]];
+                var step = $("input[name='modalContent3']:checked").val();
+                var rno = $("#contentModal").data("rno");
+                $("#contentModal").find("textarea[name=modalContent2]").val("");
+                var param = {
+                    rno: rno,
+                    step: step
+                }
+                noteService.read(param, function (result) {
+                    $("#contentModal").find("textarea[name=modalContent2]").val(result);
+                });
+
+                if (now != step) {
+                    $("#contentModal").find("textarea[name=modalContent2]").attr("readonly", true);
+                    $("#contentModal").find("#modalRegisterBtn").hide();
+
+                } else if (now == step) {
+                    $("#contentModal").find("textarea[name=modalContent2]").attr("readonly", false);
+                    $("#contentModal").find("#modalRegisterBtn").show();
+                }
+            });
+
 
             //close button click 시
             $("#contentModal").find("button[id='modalCloseBtn']").on("click", function (e) {
