@@ -49,8 +49,7 @@ public class DepartmentController {
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCno();
-        department.setCno(cno);
+        department.setTno(tno);
 
         departmentService.register(department);
 
@@ -95,8 +94,7 @@ public class DepartmentController {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCno();
-        Page<Department> result = departmentService.getListWithPaging(cno, vo);
+        Page<Department> result = departmentService.getListWithPaging(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
         List<StaffAndDno> leader = new ArrayList<StaffAndDno>();
@@ -111,9 +109,9 @@ public class DepartmentController {
             }
         });
         model.addAttribute("leaderList", leader);
-
     }
 
+    // leader인 스태프 전달하기 위해 내부 객체 사용! 한명의 직원이 여러 팀을 담당하는 것을 표현하기 위해 사용.
     public class StaffAndDno {
         public Staff staff;
         public Long dno;
@@ -121,16 +119,17 @@ public class DepartmentController {
 
     @GetMapping("/leader")
     public void readLeader(long dno, long tno, PageVO vo, Model model) {
+        //dno일치하는 팀 정보와 리더 정보 전달.
         departmentService.read(dno).ifPresent(department -> {
-            model.addAttribute("team", department.getLeader());
-
             if (department.getLeader() != null) {
+                model.addAttribute("team", department.getLeader());
                 staffService.read(department.getLeader().getSno()).ifPresent(staff -> {
                     model.addAttribute("leader", staff);
                 });
             }
         });
 
+        //leader를 전체 직원 명단 전송
         long cno = turnService.get(tno).get().getCno();
         staffService.readBycno(cno).ifPresent(origin -> {
             model.addAttribute("staffList", origin);

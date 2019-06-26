@@ -79,6 +79,6 @@ public class StaffServiceTests {
 
 	@Test
 	public void testDeleteDistinctInfoByCno() {
-		staffService.deleteDistinctInfoByCno(1L);
+		staffService.deleteDistinctInfoByTnoCno(1L, 1L);
 	}
 }

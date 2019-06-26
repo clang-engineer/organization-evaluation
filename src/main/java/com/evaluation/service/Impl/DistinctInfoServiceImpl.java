@@ -21,13 +21,13 @@ class DistinctInfoServiceImpl implements DistinctInfoService {
     TurnRepository turnRepo;
 
     @Override
-    public List<String> getListDepartment1(long cno) {
-        return repo.getListDepartment1(cno);
+    public List<String> getListDepartment1(long tno) {
+        return repo.getListDepartment1(tno);
     }
 
     @Override
-    public List<String> getListDepartment2(long cno) {
-        return repo.getListDepartment2(cno);
+    public List<String> getListDepartment2(long tno) {
+        return repo.getListDepartment2(tno);
     }
 
     @Override
@@ -56,8 +56,8 @@ class DistinctInfoServiceImpl implements DistinctInfoService {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        result.put("department1", repo.getListDepartment1(cno));
-        result.put("department2", repo.getListDepartment2(cno));
+        result.put("department1", repo.getListDepartment1(tno));
+        result.put("department2", repo.getListDepartment2(tno));
         result.put("division1", repo.getListDivision1(cno));
         result.put("division2", repo.getListDivision2(cno));
         result.put("level", repo.getListLevel(cno));

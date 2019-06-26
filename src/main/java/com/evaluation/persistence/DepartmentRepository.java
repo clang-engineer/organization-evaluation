@@ -18,27 +18,27 @@ import org.springframework.transaction.annotation.Transactional;
 public interface DepartmentRepository extends CrudRepository<Department, Long>, QuerydslPredicateExecutor<Department> {
 
     // 팀별 목표 설정하기 위해 팀장인 팀이 있는지 확인
-    @Query("SELECT d FROM Department d WHERE d.cno=:cno AND d.leader.sno=:sno")
-    public Optional<List<Department>> findByCnoSno(@Param("cno") long cno, @Param("sno") long sno);
+    @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.leader.sno=:sno")
+    public Optional<List<Department>> findByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
     // 부서정보 전체 삭제
     @Transactional
     @Modifying
-    @Query("DELETE FROM Department d WHERE d.cno=?1")
-    public void deleteByCno(long cno);
+    @Query("DELETE FROM Department d WHERE d.tno=?1")
+    public void deleteByTno(long cno);
 
-    @Query("SELECT d FROM Department d WHERE d.cno=:cno AND d.department1=:department1 AND d.department2=:department2")
-    public Optional<Department> findByDeparment(@Param("cno") long cno, @Param("department1") String department1,
+    @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.department1=:department1 AND d.department2=:department2")
+    public Optional<Department> findByDeparment(@Param("tno") long tno, @Param("department1") String department1,
             @Param("department2") String department2);
 
-    public default Predicate makePredicate(String type, String keyword, long cno) {
+    public default Predicate makePredicate(String type, String keyword, long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
         QDepartment department = QDepartment.department;
 
         builder.and(department.dno.gt(0));
-        builder.and(department.cno.eq(cno));
+        builder.and(department.tno.eq(tno));
 
         if (type == null) {
             return builder;

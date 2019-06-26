@@ -42,8 +42,8 @@ public class Department {
 	@UpdateTimestamp
 	private Timestamp updateDate;
 
-	@Column(name = "company_cno")
-	private long cno;
+	@Column(name = "turn_tno")
+	private long tno;
 
 	@Embedded
 	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_department_leader")),

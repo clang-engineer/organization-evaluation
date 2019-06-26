@@ -115,16 +115,17 @@ public class StaffServiceImpl implements StaffService {
 
 	@Override
 	public void deleteByCno(long cno) {
-		log.info("delete by tno : " + cno);
+		log.info("delete by cno : " + cno);
 
 		staffRepo.deleteByCno(cno);
 	}
 
 	@Override
-	public void deleteDistinctInfoByCno(long cno) {
-		log.info("deleteDistinctInfoByCno " + cno);
+	public void deleteDistinctInfoByTnoCno(long tno, long cno) {
+		log.info("deleteDistinctInfoByTnoCno " + tno);
 
-		departmentRepo.deleteByCno(cno);
+		departmentRepo.deleteByTno(tno);
+
 		levelRepo.deleteByCno(cno);
 		divisionRepo.deleteByCno(cno);
 	}

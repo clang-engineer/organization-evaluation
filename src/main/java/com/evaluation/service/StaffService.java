@@ -29,7 +29,7 @@ public interface StaffService {
 
 	public void deleteByCno(long cno);
 
-	public void deleteDistinctInfoByCno(long cno);
+	public void deleteDistinctInfoByTnoCno(long tno, long cno);
 
 	public Optional<Staff> readByEmail(String email);
 

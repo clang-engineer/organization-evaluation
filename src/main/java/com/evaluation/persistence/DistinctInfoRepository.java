@@ -12,11 +12,11 @@ import org.springframework.stereotype.Repository;
 @Repository
 public interface DistinctInfoRepository extends CrudRepository<Company, Long> {
 
-    @Query("SELECT DISTINCT d.department1 FROM Department d WHERE cno=?1 ORDER BY d.department1 ASC")
-    public List<String> getListDepartment1(long cno);
+    @Query("SELECT DISTINCT d.department1 FROM Department d WHERE tno=?1 ORDER BY d.department1 ASC")
+    public List<String> getListDepartment1(long tno);
 
-    @Query("SELECT DISTINCT d.department2 FROM Department d WHERE cno=?1 ORDER BY d.department2 ASC")
-    public List<String> getListDepartment2(long cno);
+    @Query("SELECT DISTINCT d.department2 FROM Department d WHERE tno=?1 ORDER BY d.department2 ASC")
+    public List<String> getListDepartment2(long tno);
 
     @Query("SELECT DISTINCT d.division1 FROM Division d WHERE cno=?1 ORDER BY d.division1 ASC")
     public List<String> getListDivision1(long cno);

@@ -57,24 +57,24 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Page<Department> getListWithPaging(long cno, PageVO vo) {
-        log.info("getListWithPaging by " + cno);
+    public Page<Department> getListWithPaging(long tno, PageVO vo) {
+        log.info("getListWithPaging by " + tno);
 
-        Pageable page = vo.makePageable(1, "department1");
+        Pageable page = vo.makePageable(1, "dno");
         Page<Department> result = departmentRepo
-                .findAll(departmentRepo.makePredicate(vo.getType(), vo.getKeyword(), cno), page);
+                .findAll(departmentRepo.makePredicate(vo.getType(), vo.getKeyword(), tno), page);
         return result;
     }
 
     @Override
-    public Optional<List<Department>> findByCnoSno(long cno, long sno) {
-        return departmentRepo.findByCnoSno(cno, sno);
+    public Optional<List<Department>> findByTnoSno(long tno, long sno) {
+        return departmentRepo.findByTnoSno(tno, sno);
     }
 
     @Override
-    public Optional<Department> findByDepartment(long cno, String department1, String department2) {
-        log.info("get dep by " + cno + "/" + department1 + "/" + department2);
+    public Optional<Department> findByDepartment(long tno, String department1, String department2) {
+        log.info("get dep by " + tno + "/" + department1 + "/" + department2);
 
-        return departmentRepo.findByDeparment(cno, department1, department2);
+        return departmentRepo.findByDeparment(tno, department1, department2);
     }
 }

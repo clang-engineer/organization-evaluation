@@ -163,7 +163,6 @@ public class StaffController {
 		model.addAttribute("result", new PageMaker<>(result));
 	}
 
-
 	@PostMapping("/xlUpload")
 	@ResponseBody
 	public void xlUpload(long tno, Admin admin, MultipartFile uploadFile, Model model) {
@@ -241,7 +240,7 @@ public class StaffController {
 		});
 
 		// level, department, division의 정보 우선 모두 제거. 이건 체크박스 여부에 관계없이 엑셀로 업로드 될 때 항상 실행.
-		staffService.deleteDistinctInfoByCno(cno);
+		staffService.deleteDistinctInfoByTnoCno(tno, cno);
 
 		// 중복 제거된 list에서 lev등록
 		levList.forEach(origin -> {
@@ -256,7 +255,7 @@ public class StaffController {
 		// 중복 제거된 list에서 Dep등록
 		depList.forEach(data -> {
 			Department department = new Department();
-			department.setCno(cno);
+			department.setTno(tno);
 			department.setDepartment1(data.get(0));
 			department.setDepartment2(data.get(1));
 			department.setWriteId(admin.getWriteId());

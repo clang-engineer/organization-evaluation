@@ -30,7 +30,7 @@ public class DepartmentRepositoryTests {
             Department department = new Department();
             department.setDepartment1("dep1" + i);
             department.setDepartment2("dep2" + i);
-            department.setCno(99L);
+            department.setTno(99L);
             departmentRepo.save(department);
         });
 
@@ -59,7 +59,7 @@ public class DepartmentRepositoryTests {
 
     @Test
     public void name() {
-        departmentRepo.findByCnoSno(4L, 1117L).ifPresent(list -> list.forEach(dep -> {
+        departmentRepo.findByTnoSno(4L, 1117L).ifPresent(list -> list.forEach(dep -> {
             log.info("" + dep.getDno());
         }));
     }

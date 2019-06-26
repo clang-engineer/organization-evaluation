@@ -142,10 +142,10 @@ public class MBOController {
 
         companyService.readByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
-            long cno = origin.getCno();
-            departmentService.findByCnoSno(cno, sno).ifPresent(list -> {
-                model.addAttribute("department", list);
-            });
+        });
+        
+        departmentService.findByTnoSno(tno, sno).ifPresent(list -> {
+            model.addAttribute("department", list);
         });
 
         turnService.get(tno).ifPresent(turn -> {
