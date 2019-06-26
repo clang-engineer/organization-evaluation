@@ -143,7 +143,7 @@ public class MBOController {
         companyService.readByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
-        
+
         departmentService.findByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("department", list);
         });
@@ -198,7 +198,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    // @GetMapping("/object")
+    @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -218,8 +218,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    @GetMapping("/object")
-    // @PostMapping("/object")
+    // @GetMapping("/object")
+    @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -253,8 +253,7 @@ public class MBOController {
             model.addAttribute("relation", relation);
 
             // 피평가자의 팀 목표 전달
-            long cno = companyService.readByCompanyId(company).map(Company::getCno).orElse(null);
-            departmentService.findByDepartment(cno, relation.getEvaluated().getDepartment1(),
+            departmentService.findByDepartment(tno, relation.getEvaluated().getDepartment1(),
                     relation.getEvaluated().getDepartment2()).ifPresent(origin -> {
                         model.addAttribute("department", origin);
                         log.info("================>" + origin);

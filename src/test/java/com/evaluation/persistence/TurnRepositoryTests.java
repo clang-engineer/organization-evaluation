@@ -60,4 +60,13 @@ public class TurnRepositoryTests {
 			});
 		});
 	}
+
+	@Test
+	public void testGetTurnsOfCompanyByStatusMBO() {
+		turnRepo.getTurnsInMBO(1L, LocalDateTime.now()).ifPresent(origin -> {
+			origin.forEach(turn -> {
+				log.info("===>" + turn.getTitle());
+			});
+		});
+	}
 }

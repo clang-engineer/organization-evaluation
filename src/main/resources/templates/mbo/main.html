@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutMBO}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutMBO}">
 <!-- div content -->
 <div layout:fragment="content">
 
@@ -24,7 +25,8 @@
                         </p>
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoMBO?.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
+                        <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
+                            title="click!!">Survey start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
@@ -168,8 +170,10 @@
             var modalCloseBtn = $("#modalCloseBtn");
 
             modalTitle.text("팀 목표 입력");
-            modalLabel1.text("제목");
-            modalLabel2.text("내용");
+            modalLabel1.text("Title");
+            modalLabel2.text("Content");
+
+            modal.find("#content2").append("<p class='float-md-right mb-0' id='count_message'>0/2000</p>");
 
 
             // 모달 button
@@ -208,7 +212,7 @@
 
                 dno = $(this).data('dno');
                 departmentService.read(dno, function (result) {
-                    modalTitle.text(result.department2 + "팀 목표 설정");
+                    modalTitle.text(result.department1 + " - " + result.department2 + "팀 목표 설정");
                     modalContent1.val(result.leader.title);
                     modalContent2.text(result.leader.content);
                 });

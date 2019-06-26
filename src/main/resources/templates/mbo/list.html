@@ -4,8 +4,10 @@
 <!-- div content -->
 <div layout:fragment="content">
     <style>
-        small {
-            font-size: 1.2rem;
+        .mb-5 small,
+        .card-header,
+        .card small {
+            font-size: 1.0rem;
         }
     </style>
     <!-- Page Content -->
@@ -17,7 +19,7 @@
         <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='do'">MBO Step2 Do
             <small>목표를 수행하고, 조율하는 단계입니다.</small>
         </h2>
-        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='see'">MBO Step3 'See
+        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='see'">MBO Step3 See
             <small>목표 달성도를 평가하고 피드백하는 단계입니다.</small>
         </h2>
         <div class="row">
@@ -164,6 +166,14 @@
             modalLabel1.hide();
             modalGroupContent2.hide();
 
+            $("#contentModal").find("#content2").append("<p class='float-md-right mb-0' id='count_message'>0/2000</p>");
+            //글자 수 카운터
+            $("#contentModal").on("keyup", "textarea", function (e) {
+                var maxLength = 2000;
+                var length = $(this).val().length;
+                $(this).next().html(length + "/2000");
+            });
+
             var formObj = $("#f1");
 
             //링크 버튼 별 동작을 나누기 위해 switch문을 사용하였다.
@@ -212,7 +222,7 @@
                         var contentModal = $("#contentModal");
                         var step = $(this).data("step");
                         //모달 text
-                        contentModal.find("#modalTitle").html("MBO STEP " + step.toUpperCase() + " <small> 면담 시트</small>");
+                        contentModal.find("#modalTitle").html("MBO " + step.toUpperCase() + " <small> 면담 시트</small>");
                         contentModal.find("#modalLabel1").text("대상자");
                         contentModal.find("#modalLabel2").text("Note");
                         contentModal.find("textarea[name=modalContent2]").attr("placeholder", "면담 내용 작성 전 입니다.");

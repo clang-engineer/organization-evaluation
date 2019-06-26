@@ -1,12 +1,20 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutSurvey}">
 <!-- div content -->
 <div layout:fragment="content">
+    <style>
+        .mb-5 small,
+        .card-header,
+        .card small {
+            font-size: 1.0rem;
+        }
+    </style>
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
         <h2 class="mb-5">Survey List
-            <small>Subheading</small>
+            <small>기간 내에 아래의 대상자에 대한 평가에 임합니다.</small>
         </h2>
         <div class="row">
             <!-- Blog Entries Column -->
@@ -43,9 +51,9 @@
                     <div th:with="relationArray = ${ {'1', '2', '3'} }">
                         <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
                             <h5 class="card-header">[[${r}]]차 평가자로서 평가할 대상
-                                <small class="float-md-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
-                                <small class="float-md-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
-                                <small class="float-md-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
+                                <small class="float-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
+                                <small class="float-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
+                                <small class="float-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
                             </h5>
                             <!-- card body -->
                             <div class="card-body pb-0">

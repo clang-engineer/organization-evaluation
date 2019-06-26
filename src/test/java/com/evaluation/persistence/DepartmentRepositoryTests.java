@@ -66,7 +66,7 @@ public class DepartmentRepositoryTests {
 
     @Test
     public void findByName() {
-        departmentRepo.findByDeparment(2, null, "DELL EMC 영업2팀").ifPresent(origin -> {
+        departmentRepo.findByDeparment(1, "실리콘마이터스", "DELL EMC 영업2팀").ifPresent(origin -> {
             log.info("" + origin.getDno());
         });
     }

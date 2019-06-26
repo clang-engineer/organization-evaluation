@@ -9,7 +9,8 @@
         <h2 class="mb-4">MBO List
             <small>Subheading</small>
         </h2>
-        [[${department}]]
+        [[${department?.leader?.title}]]
+        [[${department?.leader?.content}]]
         <div>
             <button id="addObjectBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='see'"><i class="fas fa-plus-circle">목표추가</i></button>
             <button id="removedListBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
@@ -129,6 +130,7 @@
     <div th:insert="~{common/object::removedObjectList}"></div>
     <div th:insert="~{common/modal::object}"></div>
     <div th:insert="~{common/modal::basic}"></div>
+    <div th:insert="~{common/modal::content}"></div>
 </div>
 
 </html>
@@ -453,8 +455,6 @@
                 };
             });
 
-
-
             //close button click 시
             modalCloseBtn.on("click", function (e) {
                 modal.modal('hide');
@@ -467,6 +467,22 @@
 
             $("#removedListBtn").click(function (e) {
                 $("#removedListModal").modal('show');
+            });
+
+            //부서 목표 조회하는 모달
+            $("#departmentObject").click(function (e) {
+                var dep1 = [[${ department?.department1 }]];
+                var dep2 = [[${ department?.department2 }]];
+                var title = [[${ department?.leader?.title }]];
+                var content = [[${ department?.leader?.content }]];
+                var contetnModal = $("#contentModal");
+                contetnModal.find("#modalTitle").text(dep1 + " - " + dep2 + " 팀 목표");
+                contetnModal.find("#modalLabel1").text("Title");
+                contetnModal.find("#modalLabel2").text("Content");
+                contetnModal.find("input[name=modalContent1]").attr("readonly", "true").val(title);
+                contetnModal.find("textarea[name=modalContent2]").attr("readonly", "true").val(content);
+                contetnModal.find("button[id!='modalCloseBtn']").hide();
+                contetnModal.modal("show");
             });
 
             //글자 수 카운터
