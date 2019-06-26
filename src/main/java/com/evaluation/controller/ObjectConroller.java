@@ -86,7 +86,7 @@ public class ObjectConroller {
                     mboService.register(tmp);
 
                     // 댓글 mno 수정하기
-                    replyService.listByMbo(mno).ifPresent(list -> {
+                    replyService.listByMno(mno).ifPresent(list -> {
                         list.forEach(reply -> {
                             reply.setMno(tmp.getMno());
                             replyService.modify(reply);
@@ -103,7 +103,7 @@ public class ObjectConroller {
         mboService.remove(mno);
 
         // 단계가 어디든 게시물이 삭제되면 댓글은 삭제되도록 함.
-        replyService.listByMbo(mno).ifPresent(list -> {
+        replyService.listByMno(mno).ifPresent(list -> {
             list.forEach(reply -> {
                 replyService.remove(reply.getRno());
             });

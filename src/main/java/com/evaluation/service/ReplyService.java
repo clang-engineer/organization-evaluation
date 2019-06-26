@@ -14,6 +14,6 @@ public interface ReplyService {
 
     public void remove(long rno);
 
-    public Optional<List<Reply>> listByMbo(long mno);
+    public Optional<List<Reply>> listByMno(long mno);
 
 }

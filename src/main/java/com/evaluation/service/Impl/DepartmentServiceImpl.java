@@ -70,4 +70,11 @@ public class DepartmentServiceImpl implements DepartmentService {
     public Optional<List<Department>> findByCnoSno(long cno, long sno) {
         return departmentRepo.findByCnoSno(cno, sno);
     }
+
+    @Override
+    public Optional<Department> findByDepartment(long cno, String department1, String department2) {
+        log.info("get dep by " + cno + "/" + department1 + "/" + department2);
+
+        return departmentRepo.findByDeparment(cno, department1, department2);
+    }
 }

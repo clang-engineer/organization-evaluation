@@ -10,6 +10,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.evaluation.domain.Company;
 import com.evaluation.domain.MBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
@@ -251,6 +252,14 @@ public class MBOController {
             // 관계에 대한 정보 추가
             model.addAttribute("relation", relation);
 
+            // 피평가자의 팀 목표 전달
+            long cno = companyService.readByCompanyId(company).map(Company::getCno).orElse(null);
+            departmentService.findByDepartment(cno, relation.getEvaluated().getDepartment1(),
+                    relation.getEvaluated().getDepartment2()).ifPresent(origin -> {
+                        model.addAttribute("department", origin);
+                        log.info("================>" + origin);
+                    });
+
             // 피평가자의 목표 가져오기, 피평가자 sno와 tno로
             mboService.listByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(list -> {
                 // finish Y인 목록과 N인 목록 구분 지음.
@@ -259,16 +268,16 @@ public class MBOController {
 
                 for (int i = 0; i < list.size(); i++) {
 
-                    //댓글 수와 목표를 묶은 객체를 만들어서 list에 추가함.
+                    // 댓글 수와 목표를 묶은 객체를 만들어서 list에 추가함.
                     ObjectWithReplyNum object = new ObjectWithReplyNum();
-                    //목표를 추가하고
+                    // 목표를 추가하고
                     object.mbo = list.get(i);
-                    //목표에 해당하는 댓글수를 가져와서 추가하고
-                    replyService.listByMbo(list.get(i).getMno()).ifPresent(origin -> {
+                    // 목표에 해당하는 댓글수를 가져와서 추가하고
+                    replyService.listByMno(list.get(i).getMno()).ifPresent(origin -> {
                         object.replyNum = origin.size();
                     });
 
-                    //삭제,수정 된 목표와 아닌 것을 구분하고
+                    // 삭제,수정 된 목표와 아닌 것을 구분하고
                     if (list.get(i).getFinish().equals("Y")) {
                         objectList.add(object);
                     } else {
@@ -282,7 +291,7 @@ public class MBOController {
                 // 댓글 리스트 목록으로 만들어 전달하기 현재 목표리스트의 mno와 일치하는 댓글만
                 List<Reply> replyList = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
-                    replyService.listByMbo(list.get(i).getMno()).ifPresent(origin -> {
+                    replyService.listByMno(list.get(i).getMno()).ifPresent(origin -> {
                         replyList.addAll(origin);
                     });
                 }

@@ -21,4 +21,6 @@ public interface DepartmentService {
 	public Page<Department> getListWithPaging(long cno, PageVO vo);
 
 	public Optional<List<Department>> findByCnoSno(long cno, long sno);
+
+	public Optional<Department> findByDepartment(long cno, String department1, String department2);
 }

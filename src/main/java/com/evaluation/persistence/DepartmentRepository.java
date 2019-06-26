@@ -27,6 +27,10 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
     @Query("DELETE FROM Department d WHERE d.cno=?1")
     public void deleteByCno(long cno);
 
+    @Query("SELECT d FROM Department d WHERE d.cno=:cno AND d.department1=:department1 AND d.department2=:department2")
+    public Optional<Department> findByDeparment(@Param("cno") long cno, @Param("department1") String department1,
+            @Param("department2") String department2);
+
     public default Predicate makePredicate(String type, String keyword, long cno) {
 
         BooleanBuilder builder = new BooleanBuilder();

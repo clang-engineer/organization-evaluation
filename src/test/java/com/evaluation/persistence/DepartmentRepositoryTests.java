@@ -59,8 +59,15 @@ public class DepartmentRepositoryTests {
 
     @Test
     public void name() {
-        departmentRepo.findByCnoSno(4L,1117L).ifPresent(list -> list.forEach(dep -> {
+        departmentRepo.findByCnoSno(4L, 1117L).ifPresent(list -> list.forEach(dep -> {
             log.info("" + dep.getDno());
         }));
+    }
+
+    @Test
+    public void findByName() {
+        departmentRepo.findByDeparment(2, null, "DELL EMC 영업2팀").ifPresent(origin -> {
+            log.info("" + origin.getDno());
+        });
     }
 }

@@ -55,7 +55,7 @@ public class ReplyServiceImpl implements ReplyService {
     }
 
     @Override
-    public Optional<List<Reply>> listByMbo(long mno) {
+    public Optional<List<Reply>> listByMno(long mno) {
         log.info("listby " + mno);
 
         return replyRepo.listByMno(mno);
