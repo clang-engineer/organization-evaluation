@@ -84,11 +84,11 @@ public class BookRepositoryTests {
 		Book book = new Book();
 		book.setTitle("High - Low");
 		List<Content> contents = new ArrayList<Content>();
-		contents.add(new Content("Poor", 0.8));
-		contents.add(new Content("Unsatisfactory", 0.9));
-		contents.add(new Content("Satisfactory", 1));
-		contents.add(new Content("Good", 1.1));
 		contents.add(new Content("Excellent", 1.2));
+		contents.add(new Content("Good", 1.1));
+		contents.add(new Content("Satisfactory", 1));
+		contents.add(new Content("Unsatisfactory", 0.9));
+		contents.add(new Content("Poor", 0.8));
 
 		book.setContents(contents);
 		book.setType("MboReply");
@@ -97,11 +97,11 @@ public class BookRepositoryTests {
 		Book book2 = new Book();
 		book2.setTitle("A - E");
 		List<Content> contents2 = new ArrayList<Content>();
-		contents2.add(new Content("E", 0.8));
-		contents2.add(new Content("D", 0.9));
-		contents2.add(new Content("C", 1));
-		contents2.add(new Content("B", 1.1));
 		contents2.add(new Content("A", 1.2));
+		contents2.add(new Content("B", 1.1));
+		contents2.add(new Content("C", 1));
+		contents2.add(new Content("D", 0.9));
+		contents2.add(new Content("E", 0.8));
 
 		book2.setContents(contents2);
 		book2.setType("MboReply");
@@ -110,9 +110,9 @@ public class BookRepositoryTests {
 		Book book3 = new Book();
 		book3.setTitle("weight H - L");
 		List<Content> contents3 = new ArrayList<Content>();
-		contents3.add(new Content("Low", 0.9));
-		contents3.add(new Content("Middle", 1));
 		contents3.add(new Content("High", 1.1));
+		contents3.add(new Content("Middle", 1));
+		contents3.add(new Content("Low", 0.9));
 
 		book3.setContents(contents3);
 		book3.setType("MboReply");

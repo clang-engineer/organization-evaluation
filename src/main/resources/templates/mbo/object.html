@@ -9,7 +9,7 @@
         <h2 class="mb-4">MBO List
             <small>Subheading</small>
         </h2>
-
+        [[${department}]]
         <div>
             <button id="addObjectBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='see'"><i class="fas fa-plus-circle">목표추가</i></button>
             <button id="removedListBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
@@ -43,7 +43,7 @@
                             <select class="form-control" th:name="${status.count}" th:disabled="${relation.relation}!='me'">
                                 <option value="">--</option>
                                 <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
-                                    [[${reply.name}]]
+                                    [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                 </option>
                             </select>
                         </td>
@@ -52,7 +52,7 @@
                             <select class="form-control" th:name="${status.count}">
                                 <option value="">--</option>
                                 <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
-                                    [[${reply.name}+'('+${reply.ratio}+')']]
+                                    [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                 </option>
                             </select>
                         </td>
