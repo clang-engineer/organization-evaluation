@@ -140,8 +140,6 @@
     <script th:inline="javascript">
         $(document).ready(function (e) {
 
-
-
             var csrf = JSON.parse('[[${_csrf}]]');
 
             //modal 사용 변수 선언
@@ -196,8 +194,8 @@
                 modalSelectInit();
 
                 //모달 text
-                modalContent1.val("");
-                modalContent2.val("");
+                modalContent1.val("").keyup();
+                modalContent2.val("").keyup();
                 modalContent3.val("0");
 
                 //모달 button
@@ -267,9 +265,9 @@
                 //ajax 호출
                 objectService.read(param, function (result) {
                     modalSelectInit(result.ratio * 100);
-                    modalContent1.val(result.object);
-                    modalContent2.val(result.process);
-                    modalContent3.val(result.ratio);
+                    modalContent1.val(result.object).keyup();
+                    modalContent2.val(result.process).keyup();
+                    modalContent3.val(result.ratio).keyup();
                 });
 
                 //모달 data 설정
@@ -473,14 +471,15 @@
             $("#departmentObject").click(function (e) {
                 var dep1 = [[${ department?.department1 }]];
                 var dep2 = [[${ department?.department2 }]];
-                var title = [[${ department?.leader?.title }]];
-                var content = [[${ department?.leader?.content }]];
+                var title = [[${ department?.leader ?.title }]];
+                var content = [[${ department?.leader ?.content }]];
                 var contetnModal = $("#contentModal");
                 contetnModal.find("#modalTitle").text(dep1 + " - " + dep2 + " 팀 목표");
                 contetnModal.find("#modalLabel1").text("Title");
                 contetnModal.find("#modalLabel2").text("Content");
                 contetnModal.find("input[name=modalContent1]").attr("readonly", "true").val(title);
                 contetnModal.find("textarea[name=modalContent2]").attr("readonly", "true").val(content);
+                contetnModal.find("#content3").remove();
                 contetnModal.find("button[id!='modalCloseBtn']").hide();
                 contetnModal.modal("show");
             });

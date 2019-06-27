@@ -174,7 +174,7 @@
             modalLabel2.text("Content");
 
             modal.find("#content2").append("<p class='float-md-right mb-0' id='count_message'>0/2000</p>");
-
+            modal.find("#content3").remove();
 
             // 모달 button
             modal.find("button[id!='modalCloseBtn']").hide();
@@ -214,7 +214,7 @@
                 departmentService.read(dno, function (result) {
                     modalTitle.text(result.department1 + " - " + result.department2 + "팀 목표 설정");
                     modalContent1.val(result.leader.title);
-                    modalContent2.text(result.leader.content);
+                    modalContent2.text(result.leader.content).keyup();
                 });
 
                 //모달 data

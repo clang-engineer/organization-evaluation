@@ -1,10 +1,11 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutSurvey}">
 <!-- div content -->
 <div layout:fragment="content">
     <style>
-        .modal-label {
-            font-size: 0.9rem;
+        .card .category {
+            font-size: 1.08rem;
         }
     </style>
     <!-- container -->
@@ -24,14 +25,15 @@
                 <!-- ./card-header -->
                 <!-- card-body -->
                 <div class="card mt-3 mr-3 ml-3 mb-3" th:each="category:${category}">
-                    <h5 class="card-header bg-light mb-4">[[${category}]]</h5>
+                    <h5 class="card-header bg-light mb-4 category">[[${category}]]</h5>
                     <div class="card-body ml-3 mb-3" th:each="question,status:${questionList}" th:if="${category}==${question[1]}">
                         <h6 class="card-text pb-2 mb-4">
                             [[${question[0]}]] - [[${question[2]}]]
                         </h6>
                         <div class="qparent">
                             <div th:each="book,idx:${book}" class="mr-5 mb-4 question custom-control custom-radio">
-                                <input class="mr-2  custom-control-input" th:id="'q'+${question[0]}+${idx.count}" th:name="'q'+${status.count}" type="radio" required th:value="${book.ratio}" th:checked="${book.ratio}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
+                                <input class="mr-2  custom-control-input" th:id="'q'+${question[0]}+${idx.count}" th:name="'q'+${status.count}" type="radio" required th:value="${book.ratio}"
+                                    th:checked="${book.ratio}==${relation?.answers?.get('q'+status.count)}" th:disabled="${relation.finish}=='Y'">
                                 <label class="custom-control-label" th:for="'q'+${question[0]}+${idx.count}">[[${book.name}]]</label>
                             </div>
                         </div>
@@ -119,7 +121,6 @@
             var formObj = $("#f1");
             var csrf = JSON.parse('[[${_csrf}]]');
 
-
             //글자 수 카운터
             $(".essay").on("keyup", "textarea", function (e) {
                 var maxLength = 2000;
@@ -128,6 +129,7 @@
                 $(this).next().html(length + "/2000");
             });
 
+            $(".essay").find("textarea").keyup();
 
             // load했을 때 버튼 사이즈
             var win = $(this);

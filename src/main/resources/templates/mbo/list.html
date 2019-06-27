@@ -7,7 +7,7 @@
         .mb-5 small,
         .card-header,
         .card small {
-            font-size: 1.0rem;
+            font-size: 1.08rem;
         }
     </style>
     <!-- Page Content -->
@@ -137,7 +137,7 @@
 
     <!-- Modal -->
     <div th:insert="~{common/modal::basic}"></div>
-    <div th:insert="~{common/object::content}"></div>
+    <div th:insert="~{common/modal::content}"></div>
     <!-- ./Modal -->
     
 </html>
@@ -228,8 +228,11 @@
                         contentModal.find("#modalLabel2").text("Note");
                         contentModal.find("textarea[name=modalContent2]").attr("placeholder", "면담 내용 작성 전 입니다.");
                         contentModal.find("textarea[name=modalContent2]").val("");
+                        contentModal.find("p[id='count_message']").text("0/2000");
                         //모달 layOut
                         contentModal.find("input[name=modalContent1]").attr("readonly", "true").val(name + "님");
+                        contentModal.find("textarea[name=modalContent2]").attr("readonly", false);
+                        contentModal.find("input[value='" + step + "']").prop('checked', true);
                         //모달 button
                         contentModal.find("button[id!='modalCloseBtn']").hide();
                         contentModal.find("button[id='modalRegisterBtn']").show();
@@ -243,7 +246,7 @@
                             step: step
                         }
                         noteService.read(param, function (result) {
-                            contentModal.find("textarea[name=modalContent2]").val(result);
+                            contentModal.find("textarea[name=modalContent2]").val(result).keyup();
                         });
                         contentModal.modal("show");
                         break;
@@ -292,7 +295,7 @@
                     step: step
                 }
                 noteService.read(param, function (result) {
-                    $("#contentModal").find("textarea[name=modalContent2]").val(result);
+                    $("#contentModal").find("textarea[name=modalContent2]").val(result).keyup();
                 });
 
                 if (now != step) {
