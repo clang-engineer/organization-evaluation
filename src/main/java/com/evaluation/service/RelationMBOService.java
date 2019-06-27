@@ -32,4 +32,6 @@ public interface RelationMBOService {
     public List<Staff> findDintinctEavluatedbyTno(long tno);
 
     public Optional<List<List<String>>> progressOfSurevey(long tno);
+
+    public Optional<RelationMBO> findMeRelationByTnoSno(long tno, long sno);
 }

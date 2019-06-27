@@ -200,7 +200,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    // @GetMapping("/object")
+    @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -220,8 +220,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    @GetMapping("/object")
-    // @PostMapping("/object")
+    // @GetMapping("/object")
+    @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -238,7 +238,7 @@ public class MBOController {
 
         turnService.get(tno).ifPresent(turn -> {
             // 평가 단계에서 회답지 추가
-            if (turn.getInfoMBO().getStatus().equals("see")) {
+            if (turn.getInfoMBO().getStatus().equals("see") || turn.getInfoMBO().getStatus().equals("count")) {
                 // 회답지 추가
                 bookService.read(turn.getInfoMBO().getReplyCode()).ifPresent(book -> {
                     model.addAttribute("replyCodeList", book.getContents());
@@ -253,6 +253,11 @@ public class MBOController {
         relationMBOService.read(rno).ifPresent(relation -> {
             // 관계에 대한 정보 추가
             model.addAttribute("relation", relation);
+
+            // 본인평가 정보 전달
+            relationMBOService.findMeRelationByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(relationMe -> {
+                model.addAttribute("relationMe", relationMe);
+            });
 
             // 피평가자의 팀 목표 전달
             departmentService.findByDepartment(tno, relation.getEvaluated().getDepartment1(),
@@ -335,17 +340,18 @@ public class MBOController {
         return new ResponseEntity<String>(note, HttpStatus.OK);
     }
 
+    // 평가 제출하기 위한 REST
     @PutMapping("/submit")
     @ResponseBody
     public ResponseEntity<HttpStatus> submit(@RequestBody Map<String, Object> answer, RedirectAttributes rttr) {
         log.info("" + answer.get("key"));
 
-        // parse variable
+        // parse variable csrf 때문에 string으로 안 받아짐. 때문에 object로 받아서 변환
         long tmpRno = Long.parseLong(answer.get("rno").toString());
         String tmpFinish = String.valueOf(answer.get("finish"));
         String tmpKey = String.valueOf(answer.get("key"));
         Double tmpValue = Double.valueOf(String.valueOf(answer.get("value")));
-        log.info("=????????" + tmpValue);
+
         relationMBOService.read(tmpRno).ifPresent(origin -> {
             log.info("" + origin);
             origin.setFinish(tmpFinish);

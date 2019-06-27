@@ -58,6 +58,10 @@ public interface RelationMBORepository
     @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*))*100 as ratio FROM tbl_relationmbo as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
     public Optional<List<List<String>>> progressOfSurevey(@Param("tno") long tno);
 
+    // 상사 평가시 본인 평가 정보를 확인하기 위한 쿼리
+    @Query("SELECT r FROM RelationMBO r WHERE r.rno>0 AND r.relation='me' AND r.tno=:tno AND r.evaluated.sno=:sno")
+    public Optional<RelationMBO> findMeRelationByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
+
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();

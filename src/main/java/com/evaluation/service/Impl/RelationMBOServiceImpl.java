@@ -115,4 +115,10 @@ public class RelationMBOServiceImpl implements RelationMBOService {
     public Optional<List<List<String>>> progressOfSurevey(long tno) {
         return relationMBORepo.progressOfSurevey(tno);
     };
+
+    @Override
+    public Optional<RelationMBO> findMeRelationByTnoSno(long tno, long sno) {
+
+        return relationMBORepo.findMeRelationByTnoSno(tno, sno);
+    }
 }
