@@ -228,11 +228,11 @@
                         contentModal.find("#modalLabel2").text("Note");
                         contentModal.find("textarea[name=modalContent2]").attr("placeholder", "면담 내용 작성 전 입니다.");
                         contentModal.find("textarea[name=modalContent2]").val("");
-                        contentModal.find("p[id='count_message']").text("0/2000");
                         //모달 layOut
                         contentModal.find("input[name=modalContent1]").attr("readonly", "true").val(name + "님");
                         contentModal.find("textarea[name=modalContent2]").attr("readonly", false);
                         contentModal.find("input[value='" + step + "']").prop('checked', true);
+                        contentModal.find("p[id='count_message']").text("0/2000");
                         //모달 button
                         contentModal.find("button[id!='modalCloseBtn']").hide();
                         contentModal.find("button[id='modalRegisterBtn']").show();

@@ -41,7 +41,7 @@
                         </td>
                         <!-- 본인평가 -->
                         <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see'">
-                            <select class="form-control" th:name="${status.count}" th:disabled="${relation.relation}!='me'">
+                            <select class="form-control" th:name="${status.count}" th:disabled="${relation.relation}!='me'" data-type="me">
                                 <option value="">--</option>
                                 <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
                                     [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
@@ -50,9 +50,9 @@
                         </td>
                         <!-- 상사평가 -->
                         <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' and ${relation.relation}!='me'">
-                            <select class="form-control" th:name="${status.count}">
+                            <select class="form-control" th:name="'q'+${status.count}" th:data-type="${relation?.relation}">
                                 <option value="">--</option>
-                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
+                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)}">
                                     [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                 </option>
                             </select>
@@ -139,7 +139,6 @@
     <script type="text/javascript" src="/public/js/reply.js"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
-
             var csrf = JSON.parse('[[${_csrf}]]');
 
             //modal 사용 변수 선언
@@ -490,6 +489,25 @@
                 $(this).next().html(length + "/1500");
             });
 
+            //평가 전송
+            objectListTable.on("change", "select", function (e) {
+                var select = $(this);
+                var rno = [[${ relation?.rno }]];
+                var finish = 'N';
+                var key = $(this).attr('name');
+                var value = + $(this).val();
+                var param = {
+                    rno: rno,
+                    finish: finish,
+                    key: key,
+                    value: value,
+                    csrf: csrf
+                }
+                //ajax 호출
+                objectService.submit(param, function (result) {
+                    alert(select.find(":selected").text().trim());
+                });
+            });
 
             // load했을 때 버튼 사이즈
             var win = $(this);
@@ -510,7 +528,7 @@
                 $('#bottomBtn').removeClass('btn-group-sm');
                 $('#bottomBtn').removeClass('btn-group-xs');
                 $('#bottomBtn').addClass('btn-group-lg');
-                $('#bottomBtn').addClass('btn-group-vertical');
+                $('#bottomBtn').addClass('btn-group-vesdfrtical');
             }
 
             //버튼 크기 조정을 위한 클래스 부여

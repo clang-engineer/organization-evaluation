@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
 
@@ -29,6 +30,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -197,7 +200,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    @GetMapping("/object")
+    // @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -217,8 +220,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    // @GetMapping("/object")
-    @PostMapping("/object")
+    @GetMapping("/object")
+    // @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -330,6 +333,27 @@ public class MBOController {
         String note = object.get();
 
         return new ResponseEntity<String>(note, HttpStatus.OK);
+    }
+
+    @PutMapping("/submit")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> submit(@RequestBody Map<String, Object> answer, RedirectAttributes rttr) {
+        log.info("" + answer.get("key"));
+
+        // parse variable
+        long tmpRno = Long.parseLong(answer.get("rno").toString());
+        String tmpFinish = String.valueOf(answer.get("finish"));
+        String tmpKey = String.valueOf(answer.get("key"));
+        Double tmpValue = Double.valueOf(String.valueOf(answer.get("value")));
+        log.info("=????????" + tmpValue);
+        relationMBOService.read(tmpRno).ifPresent(origin -> {
+            log.info("" + origin);
+            origin.setFinish(tmpFinish);
+            origin.getAnswers().put(tmpKey, tmpValue);
+            relationMBOService.modify(origin);
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
 }

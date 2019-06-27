@@ -12,7 +12,7 @@ import org.springframework.data.repository.query.Param;
 public interface MBORepository extends CrudRepository<MBO, Long> {
 
     // 해당 turn에 속하는 직원의 목표 리스트
-    @Query("SELECT m FROM MBO m WHERE m.tno=:tno AND m.sno=:sno")
+    @Query("SELECT m FROM MBO m WHERE m.tno=:tno AND m.sno=:sno ORDER BY m.mno ASC")
     public Optional<List<MBO>> listByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
     // 해당 tno와 sno에 속하는 멤버의 ratio 합계

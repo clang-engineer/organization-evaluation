@@ -79,11 +79,35 @@ var objectService = (function () {
         });
     }
 
+    //점수 제출을 위한 REST PUT
+    function submit(param, callback, error) {
+        $.ajax({
+            type: 'put',
+            url: '/mbo/submit',
+            data: JSON.stringify(param),
+            // data: param.content,
+            contentType: "application/json; charset:utf-8",
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+            },
+            success: function (result, status, shr) {
+                if (callback) {
+                    callback(result);
+                }
+            },
+            error: function (xhr, status, er) {
+                if (error) {
+                    error(er);
+                }
+            }
+        });
+    }
 
     return {
         register: register,
         read: read,
         modify: modify,
-        remove: remove
+        remove: remove,
+        submit: submit
     };
 })();
