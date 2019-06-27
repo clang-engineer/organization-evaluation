@@ -3,29 +3,33 @@
     layout:decorate="~{/layout/layoutMBO}">
 <!-- div content -->
 <div layout:fragment="content">
+    <style>
+        .container {
+            max-width: 1500px;
+            width: 100%;
+        }
+    </style>
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
         <h2 class="mb-4">MBO List
             <small>Subheading</small>
         </h2>
-        [[${department?.leader?.title}]]
-        [[${department?.leader?.content}]]
         <div>
-            <button id="addObjectBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='see'"><i class="fas fa-plus-circle">목표추가</i></button>
+            <button id="addObjectBtn" class="btn float-right" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'"><i class="fas fa-plus-circle">목표추가</i></button>
             <button id="removedListBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
             <button id="departmentObject" class="btn float-right"><i class="fas fa-sitemap">팀 목표 보기</i></button>
         </div>
-        <table class="table" id="objectListTable">
+        <table class="table table-border" id="objectListTable">
             <thead class="thead-dark">
-                <th class="text-nowrap" style="width: 5%" scope="col">#</th>
-                <th class="text-nowrap" style="width: 30%" scope="col">목표</th>
-                <th class="text-nowrap" style="width: 30%" scope="col">달성기준</th>
-                <th class="text-nowrap" style="width: 2%" scope="col">비중%</th>
-                <th class="text-nowrap" style="width: 2%" scope="col" th:if="${turn.infoMBO.status}!='see'">수정</th>
-                <th class="text-nowrap" style="width: 15%" scope="col" th:if="${turn.infoMBO.status}=='see'">본인평가</th>
-                <th class="text-nowrap" style="width: 15%" scope="col" th:if="${turn.infoMBO.status}=='see' and ${relation.relation}!='me'">상사평가</th>
-                <th class="text-nowrap" style="width: 2%" scope="col">댓글</th>
+                <th class="text-nowrap" scope="col">#</th>
+                <th class="text-nowrap" style="width: 45%" scope="col">목표</th>
+                <th class="text-nowrap" style="width: 55%" scope="col">달성기준</th>
+                <th class="text-nowrap" scope="col">비중%</th>
+                <th class="text-nowrap" scope="col" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">수정</th>
+                <th class="text-nowrap" scope="col" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">본인평가</th>
+                <th class="text-nowrap" scope="col" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">상사평가</th>
+                <th class="text-nowrap" scope="col">댓글</th>
             </thead>
             <tbody>
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
@@ -36,21 +40,21 @@
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
-                        <td class="align-middle text-middle"  th:if="${turn.infoMBO.status}!='see'">
+                        <td class="align-middle text-middle"  th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
                             <button class="btn btn-default btn-lg modifyObject" th:data-mno="${object?.mbo?.mno}"><i class="fas fa-eraser"></i></button>
                         </td>
                         <!-- 본인평가 -->
-                        <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see'">
-                            <select class="form-control" th:name="${status.count}" th:disabled="${relation.relation}!='me'" data-type="me">
+                        <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
+                            <select class="form-control" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count' OR ${relation.relation}!='me'">
                                 <option value="">--</option>
-                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}">
+                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relationMe?.answers?.get('q'+status.count)}">
                                     [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                 </option>
                             </select>
                         </td>
                         <!-- 상사평가 -->
-                        <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' and ${relation.relation}!='me'">
-                            <select class="form-control" th:name="'q'+${status.count}" th:data-type="${relation?.relation}">
+                        <td class="align-middle text-middle" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">
+                            <select class="form-control" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count'">
                                 <option value="">--</option>
                                 <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)}">
                                     [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
@@ -75,7 +79,7 @@
                                 <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                             </div>
                         </td>
-                        <td th:colspan="${turn.infoMBO.status}!='see'?'4':'6'" class="text-left">
+                        <td th:colspan="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do')?'4':'6'" class="text-left">
                             <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
                                 [[${reply.rno}]]
                                 [[${reply?.comment}]]
@@ -83,11 +87,11 @@
                                 <div class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
                             </div>
                         </td>
-                        <td th:if="${turn.infoMBO.status}!='see'">
+                        <td th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
                             <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify"><i class="fas fa-times"></i></button>
                         </td>
                     </tr>
-                    <tr class="collapse table-primary" th:id="collapse+${object?.mbo?.mno}" th:if="${turn.infoMBO.status}!='see'">
+                    <tr class="collapse table-primary" th:id="collapse+${object?.mbo?.mno}" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
                         <td colspan=5 class="align-middle text-middle">
                             <div class="form-group">
                                 <input type="text" class="form-control form-inline" placeholder="Enter Reply">

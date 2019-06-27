@@ -133,7 +133,7 @@
                     <li class="nav-item">
                         <a class="nav-link" th:href="@{main(company=${company},tno=${tno})}">About</a>
                     </li>
-                    <li class="nav-item dropdown">
+                    <li class="nav-item dropdown" th:if="${turn?.infoMBO?.status}!='count'">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                             <span th:text="MBO"></span>
                         </a>

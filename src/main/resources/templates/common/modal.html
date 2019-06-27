@@ -61,11 +61,11 @@
                             <input type="radio" id="customRadioInline1" name="modalContent3" class="custom-control-input" th:checked="${step}=='plan'" value="plan">
                             <label class="custom-control-label" for="customRadioInline1">STEP1 PLAN</label>
                         </div>
-                        <div class="custom-control custom-radio custom-control-inline" th:if="${step}=='do' OR ${step}=='see'">
+                        <div class="custom-control custom-radio custom-control-inline" th:if="${step}!='plan'">
                             <input type="radio" id="customRadioInline2" name="modalContent3" class="custom-control-input" th:checked="${step}=='do'" value="do">
                             <label class="custom-control-label" for="customRadioInline2">STEP2 DO</label>
                         </div>
-                        <div class="custom-control custom-radio custom-control-inline" th:if="${step}=='see'">
+                        <div class="custom-control custom-radio custom-control-inline" th:if="${step}!='plan' AND ${step}!='do'">
                             <input type="radio" id="customRadioInline3" name="modalContent3" class="custom-control-input" th:checked="${step}=='see'" value="see">
                             <label class="custom-control-label" for="customRadioInline3">STEP3 SEE</label>
                         </div>

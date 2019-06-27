@@ -41,7 +41,7 @@
             <div class="col-md-4">
 
                 <!-- Categories Widget -->
-                <div class="card mb-4" th:if="${department}!=null">
+                <div class="card mb-4" th:if="${department}!=null AND (${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do')">
                     <h5 class="card-header dep-card" data-html="true" data-toggle="tooltip" data-placement="right" title="목표를 팀원들과 <br> 공유 합니다.">Deparment</h5>
                         <div class="card-body">
                             <div class="row">
