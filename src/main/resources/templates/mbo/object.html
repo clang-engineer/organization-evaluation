@@ -8,34 +8,41 @@
             max-width: 1500px;
             width: 100%;
         }
+
+        h2 small {
+            font-size: 1.1rem;
+        }
     </style>
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-4">MBO List
-            <small>Subheading</small>
+        <h2 class="mb-3">MBO List
+            <small class="font-weight-light ml-3" th:if="${turn.infoMBO.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
+            <small class="font-weight-light ml-3" th:if="${relationMe}!=null AND ${turn.infoMBO.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
+                입니다.</small>
+
         </h2>
         <div>
-            <button id="addObjectBtn" class="btn float-right" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'"><i class="fas fa-plus-circle">목표추가</i></button>
+            <button id="addObjectBtn" class="btn float-right" th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'"><i class="fas fa-plus-circle">목표추가</i></button>
             <button id="removedListBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
-            <button id="departmentObject" class="btn float-right"><i class="fas fa-sitemap">팀 목표 보기</i></button>
+            <button id="departmentObject" class="btn float-right" th:if="${department.leader}!=null"><i class="fas fa-sitemap">팀 목표 보기</i></button>
         </div>
         <table class="table table-border" id="objectListTable">
             <thead class="thead-dark">
-                <th class="text-nowrap" scope="col">#</th>
-                <th class="text-nowrap" style="width: 45%" scope="col">목표</th>
-                <th class="text-nowrap" style="width: 55%" scope="col">달성기준</th>
-                <th class="text-nowrap" scope="col">비중%</th>
-                <th class="text-nowrap" scope="col" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">수정</th>
-                <th class="text-nowrap" scope="col" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">본인평가</th>
-                <th class="text-nowrap" scope="col" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">상사평가</th>
-                <th class="text-nowrap" scope="col">댓글</th>
+                <th scope="col" class="text-nowrap">#</th>
+                <th scope="col" class="text-nowrap" style="width: 30%">목표</th>
+                <th scope="col" class="text-nowrap" style="width: 40%">달성기준</th>
+                <th scope="col" class="text-nowrap">비중%</th>
+                <th scope="col" class="text-nowrap" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">수정</th>
+                <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">본인평가</th>
+                <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">상사평가</th>
+                <th scope="col" class="text-nowrap">댓글</th>
             </thead>
             <tbody>
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
                     <!-- object -->
-                    <tr>
-                        <th name="objectCount" scope="row" style="line-height:150px;">[[${object?.mbo?.mno}]]</th>
+                    <tr style="border-bottom: 1px solid gray;">
+                        <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th>
                         <!-- <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
@@ -45,21 +52,25 @@
                         </td>
                         <!-- 본인평가 -->
                         <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
-                            <select class="form-control" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count' OR ${relation.relation}!='me'">
-                                <option value="">--</option>
-                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relationMe?.answers?.get('q'+status.count)}">
-                                    [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
-                                </option>
-                            </select>
+                            <form class="was-validated">    
+                                <select class="form-control" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count' OR ${relation.relation}!='me'" required>
+                                    <option value="">--</option>
+                                    <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relationMe?.answers?.get('q'+status.count)}">
+                                        [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
+                                    </option>
+                                </select>
+                            </form>
                         </td>
                         <!-- 상사평가 -->
                         <td class="align-middle text-middle" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">
-                            <select class="form-control" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count'">
-                                <option value="">--</option>
-                                <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)}">
-                                    [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
-                                </option>
-                            </select>
+                            <form class="was-validated">
+                                <select class="custom-select" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count'" required>
+                                    <option value="">--</option>
+                                    <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)}">
+                                        [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
+                                    </option>
+                                </select>
+                            </form>
                         </td>
                         <!-- 댓글 collapse -->
                         <td class="align-middle text-middle">
@@ -74,7 +85,7 @@
                     <!-- ./object -->
                     <!-- reply -->
                     <tr th:each="reply:${replyList}" th:if="${reply.mno}==${object?.mbo?.mno}" class="collapse" th:id="collapse+${object?.mbo?.mno}">
-                        <td>
+                        <td scope="row">
                             <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
                                 <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                             </div>
@@ -88,25 +99,48 @@
                             </div>
                         </td>
                         <td th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
-                            <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify"><i class="fas fa-times"></i></button>
+                            <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify" th:if="${reply.writeId}==${session?.evaluator.email}"><i class="fas fa-times"></i></button>
+                            <span th:if="${reply.writeId}!=${session?.evaluator.email}">-</span>
                         </td>
                     </tr>
                     <tr class="collapse table-primary" th:id="collapse+${object?.mbo?.mno}" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
-                        <td colspan=5 class="align-middle text-middle">
-                            <div class="form-group">
-                                <input type="text" class="form-control form-inline" placeholder="Enter Reply">
-                            </div>
+                        <td class="align-middle">
+                            <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                         </td>
-                        <td>
-                            <button type="button" th:data-mno="${object?.mbo?.mno}" class="btn btn-primary btn-sm replyRegister">등록</button>
+                        <td colspan="4" class="align-middle text-middle">
+                            <input type="text" class="form-control form-inline" placeholder="Enter Reply">
+                        </td>
+                        <td class="align-middle">
+                            <button type="button" th:data-mno="${object?.mbo?.mno}" class="btn btn-primary replyRegister">등록</button>
                         </td>
                     </tr>
                     <!-- ./reply -->
                 </div>
             </tbody>
+            <tfoot style="border-top: 3px double black;" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
+                <tr>
+                    <td scope="row" class="font-weight-bold text-right align-middle" th:colspan="${relation.relation}=='me'?4:5" >
+                        [[${relation?.evaluated?.name}]]님의 종합 업무 부하량 : 
+                        <div class="small font-italic font-weight-light" th:if="${relation.relation}!='me'" th:text="${relationMe?.answers?.get('weight')}!=null ? '본인 평가 부하량: '+ ${#numbers.formatPercent(relationMe?.answers?.get('weight'),0,0)} : '본인 평가 실시 전'">
+                        </div> 
+                        
+                    </td>
+                    <td scope="colgroup" colspan="2" class="align-middle">
+                        <form class="was-validated">
+                            <select class="custom-select" th:name="weight" th:disabled="${turn.infoMBO.status}=='count'" required>
+                                <option value="">--</option>
+                                <option th:each="reply:${weightCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('weight')}">
+                                    [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
+                                </option>
+                            </select>
+                            <div class="invalid-feedback">올바른 값을 선택해주세요.</div>
+                        </form>
+                    </td>
+                </tr>
+            </tfoot>
         </table>
 
-      
+
     </div>
        <!-- button -->
        <div id="bottomGroup" class="position-fixed" align="center">
@@ -235,15 +269,17 @@
                     });
 
                     //목표 행 생성.
-                    var str = "<tr><th name='objectCount' scope='row' style='line-height:150px;'>" + (max + 1) + "</th>"
+                    var str = "<tr style='border-bottom: 1px solid gray;'><th name='objectCount' scope='row' style='line-height:150px;'>" + (max + 1) + "</th>"
                         + "<td class='text-left' style = 'white-space:pre-line'>" + result.object + "</td >"
                         + "<td class='text-left' style='white-space:pre-line'>" + result.process + "</td>"
                         + "<td class='ratio align-middle' >" + Math.floor(result.ratio * 100) + '%' + "</td >"
                         + "<td class='align-middle text-middle' ><button class='btn btn-default btn-lg modifyObject' data-mno='" + result.mno + "' ><i class='fas fa-eraser'></i></button></td >"
                         + "<td class='align-middle text-middle'><button class='btn btn-default btn-lg' data-toggle='collapse' href='#collapse" + result.mno + "' role='button' aria-expanded='false' aria-controls='collapseExample'><i class='fas fa-comments'></i><small class='badge badge-pill badge-danger' name='replyNum'>0</small></button></td >"
                         + "</tr >"
-                        + "<tr class='collapse' id='collapse" + result.mno + "'><td colspan='5' class='align-middle text-middle'><div class='form-group'><input type='text' class='form-control form-inline' placeholder='Enter Reply'></div></td>"
-                        + "<td><button type='button' data-mno='" + result.mno + "' class='btn btn-primary btn-sm replyRegister'>등록</button></td>"
+                        + "<tr class='collapse table-primary' id='collapse" + result.mno + "'>"
+                        + "<td class='align-middle'><i class='fas fa-comment-dots fa-flip-horizontal'></i></td>"
+                        + "<td colspan='4' class='align-middle text-middle'><input type='text' class='form-control form-inline' placeholder='Enter Reply'></td>"
+                        + "<td><button type='button' data-mno='" + result.mno + "' class='btn btn-primary replyRegister align-middle'>등록</button></td>"
                         + "</tr>;"
 
                     objectListTable.append(str);
@@ -416,7 +452,7 @@
                 //ajax 호출
                 replyService.modify(param, function (result) {
                     alert("수정 되었습니다.");
-                    var currentDate = new Date(result.writeDate);
+                    var currentDate = new Date(result.updateDate);
                     var str = "<div class='collpse show' th:id='collapse'" + result.mno + ">"
                         + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div>"
                         + "</div>";
@@ -513,6 +549,74 @@
                 });
             });
 
+            //제출 버튼에 대한 설정.
+            //전송 버튼 눌렀을 때의 동작
+            $("#btnSubmit").click(function (e) {
+                e.preventDefault();
+                var evaluatedName = [[${ relation.evaluated.name }]];
+                //form 꽉 찾는지 확인하기
+                //모달 data
+                $("#basicModal").data("finish", "Y");
+
+                //modal Text
+                $("#basicModal").find("#modalTitle").text("Submit Evaluation");
+                $("#basicModal").find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 최종 제출합니다.").attr("readonly", true);
+                $("#basicModal").find("#modalLabel2").text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.").css("fontSize", "0.9rem");
+
+                //모달 layout
+                $("#basicModal").find("#modalBody").addClass("pb-0")
+                $("#basicModal").find("#modalLabel1").remove();
+                $("#basicModal").find("input[name='modalContent2']").remove();
+
+                //모달 button
+                $("#basicModal").find("button[id!='modalCloseBtn']").hide();
+                $("#basicModal").find("#modalRegisterBtn").show().text("Submit");
+
+                $("#basicModal").modal('show');
+            })
+
+            $("#btnPause").click(function (e) {
+                e.preventDefault();
+                var evaluatedName = [[${ relation.evaluated.name }]];
+
+                //모달 data
+                $("#basicModal").data("finish", "T");
+
+                //modal Text
+                $("#basicModal").find("#modalTitle").text("Pause Evaluation");
+                $("#basicModal").find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 임시 저장합니다.").attr("readonly", true);
+                $("#basicModal").find("#modalLabel2").text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.").css("fontSize", "0.9rem");
+
+                //모달 layout
+                $("#basicModal").find("#modalBody").addClass("pb-0")
+                $("#basicModal").find("#modalLabel1").remove();
+                $("#basicModal").find("input[name='modalContent2']").remove();
+
+                //모달 button
+                $("#basicModal").find("button[id!='modalCloseBtn']").hide();
+                $("#basicModal").find("#modalRegisterBtn").show().text("Submit");
+
+                $("#basicModal").modal('show');
+            });
+
+            // //Register button에 대한 동작
+            // modalRegisterBtn.click(function (e) {
+            //     switch (modal.data("finish")) {
+            //         case "Y":
+            //             formObj.append("<input type='hidden' name='finish' value='Y'>");
+            //             break;
+            //         case "T":
+            //             formObj.append("<input type='hidden' name='finish' value='T'>");
+            //             break;
+            //     }
+            //     formObj.submit();
+            // });
+
+            // //close button click 시
+            // modalCloseBtn.on("click", function (e) {
+            //     modal.modal('hide');
+            // });
+
             // load했을 때 버튼 사이즈
             var win = $(this);
             if (win.width() < 768) {
@@ -532,7 +636,7 @@
                 $('#bottomBtn').removeClass('btn-group-sm');
                 $('#bottomBtn').removeClass('btn-group-xs');
                 $('#bottomBtn').addClass('btn-group-lg');
-                $('#bottomBtn').addClass('btn-group-vesdfrtical');
+                $('#bottomBtn').addClass('btn-group-vertical');
             }
 
             //버튼 크기 조정을 위한 클래스 부여

@@ -16,6 +16,7 @@
         <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='plan'">MBO Step1 Plan
             <small>목표를 설정하는 단계입니다.</small>
         </h2>
+
         <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='do'">MBO Step2 Do
             <small>목표를 수행하고, 조율하는 단계입니다.</small>
         </h2>
@@ -31,7 +32,9 @@
                     <div class="card mb-4" th:if="${#lists.contains(relationList,'me')}">
                         <h5 class="card-header">본인 목표 관리</h5>
                         <div class="card-body">
-                            <h5 class="card-title">Own Object</h5>
+                            <h5 class="card-title">Own Object
+                            </h5>
+                            
                             <p class="card-text">본인 목표를 작성합니다.</p>
                             <span th:each="relation:${evaluatedList}" th:if="${relation.relation}=='me'">
                                 <table>
@@ -39,7 +42,9 @@
                                         <tr>
                                             <td>
                                                 <button class="btn btn-primary" th:if="${turn?.infoMBO?.status}!='see'" data-type="mbo" th:data-rno="${relation.rno}" data-name="본인" data-toggle="tooltip" data-placement="right"
-                                                    title="본인 목표 관리 페이지로 이동">Go to my MBO!</button>
+                                                    title="본인 목표 관리 페이지로 이동">목표 작성률
+                                                    <span th:each="ratio:${ratioList}" th:if="${ratio[0]}==${session.evaluator.sno}">[[${#numbers.formatPercent(ratio[2],0,0)}]]</span>
+                                                </button>
                                                 <span th:if="${turn?.infoMBO?.status}=='see'">
                                                     <button class="btn btn-primary" th:if="${relation.finish}=='N'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="N" data-toggle="tooltip"
                                                         data-placement="right" title="실시 전 입니다.">Go to my MBO!</button>
@@ -52,6 +57,7 @@
                                         </tr>
                                     </tbody>
                                 </table>
+                                
                             </span>
                         </div>
                     </div>
@@ -69,20 +75,20 @@
                                 <table id="table" class="table">
                                     <thead class="thead-dark">
                                         <tr>
-                                            <th class="text-nowrap" scope="col">Name</th>
-                                            <th class="text-nowrap" scope="col">Department</th>
-                                            <th class="text-nowrap" scope="col">Division</th>
-                                            <th class="text-nowrap" scope="col">Level</th>
-                                            <th class="text-nowrap" scope="col" th:if="${turn.infoMBO?.status}!='see'">작성률</th>
-                                            <th class="text-nowrap" scope="col" th:if="${turn.infoMBO?.status}!='see'">MBO</th>
-                                            <th class="text-nowrap" scope="col" th:if="${turn.infoMBO?.status}=='see'">본인평가</th>
-                                            <th class="text-nowrap" scope="col" th:if="${turn.infoMBO?.status}=='see'">목표평가</th>
-                                            <th class="text-nowrap" scope="col">면담시트</th>
+                                            <th scope="col" class="text-nowrap align-middle">Name</th>
+                                            <th scope="col" class="text-nowrap align-middle">Department</th>
+                                            <th scope="col" class="text-nowrap align-middle">Division</th>
+                                            <th scope="col" class="text-nowrap align-middle">Level</th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}!='see'" style="width: 20%">작성률</th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}!='see'">MBO</th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}=='see'">본인평가<h6 class="pt-1" style="font-size: 0.5rem">(완료O/미완료X)</h6></th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}=='see'">목표평가</th>
+                                            <th scope="col" class="text-nowrap align-middle">면담시트</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         <tr th:each="relation:${evaluatedList}" th:if="${relation.relation}==${r}">
-                                            <td class="align-middle">[[${relation?.evaluated?.name}]]</td>
+                                            <th scope="row" class="align-middle font-weight-normal">[[${relation?.evaluated?.name}]]</th>
                                             <td class="align-middle">[[${relation?.evaluated?.department1}]]-[[${relation?.evaluated?.department2}]]</td>
                                             <td class="align-middle">[[${relation?.evaluated?.division1}]]-[[${relation?.evaluated?.division2}]]</td>
                                             <td class="align-middle">[[${relation?.evaluated?.level}]]</td>
@@ -95,8 +101,16 @@
                                             <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}!='see'">
                                                 <button class="btn btn-default" data-type="mbo" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
                                             </td>
-                                            <!-- 평가 버튼 열 -->
+                                            <!-- 본인 평가 확인 열 -->
                                             <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}=='see'">
+                                                <span th:each="relationMe:${relationMeList}">
+                                                    <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe.finish}=='Y'">
+                                                        <i class="far fa-circle"></i>
+                                                    </span>
+                                                    <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe.finish}=='N'">
+                                                        <i class="fas fa-times"></i>
+                                                    </span>
+                                                </span>
                                             </td>
                                             <!-- 평가 버튼 열 -->
                                             <td th:if="${turn.infoMBO?.status}=='see'">

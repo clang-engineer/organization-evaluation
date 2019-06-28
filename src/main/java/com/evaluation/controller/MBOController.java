@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.evaluation.domain.MBO;
+import com.evaluation.domain.RelationMBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
 import com.evaluation.service.BookService;
@@ -176,20 +177,33 @@ public class MBOController {
         model.addAttribute("company", company);
 
         relationMBOService.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
+            //관계정보 전달
+            model.addAttribute("evaluatedList", relation);
+
+            // 관계 종류를 전달하기 위한 Set
             Set<String> relationList = new HashSet<>();
             relation.forEach(origin -> {
                 relationList.add(origin.getRelation());
             });
             model.addAttribute("relationList", relationList);
-            model.addAttribute("evaluatedList", relation);
 
+            // 피평가자의 특정 정보를 얻기 위한 list와 for문
             List<List<String>> ratioList = new ArrayList<>();
+            List<RelationMBO> relationMeList = new ArrayList<>();
+
             relation.forEach(origin -> {
+                // 피평가자의 서베이 진행률을 얻기 위한
                 mboService.ratioByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(ratio -> {
                     ratioList.addAll(ratio);
                 });
+
+                // 피평가자의 본인 평가 완료 여부를 얻기 위한
+                relationMBOService.findMeRelationByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(tmpRel -> {
+                    relationMeList.add(tmpRel);
+                });
             });
             model.addAttribute("ratioList", ratioList);
+            model.addAttribute("relationMeList", relationMeList);
         });
 
         turnService.get(tno).ifPresent(turn -> {
@@ -200,7 +214,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    // @GetMapping("/object")
+    @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -220,8 +234,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    @GetMapping("/object")
-    // @PostMapping("/object")
+    // @GetMapping("/object")
+    @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -263,7 +277,6 @@ public class MBOController {
             departmentService.findByDepartment(tno, relation.getEvaluated().getDepartment1(),
                     relation.getEvaluated().getDepartment2()).ifPresent(origin -> {
                         model.addAttribute("department", origin);
-                        log.info("================>" + origin);
                     });
 
             // 피평가자의 목표 가져오기, 피평가자 sno와 tno로

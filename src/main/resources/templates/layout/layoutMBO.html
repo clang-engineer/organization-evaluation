@@ -139,11 +139,11 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                             <div th:if="${session.evaluator}">
-                                <a id="navStep1" class="dropdown-item" th:href="@{profile(company=${company},tno=${tno})}">Plan(목표 설정)</a>
+                                <a id="navStep1" class="dropdown-item" th:href="@{list(company=${company},tno=${tno})}">Plan(목표 설정)</a>
                                 <div class="dropdown-divider"></div>
-                                <a id="navStep2" class="dropdown-item" th:href="@{profile(company=${company},tno=${tno})}">Do(중간 운영)</a>
+                                <a id="navStep2" class="dropdown-item" th:href="@{list(company=${company},tno=${tno})}">Do(중간 운영)</a>
                                 <div class="dropdown-divider"></div>
-                                <a id="navStep3" class="dropdown-item" th:href="@{profile(company=${company},tno=${tno})}">See(평가)</a>
+                                <a id="navStep3" class="dropdown-item" th:href="@{list(company=${company},tno=${tno})}">See(평가)</a>
                             </div>
                         </div>
                     </li>
