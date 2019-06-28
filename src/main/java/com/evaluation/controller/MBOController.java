@@ -200,7 +200,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    @GetMapping("/object")
+    // @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -220,8 +220,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    // @GetMapping("/object")
-    @PostMapping("/object")
+    @GetMapping("/object")
+    // @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -244,7 +244,7 @@ public class MBOController {
                     model.addAttribute("replyCodeList", book.getContents());
                 });
                 // 가중치 추가
-                bookService.read(turn.getInfoMBO().getReplyCode()).ifPresent(book -> {
+                bookService.read(turn.getInfoMBO().getWeightCode()).ifPresent(book -> {
                     model.addAttribute("weightCodeList", book.getContents());
                 });
             }
