@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import com.evaluation.domain.InfoMBO;
+import com.evaluation.domain.embeddable.InfoMBO;
 import com.evaluation.service.BookService;
 import com.evaluation.service.InfoMBOService;
 

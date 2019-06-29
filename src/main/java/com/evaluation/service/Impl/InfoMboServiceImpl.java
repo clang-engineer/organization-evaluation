@@ -1,6 +1,6 @@
 package com.evaluation.service.Impl;
 
-import com.evaluation.domain.InfoMBO;
+import com.evaluation.domain.embeddable.InfoMBO;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.InfoMBOService;
 

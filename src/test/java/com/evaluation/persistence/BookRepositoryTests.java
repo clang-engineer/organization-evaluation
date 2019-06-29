@@ -4,7 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.evaluation.domain.Book;
-import com.evaluation.domain.Content;
+import com.evaluation.domain.embeddable.Content;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;

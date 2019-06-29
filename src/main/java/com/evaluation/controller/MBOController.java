@@ -12,10 +12,10 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.evaluation.domain.MBO;
-import com.evaluation.domain.RatioValue;
 import com.evaluation.domain.RelationMBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
+import com.evaluation.domain.embeddable.RatioValue;
 import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;

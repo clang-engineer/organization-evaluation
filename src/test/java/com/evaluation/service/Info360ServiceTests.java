@@ -2,13 +2,13 @@ package com.evaluation.service;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.evaluation.domain.InfoSurvey;
-
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+
+import com.evaluation.domain.embeddable.InfoSurvey;
 
 import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;

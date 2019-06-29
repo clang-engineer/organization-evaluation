@@ -1,6 +1,6 @@
 package com.evaluation.service;
 
-import com.evaluation.domain.InfoMBO;
+import com.evaluation.domain.embeddable.InfoMBO;
 
 public interface InfoMBOService {
 	public void register(Long tno, InfoMBO infoMBO);

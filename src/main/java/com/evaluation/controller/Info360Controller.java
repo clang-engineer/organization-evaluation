@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import com.evaluation.domain.InfoSurvey;
+import com.evaluation.domain.embeddable.InfoSurvey;
 import com.evaluation.service.BookService;
 import com.evaluation.service.InfoSurveyService;
 

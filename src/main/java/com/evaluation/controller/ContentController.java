@@ -3,7 +3,7 @@ package com.evaluation.controller;
 import java.util.List;
 
 import com.evaluation.domain.Book;
-import com.evaluation.domain.Content;
+import com.evaluation.domain.embeddable.Content;
 import com.evaluation.service.BookService;
 
 import org.springframework.beans.factory.annotation.Autowired;

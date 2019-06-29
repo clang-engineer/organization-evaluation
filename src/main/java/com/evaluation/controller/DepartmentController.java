@@ -5,8 +5,8 @@ import java.util.List;
 import java.util.Optional;
 
 import com.evaluation.domain.Department;
-import com.evaluation.domain.Leader;
 import com.evaluation.domain.Staff;
+import com.evaluation.domain.embeddable.Leader;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;

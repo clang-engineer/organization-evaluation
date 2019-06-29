@@ -20,6 +20,8 @@ import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.OrderBy;
 import org.hibernate.annotations.UpdateTimestamp;
 
+import com.evaluation.domain.embeddable.RatioValue;
+
 import lombok.Getter;
 import lombok.Setter;
 

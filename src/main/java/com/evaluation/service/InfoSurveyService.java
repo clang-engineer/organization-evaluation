@@ -1,6 +1,6 @@
 package com.evaluation.service;
 
-import com.evaluation.domain.InfoSurvey;
+import com.evaluation.domain.embeddable.InfoSurvey;
 
 public interface InfoSurveyService {
 	public void register(Long tno, InfoSurvey infoSurvey);

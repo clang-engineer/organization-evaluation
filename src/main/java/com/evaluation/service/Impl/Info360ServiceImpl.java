@@ -1,6 +1,6 @@
 package com.evaluation.service.Impl;
 
-import com.evaluation.domain.InfoSurvey;
+import com.evaluation.domain.embeddable.InfoSurvey;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.InfoSurveyService;
 

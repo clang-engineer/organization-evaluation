@@ -1,4 +1,4 @@
-package com.evaluation.domain;
+package com.evaluation.domain.embeddable;
 
 import java.time.LocalDateTime;
 
@@ -9,6 +9,9 @@ import org.springframework.format.annotation.DateTimeFormat;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * Turn에서 사용.
+ */
 @Embeddable
 @Getter
 @Setter

@@ -1,4 +1,4 @@
-package com.evaluation.domain;
+package com.evaluation.domain.embeddable;
 
 import javax.persistence.Embeddable;
 
@@ -7,6 +7,9 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 
+/**
+ * Book에서 사용.
+ */
 @Embeddable
 @Getter
 @Setter
