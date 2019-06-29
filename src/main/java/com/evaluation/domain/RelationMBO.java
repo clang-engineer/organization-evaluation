@@ -45,9 +45,8 @@ public class RelationMBO {
     @ElementCollection
     @CollectionTable(name = "tbl_relationMBO_answers", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "answer_key")
-    @Column(name = "answer_value")
     @OrderBy(clause = "answer_key asc")
-    private Map<String, Double> answers;
+    private Map<String, RatioValue> answers;
 
     @ElementCollection
     @CollectionTable(name = "tbl_relationMBO_comments", joinColumns = @JoinColumn(name = "relation_rno"))

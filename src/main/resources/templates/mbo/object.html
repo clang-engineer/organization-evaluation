@@ -23,7 +23,8 @@
 
         </h2>
         <div>
-            <button id="addObjectBtn" class="btn float-right" th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'"><i class="fas fa-plus-circle">목표추가</i></button>
+            <button id="addObjectBtn" class="btn float-right" th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'"><i
+                    class="fas fa-plus-circle">목표추가</i></button>
             <button id="removedListBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
             <button id="departmentObject" class="btn float-right" th:if="${department.leader}!=null"><i class="fas fa-sitemap">팀 목표 보기</i></button>
         </div>
@@ -53,9 +54,9 @@
                         <!-- 본인평가 -->
                         <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
                             <form class="was-validated">    
-                                <select class="form-control" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count' OR ${relation.relation}!='me'" required>
+                                <select class="form-control" th:name="'q'+${status.count}" th:data-ratio="${object?.mbo?.ratio}" th:disabled="${turn.infoMBO.status}=='count' OR ${relation.relation}!='me'" required>
                                     <option value="">--</option>
-                                    <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relationMe?.answers?.get('q'+status.count)}">
+                                    <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relationMe?.answers?.get('q'+status.count)?.value}">
                                         [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                     </option>
                                 </select>
@@ -64,9 +65,9 @@
                         <!-- 상사평가 -->
                         <td class="align-middle text-middle" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">
                             <form class="was-validated">
-                                <select class="custom-select" th:name="'q'+${status.count}" th:disabled="${turn.infoMBO.status}=='count'" required>
+                                <select class="custom-select" th:name="'q'+${status.count}" th:data-ratio="${object?.mbo?.ratio}" th:disabled="${turn.infoMBO.status}=='count'" required>
                                     <option value="">--</option>
-                                    <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)}">
+                                    <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)?.value}">
                                         [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                     </option>
                                 </select>
@@ -118,7 +119,7 @@
                 </div>
             </tbody>
             <tfoot style="border-top: 3px double black;" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
-                <tr>
+                <tr style="height: 160px;">
                     <td scope="row" class="font-weight-bold text-right align-middle" th:colspan="${relation.relation}=='me'?4:5" >
                         [[${relation?.evaluated?.name}]]님의 종합 업무 부하량 : 
                         <div class="small font-italic font-weight-light" th:if="${relation.relation}!='me'" th:text="${relationMe?.answers?.get('weight')}!=null ? '본인 평가 부하량: '+ ${#numbers.formatPercent(relationMe?.answers?.get('weight'),0,0)} : '본인 평가 실시 전'">
@@ -129,7 +130,7 @@
                         <form class="was-validated">
                             <select class="custom-select" th:name="weight" th:disabled="${turn.infoMBO.status}=='count'" required>
                                 <option value="">--</option>
-                                <option th:each="reply:${weightCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('weight')}">
+                                <option th:each="reply:${weightCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('weight')?.value}">
                                     [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
                                 </option>
                             </select>
@@ -535,12 +536,13 @@
                 var rno = [[${ relation?.rno }]];
                 var finish = 'N';
                 var key = $(this).attr('name');
-                var value = + $(this).val();
+                var ratio = $(this).data("ratio");
+                var value = $(this).val();
                 var param = {
                     rno: rno,
                     finish: finish,
                     key: key,
-                    value: value,
+                    value: { "ratio": ratio, "value": value },
                     csrf: csrf
                 }
                 //ajax 호출

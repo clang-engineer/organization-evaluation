@@ -12,6 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.evaluation.domain.MBO;
+import com.evaluation.domain.RatioValue;
 import com.evaluation.domain.RelationMBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
@@ -22,6 +23,7 @@ import com.evaluation.service.MBOService;
 import com.evaluation.service.RelationMBOService;
 import com.evaluation.service.ReplyService;
 import com.evaluation.service.TurnService;
+import com.google.gson.Gson;
 
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -177,7 +179,7 @@ public class MBOController {
         model.addAttribute("company", company);
 
         relationMBOService.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
-            //관계정보 전달
+            // 관계정보 전달
             model.addAttribute("evaluatedList", relation);
 
             // 관계 종류를 전달하기 위한 Set
@@ -214,7 +216,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    @GetMapping("/object")
+    // @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -234,8 +236,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    // @GetMapping("/object")
-    @PostMapping("/object")
+    @GetMapping("/object")
+    // @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -357,13 +359,14 @@ public class MBOController {
     @PutMapping("/submit")
     @ResponseBody
     public ResponseEntity<HttpStatus> submit(@RequestBody Map<String, Object> answer, RedirectAttributes rttr) {
-        log.info("" + answer.get("key"));
+        log.info("" + answer);
 
         // parse variable csrf 때문에 string으로 안 받아짐. 때문에 object로 받아서 변환
         long tmpRno = Long.parseLong(answer.get("rno").toString());
         String tmpFinish = String.valueOf(answer.get("finish"));
         String tmpKey = String.valueOf(answer.get("key"));
-        Double tmpValue = Double.valueOf(String.valueOf(answer.get("value")));
+        Gson gson = new Gson();
+        RatioValue tmpValue = gson.fromJson(answer.get("value").toString(), RatioValue.class);
 
         relationMBOService.read(tmpRno).ifPresent(origin -> {
             log.info("" + origin);
