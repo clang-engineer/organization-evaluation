@@ -19,17 +19,20 @@ import com.evaluation.service.Relation360Service;
 import com.evaluation.service.TurnService;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
 
 @Controller
-@RequestMapping("/progress/**")
+@RequestMapping("/progress/*")
 @AllArgsConstructor
 public class ProgressController {
 
@@ -244,6 +247,24 @@ public class ProgressController {
         });
     }
 
+    // 평가자의 피평가자 명단
+    @GetMapping("/survey/evaluatedList")
+    public void evaluated(long tno, long sno, Model model) {
+        relation360Service.findByEvaluator(sno, tno).ifPresent(origin -> {
+            model.addAttribute("evaluatedList", origin);
+        });
+        model.addAttribute("tno", tno);
+    }
+
+    // 평가자의 피평가자 서베이 저장 상태 바꿀 수 있도록하는 REST
+    @PutMapping("/survey/evaluatedList")
+    public ResponseEntity<HttpStatus> evaluatedFinishChange(long rno, String finish) {
+        relation360Service.read(rno).ifPresent(origin -> {
+            origin.setFinish(finish);
+            relation360Service.modify(origin);
+        });
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
     // 커스텀 sort를 위한
     // public void questionSort(List<String> list) {
     // Collections.sort(list, new Comparator<String>() {

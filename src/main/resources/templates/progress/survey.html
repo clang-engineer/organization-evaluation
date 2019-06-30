@@ -60,7 +60,7 @@
                         <tbody>
                             <tr th:each="staff,iterstate:${progress}">
                                 <th>[[${iterstate.count}]]</td>
-                                <td>[[${staff[0]}]]</td>
+                                <td><a th:href="@{/progress/survey/evaluatedList(tno=${tno},sno=${staff[8]})}">[[${staff[0]}]]</a></td>
                                 <td>[[${staff[1]}]]</td>
                                 <td>[[${staff[2]}]]</td>
                                 <td>[[${staff[3]}]]</td>

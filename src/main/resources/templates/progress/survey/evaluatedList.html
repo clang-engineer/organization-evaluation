@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Tables</li>
+        </ol>
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i> Evaluated List
+            </div>
+
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th colspan="col">#</th>
+                                <th>피평가자</th>
+                                <th>Dep</th>
+                                <th>Lev</th>
+                                <th>평가자</th>
+                                <th>finish</th>
+                            </tr>
+                        </thead>
+                        <tfoot>
+                            <tr>
+                                <th>#</th>
+                                <th>피평가자</th>
+                                <th>Dep</th>
+                                <th>Lev</th>
+                                <th>평가자</th>
+                                <th>finish</th>
+                            </tr>
+                        </tfoot>
+                        <tbody>
+                            <tr colspan="row" th:each="relation,status:${evaluatedList}">
+                                <td>[[${status.count}]]</td>
+                                <td>[[${relation?.evaluated?.name}]]</td>
+                                <td>[[${relation?.evaluated?.department1}]] - [[${relation?.evaluated?.department2}]]</td>
+                                <td>[[${relation?.evaluated?.level}]]</td>
+                                <td>[[${relation?.evaluator?.name}]]</td>
+                                <td>
+                                    <div class="form-group">
+                                        <select class="form-control" th:data-rno="${relation.rno}">
+                                            <option value="N" th:selected="${relation.finish}=='N'">N</option>
+                                            <option value="T" th:selected="${relation.finish}=='T'">T</option>
+                                            <option value="Y" th:selected="${relation.finish}=='Y'">Y</option>
+                                        </select>
+                                    </div>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+            </div>
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+
+        </div>
+
+        <p class="small text-center text-muted my-5">
+            <em>More table examples coming soon...</em>
+        </p>
+    </div>
+    <!-- /.container-fluid -->
+
+
+</div>
+
+
+
+<th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var csrf = JSON.parse('[[${_csrf}]]');
+            //평가 전송
+            $("#dataTable").on("change", "select", function (e) {
+                var rno = $(this).data("rno");
+                var finish = $(this).val();
+
+                var param = {
+                    rno: rno,
+                    finish: finish,
+                    csrf: csrf
+                }
+                $.ajax({
+                    type: 'put',
+                    url: '/progress/survey/evaluatedList',
+                    data: 'rno=' + param.rno + '&finish=' + param.finish,
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+                    },
+                    success: function (result, status, shr) {
+                        alert("success");
+                    },
+                    error: function (xhr, status, er) {
+                        alert(er);
+                    }
+                });
+            });
+        });
+    </script>
+</th:block>
