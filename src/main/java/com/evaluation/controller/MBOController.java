@@ -216,7 +216,7 @@ public class MBOController {
     }
 
     // 새로 고침시 리스트로 복귀하기 위한 매핑
-    // @GetMapping("/object")
+    @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
 
@@ -236,8 +236,8 @@ public class MBOController {
     }
 
     // 목표와 목표댓글을 불러오기 위한
-    @GetMapping("/object")
-    // @PostMapping("/object")
+    // @GetMapping("/object")
+    @PostMapping("/object")
     public void object(Long rno, long tno, String company, Model model) {
         log.info("" + rno);
 
@@ -360,20 +360,26 @@ public class MBOController {
     @ResponseBody
     public ResponseEntity<HttpStatus> submit(@RequestBody Map<String, Object> answer, RedirectAttributes rttr) {
         log.info("" + answer);
-
-        // parse variable csrf 때문에 string으로 안 받아짐. 때문에 object로 받아서 변환
         long tmpRno = Long.parseLong(answer.get("rno").toString());
         String tmpFinish = String.valueOf(answer.get("finish"));
-        String tmpKey = String.valueOf(answer.get("key"));
-        Gson gson = new Gson();
-        RatioValue tmpValue = gson.fromJson(answer.get("value").toString(), RatioValue.class);
+        // key-value를 전달하는 경우랑 finish만 전달하는 경우를 나눠서 처리함
+        if (answer.containsKey("key")) {
+            // parse variable csrf 때문에 string으로 안 받아짐. 때문에 object로 받아서 변환
+            String tmpKey = String.valueOf(answer.get("key"));
+            Gson gson = new Gson();
+            RatioValue tmpValue = gson.fromJson(answer.get("value").toString(), RatioValue.class);
 
-        relationMBOService.read(tmpRno).ifPresent(origin -> {
-            log.info("" + origin);
-            origin.setFinish(tmpFinish);
-            origin.getAnswers().put(tmpKey, tmpValue);
-            relationMBOService.modify(origin);
-        });
+            relationMBOService.read(tmpRno).ifPresent(origin -> {
+                origin.setFinish(tmpFinish);
+                origin.getAnswers().put(tmpKey, tmpValue);
+                relationMBOService.modify(origin);
+            });
+        } else {
+            relationMBOService.read(tmpRno).ifPresent(origin -> {
+                origin.setFinish(tmpFinish);
+                relationMBOService.modify(origin);
+            });
+        }
 
         return new ResponseEntity<>(HttpStatus.OK);
     }

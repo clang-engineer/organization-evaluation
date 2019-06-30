@@ -134,28 +134,13 @@
 
             // load했을 때 버튼 사이즈
             var win = $(this);
-            if (win.width() < 768) {
-                $('#bottomBtn').addClass('btn-group-sm');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-lg');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-vertical');
-
-            } else if ((win.width() < 1200)) {
-                $('#bottomBtn').removeClass('btn-group-sm');
-                $('#bottomBtn').addClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-lg');
-                $('#bottomBtn').removeClass('btn-group-vertical');
-
-            } else {
-                $('#bottomBtn').removeClass('btn-group-sm');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').addClass('btn-group-lg');
-                $('#bottomBtn').addClass('btn-group-vertical');
-            }
-
+            bottomBtnSize();
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
+                bottomBtnSize();
+            });
+
+            function bottomBtnSize() {
                 if (win.width() < 768) {
                     $('#bottomBtn').addClass('btn-group-sm');
                     $('#bottomBtn').removeClass('btn-group-xs');
@@ -174,27 +159,40 @@
                     $('#bottomBtn').addClass('btn-group-lg');
                     $('#bottomBtn').addClass('btn-group-vertical');
                 }
-            });
-
+            };
             //전송 버튼 눌렀을 때의 동작
-            $("#btnSubmit").click(function (e) {
+            $("#btnSubmit, #btnPause").click(function (e) {
                 e.preventDefault();
+                var btnType = $(this).attr('id');
 
-                //form 꽉 찾는지 확인하기
-                if (!(formObj[0].checkValidity())) {
-                    formObj[0].reportValidity();
-                    return false;
+                if (btnType == 'btnPause') {
+                    //모달 data
+                    modal.data("finish", "T");
+
+                    //modal Text
+                    modalTitle.text("Pause Evaluation");
+
+                    //모달 layout
+                    modalContent1.val(evaluatedName + "님에 대한 평가를 임시 저장합니다.");
+                    modalLabel2.text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.");
+                } else if (btnType == 'btnSubmit') {
+                    //form 꽉 찾는지 확인하기
+                    if (!(formObj[0].checkValidity())) {
+                        formObj[0].reportValidity();
+                        return false;
+                    }
+                    //모달 data
+                    modal.data("finish", "Y");
+
+                    //modal Text
+                    modalTitle.text("Submit Evaluation");
+
+                    //모달 layout
+                    modalContent1.val(evaluatedName + "님에 대한 평가를 최종 제출합니다.");
+                    modalLabel2.text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.");
+
                 }
 
-                //모달 data
-                modal.data("finish", "Y");
-
-                //modal Text
-                modalTitle.text("Submit Evaluation");
-
-                //모달 layout
-                modalContent1.val(evaluatedName + "님에 대한 평가를 최종 제출합니다.");
-                modalLabel2.text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.");
                 modalContent1.attr("readonly", "true");
 
                 //모달 button
@@ -203,27 +201,6 @@
 
                 modal.modal('show');
             })
-
-            $("#btnPause").click(function (e) {
-                e.preventDefault();
-
-                //모달 data
-                modal.data("finish", "T");
-
-                //modal Text
-                modalTitle.text("Pause Evaluation");
-
-                //모달 layout
-                modalContent1.val(evaluatedName + "님에 대한 평가를 임시 저장합니다.");
-                modalLabel2.text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.");
-                modalContent1.attr("readonly", "true");
-
-                //모달 button
-                modal.find("button[id!='modalCloseBtn']").hide();
-                modalRegisterBtn.show();
-
-                modal.modal('show');
-            });
 
             //Register button에 대한 동작
             modalRegisterBtn.click(function (e) {

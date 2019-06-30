@@ -493,16 +493,7 @@
                 };
             });
 
-            //close button click 시
-            modalCloseBtn.on("click", function (e) {
-                modal.modal('hide');
-            });
-
-            //댓글 모달 close버튼 클릭시
-            $("#basicModal").find("#modalCloseBtn").on("click", function (e) {
-                $("#basicModal").modal('hide');
-            });
-
+            //삭제/수정 리스트 모달 
             $("#removedListBtn").click(function (e) {
                 $("#removedListModal").modal('show');
             });
@@ -553,96 +544,96 @@
 
             //제출 버튼에 대한 설정.
             //전송 버튼 눌렀을 때의 동작
-            $("#btnSubmit").click(function (e) {
+            $("#btnSubmit,#btnPause").click(function (e) {
                 e.preventDefault();
                 var evaluatedName = [[${ relation.evaluated.name }]];
                 //form 꽉 찾는지 확인하기
-                //모달 data
-                $("#basicModal").data("finish", "Y");
+                var btnType = $(this).attr('id');
+                var tmpModal = $("#basicModal");
 
-                //modal Text
-                $("#basicModal").find("#modalTitle").text("Submit Evaluation");
-                $("#basicModal").find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 최종 제출합니다.").attr("readonly", true);
-                $("#basicModal").find("#modalLabel2").text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.").css("fontSize", "0.9rem");
+                if (btnType == 'btnPause') {
+                    //모달 data
+                    tmpModal.data("finish", "T");
+
+                    //modal Text
+                    tmpModal.find("#modalTitle").text("Pause Evaluation");
+                    tmpModal.find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 임시 저장합니다.").attr("readonly", true);
+                    tmpModal.find("#modalLabel2").text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.").css("fontSize", "0.9rem");
+                } else if (btnType == 'btnSubmit') {
+                    //테이블 내의 모든 select박스에 대한 유효성 검사
+                    var form = objectListTable.find('form');
+                    for (var i = 0; i < form.length; i++) {
+                        if (!form[i].checkValidity()) {
+                            form[i].reportValidity();
+                            return false;
+                        };
+                    }
+                    //모달 data
+                    tmpModal.data("finish", "Y");
+
+                    //modal Text
+                    tmpModal.find("#modalTitle").text("Submit Evaluation");
+                    tmpModal.find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 최종 제출합니다.").attr("readonly", true);
+                    tmpModal.find("#modalLabel2").text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.").css("fontSize", "0.9rem");
+
+                }
 
                 //모달 layout
-                $("#basicModal").find("#modalBody").addClass("pb-0")
-                $("#basicModal").find("#modalLabel1").remove();
-                $("#basicModal").find("input[name='modalContent2']").remove();
+                tmpModal.find("#modalBody").addClass("pb-0")
+                tmpModal.find("#modalLabel1").remove();
+                tmpModal.find("input[name='modalContent2']").remove();
 
                 //모달 button
-                $("#basicModal").find("button[id!='modalCloseBtn']").hide();
-                $("#basicModal").find("#modalRegisterBtn").show().text("Submit");
+                tmpModal.find("button[id!='modalCloseBtn']").hide();
+                tmpModal.find("#modalRegisterBtn").show().text("Submit");
 
-                $("#basicModal").modal('show');
+                tmpModal.modal('show');
             })
 
-            $("#btnPause").click(function (e) {
-                e.preventDefault();
-                var evaluatedName = [[${ relation.evaluated.name }]];
+            //Register button에 대한 동작
+            $("#basicModal").find("#modalRegisterBtn").click(function (e) {
+                var rno = [[${ relation?.rno }]];
 
-                //모달 data
-                $("#basicModal").data("finish", "T");
+                switch ($("#basicModal").data("finish")) {
+                    case "T":
+                        var finish = 'T';
+                        break;
+                    case "Y":
+                        var finish = 'Y';
+                        break;
+                }
 
-                //modal Text
-                $("#basicModal").find("#modalTitle").text("Pause Evaluation");
-                $("#basicModal").find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 임시 저장합니다.").attr("readonly", true);
-                $("#basicModal").find("#modalLabel2").text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.").css("fontSize", "0.9rem");
-
-                //모달 layout
-                $("#basicModal").find("#modalBody").addClass("pb-0")
-                $("#basicModal").find("#modalLabel1").remove();
-                $("#basicModal").find("input[name='modalContent2']").remove();
-
-                //모달 button
-                $("#basicModal").find("button[id!='modalCloseBtn']").hide();
-                $("#basicModal").find("#modalRegisterBtn").show().text("Submit");
-
-                $("#basicModal").modal('show');
+                var param = {
+                    rno: rno,
+                    finish: finish,
+                    csrf: csrf
+                }
+                //ajax 호출
+                objectService.submit(param, function (result) {
+                    if (finish == 'T') {
+                        alert("임시저장 하였습니다.");
+                    } else if (finish == 'Y') {
+                        alert("제출 완료 하였습니다.");
+                    }
+                    //그냥 새로고침으로는 리다이렉트가 안돼서 아래 방식으로 서버에 현재 페이지 재요청
+                    $(location).attr('href', window.location.href);
+                });
             });
 
-            // //Register button에 대한 동작
-            // modalRegisterBtn.click(function (e) {
-            //     switch (modal.data("finish")) {
-            //         case "Y":
-            //             formObj.append("<input type='hidden' name='finish' value='Y'>");
-            //             break;
-            //         case "T":
-            //             formObj.append("<input type='hidden' name='finish' value='T'>");
-            //             break;
-            //     }
-            //     formObj.submit();
-            // });
-
             // //close button click 시
-            // modalCloseBtn.on("click", function (e) {
-            //     modal.modal('hide');
-            // });
+            $("button[id='modalCloseBtn']").on("click", function (e) {
+                $(this).closest('.modal').modal('hide');
+            });
 
             // load했을 때 버튼 사이즈
             var win = $(this);
-            if (win.width() < 768) {
-                $('#bottomBtn').addClass('btn-group-sm');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-lg');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-vertical');
-
-            } else if ((win.width() < 1200)) {
-                $('#bottomBtn').removeClass('btn-group-sm');
-                $('#bottomBtn').addClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-lg');
-                $('#bottomBtn').removeClass('btn-group-vertical');
-
-            } else {
-                $('#bottomBtn').removeClass('btn-group-sm');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').addClass('btn-group-lg');
-                $('#bottomBtn').addClass('btn-group-vertical');
-            }
-
+            bottomBtnSize();
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
+                bottomBtnSize();
+            });
+
+            function bottomBtnSize() {
                 if (win.width() < 768) {
                     $('#bottomBtn').addClass('btn-group-sm');
                     $('#bottomBtn').removeClass('btn-group-xs');
@@ -661,7 +652,7 @@
                     $('#bottomBtn').addClass('btn-group-lg');
                     $('#bottomBtn').addClass('btn-group-vertical');
                 }
-            });
+            }
 
             //탑 버튼 나중에 나오도록
             $(window).scroll(function () {
