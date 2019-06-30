@@ -16,7 +16,7 @@
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-table"></i> 360 Progress
+                <i class="fas fa-table"></i> MBO See Progress
             </div>
 
             <!-- search box -->
@@ -60,7 +60,7 @@
                         <tbody>
                             <tr th:each="staff,iterstate:${progress}">
                                 <th>[[${iterstate.count}]]</td>
-                                <td><a th:href="@{/progress/survey/evaluatedList(tno=${tno},sno=${staff[8]})}">[[${staff[0]}]]</a></td>
+                                <td><a th:href="@{/progress/mbo/evaluatedList(tno=${tno},sno=${staff[8]})}">[[${staff[0]}]]</a></td>
                                 <td>[[${staff[1]}]]</td>
                                 <td>[[${staff[2]}]]</td>
                                 <td>[[${staff[3]}]]</td>
@@ -110,7 +110,7 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.attr("action", "/progress/survey");
+                formObj.attr("action", "/progress/mbo");
                 formObj.submit();
             });
 

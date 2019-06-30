@@ -11,11 +11,10 @@
             </li>
             <li class="breadcrumb-item active">Tables</li>
         </ol>
-
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-table"></i> 360 Evaluated List
+                <i class="fas fa-table"></i>MBO Evaluated List
             </div>
 
             <div class="card-body">
@@ -28,8 +27,8 @@
                                 <th>Dep</th>
                                 <th>Lev</th>
                                 <th>평가자</th>
-                                <th style="width: 5%">객관식</th>
-                                <th style="width: 5%">주관식</th>
+                                <th style="width: 5%">부하량</th>
+                                <th style="width: 5%">면담</th>
                                 <th>finish</th>
                             </tr>
                         </thead>
@@ -40,8 +39,8 @@
                                 <th>Dep</th>
                                 <th>Lev</th>
                                 <th>평가자</th>
-                                <th>객관식</th>
-                                <th>주관식</th>
+                                <th>부하량</th>
+                                <th>면담</th>
                                 <th>finish</th>
                             </tr>
                         </tfoot>
@@ -52,7 +51,7 @@
                                 <td>[[${relation?.evaluated?.department1}]] - [[${relation?.evaluated?.department2}]]</td>
                                 <td>[[${relation?.evaluated?.level}]]</td>
                                 <td>[[${relation?.evaluator?.name}]]</td>
-                                <td style="font-size: 0.5rem">[[${relation?.answers}]]</td>
+                                <td style="font-size: 0.5rem">ratio : [[${relation?.answers?.get('weight')?.value}]] / value : [[${relation?.answers?.get('weight')?.value}]]</td>
                                 <td style="font-size: 0.5rem">[[${relation?.comments}]]</td>
                                 <td>
                                     <div class="form-group">
@@ -100,7 +99,7 @@
                 }
                 $.ajax({
                     type: 'put',
-                    url: '/progress/survey/evaluatedList',
+                    url: '/progress/mbo/evaluatedList',
                     data: 'rno=' + param.rno + '&finish=' + param.finish,
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
