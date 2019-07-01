@@ -9,6 +9,7 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
 import com.evaluation.domain.Company;
@@ -31,10 +32,12 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/progress/*")
 @AllArgsConstructor
+@Slf4j
 public class ProgressController {
 
     Relation360Service relation360Service;
@@ -47,25 +50,78 @@ public class ProgressController {
 
     QuestionService questionService;
 
-    @GetMapping("/survey")
-    public void survey(long tno, Model model) {
+    @GetMapping(value = { "/survey", "/mbo" })
+    public void survey(long tno, Model model, HttpServletRequest request) {
+        String whatYouCall = request.getServletPath();
 
-        relation360Service.progressOfSurevey(tno).ifPresent(origin -> {
-            model.addAttribute("progress", origin);
+        if (whatYouCall.equals("/progress/survey")) {
+            relation360Service.progressOfSurevey(tno).ifPresent(origin -> {
+                model.addAttribute("progress", origin);
+                // 총 개수 구하기
+                int completeCount = 0;
+                int totalCount = 0;
+                for (int i = 0; i < origin.size(); i++) {
+                    completeCount += Integer.parseInt(origin.get(i).get(5));
+                    totalCount += Integer.parseInt(origin.get(i).get(6));
+                }
 
-            // 총 개수 구하기
-            int completeCount = 0;
-            int totalCount = 0;
-            for (int i = 0; i < origin.size(); i++) {
-                completeCount += Integer.parseInt(origin.get(i).get(5));
-                totalCount += Integer.parseInt(origin.get(i).get(6));
-            }
+                model.addAttribute("completeCount", completeCount);
+                model.addAttribute("totalCount", totalCount);
+            });
+        } else if (whatYouCall.equals("/progress/mbo")) {
+            relationMBOService.progressOfSurevey(tno).ifPresent(origin -> {
+                model.addAttribute("progress", origin);
 
-            model.addAttribute("completeCount", completeCount);
-            model.addAttribute("totalCount", totalCount);
-        });
+                // 총 개수 구하기
+                int completeCount = 0;
+                int totalCount = 0;
+                for (int i = 0; i < origin.size(); i++) {
+                    completeCount += Integer.parseInt(origin.get(i).get(5));
+                    totalCount += Integer.parseInt(origin.get(i).get(6));
+                }
+
+                model.addAttribute("completeCount", completeCount);
+                model.addAttribute("totalCount", totalCount);
+            });
+        }
 
         model.addAttribute("tno", tno);
+    }
+
+    // 평가자의 피평가자 리스트 얻어오는 컨트롤러 중복 제거 위해, 합침. 다형성 이용해서 중복 더 줄이고 싶으나, 복잡성 증가해서 스탑.
+    @GetMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
+    public void mboEvaluated(long tno, long sno, Model model, HttpServletRequest request) {
+        String whatYouCall = request.getServletPath();
+
+        if (whatYouCall.equals("/progress/survey/evaluatedList")) {
+            relation360Service.findByEvaluator(sno, tno).ifPresent(origin -> {
+                model.addAttribute("evaluatedList", origin);
+            });
+        } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
+            relationMBOService.findByEvaluator(sno, tno).ifPresent(origin -> {
+                model.addAttribute("evaluatedList", origin);
+            });
+        }
+        model.addAttribute("tno", tno);
+    }
+
+    // 평가자의 피평가자 서베이 저장 상태 바꿀 수 있도록하는 REST
+    @PutMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
+    public ResponseEntity<HttpStatus> mboEvaluatedFinishChange(long rno, String finish, HttpServletRequest request) {
+        String whatYouCall = request.getServletPath();
+
+        if (whatYouCall.equals("/progress/survey/evaluatedList")) {
+            relation360Service.read(rno).ifPresent(origin -> {
+                origin.setFinish(finish);
+                relation360Service.modify(origin);
+            });
+        } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
+            relationMBOService.read(rno).ifPresent(origin -> {
+                origin.setFinish(finish);
+                relationMBOService.modify(origin);
+            });
+        }
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     @PostMapping("/survey")
@@ -250,48 +306,7 @@ public class ProgressController {
         });
     }
 
-    // 평가자의 피평가자 명단
-    @GetMapping("/survey/evaluatedList")
-    public void evaluated(long tno, long sno, Model model) {
-        relation360Service.findByEvaluator(sno, tno).ifPresent(origin -> {
-            model.addAttribute("evaluatedList", origin);
-        });
-        model.addAttribute("tno", tno);
-    }
-
-    // 평가자의 피평가자 서베이 저장 상태 바꿀 수 있도록하는 REST
-    @PutMapping("/survey/evaluatedList")
-    public ResponseEntity<HttpStatus> evaluatedFinishChange(long rno, String finish) {
-        relation360Service.read(rno).ifPresent(origin -> {
-            origin.setFinish(finish);
-            relation360Service.modify(origin);
-        });
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    //mbo의 평가 progress 보기
-    @GetMapping("/mbo")
-    public void plan(long tno, Model model) {
-
-        relationMBOService.progressOfSurevey(tno).ifPresent(origin -> {
-            model.addAttribute("progress", origin);
-
-            // 총 개수 구하기
-            int completeCount = 0;
-            int totalCount = 0;
-            for (int i = 0; i < origin.size(); i++) {
-                completeCount += Integer.parseInt(origin.get(i).get(5));
-                totalCount += Integer.parseInt(origin.get(i).get(6));
-            }
-
-            model.addAttribute("completeCount", completeCount);
-            model.addAttribute("totalCount", totalCount);
-        });
-
-        model.addAttribute("tno", tno);
-    }
-
-    //mbo의 평가 progress 다운받기
+    // mbo의 평가 progress 다운받기
     @PostMapping("/mbo")
     @ResponseBody
     public void seeXlDownload(long tno, HttpServletResponse response) {
@@ -368,38 +383,4 @@ public class ProgressController {
         });
     }
 
-    // mbo 평가자의 피평가자 명단
-    @GetMapping("/mbo/evaluatedList")
-    public void mboEvaluated(long tno, long sno, Model model) {
-        relationMBOService.findByEvaluator(sno, tno).ifPresent(origin -> {
-            model.addAttribute("evaluatedList", origin);
-        });
-        model.addAttribute("tno", tno);
-    }
-
-    // mbo평가자의 피평가자 서베이 저장 상태 바꿀 수 있도록하는 REST
-    @PutMapping("/mbo/evaluatedList")
-    public ResponseEntity<HttpStatus> mboEvaluatedFinishChange(long rno, String finish) {
-        relationMBOService.read(rno).ifPresent(origin -> {
-            origin.setFinish(finish);
-            relationMBOService.modify(origin);
-        });
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
-
-    // 커스텀 sort를 위한
-    // public void questionSort(List<String> list) {
-    // Collections.sort(list, new Comparator<String>() {
-    // @Override
-    // public int compare(String s1, String s2) {
-    // if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
-    // return -1;
-    // } else if (Integer.parseInt(s1.substring(1)) >
-    // Integer.parseInt(s2.substring(1))) {
-    // return 1;
-    // }
-    // return 0;
-    // }
-    // });
-    // }
 }
