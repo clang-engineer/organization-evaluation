@@ -18,6 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.evaluation.domain.Company;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
+import com.evaluation.service.MBOService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
 import com.evaluation.service.RelationMBOService;
@@ -50,6 +51,8 @@ public class ProgressController {
     CompanyService companyService;
 
     QuestionService questionService;
+
+    MBOService mboService;
 
     @GetMapping(value = { "/survey", "/mbo" })
     public void survey(long tno, Model model, HttpServletRequest request) {
@@ -399,7 +402,7 @@ public class ProgressController {
 
             String fileName = "default";
             try {
-                fileName = URLEncoder.encode(company + "_mboResult_" + format_time, "UTF-8");
+                fileName = URLEncoder.encode(company + "_mboSeeResult_" + format_time, "UTF-8");
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
@@ -545,7 +548,96 @@ public class ProgressController {
     public void progressOfPlan(long tno, Model model) {
         relationMBOService.progressOfPlan(tno).ifPresent(list -> {
             model.addAttribute("progress", list);
+            double total = 0;
+            for (List<String> tmpList : list) {
+
+                total += (tmpList.get(6) != null) ? Double.parseDouble(tmpList.get(6)) : 0;
+            }
+            model.addAttribute("count", list.size());
+            model.addAttribute("total", total);
         });
         model.addAttribute("tno", tno);
+    }
+
+    @GetMapping("/mbo/objectList")
+    public void objectList(long tno, long sno, Model model) {
+        model.addAttribute("tno", tno);
+        mboService.listByTnoSno(tno, sno).ifPresent(list -> {
+            model.addAttribute("objectList", list);
+        });
+    }
+
+    @PostMapping("/mbo/plan")
+    @ResponseBody
+    public void planXlDownload(long tno, HttpServletResponse response) {
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            String company = companyService.get(cno).map(Company::getName).orElse("etc");
+
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
+            String format_time = format.format(System.currentTimeMillis());
+
+            String fileName = "default";
+            try {
+                fileName = URLEncoder.encode(company + "_mboPlanProgress _" + format_time, "UTF-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
+            relationMBOService.progressOfPlan(tno).ifPresent(list -> {
+                List<List<String>> xlList = new ArrayList<List<String>>();
+                List<String> header = new ArrayList<String>();
+
+                header.add("이름");
+                header.add("이메일");
+                header.add("직책");
+                header.add("부문");
+                header.add("부서");
+                header.add("완료");
+
+                xlList.add(header);
+
+                Double completeCount = 0.0;
+                int totalCount = 0;
+                for (int i = 0; i < list.size(); i++) {
+                    List<String> tmpList = new ArrayList<String>();
+                    tmpList.add(list.get(i).get(1));
+                    tmpList.add(list.get(i).get(2));
+                    tmpList.add(list.get(i).get(3));
+                    tmpList.add(list.get(i).get(4));
+                    tmpList.add(list.get(i).get(5));
+                    if (list.get(i).get(6) != null) {
+                        Double tmpValue = Double.parseDouble(list.get(i).get(6));
+                        tmpList.add(String.format("%.0f", tmpValue * 100) + "%");
+                        completeCount += tmpValue;
+                    } else {
+                        tmpList.add("");
+                    }
+                    xlList.add(tmpList);
+                }
+
+                totalCount = list.size();
+                // 엑셀 바닥글 설정
+                List<String> footer = new ArrayList<String>();
+                String[] space = { "-", "-", "-", "-" };
+                footer.addAll(Arrays.asList(space));
+                footer.add("Total");
+                footer.add(String.format("%.0f", completeCount / totalCount * 100) + "%");
+                xlList.add(footer);
+
+                try {
+                    XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
+                    workbook.write(response.getOutputStream());
+                    workbook.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            });
+        });
     }
 }
