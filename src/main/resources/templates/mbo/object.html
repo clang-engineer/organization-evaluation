@@ -43,8 +43,8 @@
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
                     <!-- object -->
                     <tr style="border-bottom: 1px solid gray;">
-                        <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th>
-                        <!-- <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
+                        <!-- <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th> -->
+                        <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
@@ -529,6 +529,9 @@
                 var key = $(this).attr('name');
                 var ratio = $(this).data("ratio");
                 var value = $(this).val();
+                if (key == 'weight') {
+                    ratio = 1;
+                }
                 var param = {
                     rno: rno,
                     finish: finish,

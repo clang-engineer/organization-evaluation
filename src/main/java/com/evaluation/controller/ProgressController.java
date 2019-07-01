@@ -5,7 +5,10 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedHashSet;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
 
@@ -383,4 +386,160 @@ public class ProgressController {
         });
     }
 
+    @PostMapping("/mbo/result")
+    @ResponseBody
+    public void mboResultDownload(long tno, HttpServletResponse response) {
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            String company = companyService.get(cno).map(Company::getName).orElse("etc");
+
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
+            String format_time = format.format(System.currentTimeMillis());
+
+            String fileName = "default";
+            try {
+                fileName = URLEncoder.encode(company + "_mboResult_" + format_time, "UTF-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
+            relationMBOService.findAllbyTno(tno).ifPresent(list -> {
+                List<List<String>> xlList = new ArrayList<List<String>>();
+                List<String> header = new ArrayList<String>();
+
+                header.add("이름");
+                header.add("이메일");
+                header.add("직책");
+                header.add("부문");
+                header.add("부서");
+                header.add("직군");
+                header.add("계층");
+                header.add("관계");
+                header.add("평가자");
+                header.add("임시저장");
+                header.add("입력일");
+
+                // set으로 중복제거
+                Set<String> answerKeySet = new LinkedHashSet<String>();
+                Set<String> commentKeySet = new LinkedHashSet<String>();
+                for (int i = 0; i < list.size(); i++) {
+                    answerKeySet.addAll(list.get(i).getAnswers().keySet());
+                    commentKeySet.addAll(list.get(i).getComments().keySet());
+                }
+
+                // list로 변환 후 정렬
+                List<String> answerKeyList = new ArrayList<String>(answerKeySet);
+                questionSort(answerKeyList);
+
+                // sum을 표시해주는 열 따로 생성
+                List<String> ratioHeaderList = new LinkedList<String>();
+                List<String> valueHeaderList = new LinkedList<String>();
+                List<String> multipleHeaderList = new LinkedList<String>();
+                for (int i = 0; i < answerKeyList.size(); i++) {
+                    String ratioString = "r-" + answerKeyList.get(i);
+                    String valueString = "v-" + answerKeyList.get(i);
+                    String multipleString = "r*v-" + answerKeyList.get(i);
+                    ratioHeaderList.add(i, ratioString);
+                    valueHeaderList.add(i, valueString);
+                    multipleHeaderList.add(i, multipleString);
+                }
+                header.addAll(ratioHeaderList);
+                header.addAll(valueHeaderList);
+                header.addAll(multipleHeaderList);
+                header.addAll(commentKeySet);
+
+                xlList.add(header);
+
+                for (int i = 0; i < list.size(); i++) {
+                    List<String> tmpList = new ArrayList<String>();
+                    tmpList.add(list.get(i).getEvaluated().getName());
+                    tmpList.add(list.get(i).getEvaluated().getEmail());
+                    tmpList.add(list.get(i).getEvaluated().getLevel());
+                    tmpList.add(list.get(i).getEvaluated().getDepartment1());
+                    tmpList.add(list.get(i).getEvaluated().getDepartment2());
+                    tmpList.add(list.get(i).getEvaluated().getDivision1());
+                    tmpList.add(list.get(i).getEvaluated().getDivision2());
+                    tmpList.add(list.get(i).getRelation());
+                    tmpList.add(list.get(i).getEvaluator().getEmail());
+                    tmpList.add(list.get(i).getFinish());
+                    // 입력시간은 N가 아닌 것들만 입력 해준다!
+                    if (list.get(i).getFinish().equals("N")) {
+                        tmpList.add(null);
+                    } else {
+                        tmpList.add("" + list.get(i).getUpdateDate());
+                    }
+
+                    // ratio추출해서 더하고
+                    for (String key : answerKeyList) {
+                        if (list.get(i).getAnswers().get(key) == null) {
+                            tmpList.add(null);
+                        } else {
+                            tmpList.add("" + list.get(i).getAnswers().get(key).getRatio());
+                        }
+                    }
+
+                    //value 추출해서 더하고
+                    for (String key : answerKeyList) {
+                        if (list.get(i).getAnswers().get(key) == null) {
+                            tmpList.add(null);
+                        } else {
+                            tmpList.add("" + list.get(i).getAnswers().get(key).getValue());
+                        }
+                    }
+
+                    // ratio*value를 더한다.
+                    for (String key : answerKeyList) {
+                        if (list.get(i).getAnswers().get(key) == null) {
+                            tmpList.add(null);
+                        } else {
+                            tmpList.add("" + list.get(i).getAnswers().get(key).getRatio()
+                                    * list.get(i).getAnswers().get(key).getValue());
+                        }
+                    }
+
+                    // comment를 위에서 만든 key로 for문 돌린다.
+                    for (String key : commentKeySet) {
+                        if (list.get(i).getComments().get(key) == null) {
+                            tmpList.add(null);
+                        } else {
+                            tmpList.add("" + list.get(i).getComments().get(key));
+                        }
+                    }
+                    xlList.add(tmpList);
+                }
+
+                try {
+                    XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
+                    workbook.write(response.getOutputStream());
+                    workbook.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            });
+        });
+    }
+
+    // 커스텀 sort를 위한
+    public void questionSort(List<String> list) {
+        Collections.sort(list, new Comparator<String>() {
+            @Override
+            public int compare(String s1, String s2) {
+                if (s1.equals("weight") || s2.equals("weight")) {
+                    return -1;
+                }
+
+                if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
+                    return -1;
+                } else if (Integer.parseInt(s1.substring(1)) > Integer.parseInt(s2.substring(1))) {
+                    return 1;
+                }
+                return 0;
+            }
+        });
+    }
 }
