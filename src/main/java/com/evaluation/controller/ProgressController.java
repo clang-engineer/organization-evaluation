@@ -35,12 +35,10 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 
 @Controller
 @RequestMapping("/progress/*")
 @AllArgsConstructor
-@Slf4j
 public class ProgressController {
 
     Relation360Service relation360Service;
@@ -482,7 +480,7 @@ public class ProgressController {
                         }
                     }
 
-                    //value 추출해서 더하고
+                    // value 추출해서 더하고
                     for (String key : answerKeyList) {
                         if (list.get(i).getAnswers().get(key) == null) {
                             tmpList.add(null);
@@ -541,5 +539,13 @@ public class ProgressController {
                 return 0;
             }
         });
+    }
+
+    @GetMapping("/mbo/plan")
+    public void progressOfPlan(long tno, Model model) {
+        relationMBOService.progressOfPlan(tno).ifPresent(list -> {
+            model.addAttribute("progress", list);
+        });
+        model.addAttribute("tno", tno);
     }
 }

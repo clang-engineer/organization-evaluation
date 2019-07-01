@@ -34,4 +34,6 @@ public interface RelationMBOService {
     public Optional<List<List<String>>> progressOfSurevey(long tno);
 
     public Optional<RelationMBO> findMeRelationByTnoSno(long tno, long sno);
+
+    public Optional<List<List<String>>> progressOfPlan(long tno);
 }

@@ -121,4 +121,9 @@ public class RelationMBOServiceImpl implements RelationMBOService {
 
         return relationMBORepo.findMeRelationByTnoSno(tno, sno);
     }
+
+    @Override
+    public Optional<List<List<String>>> progressOfPlan(long tno) {
+        return relationMBORepo.progressOfPlan(tno);
+    }
 }

@@ -25,4 +25,11 @@ public class RelationMBOTests {
             log.info("" + origin.getRno());
         });
     }
+
+    @Test
+    public void progressOfPlan() {
+        relationMBORepo.progressOfPlan(1).ifPresent(origin -> {
+            log.info("" + origin);
+        });
+    }
 }
