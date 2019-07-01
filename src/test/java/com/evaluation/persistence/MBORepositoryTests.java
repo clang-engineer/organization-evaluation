@@ -60,4 +60,11 @@ public class MBORepositoryTests {
             });
         });
     }
+
+    @Test
+    public void name() {
+        mboRepo.listByTno(1L).ifPresent(origin -> {
+            log.info("" + origin);
+        });
+    }
 }

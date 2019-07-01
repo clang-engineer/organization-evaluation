@@ -640,4 +640,70 @@ public class ProgressController {
             });
         });
     }
+
+    @PostMapping("/mbo/plan/result")
+    @ResponseBody
+    public void mboPlanResultDownload(long tno, HttpServletResponse response) {
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            String company = companyService.get(cno).map(Company::getName).orElse("etc");
+
+            response.setContentType("application/vnd.ms-excel;charset=UTF-8");
+            response.setCharacterEncoding("UTF-8");
+            SimpleDateFormat format = new SimpleDateFormat("yyyy-MM-dd//HHmmss");
+            String format_time = format.format(System.currentTimeMillis());
+
+            String fileName = "default";
+            try {
+                fileName = URLEncoder.encode(company + "_mboPlanResult_" + format_time, "UTF-8");
+            } catch (UnsupportedEncodingException e1) {
+                e1.printStackTrace();
+            }
+
+            response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
+            mboService.listByTno(tno).ifPresent(list -> {
+                List<List<String>> xlList = new ArrayList<List<String>>();
+                List<String> header = new ArrayList<String>();
+
+                header.add("#");
+                header.add("이름");
+                header.add("이메일");
+                header.add("직책");
+                header.add("부문");
+                header.add("부서");
+                header.add("finish");
+                header.add("목표");
+                header.add("프로세스");
+                header.add("비율");
+
+                xlList.add(header);
+                int index = 0;
+                for (List<String> objectList : list) {
+                    List<String> tmpList = new ArrayList<String>();
+                    tmpList.add(Integer.toString(index + 1));
+                    tmpList.add(objectList.get(0));
+                    tmpList.add(objectList.get(1));
+                    tmpList.add(objectList.get(2));
+                    tmpList.add(objectList.get(3));
+                    tmpList.add(objectList.get(4));
+                    tmpList.add(objectList.get(5));
+                    tmpList.add(objectList.get(6));
+                    tmpList.add(objectList.get(7));
+                    tmpList.add(String.format("%.0f", Double.parseDouble(objectList.get(8)) * 100) + "%");
+                    xlList.add(tmpList);
+                    index++;
+                }
+
+                try {
+                    XSSFWorkbook workbook = AboutExcel.writeExcel(xlList);
+                    workbook.write(response.getOutputStream());
+                    workbook.close();
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+            });
+        });
+    }
 }
