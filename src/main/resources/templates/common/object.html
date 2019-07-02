@@ -25,7 +25,7 @@
                             <div th:each="object,status:${removedList}">
                                 <!-- object -->
                                 <tr>
-                                    <th name="objectCount" scope="row" style="line-height:150px;">[[${status?.count}]]</th>
+                                    <th name="removedCount" scope="row" style="line-height:150px;">[[${status?.count}]]</th>
                                     <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                                     <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                                     <td class="align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
@@ -44,13 +44,13 @@
                                 </tr>
                                 <!-- ./object -->
                                 <!-- reply -->
-                                <tr th:each="reply:${replyList}" th:if="${reply.mno}==${object?.mbo?.mno}" class="collapse" th:id="collapse+${object?.mbo?.mno}">
+                                <tr th:each="reply:${replyList}" th:if="${reply.mno}==${object?.mbo?.mno}" class="collapse table-secondary" th:id="collapse+${object?.mbo?.mno}">
                                     <td>
                                         <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
                                             <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                                         </div>
                                     </td>
-                                    <td th:colspan="${turn.infoMBO.status}!='see'?'4':'6'" class="text-left">
+                                    <td th:colspan="5" class="text-left">
                                         <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
                                             [[${reply.rno}]]
                                             [[${reply?.comment}]]

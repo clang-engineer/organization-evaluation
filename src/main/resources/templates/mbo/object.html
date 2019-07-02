@@ -17,16 +17,16 @@
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
         <h2 class="mb-3">MBO List
-            <small class="font-weight-light ml-3" th:if="${turn.infoMBO.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
-            <small class="font-weight-light ml-3" th:if="${relationMe}!=null AND ${turn.infoMBO.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
+            <small class="font-weight-light ml-3" th:if="${turn?.infoMBO?.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
+            <small class="font-weight-light ml-3" th:if="${relationMe}!=null AND ${turn?.infoMBO?.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
                 입니다.</small>
 
         </h2>
         <div>
-            <button id="addObjectBtn" class="btn float-right" th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'"><i
+            <button id="addObjectBtn" class="btn float-right" th:if="(${turn?.infoMBO?.status}=='plan' OR ${turn?.infoMBO?.status}=='do') AND ${relation?.relation}=='me'"><i
                     class="fas fa-plus-circle">목표추가</i></button>
-            <button id="removedListBtn" class="btn float-right" th:if="${turn.infoMBO.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
-            <button id="departmentObject" class="btn float-right" th:if="${department.leader}!=null"><i class="fas fa-sitemap">팀 목표 보기</i></button>
+            <button id="removedListBtn" class="btn float-right" th:if="${turn?.infoMBO?.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
+            <button id="departmentObject" class="btn float-right" th:if="${department?.leader}!=null"><i class="fas fa-sitemap">팀 목표 보기</i></button>
         </div>
         <table class="table table-border" id="objectListTable">
             <thead class="thead-dark">
@@ -43,8 +43,8 @@
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
                     <!-- object -->
                     <tr style="border-bottom: 1px solid gray;">
-                        <!-- <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th> -->
-                        <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th>
+                        <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th>
+                        <!-- <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
@@ -93,7 +93,7 @@
                         </td>
                         <td th:colspan="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do')?'4':'6'" class="text-left">
                             <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
-                                [[${reply.rno}]]
+                                [[${reply?.rno}]]
                                 [[${reply?.comment}]]
                                 <!-- 본인이면 아이디 안 붙도록 -->
                                 <div class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
@@ -104,6 +104,7 @@
                             <span th:if="${reply.writeId}!=${session?.evaluator.email}">-</span>
                         </td>
                     </tr>
+                    <!-- 댓글 동록 input -->
                     <tr class="collapse table-primary" th:id="collapse+${object?.mbo?.mno}" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
                         <td class="align-middle">
                             <i class="fas fa-comment-dots fa-flip-horizontal"></i>
@@ -115,6 +116,7 @@
                             <button type="button" th:data-mno="${object?.mbo?.mno}" class="btn btn-primary replyRegister">등록</button>
                         </td>
                     </tr>
+                    <!-- ./댓글 동록 input -->
                     <!-- ./reply -->
                 </div>
             </tbody>
@@ -348,6 +350,8 @@
                 });
             });
 
+
+
             //모달 내의 삭제 머튼 눌렀을 때
             modalRemoveBtn.click(function (e) {
                 var mno = modal.data("mno");
@@ -363,9 +367,28 @@
                 //ajax 호출
                 if (delchk() == true) {
                     objectService.remove(param, function (result) {
-                        alert("삭제 되었습니다.");
-                        objectListTable.find("button[data-mno=" + mno + "]").parent().parent().remove();
-                        objectListTable.find("tr[id='collapse" + mno + "']").remove();
+                        alert("삭제 되었습니다.");  
+
+                        //삭제 리시트의 인덱스의 최대값 찾기.
+                        var max = 0;
+                        $("th[name='removedCount']").each(function () {
+                            var value = parseInt($(this).text());
+                            max = (value > max) ? value : max;
+                        });
+
+                        //목표 삭제 되는 순간 removedTable로 이동시킴.
+                        var removedObject = objectListTable.find(".modifyObject").filter("button[data-mno=" + mno + "]").parent().parent();
+                        removedObject.find("th[name=objectCount]").attr("name", "removedCount").text(max + 1);
+                        var currentDate = new Date();
+                        removedObject.find(".modifyObject").parent().text(displayTime(currentDate));
+                        $("#removedListTable").append(removedObject);
+                        
+                        //댓글도 함께 이동. 
+                        var removedReply = objectListTable.find("tr[id='collapse" + mno + "']");
+                        removedReply.find(".replyModify").text("-");
+                        $("#removedListTable").append(removedReply);
+                        removedReply.find("input").closest("tr").remove();
+
                         modal.modal("hide");
                     });
                 } else {
