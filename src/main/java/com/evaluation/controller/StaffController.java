@@ -174,6 +174,9 @@ public class StaffController {
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
 
+		//중복 제거를 위한 부서! 엑셀로 등록하는 부서 중에서만 생성. (부서만 tno참조이므로 (cno(X)))
+		Set<List<String>> depList = new HashSet<List<String>>();
+
 		// 직원 등록
 		for (List<String> list : allData) {
 			if (iteration == 0) {
@@ -186,7 +189,13 @@ public class StaffController {
 				throw new IllegalArgumentException("메일 주소에 이상 문자가 포함되어있습니다.");
 			}
 
-			log.info("" + list);
+			// 중복제거 부서 추가해놓음.
+			List<String> tmpDep = new ArrayList<String>();
+			tmpDep.add(list.get(3));
+			tmpDep.add(list.get(4));
+			depList.add(tmpDep);
+
+			//직원 정보 생성 및 등록
 			Staff row = new Staff();
 			row.setCno(cno);
 			row.setName(list.get(0));
@@ -216,9 +225,8 @@ public class StaffController {
 
 		}
 
-		// 중복 제거 부서
+		// 중복 제거 직급, 직군-계층, Set두개값 문자 조합 중복 체크함
 		Set<String> levList = new TreeSet<String>();
-		Set<List<String>> depList = new HashSet<List<String>>();
 		Set<List<String>> divList = new HashSet<List<String>>();
 
 		// 회사에 속한 전 직원 정보 중복제거 하기
@@ -226,12 +234,7 @@ public class StaffController {
 			origin.forEach(staff -> {
 				// 중복제거 직급 생성
 				levList.add(staff.getLevel());
-				// 중복제거 부서 생성
-				List<String> tmpDep = new ArrayList<String>();
-				tmpDep.add(staff.getDepartment1());
-				tmpDep.add(staff.getDepartment2());
-				depList.add(tmpDep);
-				// 중복제거 부문 생성
+				// 중복제거 직군, 계층 생성
 				List<String> tmpDiv = new ArrayList<String>();
 				tmpDiv.add(staff.getDivision1());
 				tmpDiv.add(staff.getDivision2());
