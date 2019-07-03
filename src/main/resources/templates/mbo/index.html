@@ -27,13 +27,13 @@
         <span class="float-right" th:text="${company?.name}"> </span>
       </div>
       <div class="card-body">
-        <form th:action="@{login}"  method="POST">
+        <form th:action="@{login}" method="POST">
           <div class="form-group">
             <h6 class="card-title">Choose MBO Info</h6>
             <p class="card-text">
               <select class="custom-select" name="tno">
                 <option th:each="turn:${turns}" th:value="${turn.tno}">[[${turn?.infoMBO?.title}]]</option>
-                <option>--</option>  
+                <option value="0">--</option>
               </select>
             </p>
           </div>
@@ -58,6 +58,7 @@
               </label>
             </div>
           </div> -->
+          <input type="hidden" name="company" th:value="${company.id}">
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
           <button class="btn btn-primary btn-block" type="submit">Login</button>
         </form>
@@ -75,6 +76,23 @@
   <!-- Core plugin JavaScript-->
   <script src="/vendor/jquery-easing/jquery.easing.min.js"></script>
 
+  <script th:inline="javascript">
+    $(document).ready(function (e) {
+      var error = [[${ error }]];
+      switch (error) {
+        case "tno":
+          alert("회차 정보를 확인해주세요.");
+          break;
+        case "email":
+          alert("선택하신 회차에 등록되지 않은 메일 주소입니다.");
+          break;
+        case "password":
+          alert("패스워드가 일치하지 않습니다.");
+          break;
+      }
+
+    });
+  </script>
 </body>
 
 </html>

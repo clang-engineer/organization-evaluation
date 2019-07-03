@@ -66,16 +66,25 @@ public class SurveyConroller {
     }
 
     @PostMapping("/login")
-    public String userLogin(long tno, Staff staff, RedirectAttributes rttr, HttpServletRequest request) {
+    public String userLogin(String company, long tno, Staff staff, RedirectAttributes rttr,
+            HttpServletRequest request) {
         log.info("user login" + tno + staff);
 
-        turnService.get(tno).ifPresent(turn -> {
-            long cno = turn.getCno();
-            companyService.get(cno).ifPresent(origin -> {
-                String company = origin.getId();
-                rttr.addAttribute("company", company);
-            });
-        });
+        rttr.addAttribute("company", company);
+
+        if (tno == 0) {
+            rttr.addFlashAttribute("error", "tno");
+            return "redirect:/mbo/";
+        }
+
+        if (!relation360Service.findInEvaluator(tno, staff.getEmail()).isPresent()) {
+            rttr.addFlashAttribute("error", "email");
+            return "redirect:/mbo/";
+        } else if (!relation360Service.findInEvaluator(tno, staff.getEmail()).get().getPassword()
+                .equals(staff.getPassword())) {
+            rttr.addFlashAttribute("error", "password");
+            return "redirect:/mbo/";
+        }
 
         // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
         relation360Service.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
