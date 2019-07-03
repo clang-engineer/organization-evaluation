@@ -1,0 +1,67 @@
+<!-- container -->
+<div class="container" th:fragment="modify">
+
+    <!-- Page Heading/Breadcrumbs -->
+    <h1 class="mb-5">Contact
+        <small>Subheading</small>
+    </h1>
+
+
+    <!-- Blog Post -->
+    <div class="card mb-4">
+        <div class="card-body">
+
+            <form th:action="${modify}" method="POST" th:with="evaluator=${session?.evaluator}">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input type="text" class="form-control" name="name" placeholder="Name" th:value="${evaluator?.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input type="email" class="form-control" name="email" placeholder="Email" th:value="${evaluator?.email}" readonly>
+                </div>
+                <label>Password</label>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input class="form-control" type="password" name="password" placeholder="Password" th:value="${evaluator?.password}">
+                    </div>
+                    <div class="form-group col-md-6">
+                        <input class="form-control" type="password" placeholder="Confirm Password" th:value="${evaluator?.password}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Telephone</label>
+                    <input class="form-control" type="telephone" name="telephone" placeholder="555-5555-5555" th:value="${evaluator?.telephone}">
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Department1</label>
+                        <input type="text" class="form-control" name="department1" placeholder="Department1" th:value="${evaluator?.department1}" readonly>
+                    </div>
+                    <div class="form-group col-md-6">
+                        <label>Department2</label>
+                        <input type="email" class="form-control" name="department2" placeholder="Department2" th:value="${evaluator?.department2}" readonly>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label>Level</label>
+                    <input type="text" class="form-control" name="level" placeholder="Level" th:value="${evaluator?.level}" readonly>
+                </div>
+                <input type="hidden" name="division1" th:value="${evaluator?.division1}">
+                <input type="hidden" name="division2" th:value="${evaluator?.division2}">
+                <input type="hidden" name="updateId" th:value="${evaluator?.name}">
+                <input type="hidden" name="cno" th:value="${evaluator?.cno}">
+                <!-- <input type="hidden" name="company" th:value="${company}"> -->
+                <input type="hidden" name="tno" th:value="${tno}">
+                <button type="submit" class="btn btn-danger">Modify</button>
+            </form>
+        </div>
+        <div class="card-footer text-muted">
+            Posted on January 1, 2017 by
+            <a href="#">Start Bootstrap</a>
+        </div>
+    </div>
+    <!--./ Blog Post -->
+
+</div>
+<!-- ./container -->

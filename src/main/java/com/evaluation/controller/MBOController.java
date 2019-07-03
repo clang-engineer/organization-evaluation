@@ -22,6 +22,7 @@ import com.evaluation.service.DepartmentService;
 import com.evaluation.service.MBOService;
 import com.evaluation.service.RelationMBOService;
 import com.evaluation.service.ReplyService;
+import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.google.gson.Gson;
 
@@ -62,6 +63,8 @@ public class MBOController {
     ReplyService replyService;
 
     TurnService turnService;
+
+    StaffService staffService;
 
     @GetMapping("/")
     public String survey(String company, Model model) {
@@ -134,6 +137,10 @@ public class MBOController {
             model.addAttribute("companyInfo", origin);
         });
 
+        // mbo turn에 따른 navbar 구분을 위해
+        turnService.get(tno).ifPresent(turn -> {
+            model.addAttribute("turn", turn);
+        });
     }
 
     @GetMapping("/main")
@@ -392,4 +399,54 @@ public class MBOController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    @GetMapping("/profile")
+    public void profile(String company, long tno, Model model) {
+
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
+        // mbo turn에 따른 navbar 구분을 위해
+        turnService.get(tno).ifPresent(turn -> {
+            model.addAttribute("turn", turn);
+        });
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
+    }
+
+    @GetMapping("/modify")
+    public void modify(String company, long tno, Model model) {
+
+        model.addAttribute("company", company);
+        model.addAttribute("tno", tno);
+        // mbo turn에 따른 navbar 구분을 위해
+        turnService.get(tno).ifPresent(turn -> {
+            model.addAttribute("turn", turn);
+        });
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
+        });
+
+    }
+
+    @PostMapping("/modify")
+    public String modify(Staff staff, String company, long tno, RedirectAttributes rttr, HttpServletRequest request) {
+        staffService.readByEmail(staff.getEmail()).ifPresent(origin -> {
+            long sno = origin.getSno();
+            log.info("===>" + sno);
+            staff.setSno(sno);
+            staffService.modify(staff);
+
+            HttpSession session = request.getSession();
+            session.setAttribute("evaluator", staff);
+        });
+
+        rttr.addAttribute("company", company);
+        rttr.addAttribute("tno", tno);
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            rttr.addFlashAttribute("companyInfo", origin);
+        });
+
+        return "redirect:/mbo/profile";
+    }
 }
