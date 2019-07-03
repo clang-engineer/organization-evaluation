@@ -34,7 +34,7 @@
                 <th scope="col" class="text-nowrap" style="width: 30%">목표</th>
                 <th scope="col" class="text-nowrap" style="width: 40%">달성기준</th>
                 <th scope="col" class="text-nowrap">비중%</th>
-                <th scope="col" class="text-nowrap" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">수정</th>
+                <th scope="col" class="text-nowrap" th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'">수정</th>
                 <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">본인평가</th>
                 <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">상사평가</th>
                 <th scope="col" class="text-nowrap">댓글</th>
@@ -43,12 +43,12 @@
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
                     <!-- object -->
                     <tr style="border-bottom: 1px solid gray;">
-                        <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th>
-                        <!-- <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th> -->
+                        <!-- <th scope="row" name="objectCount" style="line-height:150px;">[[${object?.mbo?.mno}]]</th> -->
+                        <th name="objectCount" scope="row" style="line-height:150px;">[[${status.count}]]</th>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
-                        <td class="align-middle text-middle"  th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
+                        <td class="align-middle text-middle"  th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'">
                             <button class="btn btn-default btn-lg modifyObject" th:data-mno="${object?.mbo?.mno}"><i class="fas fa-eraser"></i></button>
                         </td>
                         <!-- 본인평가 -->
@@ -91,9 +91,9 @@
                                 <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                             </div>
                         </td>
-                        <td th:colspan="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do')?'4':'6'" class="text-left">
+                        <td colspan="4" class="text-left replyColspan">
                             <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
-                                [[${reply?.rno}]]
+                                <!-- [[${reply?.rno}]] -->
                                 [[${reply?.comment}]]
                                 <!-- 본인이면 아이디 안 붙도록 -->
                                 <div class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
@@ -109,7 +109,7 @@
                         <td class="align-middle">
                             <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                         </td>
-                        <td colspan="4" class="align-middle text-middle">
+                        <td colspan="4" class="align-middle text-middle inputColspan">
                             <input type="text" class="form-control form-inline" placeholder="Enter Reply">
                         </td>
                         <td class="align-middle">
@@ -206,6 +206,34 @@
 
             //테이블 지정
             var objectListTable = $('#objectListTable');
+
+            //댓글 colspan 지정
+            var step = [[${ turn.infoMBO.status }]];
+            var relation = [[${ relation.relation }]];
+
+            replyColspan(step, relation);
+            function replyColspan(step, relation) {
+                if (relation != 'me') {
+                    relation = 'other';
+                }
+                switch (step + relation) {
+                    case "planother":
+                    case "doother":
+                        $(".replyColspan").attr("colspan", "3");
+                        $(".inputColspan").attr("colspan", "3");
+                        break;
+                    case "seeme":
+                    case "countme":
+                        $(".replyColspan").attr("colspan", "5");
+                        break;
+                    case "seeother":
+                    case "countother":
+                        $(".replyColspan").attr("colspan", "6");
+                        break;
+
+                }
+                console.log(step + relation);
+            };
 
             //modal select 초기화
             function modalSelectInit(now) {
@@ -326,7 +354,6 @@
             //모달 내의 목표 수정 버튼 클릭 했을 때
             modalModifyBtn.click(function (e) {
                 var mno = modal.data("mno");
-                var step = [[${ turn.infoMBO.status }]];
 
                 //변수 넘길 때 목표관련 데이터 외에 step을 같이 넘겨서 스텝에 따른 동작 다르게
                 var param = {
@@ -343,19 +370,35 @@
                 objectService.modify(param, function (result) {
                     alert("수정 되었습니다.");
 
+                    //목표 수정 되는 순간 removedTable로 복제.
+                    if (step == 'do') {
+                        //삭제 리시트의 인덱스의 최대값 찾기.
+                        var max = 0;
+                        $("th[name='removedCount']").each(function () {
+                            var value = parseInt($(this).text());
+                            max = (value > max) ? value : max;
+                        });
+                        var removedObject = objectListTable.find(".modifyObject").filter("button[data-mno=" + mno + "]").parent().parent().clone();
+                        removedObject.find("th[name=objectCount]").attr("name", "removedCount").text(max + 1);
+                        var currentDate = new Date();
+                        removedObject.find(".modifyObject").parent().text(displayTime(currentDate));
+                        removedObject.find("button[href='#collapse" + mno + "']").removeAttr("href").text("-");
+                        $("#removedListTable").append(removedObject);
+                    }
+
+                    //기존 목표 내용 바꾸기
                     objectListTable.find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(0).text(modalContent1.val());
                     objectListTable.find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(1).text(modalContent2.val());
                     objectListTable.find("button[data-mno=" + mno + "]").parent().parent().find('td').eq(2).text(Math.floor(modalContent3.val() * 100) + '%');
                     modal.modal("hide");
+
                 });
             });
-
 
 
             //모달 내의 삭제 머튼 눌렀을 때
             modalRemoveBtn.click(function (e) {
                 var mno = modal.data("mno");
-                var step = [[${ turn.infoMBO.status }]];
 
                 //변수 넘길 때 목표관련 데이터 외에 step을 같이 넘겨서 스텝에 따른 동작 다르게
                 var param = {
@@ -367,27 +410,31 @@
                 //ajax 호출
                 if (delchk() == true) {
                     objectService.remove(param, function (result) {
-                        alert("삭제 되었습니다.");  
+                        alert("삭제 되었습니다.");
+                        if (step == 'plan') {
+                            objectListTable.find("button[data-mno=" + mno + "]").parent().parent().remove();
+                            objectListTable.find("tr[id='collapse" + mno + "']").remove();
+                        } else if (step == 'do') {
+                            //삭제 리시트의 인덱스의 최대값 찾기.
+                            var max = 0;
+                            $("th[name='removedCount']").each(function () {
+                                var value = parseInt($(this).text());
+                                max = (value > max) ? value : max;
+                            });
 
-                        //삭제 리시트의 인덱스의 최대값 찾기.
-                        var max = 0;
-                        $("th[name='removedCount']").each(function () {
-                            var value = parseInt($(this).text());
-                            max = (value > max) ? value : max;
-                        });
+                            //목표 삭제 되는 순간 removedTable로 이동시킴.
+                            var removedObject = objectListTable.find(".modifyObject").filter("button[data-mno=" + mno + "]").parent().parent();
+                            removedObject.find("th[name=objectCount]").attr("name", "removedCount").text(max + 1);
+                            var currentDate = new Date();
+                            removedObject.find(".modifyObject").parent().text(displayTime(currentDate));
+                            $("#removedListTable").append(removedObject);
 
-                        //목표 삭제 되는 순간 removedTable로 이동시킴.
-                        var removedObject = objectListTable.find(".modifyObject").filter("button[data-mno=" + mno + "]").parent().parent();
-                        removedObject.find("th[name=objectCount]").attr("name", "removedCount").text(max + 1);
-                        var currentDate = new Date();
-                        removedObject.find(".modifyObject").parent().text(displayTime(currentDate));
-                        $("#removedListTable").append(removedObject);
-                        
-                        //댓글도 함께 이동. 
-                        var removedReply = objectListTable.find("tr[id='collapse" + mno + "']");
-                        removedReply.find(".replyModify").text("-");
-                        $("#removedListTable").append(removedReply);
-                        removedReply.find("input").closest("tr").remove();
+                            //댓글도 함께 이동. 
+                            var removedReply = objectListTable.find("tr[id='collapse" + mno + "']");
+                            removedReply.find(".replyModify").text("-");
+                            $("#removedListTable").append(removedReply);
+                            removedReply.find("input").closest("tr").remove();
+                        }
 
                         modal.modal("hide");
                     });
@@ -414,8 +461,14 @@
                 //ajax 호출
                 replyService.register(param, function (result) {
                     var currentDate = new Date(result.writeDate);
+
+                    //댓글 colspan
+                    var colspan = '3';
+                    if (relation == 'me') {
+                        colspan = 4;
+                    }
                     var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comment-dots fa-flip-horizontal'></i></div></td>"
-                        + "<td colspan='4' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div></div></td>"
+                        + "<td colspan='" + colspan + "' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div></div></td>"
                         + "<td><button type='button' data-rno='" + result.rno + "' class='btn btn-default btn-sm replyModify'><i class='fas fa-times'></i></button></td ></tr >";
 
                     objectListTable.find("tr[id='collapse" + mno + "']").last().before(str);

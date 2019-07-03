@@ -531,7 +531,7 @@ public class ProgressController {
             @Override
             public int compare(String s1, String s2) {
                 if (s1.equals("weight") || s2.equals("weight")) {
-                    return -1;
+                    return 1;
                 }
 
                 if (Integer.parseInt(s1.substring(1)) < Integer.parseInt(s2.substring(1))) {
