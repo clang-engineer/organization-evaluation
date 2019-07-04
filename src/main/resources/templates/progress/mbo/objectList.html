@@ -14,7 +14,7 @@
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-table"></i>MBO Evaluated List
+                <i class="fas fa-table"></i>MBO Object List
             </div>
 
             <div class="card-body">
@@ -26,6 +26,7 @@
                                 <th>목표</th>
                                 <th>달성기준</th>
                                 <th>비중</th>
+                                <th>최종</th>
                             </tr>
                         </thead>
                         <tfoot>
@@ -34,6 +35,7 @@
                                 <th>목표</th>
                                 <th>달성기준</th>
                                 <th>비중</th>
+                                <th>최종</th>
                             </tr>
                         </tfoot>
                         <tbody>
@@ -42,6 +44,7 @@
                                 <td style="font-size: 0.5rem">[[${object?.object}]]</td>
                                 <td style="font-size: 0.5rem">[[${object?.process}]]</td>
                                 <td style="font-size: 0.5rem">[[${#numbers.formatPercent(object?.ratio,0,0)}]]</td>
+                                <td style="font-size: 0.5rem">[[${object?.finish}]]</td>
                             </tr>
                         </tbody>
                     </table>

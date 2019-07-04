@@ -19,53 +19,7 @@
 
             <div class="card-body">
                 <div class="table-responsive">
-                    <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th colspan="col">#</th>
-                                <th>피평가자</th>
-                                <th>Dep</th>
-                                <th>Lev</th>
-                                <th>평가자</th>
-                                <th style="width: 5%">부하량</th>
-                                <th style="width: 5%">면담</th>
-                                <th>finish</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>#</th>
-                                <th>피평가자</th>
-                                <th>Dep</th>
-                                <th>Lev</th>
-                                <th>평가자</th>
-                                <th>부하량</th>
-                                <th>면담</th>
-                                <th>finish</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            <tr colspan="row" th:each="relation,status:${evaluatedList}">
-                                <td>[[${status.count}]]</td>
-                                <td>[[${relation?.evaluated?.name}]]</td>
-                                <td>[[${relation?.evaluated?.department1}]] - [[${relation?.evaluated?.department2}]]</td>
-                                <td>[[${relation?.evaluated?.level}]]</td>
-                                <td>[[${relation?.evaluator?.name}]]</td>
-                                <td style="font-size: 0.5rem">ratio : [[${relation?.answers?.get('weight')?.value}]] / value : [[${relation?.answers?.get('weight')?.value}]]</td>
-                                <td style="font-size: 0.5rem">[[${relation?.comments}]]</td>
-                                <td>
-                                    <div class="form-group">
-                                        <select class="form-control" th:data-rno="${relation.rno}">
-                                            <option value="N" th:selected="${relation.finish}=='N'">N</option>
-                                            <option value="T" th:selected="${relation.finish}=='T'">T</option>
-                                            <option value="Y" th:selected="${relation.finish}=='Y'">Y</option>
-                                        </select>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                    <table th:insert="~{common/turnAdmin/evaluatedListTable::evaluatedListTable}"></table>
                 </div>
             </div>
             <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>

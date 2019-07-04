@@ -40,112 +40,19 @@
                     </div>
                 </div>
             </div>
-
             <!-- /search box -->
+
+            <!-- card body -->
             <div class="card-body">
                 <div class="table-responsive">
-                    <table th:with="idxpageNum=${result.currentPageNum}, result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
-                        <thead>
-                            <tr>
-                                <th>Idx</th>
-                                <th>Name</th>
-                                <th>Level</th>
-                                <th>Department1</th>
-                                <th>Department2</th>
-                                <th>Division1</th>
-                                <th>Division1</th>
-                                <th>본인</th>
-                                <th>1차</th>
-                                <th>2차</th>
-                                <th>3차</th>
-                                <th>제외</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr>
-                                <th>Idx</th>
-                                <th>Name</th>
-                                <th>Level</th>
-                                <th>Department1</th>
-                                <th>Department2</th>
-                                <th>Division1</th>
-                                <th>Division1</th>
-                                <th>본인</th>
-                                <th>1차</th>
-                                <th>2차</th>
-                                <th>3차</th>
-                                <th>제외</th>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            <tr th:each="staff,status:${result.content}">
-                                <td>[[${idxpageNum-1}*10+${status.count}]]</td>
-                                <td>[[${staff.name}]]</td>
-                                <td>[[${staff.level}]]</td>
-                                <td>[[${staff.department1}]]</td>
-                                <td>[[${staff.department2}]]</td>
-                                <td>[[${staff.division1}]]</td>
-                                <td>[[${staff.division2}]]</td>
-                                <td>
-                                    <span class="evaluatorList" th:each="relation:${relationMe}">
-                                        <a th:href="${relation.rno}" data-relation="me" th:if="${staff.sno}==${relation.evaluated.sno}">
-                                            <button class='btn btn-default' type='button'><i class='fas fa-check-circle fa-sm'></i></button>
-                                        </a>
-                                    </span>
-                                </td>
-                                <td>
-                                    <span class="evaluatorList" th:each="relation:${relation1}">
-                                        <a th:href="${relation.rno}" data-relation="1" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
-                                        </a>
-                                    </span>
-                                    <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='1'" type="button">
-                                        <i class="fas fa-user-plus fa-sm"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <span class="evaluatorList" th:each="relation:${relation2}">
-                                        <a th:href="${relation.rno}" data-relation="2" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
-                                        </a>
-                                    </span>
-                                    <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='2'" type="button">
-                                        <i class="fas fa-user-plus fa-sm"></i>
-                                    </button>
-                                </td>
-                                <td>
-                                    <span class="evaluatorList" th:each="relation:${relation3}">
-                                        <a th:href="${relation.rno}" data-relation="3" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
-                                        </a>
-                                    </span>
-                                    <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='3'" type="button">
-                                        <i class="fas fa-user-plus fa-sm"></i>
-                                    </button>
-                                </td>
-                                <td><a th:href="${staff.sno}" class="evaluatedInfoDelete">
-                                        <button class="btn btn-default" type="button">
-                                            <i class="fas fa-trash-alt fa-sm"></i>
-                                        </button>
-                                    </a></td>
-                            </tr>
-                        </tbody>
-                    </table>
-
+                    <table th:insert="~{common/turnAdmin/relationListTable::relationListTable}"></table>
                 </div>
                 <!-- page nation -->
-                <nav aria-label="Page navigation example">
-                    <ul class="pagination justify-content-end">
-                        <li class="page-item" th:if="${result.prevPage}">
-                            <a class="page-link" th:href="${result.prevPage.pageNumber}+1" tabindex="-1">Prev</a>
-                        </li>
-                        <li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' " th:each="p:${result.pageList}">
-                            <a class="page-link" th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
-                        </li>
-                        <li class="page-item" th:if="${result.nextPage}">
-                            <a class="page-link" th:href="${result.nextPage.pageNumber}+1">Next</a>
-                        </li>
-                    </ul>
+                <nav th:insert="~{common/turnAdmin/pagenation::pagenation}">
                 </nav>
                 <!--/ page nation -->
             </div>
+            <!-- ./card body -->
             <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
 
         </div>

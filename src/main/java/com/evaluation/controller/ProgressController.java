@@ -175,7 +175,8 @@ public class ProgressController {
                     tmpList.add(list.get(i).get(4));
                     tmpList.add(list.get(i).get(5));
                     tmpList.add(list.get(i).get(6));
-                    tmpList.add(list.get(i).get(7));
+                    Double tmpValue = Double.parseDouble(list.get(i).get(7));
+                    tmpList.add(String.format("%.0f", tmpValue * 100) + "%");
                     xlList.add(tmpList);
 
                     completeCount += Integer.parseInt(list.get(i).get(5));
@@ -189,7 +190,7 @@ public class ProgressController {
                 footer.add("Total");
                 footer.add(Integer.toString(completeCount));
                 footer.add(Integer.toString(totalCount));
-                footer.add(Integer.toString((completeCount / totalCount) * 100));
+                footer.add(Integer.toString((completeCount / totalCount) * 100) + '%');
                 xlList.add(footer);
 
                 try {
@@ -358,7 +359,8 @@ public class ProgressController {
                     tmpList.add(list.get(i).get(4));
                     tmpList.add(list.get(i).get(5));
                     tmpList.add(list.get(i).get(6));
-                    tmpList.add(list.get(i).get(7));
+                    Double tmpValue = Double.parseDouble(list.get(i).get(7));
+                    tmpList.add(String.format("%.0f", tmpValue * 100) + "%");
                     xlList.add(tmpList);
 
                     completeCount += Integer.parseInt(list.get(i).get(5));
@@ -372,7 +374,7 @@ public class ProgressController {
                 footer.add("Total");
                 footer.add(Integer.toString(completeCount));
                 footer.add(Integer.toString(totalCount));
-                footer.add(Integer.toString((completeCount / totalCount) * 100));
+                footer.add(Integer.toString((completeCount / totalCount) * 100) + '%');
                 xlList.add(footer);
 
                 try {
