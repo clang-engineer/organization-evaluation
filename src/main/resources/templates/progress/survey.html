@@ -31,50 +31,7 @@
             <!-- .card-body -->
             <div class="card-body">
                 <div class="table-responsive text-nowrap">
-                    <table class="table table-bordered table-hover" id="dataTable" width="100%" cellspacing="0">
-                        <thead class="thead-dark">
-                            <tr>
-                                <th>idx</th>
-                                <th>Name</th>
-                                <th>Email</th>
-                                <th>Level</th>
-                                <th>Department1</th>
-                                <th>Department2</th>
-                                <th>complete</th>
-                                <th>Total</th>
-                                <th class="w-50 th-lg" style="min-width: 300px">Ratio</th>
-                            </tr>
-                        </thead>
-                        <tfoot>
-                            <tr class="table-secondary">
-                                <th colspan="6">Total</th>
-                                <th>[[${completeCount}]]</th>
-                                <th>[[${totalCount}]]</th>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar bg-success" role="progressbar" th:style="${totalCount}!=null?'width:'+(${completeCount}/${totalCount})*100+'%'" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100"></div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tfoot>
-                        <tbody>
-                            <tr th:each="staff,iterstate:${progress}">
-                                <th>[[${iterstate.count}]]</td>
-                                <td><a th:href="@{/progress/survey/evaluatedList(tno=${tno},sno=${staff[8]})}">[[${staff[0]}]]</a></td>
-                                <td>[[${staff[1]}]]</td>
-                                <td>[[${staff[2]}]]</td>
-                                <td>[[${staff[3]}]]</td>
-                                <td>[[${staff[4]}]]</td>
-                                <td>[[${staff[5]}]]</td>
-                                <td>[[${staff[6]}]]</td>
-                                <td>
-                                    <div class="progress">
-                                        <div class="progress-bar" role="progressbar" th:style="'width:'+${#numbers.formatPercent(staff[7],0,0)}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(staff[7],0,0)}]]</div>
-                                    </div>
-                                </td>
-                            </tr>
-                        </tbody>
-                    </table>
+                    <table th:insert="~{common/turnAdmin/progressListTable::progressListTable(survey)}"></table>
                 </div>
             </div>
             <!-- .card-body -->
@@ -117,6 +74,21 @@
             //rawdata 다운로드 함수
             $("#xlRawdata").click(function (e) {
                 formObj.attr("action", "/progress/survey/result");
+                formObj.submit();
+            });
+
+            // 개인의 피평가자 리스트 보는 버튼 클릭.
+            $(".evaluatedList").click(function (e) {
+                e.preventDefault();
+                var tno = [[${ tno }]];
+                var sno = $(this).attr("href");
+                var type = $(this).data("type");
+
+                formObj.empty();
+                formObj.attr("method", "GET")
+                formObj.append("<input type='hidden' name='tno' value='" + tno + "'>");
+                formObj.append("<input type='hidden' name='sno' value='" + sno + "'>");
+                formObj.attr("action", "/progress/" + type + "/evaluatedList");
                 formObj.submit();
             });
 

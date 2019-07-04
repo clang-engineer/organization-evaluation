@@ -69,7 +69,7 @@
 								<td>[[${department.department2}]]</td>
 								<td><a th:href="${department.dno}" class="leader">
 										<span th:each="leader:${leaderList}" th:if="${leader.staff.sno}==${department?.leader?.sno} AND ${department.dno}==${leader.dno}">
-											[[${leader?.staff.name}]] - [[${leader?.staff.level}]] : [[${department?.leader?.title 	}]]
+											[[${leader?.staff.name}]] - [[${leader?.staff.level}]] : [[${department?.leader?.title }]]
 										</span>
 										<button type="button" class="btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
 									</a>
@@ -84,18 +84,7 @@
 
 				</div>
 				<!-- page nation -->
-				<nav aria-label="Page navigation example">
-					<ul class="pagination justify-content-end">
-						<li class="page-item" th:if="${result.prevPage}">
-							<a class="page-link" th:href="${result.prevPage.pageNumber}+1" tabindex="-1">Prev</a>
-						</li>
-						<li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' " th:each="p:${result.pageList}">
-							<a class="page-link" th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
-						</li>
-						<li class="page-item" th:if="${result.nextPage}">
-							<a class="page-link" th:href="${result.nextPage.pageNumber}+1">Next</a>
-						</li>
-					</ul>
+				<nav th:insert="~{common/turnAdmin/pagenation::pagenation}">
 				</nav>
 				<!--/ page nation -->
 			</div>
