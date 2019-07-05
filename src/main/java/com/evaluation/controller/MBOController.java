@@ -148,24 +148,24 @@ public class MBOController {
         log.info("====>turn main by company" + company);
 
         HttpSession session = request.getSession();
-        long sno;
+
         if (session.getAttribute("evaluator") == null) {
             rttr.addAttribute("company", company);
             return "redirect:/mbo/";
-        } else {
-            Staff staff = (Staff) session.getAttribute("evaluator");
-            sno = staff.getSno();
         }
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
-        });
+        Staff staff = (Staff) session.getAttribute("evaluator");
+        long sno = staff.getSno();
 
         departmentService.findByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("department", list);
+        });
+
+        companyService.readByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("companyInfo", origin);
         });
 
         turnService.get(tno).ifPresent(turn -> {

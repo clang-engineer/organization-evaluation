@@ -7,12 +7,16 @@
         .card .category {
             font-size: 1.08rem;
         }
+
+        h2 small {
+            font-size: 1.08rem;
+        }
     </style>
     <!-- container -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-5">Suvey
-            <small>Subheading</small>
+        <h2 class="mb-5">Suvey Questions
+            <small class="font-weight-light" th:if="${turn?.infoMBO?.status}!='see'">[[${relation?.evaluated?.name}]]님에 대한 질의 목록</small>
         </h2>
         <!-- form -->
         <form id="f1" method="POST" th:action="@{submit}">

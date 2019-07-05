@@ -3,12 +3,16 @@
     layout:decorate="~{/layout/layoutMBO}">
 <!-- div content -->
 <div layout:fragment="content">
-
+    <style>
+        h2 small {
+            font-size: 1.08rem;
+        }
+    </style>
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-5">MBO Overall info
-            <small>Subheading</small>
+        <h2 class="mb-5">MBO Overall Info
+            <small class="font-weight-light">MBO를 진행하는 목적 및 기타 정보입니다.</small>
         </h2>
         <div class="row">
             <!-- Blog Entries Column -->
@@ -26,7 +30,7 @@
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoMBO?.content}"></p>
                         <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
-                            title="click!!">Survey start &rarr;</a>
+                            title="click!!">MBO start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">

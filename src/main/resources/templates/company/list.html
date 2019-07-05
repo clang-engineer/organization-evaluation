@@ -1,5 +1,6 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutCompany}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layoutCompany}">
 <div layout:fragment="content">
 	<!-- Begin Page Content -->
 	<div class="container-fluid">
@@ -20,13 +21,13 @@
 
 				<div style="float:right">
 					<div class="input-group">
-						<select class="form-control col-sm-4" id="searchType">
+						<select class="form-control col-4" id="searchType">
 							<option>---
 								</optinon>
 							<option value="id" th:selected="${pageVO.type}=='id'">ID</option>
 							<option value="name" th:selected="${pageVO.type}=='name'">Name</option>
 						</select>
-						<input type="text" class="col-sm-7 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+						<input type="text" class="col-7 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
 							<button class="btn btn-primary" id="searchBtn" type="button">
 								<i class="fas fa-search fa-sm"></i>
@@ -35,7 +36,7 @@
 					</div>
 				</div>
 				<!-- /serarch box -->
-				<div class="col-md-1" style="float: right">
+				<div class="mr-2" style="float: right">
 					<button id="register" class="btn btn-primary border btn-block">Register</button>
 				</div>
 			</div>
@@ -84,18 +85,7 @@
 				</div>
 
 				<!-- page nation -->
-				<nav aria-label="Page navigation example">
-					<ul class="pagination justify-content-end">
-						<li class="page-item" th:if="${result.prevPage}">
-							<a class="page-link" th:href="${result.prevPage.pageNumber}+1" tabindex="-1">Prev</a>
-						</li>
-						<li class="page-item" th:classappend="${p.pageNumber==result.currentPageNum-1}?active:'' " th:each="p:${result.pageList}">
-							<a class="page-link" th:href="${p.pageNumber}+1">[[${p.pageNumber}+1]]</a>
-						</li>
-						<li class="page-item" th:if="${result.nextPage}">
-							<a class="page-link" th:href="${result.nextPage.pageNumber}+1">Next</a>
-						</li>
-					</ul>
+				<nav th:insert="~{common/turnAdmin/pagenation::pagenation}">
 				</nav>
 				<!--/ page nation -->
 

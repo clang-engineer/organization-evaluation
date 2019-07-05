@@ -21,7 +21,10 @@
             <small>목표를 수행하고, 조율하는 단계입니다.</small>
         </h2>
         <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='see'">MBO Step3 See
-            <small>목표 달성도를 평가하고 피드백하는 단계입니다.</small>
+            <small>목표 달성도를 평가하는 단계입니다.</small>
+        </h2>
+        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='count'">MBO Step4 Feedback
+            <small>평가 내용에 대해 피드백하는 단계입니다.</small>
         </h2>
         <!-- row -->
         <div class="row">
@@ -36,7 +39,8 @@
                             </h5>
                             
                             <p class="card-text" th:if="${turn?.infoMBO?.status}=='plan' OR ${turn?.infoMBO?.status}=='do'">본인 목표를 작성합니다.</p>
-                            <p class="card-text" th:if="${turn?.infoMBO?.status}=='see' or ${turn?.infoMBO?.status}=='count'">본인 평가를 진행 합니다.</p>
+                            <p class="card-text" th:if="${turn?.infoMBO?.status}=='see'">본인 평가를 진행 합니다.</p>
+                            <p class="card-text" th:if="${turn?.infoMBO?.status}=='count'">본인 평가 결과를 확인 합니다.</p>
 
                             <span th:each="relation:${evaluatedList}" th:if="${relation.relation}=='me'">
                                 <table>
@@ -70,7 +74,7 @@
                     <!-- 1차 평가자 리스트 card 1차 평가자가 평가자 중에 존재하는 경우만 실행 -->
                     <div th:with="relationArray = ${ {'1', '2', '3'} }">
                         <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
-                            <h5 class="card-header">[[${r}]]차 평가자로서 목표관리 대상
+                            <h5 class="card-header">[[${r}]]차 평가자로서 목표 관리 대상자
                                 <small class="float-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 직속상사 입니다.</small>
                                 <small class="float-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 차상위상사 입니다.</small>
                                 <small class="float-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 차차상위상사 입니다.</small>
@@ -266,7 +270,7 @@
                         if (step == 'count') {
                             contentModal.find("textarea[name=modalContent2]").attr("readonly", true);
                             contentModal.find("input[type='radio']").prop('checked', false);
-                            contentModal.find("textarea[name=modalContent2]").attr("placeholder", "평가 전 아래의 버튼을 통해 작성하신 모든 면담 내용을 확인하세요.");
+                            contentModal.find("textarea[name=modalContent2]").attr("placeholder", "아래의 버튼을 통해 작성하신 모든 면담 내용을 확인하세요. (작성 내용이 없을 경우 표시x)");
                             contentModal.find("button[id!='modalCloseBtn']").hide();
                         }
                         //ajax read by noteService function

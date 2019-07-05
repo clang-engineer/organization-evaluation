@@ -1,13 +1,18 @@
 <!DOCTYPE html>
-<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutSurvey}">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutSurvey}">
 <!-- div content -->
 <div layout:fragment="content">
-
+    <style>
+        h2 small {
+            font-size: 1.08rem;
+        }
+    </style>
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-5">Survey Overall info
-            <small>Subheading</small>
+        <h2 class="mb-5">Survey Overall Info
+            <small class="font-weight-light">서베이를 진행하는 목적 및 기타 정보입니다.</small>
         </h2>
 
         <div class="row">
@@ -25,7 +30,8 @@
                         </p>
                         <hr>
                         <p class="card-text" th:utext="${turn.info360.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
+                        <a id="surveyStart" th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
+                            title="click!!">Survey start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">

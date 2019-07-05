@@ -13,7 +13,7 @@
     <!-- Page Content -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-5">Survey List
+        <h2 class="mb-5">Survey Evaluated List
             <small>기간 내에 아래의 대상자에 대한 평가에 임합니다.</small>
         </h2>
         <div class="row">
@@ -25,7 +25,7 @@
                         <h5 class="card-header">본인평가</h5>
                         <div class="card-body">
                             <h5 class="card-title">Self Evaluation</h5>
-                            <p class="card-text">추후, 동일 문항에 대한 본인과 타인의 관점을 비교해보세요. 이는 본인 성장, 상호 갈등 회복등의 계기가 될 수 있습니다.</p>
+                            <p class="card-text">추후, 자신을 바라보는 본인과 타인의 관점을 비교해보세요. 이는 본인 성장, 상호 갈등 회복등의 계기가 될 수 있습니다.</p>
                             <span th:each="relation,status:${evaluatedList}" th:if="${relation.relation}=='me'">
                                     <table>
                                         <tbody>
@@ -50,7 +50,7 @@
                     <!-- 1차 평가자 리스트 card 1차 평가자가 평가자 중에 존재하는 경우만 실행 -->
                     <div th:with="relationArray = ${ {'1', '2', '3'} }">
                         <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
-                            <h5 class="card-header">[[${r}]]차 평가자로서 평가할 대상
+                            <h5 class="card-header">[[${r}]]차 평가자로서 평가할 대상자
                                 <small class="float-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
                                 <small class="float-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
                                 <small class="float-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>

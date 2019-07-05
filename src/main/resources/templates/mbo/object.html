@@ -17,8 +17,8 @@
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
         <h2 class="mb-3">MBO List
-            <small class="font-weight-light ml-3" th:if="${turn?.infoMBO?.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
-            <small class="font-weight-light ml-3" th:if="${relationMe}!=null AND ${turn?.infoMBO?.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
+            <small class="font-weight-light ml-2" th:if="${turn?.infoMBO?.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
+            <small class="font-weight-light ml-2" th:if="${relationMe}!=null AND ${turn?.infoMBO?.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
                 입니다.</small>
 
         </h2>
