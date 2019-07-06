@@ -11,7 +11,7 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
-import com.evaluation.domain.MBO;
+import com.evaluation.domain.Mbo;
 import com.evaluation.domain.RelationMBO;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
@@ -19,7 +19,7 @@ import com.evaluation.domain.embeddable.RatioValue;
 import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
-import com.evaluation.service.MBOService;
+import com.evaluation.service.MboService;
 import com.evaluation.service.RelationMBOService;
 import com.evaluation.service.ReplyService;
 import com.evaluation.service.StaffService;
@@ -48,7 +48,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 @AllArgsConstructor
 @Transactional
-public class MBOController {
+public class MboController {
 
     BookService bookService;
 
@@ -56,7 +56,7 @@ public class MBOController {
 
     DepartmentService departmentService;
 
-    MBOService mboService;
+    MboService mboService;
 
     RelationMBOService relationMBOService;
 
@@ -269,13 +269,13 @@ public class MBOController {
 
         turnService.get(tno).ifPresent(turn -> {
             // 평가 단계에서 회답지 추가
-            if (turn.getInfoMBO().getStatus().equals("see") || turn.getInfoMBO().getStatus().equals("count")) {
+            if (turn.getInfoMbo().getStatus().equals("see") || turn.getInfoMbo().getStatus().equals("count")) {
                 // 회답지 추가
-                bookService.read(turn.getInfoMBO().getReplyCode()).ifPresent(book -> {
+                bookService.read(turn.getInfoMbo().getReplyCode()).ifPresent(book -> {
                     model.addAttribute("replyCodeList", book.getContents());
                 });
                 // 가중치 추가
-                bookService.read(turn.getInfoMBO().getWeightCode()).ifPresent(book -> {
+                bookService.read(turn.getInfoMbo().getWeightCode()).ifPresent(book -> {
                     model.addAttribute("weightCodeList", book.getContents());
                 });
             }
@@ -340,7 +340,7 @@ public class MBOController {
      * 댓글수를 같이 가져가기 위한 내부 클래스
      */
     public class ObjectWithReplyNum {
-        public MBO mbo;
+        public Mbo mbo;
         public int replyNum;
     }
 

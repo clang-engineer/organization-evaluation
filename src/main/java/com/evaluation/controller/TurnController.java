@@ -48,7 +48,7 @@ public class TurnController {
 	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
 		turn.setInfo360(turnService.get(turn.getTno()).get().getInfo360());
-		turn.setInfoMBO(turnService.get(turn.getTno()).get().getInfoMBO());
+		turn.setInfoMbo(turnService.get(turn.getTno()).get().getInfoMbo());
 		turnService.modify(turn);
 
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.CREATED);

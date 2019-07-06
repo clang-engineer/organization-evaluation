@@ -33,12 +33,12 @@ public class TurnRepositoryTests {
 
 	@Test
 	public void testInsertTurns() {
-
-		Long[] arr = { 100L, 99L, 98L };
+		turnRepo.deleteAll();
+		Long[] arr = { 1L, 2L, 3L, 4L, 5L };
 
 		Arrays.stream(arr).forEach(num -> {
 
-			IntStream.range(1, 11).forEach(i -> {
+			IntStream.range(1, 4).forEach(i -> {
 				Turn turn = new Turn();
 				turn.setTitle("turn..." + i);
 				Set<String> types = new HashSet<>();

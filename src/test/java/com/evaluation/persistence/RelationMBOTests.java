@@ -14,7 +14,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Commit
 @Slf4j
-public class RelationMBOTests {
+public class RelationMboTests {
 
     @Setter(onMethod_ = { @Autowired })
     RelationMBORepository relationMBORepo;

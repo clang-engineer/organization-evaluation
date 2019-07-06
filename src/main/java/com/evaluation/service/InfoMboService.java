@@ -1,13 +1,13 @@
 package com.evaluation.service;
 
-import com.evaluation.domain.embeddable.InfoMBO;
+import com.evaluation.domain.embeddable.InfoMbo;
 
-public interface InfoMBOService {
-	public void register(Long tno, InfoMBO infoMBO);
+public interface InfoMboService {
+	public void register(Long tno, InfoMbo infoMbo);
 
-	public InfoMBO read(long tno);
+	public InfoMbo read(long tno);
 
-	public void modify(Long tno, InfoMBO infoMBO);
+	public void modify(Long tno, InfoMbo infoMbo);
 
 	public void remove(long tno);
 }

@@ -18,7 +18,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.evaluation.domain.Company;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
-import com.evaluation.service.MBOService;
+import com.evaluation.service.MboService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
 import com.evaluation.service.RelationMBOService;
@@ -52,7 +52,7 @@ public class ProgressController {
 
     QuestionService questionService;
 
-    MBOService mboService;
+    MboService mboService;
 
     @GetMapping(value = { "/survey", "/mbo" })
     public void survey(long tno, Model model, HttpServletRequest request) {

@@ -2,7 +2,7 @@ package com.evaluation.persistence;
 
 import static org.junit.Assert.assertNotNull;
 
-import com.evaluation.domain.MBO;
+import com.evaluation.domain.Mbo;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -18,10 +18,10 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Commit
 @Slf4j
-public class MBORepositoryTests {
+public class MboRepositoryTests {
 
     @Setter(onMethod_ = { @Autowired })
-    MBORepository mboRepo;
+    MboRepository mboRepo;
 
     @Test
     public void testDI() {
@@ -31,7 +31,7 @@ public class MBORepositoryTests {
     @Test
     public void insertTest() {
 
-        MBO mbo = new MBO();
+        Mbo mbo = new Mbo();
         mbo.setObject("목표 1");
         mbo.setProcess("12월까지 땡땡을 한다.");
         mbo.setRatio(0.1);

@@ -15,7 +15,7 @@ import lombok.Setter;
 @Embeddable
 @Getter
 @Setter
-public class InfoMBO {
+public class InfoMbo {
 
 	private String title;
 	private String content;

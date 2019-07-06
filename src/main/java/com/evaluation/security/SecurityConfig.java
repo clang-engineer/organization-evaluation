@@ -29,10 +29,20 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     protected void configure(HttpSecurity http) throws Exception {
         log.info("security config...");
 
-        http.authorizeRequests().antMatchers("/company/**").hasAnyRole("MANAGER", "ADMIN");
-        http.authorizeRequests().antMatchers("/book/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/admin/**").hasAnyRole("MANAGER", "ADMIN");
-
+        // http.authorizeRequests().antMatchers("/admin/**").permitAll();
+        http.authorizeRequests().antMatchers("/book/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/company/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/staff/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/department/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/level/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/division/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/info360/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/relation360/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/question/**").hasAnyRole("MANAGER", "ADMIN");
+        
+        http.authorizeRequests().antMatchers("/survey/**").permitAll();
+        
         http.formLogin().loginPage("/login").successHandler(new CustomLoginSuccessHandler());
 
         http.exceptionHandling().accessDeniedPage("/accessDenied");

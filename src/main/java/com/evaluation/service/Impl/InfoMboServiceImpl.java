@@ -1,8 +1,8 @@
 package com.evaluation.service.Impl;
 
-import com.evaluation.domain.embeddable.InfoMBO;
+import com.evaluation.domain.embeddable.InfoMbo;
 import com.evaluation.persistence.TurnRepository;
-import com.evaluation.service.InfoMBOService;
+import com.evaluation.service.InfoMboService;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -12,45 +12,45 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class InfoMBOServiceImpl implements InfoMBOService {
+public class InfoMboServiceImpl implements InfoMboService {
 
 	@Setter(onMethod_ = { @Autowired })
 	private TurnRepository turnRepo;
 
 	@Override
-	public void register(Long tno, InfoMBO infoMBO) {
+	public void register(Long tno, InfoMbo infoMbo) {
 
-		log.info("service : infoMBO register " + infoMBO);
+		log.info("service : infoMbo register " + infoMbo);
 
 		turnRepo.findById(tno).ifPresent(origin -> {
-			origin.setInfoMBO(infoMBO);
+			origin.setInfoMbo(infoMbo);
 			turnRepo.save(origin);
 		});
 	}
 
 	@Override
-	public InfoMBO read(long tno) {
-		log.info("service : infoMBO get " + tno);
+	public InfoMbo read(long tno) {
+		log.info("service : infoMbo get " + tno);
 
-		return turnRepo.findById(tno).get().getInfoMBO();
+		return turnRepo.findById(tno).get().getInfoMbo();
 	}
 
 	@Override
-	public void modify(Long tno, InfoMBO infoMBO) {
-		log.info("service : infoMBO modify " + tno);
+	public void modify(Long tno, InfoMbo infoMbo) {
+		log.info("service : infoMbo modify " + tno);
 
 		turnRepo.findById(tno).ifPresent(origin -> {
-			origin.setInfoMBO(infoMBO);
+			origin.setInfoMbo(infoMbo);
 			turnRepo.save(origin);
 		});
 	}
 
 	@Override
 	public void remove(long tno) {
-		log.info("service : infoMBO remove " + tno);
+		log.info("service : infoMbo remove " + tno);
 
 		turnRepo.findById(tno).ifPresent(origin -> {
-			origin.setInfoMBO(null);
+			origin.setInfoMbo(null);
 			turnRepo.save(origin);
 		});
 

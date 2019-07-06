@@ -37,7 +37,7 @@ public class AdminRepositoryTests {
 
     @Test
     public void testInsert() {
-        for (int i = 0; i <= 100; i++) {
+        for (int i = 0; i <= 6; i++) {
             Admin admin = new Admin();
             admin.setUid("uid" + i);
             admin.setUpw(pwEncoder.encode("uid" + i));

@@ -21,11 +21,11 @@ import javax.persistence.SecondaryTable;
 import javax.persistence.SecondaryTables;
 import javax.persistence.Table;
 
+import com.evaluation.domain.embeddable.InfoMbo;
+import com.evaluation.domain.embeddable.InfoSurvey;
+
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
-
-import com.evaluation.domain.embeddable.InfoMBO;
-import com.evaluation.domain.embeddable.InfoSurvey;
 
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
@@ -37,7 +37,7 @@ import lombok.Setter;
 @Table(name = "tbl_turn")
 @SecondaryTables({
 		@SecondaryTable(name = "tbl_turn_info360", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")),
-		@SecondaryTable(name = "tbl_turn_infoMBO", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")), })
+		@SecondaryTable(name = "tbl_turn_infoMbo", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")), })
 @EqualsAndHashCode(of = "tno")
 public class Turn {
 
@@ -79,18 +79,18 @@ public class Turn {
 	private InfoSurvey info360;
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoMBO", length = 2000)),
-			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "weightCode", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "step1Start", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "step1End", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "step2Start", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "step2End", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "step3Start", column = @Column(table = "tbl_turn_infoMBO")),
-			@AttributeOverride(name = "step3End", column = @Column(table = "tbl_turn_infoMBO")) })
-	private InfoMBO infoMBO;
+	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoMbo", length = 2000)),
+			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "weightCode", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step1Start", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step1End", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step2Start", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step2End", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step3Start", column = @Column(table = "tbl_turn_infoMbo")),
+			@AttributeOverride(name = "step3End", column = @Column(table = "tbl_turn_infoMbo")) })
+	private InfoMbo infoMbo;
 }

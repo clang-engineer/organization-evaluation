@@ -2,8 +2,8 @@ package com.evaluation.controller;
 
 import java.util.Optional;
 
-import com.evaluation.domain.MBO;
-import com.evaluation.service.MBOService;
+import com.evaluation.domain.Mbo;
+import com.evaluation.service.MboService;
 import com.evaluation.service.ReplyService;
 
 import org.springframework.http.HttpStatus;
@@ -27,12 +27,12 @@ import lombok.extern.slf4j.Slf4j;
 @AllArgsConstructor
 public class ObjectConroller {
 
-    MBOService mboService;
+    MboService mboService;
 
     ReplyService replyService;
 
     @PostMapping("/")
-    public ResponseEntity<MBO> register(@RequestBody MBO mbo) {
+    public ResponseEntity<Mbo> register(@RequestBody Mbo mbo) {
         log.info("add object ");
 
         mboService.register(mbo);
@@ -40,23 +40,23 @@ public class ObjectConroller {
     }
 
     @GetMapping("/{mno}")
-    public ResponseEntity<MBO> read(@PathVariable("mno") long mno) {
+    public ResponseEntity<Mbo> read(@PathVariable("mno") long mno) {
         log.info("add object ");
 
-        MBO mbo = Optional.ofNullable(mboService.read(mno)).map(Optional::get).orElse(null);
+        Mbo mbo = Optional.ofNullable(mboService.read(mno)).map(Optional::get).orElse(null);
         return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 
     @PutMapping("/{mno}/{step}")
     public ResponseEntity<HttpStatus> modify(@PathVariable("mno") long mno, @PathVariable("step") String step,
-            @RequestBody MBO mbo) {
+            @RequestBody Mbo mbo) {
         log.info("modify " + step);
 
         // plan 단계가 아니면 기존 객체 복사해서 finish M으로 등록해놈, 기록 남김! 수정은 M 삭제는 D
         if (!step.equals("plan")) {
             mboService.read(mno).ifPresent(origin -> {
                 try {
-                    MBO tmp = (MBO) origin.clone();
+                    Mbo tmp = (Mbo) origin.clone();
                     tmp.setMno(0);
                     tmp.setFinish("M");
                     mboService.register(tmp);
@@ -80,7 +80,7 @@ public class ObjectConroller {
         if (!step.equals("plan")) {
             mboService.read(mno).ifPresent(origin -> {
                 try {
-                    MBO tmp = (MBO) origin.clone();
+                    Mbo tmp = (Mbo) origin.clone();
                     tmp.setMno(0);
                     tmp.setFinish("D");
                     mboService.register(tmp);

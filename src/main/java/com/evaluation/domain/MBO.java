@@ -19,7 +19,7 @@ import lombok.Setter;
 @Setter
 @Entity
 @Table(name = "tbl_MBO")
-public class MBO implements Cloneable {
+public class Mbo implements Cloneable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -3,17 +3,17 @@ package com.evaluation.persistence;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.MBO;
+import com.evaluation.domain.Mbo;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface MBORepository extends CrudRepository<MBO, Long> {
+public interface MboRepository extends CrudRepository<Mbo, Long> {
 
     // 해당 turn에 속하는 직원의 목표 리스트
-    @Query("SELECT m FROM MBO m WHERE m.tno=:tno AND m.sno=:sno ORDER BY m.mno ASC")
-    public Optional<List<MBO>> listByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
+    @Query("SELECT m FROM Mbo m WHERE m.tno=:tno AND m.sno=:sno ORDER BY m.mno ASC")
+    public Optional<List<Mbo>> listByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
     // list에 속하는 전체 목표 엑셀로 다운 받기 위해
     @Query(value = "select s.name, s.email, s.level, s.department1, s.department2, m.finish, m.object, m.process, m.ratio from tbl_mbo m left join tbl_staff s on m.staff_sno=s.sno where m.turn_tno=:tno order by m.mno asc", nativeQuery = true)
