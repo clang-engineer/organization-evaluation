@@ -58,6 +58,5 @@ static/
 .mvn/
 mvnw
 mvnw.cmd
-application.properties
 logs/
 .tern-project
