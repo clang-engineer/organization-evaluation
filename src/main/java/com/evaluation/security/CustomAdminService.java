@@ -10,12 +10,10 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import lombok.Setter;
-
 @Service
 @Transactional
 public class CustomAdminService implements UserDetailsService {
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     private AdminRepository adminRepo;
 
     @Override

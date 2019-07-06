@@ -7,14 +7,13 @@ import com.evaluation.service.InfoSurveyService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class Info360ServiceImpl implements InfoSurveyService {
 
-	@Setter(onMethod_ = { @Autowired })
+	@Autowired
 	private TurnRepository turnRepo;
 
 	@Override

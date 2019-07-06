@@ -14,14 +14,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class Relation360ServiceImpl implements Relation360Service {
 
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     Relation360Repository relation360Repo;
 
     @Override

@@ -12,7 +12,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -20,10 +19,10 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class Info360Controller {
 
-	@Setter(onMethod_ = { @Autowired })
+	@Autowired
 	private InfoSurveyService info360Service;
 
-	@Setter(onMethod_ = { @Autowired })
+	@Autowired
 	private BookService bookService;
 
 	@GetMapping("/read")

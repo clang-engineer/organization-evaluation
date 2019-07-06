@@ -12,14 +12,13 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class LevelServiceImpl implements LevelService {
 
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     private LevelRepository levelRepo;
 
     @Override

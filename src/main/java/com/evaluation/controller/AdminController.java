@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
@@ -22,10 +21,10 @@ import lombok.extern.slf4j.Slf4j;
 @Transactional
 public class AdminController {
 
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     PasswordEncoder passwordEncoder;
 
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     AdminService adminService;
 
     @GetMapping("/register")

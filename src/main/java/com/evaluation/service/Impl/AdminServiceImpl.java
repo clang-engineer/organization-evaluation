@@ -11,14 +11,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
 public class AdminServiceImpl implements AdminService {
 
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     AdminRepository adminRepo;
 
     public void register(Admin admin) {
