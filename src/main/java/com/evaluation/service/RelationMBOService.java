@@ -3,37 +3,37 @@ package com.evaluation.service;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.RelationMBO;
+import com.evaluation.domain.RelationMbo;
 import com.evaluation.domain.Staff;
 import com.evaluation.vo.PageVO;
 
 import org.springframework.data.domain.Page;
 
-public interface RelationMBOService {
+public interface RelationMboService {
 
-    public void register(RelationMBO relationMBO);
+    public void register(RelationMbo relationMbo);
 
-    public Optional<RelationMBO> read(Long rno);
+    public Optional<RelationMbo> read(Long rno);
 
-    public void modify(RelationMBO relationMBO);
+    public void modify(RelationMbo relationMbo);
 
     public void remove(Long rno);
 
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
 
-    public Optional<List<RelationMBO>> findRelationByEvaulatedSno(long sno, long tno);
+    public Optional<List<RelationMbo>> findRelationByEvaulatedSno(long sno, long tno);
 
     public Optional<Staff> findInEvaluator(long tno, String email);
 
-    public Optional<List<RelationMBO>> findByEvaluator(long sno, long tno);
+    public Optional<List<RelationMbo>> findByEvaluator(long sno, long tno);
 
-    public Optional<List<RelationMBO>> findAllbyTno(long tno);
+    public Optional<List<RelationMbo>> findAllbyTno(long tno);
 
     public List<Staff> findDintinctEavluatedbyTno(long tno);
 
     public Optional<List<List<String>>> progressOfSurevey(long tno);
 
-    public Optional<RelationMBO> findMeRelationByTnoSno(long tno, long sno);
+    public Optional<RelationMbo> findMeRelationByTnoSno(long tno, long sno);
 
     public Optional<List<List<String>>> progressOfPlan(long tno);
 }

@@ -17,18 +17,18 @@ import lombok.extern.slf4j.Slf4j;
 public class RelationMboTests {
 
     @Setter(onMethod_ = { @Autowired })
-    RelationMBORepository relationMBORepo;
+    RelationMboRepository relationMboRepo;
 
     @Test
     public void name() {
-        relationMBORepo.findMeRelationByTnoSno(1, 2).ifPresent(origin -> {
+        relationMboRepo.findMeRelationByTnoSno(1, 2).ifPresent(origin -> {
             log.info("" + origin.getRno());
         });
     }
 
     @Test
     public void progressOfPlan() {
-        relationMBORepo.progressOfPlan(1).ifPresent(origin -> {
+        relationMboRepo.progressOfPlan(1).ifPresent(origin -> {
             log.info("" + origin);
         });
     }

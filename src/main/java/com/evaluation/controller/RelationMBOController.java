@@ -11,11 +11,11 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 import com.evaluation.domain.Company;
-import com.evaluation.domain.RelationMBO;
+import com.evaluation.domain.RelationMbo;
 import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
-import com.evaluation.service.RelationMBOService;
+import com.evaluation.service.RelationMboService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -40,13 +40,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/relationMBO/*")
+@RequestMapping("/relationMbo/*")
 @Slf4j
 @AllArgsConstructor
 @Transactional
-public class RelationMBOController {
+public class RelationMboController {
 
-    RelationMBOService relationMBOService;
+    RelationMboService relationMboService;
 
     StaffService staffService;
 
@@ -55,26 +55,26 @@ public class RelationMBOController {
     CompanyService companyService;
 
     @PostMapping("/register")
-    public String register(RelationMBO relationMBO, PageVO vo, RedirectAttributes rttr) {
-        log.info("register " + relationMBO.getEvaluated().getSno());
+    public String register(RelationMbo relationMbo, PageVO vo, RedirectAttributes rttr) {
+        log.info("register " + relationMbo.getEvaluated().getSno());
 
-        relationMBOService.register(relationMBO);
+        relationMboService.register(relationMbo);
 
         rttr.addFlashAttribute("msg", "register");
-        rttr.addAttribute("tno", relationMBO.getTno());
+        rttr.addAttribute("tno", relationMbo.getTno());
         rttr.addAttribute("page", vo.getPage());
         rttr.addAttribute("size", vo.getSize());
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relationMBO/list";
+        return "redirect:/relationMbo/list";
     }
 
     @PostMapping("/remove")
     public String remove(long rno, long tno, PageVO vo, RedirectAttributes rttr) {
         log.info("remove " + tno + rno);
 
-        relationMBOService.remove(rno);
+        relationMboService.remove(rno);
 
         rttr.addFlashAttribute("msg", "remove");
         rttr.addAttribute("tno", tno);
@@ -83,7 +83,7 @@ public class RelationMBOController {
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relationMBO/list";
+        return "redirect:/relationMbo/list";
     }
 
     @GetMapping("/list")
@@ -93,16 +93,16 @@ public class RelationMBOController {
         model.addAttribute("tno", tno);
 
         // 우선 중복 제거한 피평가자 paging처리해서 구함
-        Page<Staff> result = relationMBOService.getDistinctEvaluatedList(tno, vo);
+        Page<Staff> result = relationMboService.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
         // 화면에 표시되는 피평가자들의 관계별 relationTable만들기
-        List<RelationMBO> relationMe = new ArrayList<>();
-        List<RelationMBO> relation1 = new ArrayList<>();
-        List<RelationMBO> relation2 = new ArrayList<>();
-        List<RelationMBO> relation3 = new ArrayList<>();
+        List<RelationMbo> relationMe = new ArrayList<>();
+        List<RelationMbo> relation1 = new ArrayList<>();
+        List<RelationMbo> relation2 = new ArrayList<>();
+        List<RelationMbo> relation3 = new ArrayList<>();
         result.getContent().forEach(evaluated -> {
-            relationMBOService.findRelationByEvaulatedSno(evaluated.getSno(), tno).ifPresent(relation -> {
+            relationMboService.findRelationByEvaulatedSno(evaluated.getSno(), tno).ifPresent(relation -> {
                 relation.forEach(origin -> {
                     switch (origin.getRelation()) {
                     case "me":
@@ -134,7 +134,7 @@ public class RelationMBOController {
         log.info("get All Staff List Exclude Evaluated....");
 
         long cno = turnService.get(tno).get().getCno();
-        return new ResponseEntity<>(staffService.getMBOEvaluatedList(cno, tno), HttpStatus.OK);
+        return new ResponseEntity<>(staffService.getMboEvaluatedList(cno, tno), HttpStatus.OK);
     }
 
     @GetMapping("/evaluator/{tno}/{sno}")
@@ -144,16 +144,16 @@ public class RelationMBOController {
         log.info("get All Staff List....");
 
         long cno = turnService.get(tno).get().getCno();
-        return new ResponseEntity<>(staffService.getMBOEvaluatorList(cno, tno, sno), HttpStatus.OK);
+        return new ResponseEntity<>(staffService.getMboEvaluatorList(cno, tno, sno), HttpStatus.OK);
     }
 
     @PostMapping("/removeRow")
     public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
         log.info("deleteEvaluatedInfo by " + tno);
 
-        relationMBOService.findRelationByEvaulatedSno(sno, tno).ifPresent(list -> {
+        relationMboService.findRelationByEvaulatedSno(sno, tno).ifPresent(list -> {
             list.forEach(relation -> {
-                relationMBOService.remove(relation.getRno());
+                relationMboService.remove(relation.getRno());
             });
         });
 
@@ -164,7 +164,7 @@ public class RelationMBOController {
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relationMBO/list";
+        return "redirect:/relationMbo/list";
     }
 
     @PostMapping("/xlUpload")
@@ -175,9 +175,9 @@ public class RelationMBOController {
         long cno = turnService.get(tno).get().getCno();
 
         if (deleteList == true) {
-            relationMBOService.findAllbyTno(tno).ifPresent(list -> {
+            relationMboService.findAllbyTno(tno).ifPresent(list -> {
                 list.forEach(relation -> {
-                    relationMBOService.remove(relation.getRno());
+                    relationMboService.remove(relation.getRno());
                 });
             });
         }
@@ -206,14 +206,14 @@ public class RelationMBOController {
 
                 // 본인 평가 설정
                 if (list.get(7).equals("Y")) {
-                    RelationMBO relationMBO = new RelationMBO();
+                    RelationMbo relationMbo = new RelationMbo();
 
-                    relationMBO.setEvaluated(evaluated);
-                    relationMBO.setTno(tno);
+                    relationMbo.setEvaluated(evaluated);
+                    relationMbo.setTno(tno);
                     // 개별 설정
-                    relationMBO.setEvaluator(evaluated);
-                    relationMBO.setRelation("me");
-                    relationMBOService.register(relationMBO);
+                    relationMbo.setEvaluator(evaluated);
+                    relationMbo.setRelation("me");
+                    relationMboService.register(relationMbo);
                 }
 
                 // 1차 고과자 설정
@@ -244,13 +244,13 @@ public class RelationMBOController {
                 String name = tmpList.get(i).trim();
                 Optional<Staff> origin = staffService.readByCnoAndName(cno, name);
 
-                RelationMBO relationMBO = new RelationMBO();
-                relationMBO.setEvaluated(evaluated);
-                relationMBO.setTno(tno);
-                relationMBO.setRelation(relation);
+                RelationMbo relationMbo = new RelationMbo();
+                relationMbo.setEvaluated(evaluated);
+                relationMbo.setTno(tno);
+                relationMbo.setRelation(relation);
                 // 평가자 정보 못 찾으면 null할당
                 if (!origin.isPresent()) {
-                    relationMBO.setEvaluator(null);
+                    relationMbo.setEvaluator(null);
                 }
                 // 평가자 정보 찾았으면 할당
                 origin.ifPresent(evaluator -> {
@@ -258,9 +258,9 @@ public class RelationMBOController {
                     if (evaluated.equals(evaluator)) {
                         evaluator = null;
                     }
-                    relationMBO.setEvaluator(evaluator);
+                    relationMbo.setEvaluator(evaluator);
                 });
-                relationMBOService.register(relationMBO);
+                relationMboService.register(relationMbo);
 
             }
         }
@@ -281,7 +281,7 @@ public class RelationMBOController {
 
             String fileName = "default";
             try {
-                fileName = URLEncoder.encode(company + "_relationMBO_" + format_time, "UTF-8");
+                fileName = URLEncoder.encode(company + "_relationMbo_" + format_time, "UTF-8");
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
@@ -307,7 +307,7 @@ public class RelationMBOController {
             xlList.add(header);
 
             // 일단 중복제거한 피평가자 명단 가져오고
-            List<Staff> evaluatedList = relationMBOService.findDintinctEavluatedbyTno(tno);
+            List<Staff> evaluatedList = relationMboService.findDintinctEavluatedbyTno(tno);
 
             evaluatedList.forEach(evaluated -> {
                 List<String> tmpList = new ArrayList<String>();
@@ -328,7 +328,7 @@ public class RelationMBOController {
                 List<String> relation1 = new ArrayList<String>();
                 List<String> relation2 = new ArrayList<String>();
                 List<String> relation3 = new ArrayList<String>();
-                relationMBOService.findAllbyTno(tno).get().forEach(relation -> {
+                relationMboService.findAllbyTno(tno).get().forEach(relation -> {
                     String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName).orElse("null");
                     if (evaluated.getSno() == relation.getEvaluated().getSno()) {
                         switch (relation.getRelation()) {

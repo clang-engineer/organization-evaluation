@@ -3,10 +3,10 @@ package com.evaluation.service.Impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.RelationMBO;
+import com.evaluation.domain.RelationMbo;
 import com.evaluation.domain.Staff;
-import com.evaluation.persistence.RelationMBORepository;
-import com.evaluation.service.RelationMBOService;
+import com.evaluation.persistence.RelationMboRepository;
+import com.evaluation.service.RelationMboService;
 import com.evaluation.vo.PageVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -19,39 +19,39 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class RelationMBOServiceImpl implements RelationMBOService {
+public class RelationMboServiceImpl implements RelationMboService {
 
     @Setter(onMethod_ = { @Autowired })
-    RelationMBORepository relationMBORepo;
+    RelationMboRepository relationMboRepo;
 
     @Override
-    public void register(RelationMBO relationMBO) {
-        log.info("register : " + relationMBO);
+    public void register(RelationMbo relationMbo) {
+        log.info("register : " + relationMbo);
 
-        relationMBORepo.save(relationMBO);
+        relationMboRepo.save(relationMbo);
     }
 
     @Override
-    public Optional<RelationMBO> read(Long rno) {
+    public Optional<RelationMbo> read(Long rno) {
         log.info("read : " + rno);
 
-        return relationMBORepo.findById(rno);
+        return relationMboRepo.findById(rno);
     }
 
     @Override
-    public void modify(RelationMBO relationMBO) {
-        log.info("modify : " + relationMBO);
+    public void modify(RelationMbo relationMbo) {
+        log.info("modify : " + relationMbo);
 
-        relationMBORepo.findById(relationMBO.getRno()).ifPresent(origin -> {
-            origin.setRno(relationMBO.getRno());
-            origin.setEvaluated(relationMBO.getEvaluated());
-            origin.setEvaluator(relationMBO.getEvaluator());
-            origin.setRelation(relationMBO.getRelation());
-            origin.setTno(relationMBO.getTno());
-            origin.setAnswers(relationMBO.getAnswers());
-            origin.setComments(relationMBO.getComments());
-            origin.setFinish(relationMBO.getFinish());
-            relationMBORepo.save(origin);
+        relationMboRepo.findById(relationMbo.getRno()).ifPresent(origin -> {
+            origin.setRno(relationMbo.getRno());
+            origin.setEvaluated(relationMbo.getEvaluated());
+            origin.setEvaluator(relationMbo.getEvaluator());
+            origin.setRelation(relationMbo.getRelation());
+            origin.setTno(relationMbo.getTno());
+            origin.setAnswers(relationMbo.getAnswers());
+            origin.setComments(relationMbo.getComments());
+            origin.setFinish(relationMbo.getFinish());
+            relationMboRepo.save(origin);
         });
     }
 
@@ -59,7 +59,7 @@ public class RelationMBOServiceImpl implements RelationMBOService {
     public void remove(Long rno) {
         log.info("remove : " + rno);
 
-        relationMBORepo.deleteById(rno);
+        relationMboRepo.deleteById(rno);
     }
 
     @Override
@@ -73,57 +73,57 @@ public class RelationMBOServiceImpl implements RelationMBOService {
         String keyword = vo.getKeyword();
 
         if (type == null || type.isEmpty()) {
-            result = relationMBORepo.getDistinctEvaluatedList(tno, page);
+            result = relationMboRepo.getDistinctEvaluatedList(tno, page);
         } else if (type.equals("evaluated")) {
-            result = relationMBORepo.getDistinctEvaluatedListByEvaluated(keyword, tno, page);
+            result = relationMboRepo.getDistinctEvaluatedListByEvaluated(keyword, tno, page);
         } else if (type.equals("evaluator")) {
-            result = relationMBORepo.getDistinctEvaluatedListByEvaluator(keyword, tno, page);
+            result = relationMboRepo.getDistinctEvaluatedListByEvaluator(keyword, tno, page);
         }
         return result;
     }
 
     @Override
-    public Optional<List<RelationMBO>> findRelationByEvaulatedSno(long sno, long tno) {
+    public Optional<List<RelationMbo>> findRelationByEvaulatedSno(long sno, long tno) {
         log.info("findRelationByEvaulatedSno " + sno);
 
-        return relationMBORepo.findByEvaulatedSno(sno, tno);
+        return relationMboRepo.findByEvaulatedSno(sno, tno);
     }
 
     // 회차에 속하는 평가자이면 로그인 true로 하기 위한 서비스
     @Override
     public Optional<Staff> findInEvaluator(long tno, String email) {
-        return relationMBORepo.findInEvaluator(tno, email);
+        return relationMboRepo.findInEvaluator(tno, email);
     }
 
     // 로그인 했을 때 평가할 대상자 뽑기 위한 서비스
     @Override
-    public Optional<List<RelationMBO>> findByEvaluator(long sno, long tno) {
-        return relationMBORepo.findByEvaulaordSno(sno, tno);
+    public Optional<List<RelationMbo>> findByEvaluator(long sno, long tno) {
+        return relationMboRepo.findByEvaulaordSno(sno, tno);
     }
 
     @Override
-    public Optional<List<RelationMBO>> findAllbyTno(long tno) {
-        return relationMBORepo.findAllbyTno(tno);
+    public Optional<List<RelationMbo>> findAllbyTno(long tno) {
+        return relationMboRepo.findAllbyTno(tno);
     }
 
     @Override
     public List<Staff> findDintinctEavluatedbyTno(long tno) {
-        return relationMBORepo.findDintinctEavluatedbyTno(tno);
+        return relationMboRepo.findDintinctEavluatedbyTno(tno);
     }
 
     @Override
     public Optional<List<List<String>>> progressOfSurevey(long tno) {
-        return relationMBORepo.progressOfSurevey(tno);
+        return relationMboRepo.progressOfSurevey(tno);
     };
 
     @Override
-    public Optional<RelationMBO> findMeRelationByTnoSno(long tno, long sno) {
+    public Optional<RelationMbo> findMeRelationByTnoSno(long tno, long sno) {
 
-        return relationMBORepo.findMeRelationByTnoSno(tno, sno);
+        return relationMboRepo.findMeRelationByTnoSno(tno, sno);
     }
 
     @Override
     public Optional<List<List<String>>> progressOfPlan(long tno) {
-        return relationMBORepo.progressOfPlan(tno);
+        return relationMboRepo.progressOfPlan(tno);
     }
 }

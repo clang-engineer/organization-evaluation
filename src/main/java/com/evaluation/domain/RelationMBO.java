@@ -28,8 +28,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "tbl_relationMBO")
-public class RelationMBO {
+@Table(name = "tbl_relationmbo")
+public class RelationMbo {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -45,13 +45,13 @@ public class RelationMBO {
     private String relation;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_relationMBO_answers", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relationmbo_answers", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "answer_key")
     @OrderBy(clause = "answer_key asc")
     private Map<String, RatioValue> answers;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_relationMBO_comments", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relationmbo_comments", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "comment_key")
     @Column(name = "comment_value", length = 2000)
     @OrderBy(clause = "comment_key asc")

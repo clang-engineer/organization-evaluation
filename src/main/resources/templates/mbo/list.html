@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{/layout/layoutMBO}">
+    layout:decorate="~{/layout/layoutMbo}">
 <!-- div content -->
 <div layout:fragment="content">
     <style>
@@ -13,17 +13,17 @@
     <!-- container -->
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
-        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='plan'">MBO Step1 Plan
+        <h2 class="mb-5" th:if="${turn?.infoMbo?.status}=='plan'">MBO Step1 Plan
             <small>목표를 설정하는 단계입니다.</small>
         </h2>
 
-        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='do'">MBO Step2 Do
+        <h2 class="mb-5" th:if="${turn?.infoMbo?.status}=='do'">MBO Step2 Do
             <small>목표를 수행하고, 조율하는 단계입니다.</small>
         </h2>
-        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='see'">MBO Step3 See
+        <h2 class="mb-5" th:if="${turn?.infoMbo?.status}=='see'">MBO Step3 See
             <small>목표 달성도를 평가하는 단계입니다.</small>
         </h2>
-        <h2 class="mb-5" th:if="${turn?.infoMBO?.status}=='count'">MBO Step4 Feedback
+        <h2 class="mb-5" th:if="${turn?.infoMbo?.status}=='count'">MBO Step4 Feedback
             <small>평가 내용에 대해 피드백하는 단계입니다.</small>
         </h2>
         <!-- row -->
@@ -38,20 +38,20 @@
                             <h5 class="card-title">Own Object
                             </h5>
                             
-                            <p class="card-text" th:if="${turn?.infoMBO?.status}=='plan' OR ${turn?.infoMBO?.status}=='do'">본인 목표를 작성합니다.</p>
-                            <p class="card-text" th:if="${turn?.infoMBO?.status}=='see'">본인 평가를 진행 합니다.</p>
-                            <p class="card-text" th:if="${turn?.infoMBO?.status}=='count'">본인 평가 결과를 확인 합니다.</p>
+                            <p class="card-text" th:if="${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do'">본인 목표를 작성합니다.</p>
+                            <p class="card-text" th:if="${turn?.infoMbo?.status}=='see'">본인 평가를 진행 합니다.</p>
+                            <p class="card-text" th:if="${turn?.infoMbo?.status}=='count'">본인 평가 결과를 확인 합니다.</p>
 
                             <span th:each="relation:${evaluatedList}" th:if="${relation.relation}=='me'">
                                 <table>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button class="btn btn-primary" th:if="${turn?.infoMBO?.status}!='see'" data-type="mbo" th:data-rno="${relation.rno}" data-name="본인" data-toggle="tooltip" data-placement="right"
+                                                <button class="btn btn-primary" th:if="${turn?.infoMbo?.status}!='see'" data-type="mbo" th:data-rno="${relation.rno}" data-name="본인" data-toggle="tooltip" data-placement="right"
                                                     title="본인 목표 관리 페이지로 이동">목표 작성률
                                                     <span th:each="ratio:${ratioList}" th:if="${ratio[0]}==${session.evaluator.sno}">[[${#numbers.formatPercent(ratio[2],0,0)}]]</span>
                                                 </button>
-                                                <span th:if="${turn?.infoMBO?.status}=='see'">
+                                                <span th:if="${turn?.infoMbo?.status}=='see'">
                                                     <button class="btn btn-primary" th:if="${relation.finish}=='N'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="N" data-toggle="tooltip"
                                                         data-placement="right" title="실시 전 입니다.">Go to my MBO!</button>
                                                     <button class="btn btn-danger" th:if="${relation.finish}=='T'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="T" data-toggle="tooltip"
@@ -89,9 +89,9 @@
                                             <th scope="col" class="text-nowrap align-middle">Division</th>
                                             <th scope="col" class="text-nowrap align-middle">Level</th>
                                             <th scope="col" class="text-nowrap align-middle" style="width: 20%">작성률</th>
-                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}!='see'">MBO</th>
-                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}=='see'">본인평가<h6 class="pt-1" style="font-size: 0.5rem">(완료O/미완료X)</h6></th>
-                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMBO?.status}=='see'">목표평가</th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMbo?.status}!='see'">MBO</th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMbo?.status}=='see'">본인평가<h6 class="pt-1" style="font-size: 0.5rem">(완료O/미완료X)</h6></th>
+                                            <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMbo?.status}=='see'">목표평가</th>
                                             <th scope="col" class="text-nowrap align-middle">면담시트</th>
                                         </tr>
                                     </thead>
@@ -107,11 +107,11 @@
                                                 </div>
                                             </td>
                                             <!-- 목표 설정 버튼 열 -->
-                                            <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}!='see'">
+                                            <td class="align-items-center align-middle" th:if="${turn.infoMbo?.status}!='see'">
                                                 <button class="btn btn-default" data-type="mbo" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
                                             </td>
                                             <!-- 본인 평가 확인 열 -->
-                                            <td class="align-items-center align-middle" th:if="${turn.infoMBO?.status}=='see'">
+                                            <td class="align-items-center align-middle" th:if="${turn.infoMbo?.status}=='see'">
                                                 <span th:each="relationMe:${relationMeList}">
                                                     <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe.finish}=='Y'">
                                                         <i class="far fa-circle"></i>
@@ -122,14 +122,14 @@
                                                 </span>
                                             </td>
                                             <!-- 평가 버튼 열 -->
-                                            <td th:if="${turn.infoMBO?.status}=='see'">
+                                            <td th:if="${turn.infoMbo?.status}=='see'">
                                                 <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='N'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
                                                 <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='T'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
                                                 <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='Y'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
                                             </td>
                                             <!-- 면담 시트 버튼 열 -->
                                             <td class="align-items-center align-middle">
-                                                <button class="btn btn-default" data-type="note" th:data-step="${turn?.infoMBO?.status}" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-scroll fa-fw"></i></button>
+                                                <button class="btn btn-default" data-type="note" th:data-step="${turn?.infoMbo?.status}" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-scroll fa-fw"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>    
@@ -156,7 +156,7 @@
     <!-- button -->
 
     <form id="f1" th:action="@{object(company=${company},tno=${tno})}" method="POST">
-        <input type="hidden" th:valu="${turn?.infoMBO?.status}">
+        <input type="hidden" th:valu="${turn?.infoMbo?.status}">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 
@@ -210,7 +210,7 @@
                 var rno = $(this).data("rno");
                 var name = $(this).data("name");
                 var type = $(this).data("type");
-
+                
                 //모달 data
                 modal.data("rno", rno);
 
@@ -320,7 +320,7 @@
 
             //라디오로 이전 면담 볼수 있도록
             $("input:radio[name=modalContent3]").click(function () {
-                var now = [[${ turn?.infoMBO ?.status}]];
+                var now = [[${ turn?.infoMbo?.status}]];
                 var step = $("input[name='modalContent3']:checked").val();
                 var rno = $("#contentModal").data("rno");
                 $("#contentModal").find("textarea[name=modalContent2]").val("");

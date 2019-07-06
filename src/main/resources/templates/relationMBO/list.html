@@ -89,7 +89,7 @@
 
 
 <th:block layout:fragment="script">
-    <script type="text/javascript" src="/public/js/relationMBO.js"></script>
+    <script type="text/javascript" src="/public/js/relationMbo.js"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
 
@@ -304,7 +304,7 @@
                     formData.append("deleteList", modalDeleteList.prop('checked'));
 
                     $.ajax({
-                        url: '/relationMBO/xlUpload',
+                        url: '/relationMbo/xlUpload',
                         processData: false,
                         contentType: false,
                         beforeSend: function (xhr) {

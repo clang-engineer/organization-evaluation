@@ -98,18 +98,18 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Optional<List<Staff>> getMBOEvaluatedList(long cno, long tno) {
+	public Optional<List<Staff>> getMboEvaluatedList(long cno, long tno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.getMBOEvaluated(cno, tno);
+		Optional<List<Staff>> result = staffRepo.getMboEvaluated(cno, tno);
 		return result;
 	}
 
 	@Override
-	public Optional<List<Staff>> getMBOEvaluatorList(long cno, long tno, long sno) {
+	public Optional<List<Staff>> getMboEvaluatorList(long cno, long tno, long sno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.getMBOEvaluator(cno, tno, sno);
+		Optional<List<Staff>> result = staffRepo.getMboEvaluator(cno, tno, sno);
 		return result;
 	}
 

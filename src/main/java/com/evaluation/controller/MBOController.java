@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
 import com.evaluation.domain.Mbo;
-import com.evaluation.domain.RelationMBO;
+import com.evaluation.domain.RelationMbo;
 import com.evaluation.domain.Reply;
 import com.evaluation.domain.Staff;
 import com.evaluation.domain.embeddable.RatioValue;
@@ -20,7 +20,7 @@ import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.MboService;
-import com.evaluation.service.RelationMBOService;
+import com.evaluation.service.RelationMboService;
 import com.evaluation.service.ReplyService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
@@ -58,7 +58,7 @@ public class MboController {
 
     MboService mboService;
 
-    RelationMBOService relationMBOService;
+    RelationMboService relationMboService;
 
     ReplyService replyService;
 
@@ -94,17 +94,17 @@ public class MboController {
             return "redirect:/mbo/";
         }
 
-        if (!relationMBOService.findInEvaluator(tno, staff.getEmail()).isPresent()) {
+        if (!relationMboService.findInEvaluator(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
             return "redirect:/mbo/";
-        } else if (!relationMBOService.findInEvaluator(tno, staff.getEmail()).get().getPassword()
+        } else if (!relationMboService.findInEvaluator(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
             return "redirect:/mbo/";
         }
 
         // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
-        relationMBOService.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
+        relationMboService.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
@@ -193,7 +193,7 @@ public class MboController {
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
 
-        relationMBOService.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
+        relationMboService.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
             // 관계정보 전달
             model.addAttribute("evaluatedList", relation);
 
@@ -206,7 +206,7 @@ public class MboController {
 
             // 피평가자의 특정 정보를 얻기 위한 list와 for문
             List<List<String>> ratioList = new ArrayList<>();
-            List<RelationMBO> relationMeList = new ArrayList<>();
+            List<RelationMbo> relationMeList = new ArrayList<>();
 
             relation.forEach(origin -> {
                 // 피평가자의 서베이 진행률을 얻기 위한
@@ -215,7 +215,7 @@ public class MboController {
                 });
 
                 // 피평가자의 본인 평가 완료 여부를 얻기 위한
-                relationMBOService.findMeRelationByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(tmpRel -> {
+                relationMboService.findMeRelationByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(tmpRel -> {
                     relationMeList.add(tmpRel);
                 });
             });
@@ -281,12 +281,12 @@ public class MboController {
             }
         });
 
-        relationMBOService.read(rno).ifPresent(relation -> {
+        relationMboService.read(rno).ifPresent(relation -> {
             // 관계에 대한 정보 추가
             model.addAttribute("relation", relation);
 
             // 본인평가 정보 전달
-            relationMBOService.findMeRelationByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(relationMe -> {
+            relationMboService.findMeRelationByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(relationMe -> {
                 model.addAttribute("relationMe", relationMe);
             });
 
@@ -350,9 +350,9 @@ public class MboController {
             String note) {
         log.info("" + note);
 
-        relationMBOService.read(rno).ifPresent(origin -> {
+        relationMboService.read(rno).ifPresent(origin -> {
             origin.getComments().put(step, note);
-            relationMBOService.modify(origin);
+            relationMboService.modify(origin);
         });
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -364,7 +364,7 @@ public class MboController {
     public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
         log.info("read" + rno + step);
 
-        Optional<String> object = Optional.ofNullable(relationMBOService.read(rno).get().getComments().get(step));
+        Optional<String> object = Optional.ofNullable(relationMboService.read(rno).get().getComments().get(step));
         String note = object.get();
 
         return new ResponseEntity<String>(note, HttpStatus.OK);
@@ -384,15 +384,15 @@ public class MboController {
             Gson gson = new Gson();
             RatioValue tmpValue = gson.fromJson(answer.get("value").toString(), RatioValue.class);
 
-            relationMBOService.read(tmpRno).ifPresent(origin -> {
+            relationMboService.read(tmpRno).ifPresent(origin -> {
                 origin.setFinish(tmpFinish);
                 origin.getAnswers().put(tmpKey, tmpValue);
-                relationMBOService.modify(origin);
+                relationMboService.modify(origin);
             });
         } else {
-            relationMBOService.read(tmpRno).ifPresent(origin -> {
+            relationMboService.read(tmpRno).ifPresent(origin -> {
                 origin.setFinish(tmpFinish);
-                relationMBOService.modify(origin);
+                relationMboService.modify(origin);
             });
         }
 

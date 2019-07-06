@@ -17,15 +17,15 @@
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
         <h2 class="mb-3">MBO List
-            <small class="font-weight-light ml-2" th:if="${turn?.infoMBO?.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
-            <small class="font-weight-light ml-2" th:if="${relationMe}!=null AND ${turn?.infoMBO?.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
+            <small class="font-weight-light ml-2" th:if="${turn?.infoMbo?.status}!='see'">[[${relation?.evaluated?.name}]]님의 목표 리스트</small>
+            <small class="font-weight-light ml-2" th:if="${relationMe}!=null AND ${turn?.infoMbo?.status}=='see' AND ${relationMe?.finish}=='N'">[[${relation?.evaluated?.name}]]님 본인 평가 미완료 상태
                 입니다.</small>
 
         </h2>
         <div>
-            <button id="addObjectBtn" class="btn float-right" th:if="(${turn?.infoMBO?.status}=='plan' OR ${turn?.infoMBO?.status}=='do') AND ${relation?.relation}=='me'"><i
+            <button id="addObjectBtn" class="btn float-right" th:if="(${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do') AND ${relation?.relation}=='me'"><i
                     class="fas fa-plus-circle">목표추가</i></button>
-            <button id="removedListBtn" class="btn float-right" th:if="${turn?.infoMBO?.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
+            <button id="removedListBtn" class="btn float-right" th:if="${turn?.infoMbo?.status}!='plan'"><i class="fas fa-scroll">수정/삭제 기록</i></button>
             <button id="departmentObject" class="btn float-right" th:if="${department?.leader}!=null"><i class="fas fa-sitemap">팀 목표 보기</i></button>
         </div>
         <table class="table table-border" id="objectListTable">
@@ -34,9 +34,9 @@
                 <th scope="col" class="text-nowrap" style="width: 30%">목표</th>
                 <th scope="col" class="text-nowrap" style="width: 40%">달성기준</th>
                 <th scope="col" class="text-nowrap">비중%</th>
-                <th scope="col" class="text-nowrap" th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'">수정</th>
-                <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">본인평가</th>
-                <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">상사평가</th>
+                <th scope="col" class="text-nowrap" th:if="(${turn.infoMbo.status}=='plan' OR ${turn.infoMbo.status}=='do') AND ${relation.relation}=='me'">수정</th>
+                <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn.infoMbo.status}=='see' OR ${turn.infoMbo.status}=='count'">본인평가</th>
+                <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn.infoMbo.status}=='see' OR ${turn.infoMbo.status}=='count') and ${relation.relation}!='me'">상사평가</th>
                 <th scope="col" class="text-nowrap">댓글</th>
             </thead>
             <tbody>
@@ -48,13 +48,13 @@
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.object}]]</td>
                         <td class="text-left" style="white-space:pre-line">[[${object?.mbo?.process}]]</td>
                         <td class="ratio align-middle">[[${#numbers.formatPercent(object?.mbo?.ratio,0,0)}]]</td>
-                        <td class="align-middle text-middle"  th:if="(${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do') AND ${relation.relation}=='me'">
+                        <td class="align-middle text-middle"  th:if="(${turn.infoMbo.status}=='plan' OR ${turn.infoMbo.status}=='do') AND ${relation.relation}=='me'">
                             <button class="btn btn-default btn-lg modifyObject" th:data-mno="${object?.mbo?.mno}"><i class="fas fa-eraser"></i></button>
                         </td>
                         <!-- 본인평가 -->
-                        <td class="align-middle text-middle" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
+                        <td class="align-middle text-middle" th:if="${turn.infoMbo.status}=='see' OR ${turn.infoMbo.status}=='count'">
                             <form class="was-validated">    
-                                <select class="form-control" th:name="'q'+${status.count}" th:data-ratio="${object?.mbo?.ratio}" th:disabled="${turn.infoMBO.status}=='count' OR ${relation.relation}!='me'" required>
+                                <select class="form-control" th:name="'q'+${status.count}" th:data-ratio="${object?.mbo?.ratio}" th:disabled="${turn.infoMbo.status}=='count' OR ${relation.relation}!='me'" required>
                                     <option value="">--</option>
                                     <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relationMe?.answers?.get('q'+status.count)?.value}">
                                         [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
@@ -63,9 +63,9 @@
                             </form>
                         </td>
                         <!-- 상사평가 -->
-                        <td class="align-middle text-middle" th:if="(${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count') and ${relation.relation}!='me'">
+                        <td class="align-middle text-middle" th:if="(${turn.infoMbo.status}=='see' OR ${turn.infoMbo.status}=='count') and ${relation.relation}!='me'">
                             <form class="was-validated">
-                                <select class="custom-select" th:name="'q'+${status.count}" th:data-ratio="${object?.mbo?.ratio}" th:disabled="${turn.infoMBO.status}=='count'" required>
+                                <select class="custom-select" th:name="'q'+${status.count}" th:data-ratio="${object?.mbo?.ratio}" th:disabled="${turn.infoMbo.status}=='count'" required>
                                     <option value="">--</option>
                                     <option th:each="reply:${replyCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('q'+status.count)?.value}">
                                         [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
@@ -99,13 +99,13 @@
                                 <div class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
                             </div>
                         </td>
-                        <td th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
+                        <td th:if="${turn.infoMbo.status}=='plan' OR ${turn.infoMbo.status}=='do'">
                             <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify" th:if="${reply.writeId}==${session?.evaluator.email}"><i class="fas fa-times"></i></button>
                             <span th:if="${reply.writeId}!=${session?.evaluator.email}">-</span>
                         </td>
                     </tr>
                     <!-- 댓글 동록 input -->
-                    <tr class="collapse table-primary" th:id="collapse+${object?.mbo?.mno}" th:if="${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do'">
+                    <tr class="collapse table-primary" th:id="collapse+${object?.mbo?.mno}" th:if="${turn.infoMbo.status}=='plan' OR ${turn.infoMbo.status}=='do'">
                         <td class="align-middle">
                             <i class="fas fa-comment-dots fa-flip-horizontal"></i>
                         </td>
@@ -120,7 +120,7 @@
                     <!-- ./reply -->
                 </div>
             </tbody>
-            <tfoot style="border-top: 3px double black;" th:if="${turn.infoMBO.status}=='see' OR ${turn.infoMBO.status}=='count'">
+            <tfoot style="border-top: 3px double black;" th:if="${turn.infoMbo.status}=='see' OR ${turn.infoMbo.status}=='count'">
                 <tr style="height: 160px;">
                     <td scope="row" class="font-weight-bold text-right align-middle" th:colspan="${relation.relation}=='me'?4:5" >
                         [[${relation?.evaluated?.name}]]님의 종합 업무 부하량 : 
@@ -130,7 +130,7 @@
                     </td>
                     <td scope="colgroup" colspan="2" class="align-middle">
                         <form class="was-validated">
-                            <select class="custom-select" th:name="weight" th:disabled="${turn.infoMBO.status}=='count'" required>
+                            <select class="custom-select" th:name="weight" th:disabled="${turn.infoMbo.status}=='count'" required>
                                 <option value="">--</option>
                                 <option th:each="reply:${weightCodeList}" th:value="${reply.ratio}" th:selected="${reply.ratio}==${relation?.answers?.get('weight')?.value}">
                                     [[${reply.name}+'('+${#numbers.formatPercent(reply?.ratio,0,0)}+')']]
@@ -148,10 +148,10 @@
        <!-- button -->
        <div id="bottomGroup" class="position-fixed" align="center">
         <div id="bottomBtn" class="btn-group btn-group btn-group-lg">
-            <button th:if="${turn.infoMBO.status}=='see' AND ${relation?.finish}!='Y'" id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
+            <button th:if="${turn.infoMbo.status}=='see' AND ${relation?.finish}!='Y'" id="btnSubmit" type="submit" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="최종 제출"><i class="fas fa-share fa-2x"></i>
                 <div>Submit</div>
             </button>
-            <button th:if="${turn.infoMBO.status}=='see' AND ${relation?.finish}!='Y'" id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
+            <button th:if="${turn.infoMbo.status}=='see' AND ${relation?.finish}!='Y'" id="btnPause" class="btn btn-default" data-toggle="tooltip" data-placement="top" title="임시 저장"><i class="fas fa-pause-circle fa-2x"></i>
                 <div>Pause</div>
             </button>
             <button id="top" class="btn btn-default"><i class="fas fa-arrow-alt-circle-up fa-2x"></i>
@@ -208,7 +208,7 @@
             var objectListTable = $('#objectListTable');
 
             //댓글 colspan 지정
-            var step = [[${ turn.infoMBO.status }]];
+            var step = [[${ turn.infoMbo.status }]];
             var relation = [[${ relation.relation }]];
 
             replyColspan(step, relation);

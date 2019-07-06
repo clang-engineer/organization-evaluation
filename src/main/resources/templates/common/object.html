@@ -2,7 +2,7 @@
 <html xmlns:th="http://www.thymeleaf.org">
 <!--removed Object List  Modal -->
 <div th:fragment="removedObjectList">
-    <div class="modal fade" id="removedListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" th:if="${turn.infoMBO.status}!='plan'">
+    <div class="modal fade" id="removedListModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true" th:if="${turn?.infoMbo?.status}!='plan'">
         <div class="modal-dialog modal-xl" style="height: 100%">
             <div class="modal-content" style="height: 80%">
                 <div class="modal-header">
@@ -44,7 +44,7 @@
                                 </tr>
                                 <!-- ./object -->
                                 <!-- reply -->
-                                <tr th:each="reply:${replyList}" th:if="${reply.mno}==${object?.mbo?.mno}" class="collapse table-secondary" th:id="collapse+${object?.mbo?.mno}">
+                                <tr th:each="reply:${replyList}" th:if="${reply?.mno}==${object?.mbo?.mno}" class="collapse table-secondary" th:id="collapse+${object?.mbo?.mno}">
                                     <td>
                                         <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
                                             <i class="fas fa-comment-dots fa-flip-horizontal"></i>
@@ -52,10 +52,10 @@
                                     </td>
                                     <td th:colspan="5" class="text-left">
                                         <div class="collapse" th:id="collapse+${object?.mbo?.mno}">
-                                            [[${reply.rno}]]
+                                            [[${reply?.rno}]]
                                             [[${reply?.comment}]]
                                             <!-- 본인이면 아이디 안 붙도록 -->
-                                            <div class="float-right">[[${reply.updateId}]] - [[${#dates.format(reply.updateDate, 'yy/MM/dd HH:mm')}]]</div>
+                                            <div class="float-right">[[${reply?.updateId}]] - [[${#dates.format(reply?.updateDate, 'yy/MM/dd HH:mm')}]]</div>
                                         </div>
                                     </td>
                                 </tr>

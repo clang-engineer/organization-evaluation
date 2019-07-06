@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{/layout/layoutMBO}">
+    layout:decorate="~{/layout/layoutMbo}">
 <!-- div content -->
 <div layout:fragment="content">
     <style>
@@ -22,13 +22,13 @@
                     <!-- card-body -->
                     <div class="card-body mb-1">
                         <h4 class="card-title">
-                            [[${turn?.infoMBO?.title}]]
+                            [[${turn?.infoMbo?.title}]]
                         </h4>
                         <p class="card-text">
                             - [[${turn?.title}]]
                         </p>
                         <hr>
-                        <p class="card-text" th:utext="${turn?.infoMBO?.content}"></p>
+                        <p class="card-text" th:utext="${turn?.infoMbo?.content}"></p>
                         <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
                             title="click!!">MBO start &rarr;</a>
                     </div>
@@ -45,7 +45,7 @@
             <div class="col-md-4">
 
                 <!-- Categories Widget -->
-                <div class="card mb-4" th:if="${department}!=null AND (${turn.infoMBO.status}=='plan' OR ${turn.infoMBO.status}=='do')">
+                <div class="card mb-4" th:if="${department}!=null AND (${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do')">
                     <h5 class="card-header dep-card" data-html="true" data-toggle="tooltip" data-placement="right" title="목표를 팀원들과 <br> 공유 합니다.">Deparment</h5>
                         <div class="card-body">
                             <div class="row">
@@ -78,33 +78,33 @@
                                 <tr>
                                     <th scope="col" class="align-middle">전체기간</th>
                                     <td class="align-middle">
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.startDate, 'yy/MM/dd')}">startTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.startDate, 'yy/MM/dd')}">startTime</span>
                                         ~
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.endDate, 'yy/MM/dd')}">EndTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.endDate, 'yy/MM/dd')}">EndTime</span>
                                     </td>
                                 </tr>
                                 <tr id="step1">
                                     <th scope="col" class="align-middle">Plan(목표설정)</th>
                                     <td class="align-middle">
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.step1Start, 'MM-dd')}">startTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.step1Start, 'MM-dd')}">startTime</span>
                                         ~
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.step1End, 'MM-dd')}">EndTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.step1End, 'MM-dd')}">EndTime</span>
                                     </td>
 								</tr>
                                 <tr id="step2">
                                     <th scope="col" class="align-middle">Do(목표수행)</th>
                                     <td class="align-middle">
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.step2Start, 'MM-dd')}">startTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.step2Start, 'MM-dd')}">startTime</span>
                                         ~
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.step2End, 'MM-dd')}">EndTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.step2End, 'MM-dd')}">EndTime</span>
                                     </td>
 								</tr>
                                 <tr id="step3">
                                     <th scope="col" class="align-middle">See(목표평가)</th>
                                     <td class="align-middle">
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.step3Start, 'MM-dd')}">startTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.step3Start, 'MM-dd')}">startTime</span>
                                         ~
-                                        <span th:text="${#temporals.format(turn?.infoMBO?.step3End, 'MM-dd')}">EndTime</span>
+                                        <span th:text="${#temporals.format(turn?.infoMbo?.step3End, 'MM-dd')}">EndTime</span>
                                     </td>
 								</tr>
 							</tbody>
@@ -185,7 +185,7 @@
             modalRegisterBtn.show();
 
             //mbo 기간 정보 표시
-            var status = [[${ turn.infoMBO.status }]];
+            var status = [[${ turn?.infoMbo?.status }]];
             switch (status) {
                 case "plan":
                     $("#step1").attr("class", "table-info").attr("data-toggle", "tooltip").attr("data-placement", "right").attr("title", "현재 진행 중인 단계 입니다.");

@@ -23,9 +23,9 @@ public interface StaffService {
 
 	public Optional<List<Staff>> get360EvaluatorList(long cno, long tno, long sno);
 
-	public Optional<List<Staff>> getMBOEvaluatedList(long cno, long tno);
+	public Optional<List<Staff>> getMboEvaluatedList(long cno, long tno);
 
-	public Optional<List<Staff>> getMBOEvaluatorList(long cno, long tno, long sno);
+	public Optional<List<Staff>> getMboEvaluatorList(long cno, long tno, long sno);
 
 	public void deleteByCno(long cno);
 

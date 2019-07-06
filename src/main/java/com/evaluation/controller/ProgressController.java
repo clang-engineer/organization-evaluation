@@ -21,7 +21,7 @@ import com.evaluation.service.CompanyService;
 import com.evaluation.service.MboService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.Relation360Service;
-import com.evaluation.service.RelationMBOService;
+import com.evaluation.service.RelationMboService;
 import com.evaluation.service.TurnService;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -44,7 +44,7 @@ public class ProgressController {
 
     Relation360Service relation360Service;
 
-    RelationMBOService relationMBOService;
+    RelationMboService relationMboService;
 
     TurnService turnService;
 
@@ -73,7 +73,7 @@ public class ProgressController {
                 model.addAttribute("totalCount", totalCount);
             });
         } else if (whatYouCall.equals("/progress/mbo")) {
-            relationMBOService.progressOfSurevey(tno).ifPresent(origin -> {
+            relationMboService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
 
                 // 총 개수 구하기
@@ -102,7 +102,7 @@ public class ProgressController {
                 model.addAttribute("evaluatedList", origin);
             });
         } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
-            relationMBOService.findByEvaluator(sno, tno).ifPresent(origin -> {
+            relationMboService.findByEvaluator(sno, tno).ifPresent(origin -> {
                 model.addAttribute("evaluatedList", origin);
             });
         }
@@ -120,9 +120,9 @@ public class ProgressController {
                 relation360Service.modify(origin);
             });
         } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
-            relationMBOService.read(rno).ifPresent(origin -> {
+            relationMboService.read(rno).ifPresent(origin -> {
                 origin.setFinish(finish);
-                relationMBOService.modify(origin);
+                relationMboService.modify(origin);
             });
         }
         return new ResponseEntity<>(HttpStatus.OK);
@@ -333,7 +333,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relationMBOService.progressOfSurevey(tno).ifPresent(list -> {
+            relationMboService.progressOfSurevey(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 
@@ -410,7 +410,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relationMBOService.findAllbyTno(tno).ifPresent(list -> {
+            relationMboService.findAllbyTno(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 
@@ -548,7 +548,7 @@ public class ProgressController {
 
     @GetMapping("/mbo/plan")
     public void progressOfPlan(long tno, Model model) {
-        relationMBOService.progressOfPlan(tno).ifPresent(list -> {
+        relationMboService.progressOfPlan(tno).ifPresent(list -> {
             model.addAttribute("progress", list);
             double total = 0;
             for (List<String> tmpList : list) {
@@ -590,7 +590,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relationMBOService.progressOfPlan(tno).ifPresent(list -> {
+            relationMboService.progressOfPlan(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 

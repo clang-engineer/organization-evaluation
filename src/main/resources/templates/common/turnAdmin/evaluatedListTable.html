@@ -28,10 +28,10 @@
             <td>[[${relation?.evaluator?.name}]]</td>
             <td>
                 <div class="form-group">
-                    <select class="form-control" th:data-rno="${relation.rno}">
-                        <option value="N" th:selected="${relation.finish}=='N'">N</option>
-                        <option value="T" th:selected="${relation.finish}=='T'">T</option>
-                        <option value="Y" th:selected="${relation.finish}=='Y'">Y</option>
+                    <select class="form-control" th:data-rno="${relation?.rno}">
+                        <option value="N" th:selected="${relation?.finish}=='N'">N</option>
+                        <option value="T" th:selected="${relation?.finish}=='T'">T</option>
+                        <option value="Y" th:selected="${relation?.finish}=='Y'">Y</option>
                     </select>
                 </div>
             </td>
