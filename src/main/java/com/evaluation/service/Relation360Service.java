@@ -21,11 +21,11 @@ public interface Relation360Service {
 
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
 
-    public Optional<List<Relation360>> findRelationByEvaulatedSno(long sno, long tno);
+    public Optional<List<Relation360>> findByEvaulated(long tno, long sno);
 
-    public Optional<Staff> findInEvaluator(long tno, String email);
+    public Optional<Staff> findByTnoAndEvaluator(long tno, String email);
 
-    public Optional<List<Relation360>> findByEvaluator(long sno, long tno);
+    public Optional<List<Relation360>> findByEvaluator(long tno, long sno);
 
     public Optional<List<Relation360>> findAllbyTno(long tno);
 

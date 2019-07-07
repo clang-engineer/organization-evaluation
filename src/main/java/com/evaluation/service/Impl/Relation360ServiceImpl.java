@@ -74,30 +74,30 @@ public class Relation360ServiceImpl implements Relation360Service {
         if (type == null || type.isEmpty()) {
             result = relation360Repo.getDistinctEvaluatedList(tno, page);
         } else if (type.equals("evaluated")) {
-            result = relation360Repo.getDistinctEvaluatedListByEvaluated(keyword, tno, page);
+            result = relation360Repo.getDistinctEvaluatedListByEvaluated(tno, keyword, page);
         } else if (type.equals("evaluator")) {
-            result = relation360Repo.getDistinctEvaluatedListByEvaluator(keyword, tno, page);
+            result = relation360Repo.getDistinctEvaluatedListByEvaluator(tno, keyword, page);
         }
         return result;
     }
 
     @Override
-    public Optional<List<Relation360>> findRelationByEvaulatedSno(long sno, long tno) {
-        log.info("findRelationByEvaulatedSno " + sno);
+    public Optional<List<Relation360>> findByEvaulated(long tno, long sno) {
+        log.info("findByEvaulated " + sno);
 
-        return relation360Repo.findByEvaulatedSno(sno, tno);
+        return relation360Repo.findByEvaulated(tno, sno);
     }
 
     // 회차에 속하는 평가자이면 로그인 true로 하기 위한 서비스
     @Override
-    public Optional<Staff> findInEvaluator(long tno, String email) {
-        return relation360Repo.findInEvaluator(tno, email);
+    public Optional<Staff> findByTnoAndEvaluator(long tno, String email) {
+        return relation360Repo.findByTnoAndEvaluator(tno, email);
     }
 
     // 로그인 했을 때 평가할 대상자 뽑기 위한 서비스
     @Override
-    public Optional<List<Relation360>> findByEvaluator(long sno, long tno) {
-        return relation360Repo.findByEvaulaordSno(sno, tno);
+    public Optional<List<Relation360>> findByEvaluator(long tno, long sno) {
+        return relation360Repo.findByEvaulator(tno, sno);
     }
 
     @Override

@@ -98,7 +98,7 @@ public class ProgressController {
         String whatYouCall = request.getServletPath();
 
         if (whatYouCall.equals("/progress/survey/evaluatedList")) {
-            relation360Service.findByEvaluator(sno, tno).ifPresent(origin -> {
+            relation360Service.findByEvaluator(tno, sno).ifPresent(origin -> {
                 model.addAttribute("evaluatedList", origin);
             });
         } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {

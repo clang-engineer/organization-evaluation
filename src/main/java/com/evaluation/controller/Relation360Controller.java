@@ -102,7 +102,7 @@ public class Relation360Controller {
         List<Relation360> relation2 = new ArrayList<>();
         List<Relation360> relation3 = new ArrayList<>();
         result.getContent().forEach(evaluated -> {
-            relation360Service.findRelationByEvaulatedSno(evaluated.getSno(), tno).ifPresent(relation -> {
+            relation360Service.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
                 relation.forEach(origin -> {
                     switch (origin.getRelation()) {
                     case "me":
@@ -151,7 +151,7 @@ public class Relation360Controller {
     public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
         log.info("deleteEvaluatedInfo by " + tno);
 
-        relation360Service.findRelationByEvaulatedSno(sno, tno).ifPresent(list -> {
+        relation360Service.findByEvaulated(tno, sno).ifPresent(list -> {
             list.forEach(relation -> {
                 relation360Service.remove(relation.getRno());
             });

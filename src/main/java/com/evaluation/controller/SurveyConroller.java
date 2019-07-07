@@ -77,17 +77,17 @@ public class SurveyConroller {
             return "redirect:/mbo/";
         }
 
-        if (!relation360Service.findInEvaluator(tno, staff.getEmail()).isPresent()) {
+        if (!relation360Service.findByTnoAndEvaluator(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
             return "redirect:/mbo/";
-        } else if (!relation360Service.findInEvaluator(tno, staff.getEmail()).get().getPassword()
+        } else if (!relation360Service.findByTnoAndEvaluator(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
             return "redirect:/mbo/";
         }
 
         // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
-        relation360Service.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
+        relation360Service.findByTnoAndEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
@@ -169,7 +169,7 @@ public class SurveyConroller {
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
 
-        relation360Service.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
+        relation360Service.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
             Set<String> relationList = new HashSet<>();
             relation.forEach(origin -> {
                 relationList.add(origin.getRelation());

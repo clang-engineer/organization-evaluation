@@ -20,30 +20,30 @@ public interface Relation360Repository
         extends CrudRepository<Relation360, Long>, QuerydslPredicateExecutor<Relation360> {
 
     // 모든 테이블 가져오니 넘 느려서, 페이지에 표시되는 관련 관계자 정보만 가져오기로 함.
-    @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluated.sno=?1 AND r.tno=?2")
-    public Optional<List<Relation360>> findByEvaulatedSno(long sno, long tno);
+    @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno ")
+    public Optional<List<Relation360>> findByEvaulated(@Param("tno") long tno, @Param("sno") long sno);
 
     /* criteria 처리 필요 */
     // 하나의 tno에 존재하는 모든 relation 중 중복을 제거한 피평가자 실질적으로 페이징 처리됨.
-    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=?1 ORDER BY r.evaluated.sno ASC")
-    public Page<Staff> getDistinctEvaluatedList(long tno, Pageable pageable);
+    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno ORDER BY r.evaluated.sno ASC")
+    public Page<Staff> getDistinctEvaluatedList(@Param("tno") long tno, Pageable pageable);
 
     // ecaluated 이름으로 검색했을 때의 유일값!
-    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.evaluated.name LIKE %?1% AND r.tno=?2")
-    public Page<Staff> getDistinctEvaluatedListByEvaluated(String keyword, long tno, Pageable pageable);
+    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.name LIKE %:keyword%")
+    public Page<Staff> getDistinctEvaluatedListByEvaluated(@Param("tno") long tno, @Param("keyword") String keyword, Pageable pageable);
 
     // ecaluator 이름으로 검색했을 때의 유일값!
-    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.evaluator.name LIKE %?1% AND r.tno=?2")
-    public Page<Staff> getDistinctEvaluatedListByEvaluator(String keyword, long tno, Pageable pageable);
+    @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.name LIKE %:keyword%")
+    public Page<Staff> getDistinctEvaluatedListByEvaluator(@Param("tno") long tno, @Param("keyword") String keyword, Pageable pageable);
     /* ./criteria 처리 필요 */
 
     // 로그인 할 때 사용 회차에 있는 평가자면 로그인
-    @Query("SELECT DISTINCT r.evaluator FROM Relation360 r WHERE r.tno=?1 AND r.evaluator.email=?2")
-    public Optional<Staff> findInEvaluator(long tno, String email);
+    @Query("SELECT DISTINCT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.email=:email")
+    public Optional<Staff> findByTnoAndEvaluator(@Param("tno") long tno, @Param("email") String email);
 
     // 로그인 식 출력되는 피평가자 리스트.
-    @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.evaluator.sno=?1 AND r.tno=?2")
-    public Optional<List<Relation360>> findByEvaulaordSno(long sno, long tno);
+    @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.sno=:sno")
+    public Optional<List<Relation360>> findByEvaulator(@Param("tno") long tno, @Param("sno") long sno);
 
     // xl 다운로드를 위한 turn에 속하는 전체 관계
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno")
