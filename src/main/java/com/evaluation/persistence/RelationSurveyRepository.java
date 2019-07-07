@@ -16,7 +16,7 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
-public interface Relation360Repository
+public interface RelationSurveyRepository
         extends CrudRepository<Relation360, Long>, QuerydslPredicateExecutor<Relation360> {
 
     // 모든 테이블 가져오니 넘 느려서, 페이지에 표시되는 관련 관계자 정보만 가져오기로 함.

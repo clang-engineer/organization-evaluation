@@ -20,12 +20,10 @@ import com.evaluation.domain.Level;
 import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.function.RandomPassword;
-import com.evaluation.persistence.StaffRepository;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
 import com.evaluation.service.DivisionService;
 import com.evaluation.service.LevelService;
-import com.evaluation.service.Relation360Service;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -55,19 +53,15 @@ public class StaffController {
 
 	CompanyService companyService;
 
-	StaffService staffService;
-
 	TurnService turnService;
+
+	StaffService staffService;
 
 	LevelService levelService;
 
 	DepartmentService departmentService;
 
 	DivisionService divisionService;
-
-	Relation360Service relation360Service;
-
-	StaffRepository staffRepo;
 
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {

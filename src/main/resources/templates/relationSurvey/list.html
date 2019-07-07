@@ -1,0 +1,492 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
+
+<div layout:fragment="content">
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a href="#">Dashboard</a>
+            </li>
+            <li class="breadcrumb-item active">Tables</li>
+        </ol>
+
+        <!-- DataTables Example -->
+        <div class="card mb-3">
+            <div class="card-header">
+                <i class="fas fa-table"></i> Relation360 List
+            </div>
+
+            <div class="row" style="margin-top: 20px; margin-left: 7px;">
+                <div class="col-md-9">
+                    <button id="xlDownload" class="btn btn-info">Excel Download</button>
+                    <button id="xlRegister" class="btn btn-success">Excel Register</button>
+                    <button id="register" class="btn btn-success">Register</button>
+                </div>
+                <div class="col-md-3" style="float: right">
+                    <div class="input-group">
+                        <select class="form-control col-sm-4" id="searchType">
+                            <option>---
+                                </optinon>
+                            <option value="evaluated" th:selected="${pageVO.type}=='evaluated'">evaluated name</option>
+                            <option value="evaluator" th:selected="${pageVO.type}=='evaluator'">evaluator name</option>
+                        </select>
+                        <input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+                        <div class="input-group-append">
+                            <button class="btn btn-default border" id="searchBtn" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- /search box -->
+            <!-- card body -->
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table th:insert="~{common/turnAdmin/relationListTable::relationListTable}"></table>
+                </div>
+                <!-- page nation -->
+                <nav th:insert="~{common/turnAdmin/pagenation::pagenation}">
+                </nav>
+                <!--/ page nation -->
+            </div>
+            <!-- ./card body -->
+            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+
+        </div>
+
+        <p class="small text-center text-muted my-5">
+            <em>More table examples coming soon...</em>
+        </p>
+    </div>
+
+    <!-- /.container-fluid -->
+    <form id="f1" th:action="@{list}" method="get">
+        <input type="hidden" name="tno" th:value="${tno}" />
+        <input type="hidden" name="page" th:value=${result.currentPageNum} />
+        <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
+        <input type="hidden" name="type" th:value=${pageVO.type} />
+        <input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+    </form>
+
+    <!-- Modal -->
+    <div th:insert="~{common/modal::basic}"></div>
+    <!-- ./Modal -->
+
+    <!-- ajax loading view -->
+    <div id="viewLoading">
+        <img src="/img/loading.gif" />
+    </div>
+    <!-- ./ajax loading view -->
+
+
+</div>
+
+
+
+
+<th:block layout:fragment="script">
+    <script type="text/javascript" src="/public/js/relationSurvey.js"></script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+
+            //modal 사용 변수 선언
+            var modal = $("#basicModal");
+            var modalTitle = modal.find("#modalTitle");
+            var modalBody = modal.find("#modalBody");
+            var modalLabel1 = modal.find("#modalLabel1");
+            var modalLabel2 = modal.find("#modalLabel2");
+            var modalContent1 = modal.find("input[name='modalContent1']");
+            var modalContent2 = modal.find("input[name='modalContent2']");
+            var modalGroupContent1 = modal.find("#content1");
+            var modalGroupContent2 = modal.find("#content2");
+            var modalModifyBtn = $("#modalModifyBtn");
+            var modalRemoveBtn = $("#modalRemoveBtn");
+            var modalRegisterBtn = $("#modalRegisterBtn");
+            var modalCloseBtn = $("#modalCloseBtn");
+
+            var tno = [[${ tno }]];
+            var msg = [[${ msg }]];
+
+            var csrf = JSON.parse('[[${_csrf}]]');
+
+            if (history.state == null) {
+                if (msg == 'register') {
+                    alert("등록 되었습니다.");
+                } else if (msg == 'modify') {
+                    alert("수정 되었습니다.");
+                } else if (msg == 'remove') {
+                    alert("삭제 되었습니다.");
+                }
+            }
+
+            history.replaceState({}, null, null);
+
+            var formObj = $("#f1");
+
+            //페이지에 붙은 링크 클릭 시
+            $(".pagination a").click(function (e) {
+                e.preventDefault();
+
+                formObj.find('[name="page"]').val($(this).attr('href'));
+                formObj.submit();
+            });
+
+            //검색 버튼 클릭 시
+            $("#searchBtn").click(function (e) {
+                var typeStr = $("#searchType").find(":selected").val();
+                var keywordStr = $("#searchKeyword").val();
+
+                formObj.find("[name='type']").val(typeStr);
+                formObj.find("[name='keyword']").val(keywordStr);
+                formObj.find("[name='page']").val("1");
+                formObj.submit();
+            });
+
+            //행 삭제 버튼 클릭 시
+            $(".evaluatedInfoDelete").click(function (e) {
+                e.preventDefault();
+
+                //모달 data
+                evaluatedNo = $(this).attr("href");
+                modal.data("idx", evaluatedNo);
+                modal.data("delete", "row");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRemoveBtn.show();
+
+                //모달 layout
+                modalContent1.attr("readonly", "true");
+                modalGroupContent1.show();
+                modalGroupContent2.hide();
+                modalBody.find(".file-group").remove();
+                modal.find("table").remove();
+
+                //모달 text
+                modalTitle.text("Delete relation row");
+                modalLabel1.text("평가 data 존재 시 개별 삭제 필요.");
+                content = $(this).closest("tr").children().eq(1).text();
+                modalContent1.val("피평가자 '" + content + "'의 평가 명단을 모두 삭제합니다.");
+
+                //모달 css
+                $(".modal-dialog").removeClass("modal-xl");
+                $(".modal-content, .modal-dialog, .modal-body").removeAttr("style");
+
+                modal.modal("show");
+            });
+
+            //피평가자 등록 버튼 클릭 시
+            $("#register").click(function (e) {
+                e.preventDefault();
+
+                //모달 data
+                modal.data("type", "evaluated");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+
+                //모달 layout
+                modalGroupContent1.show();
+                modalContent1.hide();
+                modalGroupContent2.hide();
+                $(".file-group").remove();
+                modalGroupContent1.find("table").remove();
+                modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>email</th><th>level</th><th>department1</th><th>department2</th></tr><tbody id='radioBody'></tbody></table>");
+
+                showEvaluatedList(tno);
+
+                //모달 text
+                modalTitle.text("Add Evaluated")
+                modalLabel1.text("직원 중 명단에 등록되지 않은 피평가자를 추가 합니다.");
+
+                //모달 css
+                $(".modal-dialog").addClass("modal-xl");
+                $(".modal-content, .modal-dialog").css("height", "80%");
+                $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
+
+                modal.modal("show");
+            });
+
+            //평가자 등록 버튼 클릭 시
+            $(".staffForEvaluator").click(function (e) {
+                e.preventDefault();
+
+                //모달 data
+                modal.data("type", "evaluator");
+                modal.data("evaluated", $(this).data("evaluated"));
+                modal.data("relation", $(this).data("relation"));
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+
+                //모달 layout
+                modalGroupContent1.show();
+                modalContent1.hide();
+                modalGroupContent2.hide();
+                $(".file-group").remove();
+                modalGroupContent1.find("table").remove();
+                modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>email</th><th>level</th><th>department1</th><th>department2</th></tr><tbody id='radioBody'></tbody></table>");
+
+                var sno = $(this).data("evaluated");
+                showEvaluatorList({ tno: tno, sno: sno });
+
+                //모달 text
+                var evaluated = $(this).closest("tr").children().eq(1).text();
+                modalTitle.text("Add Evaluator");
+                modalLabel1.text(evaluated + "님의 평가자를 추가합니다.");
+
+                //모달 css
+                $(".modal-dialog").addClass("modal-xl");
+                $(".modal-content, .modal-dialog").css("height", "80%");
+                $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
+
+                modal.modal("show");
+            });
+
+            //xlRegister 클릭 시
+            $("#xlRegister").click(function (e) {
+                e.preventDefault();
+
+                //모달 data
+                modal.data("type", "fileUpload");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRegisterBtn.show();
+
+                //모달 text
+                modalTitle.text("Add Relation xl File");
+
+                //모달 layout
+                modal.find("table").remove();
+                modalBody.find(".file-group").remove();
+                modalBody.append("<div class='file-group'><div class='form-group'><input type='file' class='form-control-file' name='uploadFile'></div><div class='form-group'><label class='checkbox-inline'><input type='checkbox' name='deleteList'> 기존 설정 삭제 후 입력</label></div></div>");
+                modalGroupContent1.hide();
+                modalGroupContent2.hide();
+
+                //모달 css
+                $(".modal-dialog").removeClass("modal-xl");
+                $(".modal-content, .modal-dialog, .modal-body").removeAttr("style");
+
+                modal.modal("show");
+            });
+
+            //modal내의 register 클릭 시 type별로 나눠서 처리
+            modalRegisterBtn.on("click", function () {
+                if (modal.data("type") == "evaluated") {
+                    var evaluated = $(":input:radio[name=evaluated]:checked").val();
+                    var evaluator = $(":input:radio[name=evaluated]:checked").val();
+                    var relation = "me";
+                } else if (modal.data("type") == "evaluator") {
+                    var evaluator = $(":input:radio[name=evaluator]:checked").val();
+                    var evaluated = modal.data("evaluated");
+                    var relation = modal.data("relation");
+                } else if (modal.data("type") == "fileUpload") {
+                    var formData = new FormData();
+
+                    var inputFile = $("input[name='uploadFile']");
+                    var files = inputFile[0].files;
+
+                    var modalDeleteList = modal.find("input[name='deleteList']");
+
+                    if (!checkExtension(files[0].name, files[0].size)) {
+                        return false;
+                    }
+
+                    formData.append("uploadFile", files[0]);
+                    formData.append("tno", tno);
+                    formData.append("deleteList", modalDeleteList.prop('checked'));
+
+                    $.ajax({
+                        url: '/relationSurvey/xlUpload',
+                        processData: false,
+                        contentType: false,
+                        beforeSend: function (xhr) {
+                            xhr.setRequestHeader(csrf.headerName, csrf.token);
+                        },
+                        data: formData,
+                        type: 'POST',
+                        success: function (result) {
+                            alert("등록 완료 하였습니다.");
+                            modal.modal("hide");
+
+                            //parameter 제거 -> tno추가 하고 리로드
+                            url = window.location.href.split("?")[0];
+                            url += '?tno=' + tno;
+                            window.location.href = url;
+                        }, error: function (request, status, error) {
+                            alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
+                        }
+                    });
+                }
+
+                if (modal.data("type") == "evaluated" || modal.data("type") == "evaluator") {
+
+                    formObj.attr("action", "./register").attr("method", "post");
+                    formObj.append("<input type='hidden' name='evaluated' value='" + evaluated + "'/>");
+                    formObj.append("<input type='hidden' name='evaluator' value='" + evaluator + "'/>");
+                    formObj.append("<input type='hidden' name='relation' value='" + relation + "'/>");
+                    formObj.submit();
+                }
+            });
+
+            //모달 내의 삭제 버튼 클릭 시
+            modalRemoveBtn.on("click", function (e) {
+                if (delchk() == true) {
+                    formObj.attr("action", "delete");
+                } else {
+                    return;
+                };
+
+                //평가자 전체 삭제냐 한명 삭제냐 구분
+                if (modal.data("delete") == "column") {
+                    formObj.attr("action", "./remove").attr("method", "post");
+                    formObj.append("<input type='hidden' name='rno' value='" + modal.data("idx") + "'/>");
+                } else if (modal.data("delete") == "row") {
+                    formObj.attr("action", "./removeRow").attr("method", "post");
+                    formObj.append("<input type='hidden' name='sno' value='" + modal.data("idx") + "'/>");
+                }
+                
+                formObj.submit();
+            });
+
+            //close button click 시
+            modalCloseBtn.on("click", function (e) {
+                modal.modal('hide');
+            });
+
+
+            //평가자 리스트에 붙은 링크 클릭 시
+            $(".evaluatorList a").click(function (e) {
+                e.preventDefault();
+
+                //모달 data
+                relationNo = $(this).attr("href");
+                modal.data("idx", relationNo);
+                modal.data("delete", "column");
+
+                //모달 button
+                modal.find("button[id!='modalCloseBtn']").hide();
+                modalRemoveBtn.show();
+
+                //모달 layout
+                modalGroupContent1.show();
+                modalContent1.show();
+                modalGroupContent2.hide();
+                modalContent1.attr("readonly", "true");
+                modal.find("table").remove();
+                $(".file-group").remove();
+
+                //모달 text
+                modalTitle.text("Delete relation")
+                modalLabel1.text("평가 정보 삭제");
+
+                contentTrim = $.trim($(this).text());
+                evaluatorName = contentTrim.substring(0, contentTrim.length - 1);
+                evaluatedName = $(this).closest("tr").children().eq(1).text();
+
+                var relation = $(this).data("relation");
+                if (relation == "me") {
+                    modalContent1.val("본인 평가 정보를 삭제 합니다.");
+                } else {
+                    modalContent1.val(evaluatedName + "님의 평가자 명단에서 '" + evaluatorName + "'님을 제외합니다.");
+                }
+
+                //모달 css
+                $(".modal-dialog").removeClass("modal-xl");
+                $(".modal-content, .modal-dialog, .modal-body").removeAttr("style");
+
+                modal.modal("show");
+            });
+
+            //모달에 피평가자 list를 출력하는 함수
+            function showEvaluatedList(tno) {
+                relationService.getEvaluatedList(tno, function (list) {
+                    var str = "";
+                    if (list == null || list.length == 0) {
+                        $("#radioBody").html("");
+                        return;
+                    }
+                    for (var i = 0, len = list.length || 0; i < len; i++) {
+                        str += "<tr><td><input type='radio' name='evaluated' value='" + list[i].sno + "'></td>";
+                        str += "<td>" + list[i].name + "</td>";
+                        str += "<td>" + list[i].email + "</td>";
+                        str += "<td>" + (list[i].level || '') + "</td>";
+                        str += "<td>" + (list[i].department1 || '') + "</td>";
+                        str += "<td>" + (list[i].department2 || '') + "</td></tr>";
+                    }
+                    $("#radioBody").html(str);
+                });
+            }
+
+            //modal에 평가자 리스트를 출력하는 함수
+            function showEvaluatorList(param) {
+                relationService.getEvaluatorList(param, function (list) {
+                    var str = "";
+                    if (list == null || list.length == 0) {
+                        $("#radioBody").html("");
+                        return;
+                    }
+                    for (var i = 0, len = list.length || 0; i < len; i++) {
+                        str += "<tr><td><input type='radio' name='evaluator' value='" + list[i].sno + "'></td>";
+                        str += "<td>" + list[i].name + "</td>";
+                        str += "<td>" + list[i].email + "</td>";
+                        str += "<td>" + (list[i].level || '') + "</td>";
+                        str += "<td>" + (list[i].department1 || '') + "</td>";
+                        str += "<td>" + (list[i].department2 || '') + "</td></tr>";
+                    }
+                    $("#radioBody").html(str);
+                });
+            }
+
+            //xl 다운로드 함수
+            $("#xlDownload").click(function (e) {
+                formObj.attr("action", "xlDownload");
+                formObj.attr("method", "POST");
+                formObj.submit();
+            });
+
+            $('#viewLoading').hide();
+
+        }).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
+            console.log('ajax start');
+            $("#basicModal").modal("hide");
+            $('#viewLoading').show();
+        }).ajaxStop(function () {        // ajax 통신 완료 callback (로딩바 hide)
+            console.log('ajax end');
+            $('#viewLoading').hide();
+        });
+
+
+        //파일 사이즈 및 형식 제한.
+        var regex = new RegExp("(.*?)\.(xlsx)$");
+        var maxSize = 5242880;//5MB
+
+        function checkExtension(fileName, fileSize) {
+            if (fileSize >= maxSize) {
+                alert("파일 사이즈 초과");
+                return false;
+            }
+
+            if (!regex.test(fileName)) {
+                alert("xlsx 파일만 업로드 가능.")
+                return false;
+            }
+            return true;
+        }
+
+        function delchk() {
+            if (confirm("삭제하시겠습니까?")) {
+                return true;
+            } else {
+                return false;
+            }
+        }
+    </script>
+</th:block>

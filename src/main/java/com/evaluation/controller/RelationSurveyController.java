@@ -15,7 +15,7 @@ import com.evaluation.domain.Relation360;
 import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
-import com.evaluation.service.Relation360Service;
+import com.evaluation.service.RelationSurveyService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -40,13 +40,13 @@ import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/relation360/*")
+@RequestMapping("/relationSurvey/*")
 @Slf4j
 @AllArgsConstructor
 @Transactional
-public class Relation360Controller {
+public class RelationSurveyController {
 
-    Relation360Service relation360Service;
+    RelationSurveyService relationSurveyService;
 
     StaffService staffService;
 
@@ -58,7 +58,7 @@ public class Relation360Controller {
     public String register(Relation360 relation360, PageVO vo, RedirectAttributes rttr) {
         log.info("register " + relation360.getEvaluated().getSno());
 
-        relation360Service.register(relation360);
+        relationSurveyService.register(relation360);
 
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", relation360.getTno());
@@ -67,14 +67,14 @@ public class Relation360Controller {
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relation360/list";
+        return "redirect:/relationSurvey/list";
     }
 
     @PostMapping("/remove")
     public String remove(long rno, long tno, PageVO vo, RedirectAttributes rttr) {
         log.info("remove " + tno + rno);
 
-        relation360Service.remove(rno);
+        relationSurveyService.remove(rno);
 
         rttr.addFlashAttribute("msg", "remove");
         rttr.addAttribute("tno", tno);
@@ -83,7 +83,7 @@ public class Relation360Controller {
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relation360/list";
+        return "redirect:/relationSurvey/list";
     }
 
     @GetMapping("/list")
@@ -93,7 +93,7 @@ public class Relation360Controller {
         model.addAttribute("tno", tno);
 
         // 우선 중복 제거한 피평가자 paging처리해서 구함
-        Page<Staff> result = relation360Service.getDistinctEvaluatedList(tno, vo);
+        Page<Staff> result = relationSurveyService.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
         // 화면에 표시되는 피평가자들의 관계별 relationTable만들기
@@ -102,7 +102,7 @@ public class Relation360Controller {
         List<Relation360> relation2 = new ArrayList<>();
         List<Relation360> relation3 = new ArrayList<>();
         result.getContent().forEach(evaluated -> {
-            relation360Service.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
+            relationSurveyService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
                 relation.forEach(origin -> {
                     switch (origin.getRelation()) {
                     case "me":
@@ -151,9 +151,9 @@ public class Relation360Controller {
     public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
         log.info("deleteEvaluatedInfo by " + tno);
 
-        relation360Service.findByEvaulated(tno, sno).ifPresent(list -> {
+        relationSurveyService.findByEvaulated(tno, sno).ifPresent(list -> {
             list.forEach(relation -> {
-                relation360Service.remove(relation.getRno());
+                relationSurveyService.remove(relation.getRno());
             });
         });
 
@@ -164,7 +164,7 @@ public class Relation360Controller {
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relation360/list";
+        return "redirect:/relationSurvey/list";
     }
 
     @PostMapping("/xlUpload")
@@ -175,9 +175,9 @@ public class Relation360Controller {
         long cno = turnService.read(tno).get().getCno();
 
         if (deleteList == true) {
-            relation360Service.findAllByTno(tno).ifPresent(list -> {
+            relationSurveyService.findAllByTno(tno).ifPresent(list -> {
                 list.forEach(relation -> {
-                    relation360Service.remove(relation.getRno());
+                    relationSurveyService.remove(relation.getRno());
                 });
             });
         }
@@ -213,7 +213,7 @@ public class Relation360Controller {
                     // 개별 설정
                     relation360.setEvaluator(evaluated);
                     relation360.setRelation("me");
-                    relation360Service.register(relation360);
+                    relationSurveyService.register(relation360);
                 }
 
                 // 1차 고과자 설정
@@ -260,7 +260,7 @@ public class Relation360Controller {
                     }
                     relation360.setEvaluator(evaluator);
                 });
-                relation360Service.register(relation360);
+                relationSurveyService.register(relation360);
 
             }
         }
@@ -307,7 +307,7 @@ public class Relation360Controller {
             xlList.add(header);
 
             // 일단 중복제거한 피평가자 명단 가져오고
-            List<Staff> evaluatedList = relation360Service.findDintinctEavluatedByTno(tno);
+            List<Staff> evaluatedList = relationSurveyService.findDintinctEavluatedByTno(tno);
 
             evaluatedList.forEach(evaluated -> {
                 List<String> tmpList = new ArrayList<String>();
@@ -328,7 +328,7 @@ public class Relation360Controller {
                 List<String> relation1 = new ArrayList<String>();
                 List<String> relation2 = new ArrayList<String>();
                 List<String> relation3 = new ArrayList<String>();
-                relation360Service.findAllByTno(tno).get().forEach(relation -> {
+                relationSurveyService.findAllByTno(tno).get().forEach(relation -> {
                     String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName).orElse("null");
                     if (evaluated.getSno() == relation.getEvaluated().getSno()) {
                         switch (relation.getRelation()) {

@@ -20,8 +20,8 @@ import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.MboService;
 import com.evaluation.service.QuestionService;
-import com.evaluation.service.Relation360Service;
 import com.evaluation.service.RelationMboService;
+import com.evaluation.service.RelationSurveyService;
 import com.evaluation.service.TurnService;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
@@ -42,7 +42,7 @@ import lombok.AllArgsConstructor;
 @AllArgsConstructor
 public class ProgressController {
 
-    Relation360Service relation360Service;
+    RelationSurveyService relationSurveyService;
 
     RelationMboService relationMboService;
 
@@ -59,7 +59,7 @@ public class ProgressController {
         String whatYouCall = request.getServletPath();
 
         if (whatYouCall.equals("/progress/survey")) {
-            relation360Service.progressOfSurevey(tno).ifPresent(origin -> {
+            relationSurveyService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
                 // 총 개수 구하기
                 int completeCount = 0;
@@ -98,7 +98,7 @@ public class ProgressController {
         String whatYouCall = request.getServletPath();
 
         if (whatYouCall.equals("/progress/survey/evaluatedList")) {
-            relation360Service.findByEvaluator(tno, sno).ifPresent(origin -> {
+            relationSurveyService.findByEvaluator(tno, sno).ifPresent(origin -> {
                 model.addAttribute("evaluatedList", origin);
             });
         } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
@@ -115,9 +115,9 @@ public class ProgressController {
         String whatYouCall = request.getServletPath();
 
         if (whatYouCall.equals("/progress/survey/evaluatedList")) {
-            relation360Service.read(rno).ifPresent(origin -> {
+            relationSurveyService.read(rno).ifPresent(origin -> {
                 origin.setFinish(finish);
-                relation360Service.modify(origin);
+                relationSurveyService.modify(origin);
             });
         } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
             relationMboService.read(rno).ifPresent(origin -> {
@@ -149,7 +149,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relation360Service.progressOfSurevey(tno).ifPresent(list -> {
+            relationSurveyService.progressOfSurevey(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 
@@ -226,7 +226,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relation360Service.findAllByTno(tno).ifPresent(list -> {
+            relationSurveyService.findAllByTno(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 

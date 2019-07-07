@@ -9,7 +9,7 @@ import com.evaluation.vo.PageVO;
 
 import org.springframework.data.domain.Page;
 
-public interface Relation360Service {
+public interface RelationSurveyService {
 
     public void register(Relation360 relation360);
 

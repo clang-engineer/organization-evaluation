@@ -13,7 +13,7 @@ import com.evaluation.domain.Staff;
 import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.QuestionService;
-import com.evaluation.service.Relation360Service;
+import com.evaluation.service.RelationSurveyService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 
@@ -40,7 +40,7 @@ public class SurveyConroller {
 
     TurnService turnService;
 
-    Relation360Service relation360Service;
+    RelationSurveyService relationSurveyService;
 
     QuestionService questionService;
 
@@ -77,17 +77,17 @@ public class SurveyConroller {
             return "redirect:/mbo/";
         }
 
-        if (!relation360Service.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
+        if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
             return "redirect:/mbo/";
-        } else if (!relation360Service.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
+        } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
             return "redirect:/mbo/";
         }
 
-        // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
-        relation360Service.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
+        // Staff evaluator = relationSurveyService.findInEvaluator(tno, staff.getEmail());
+        relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
@@ -169,7 +169,7 @@ public class SurveyConroller {
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
 
-        relation360Service.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
+        relationSurveyService.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
             Set<String> relationList = new HashSet<>();
             relation.forEach(origin -> {
                 relationList.add(origin.getRelation());
@@ -226,7 +226,7 @@ public class SurveyConroller {
         });
 
         // 관계 정보가 존재하는 경우에 작동
-        relation360Service.read(rno).ifPresent(relation -> {
+        relationSurveyService.read(rno).ifPresent(relation -> {
             // 관계에 대한 정보 추가
             model.addAttribute("relation", relation);
 
@@ -263,7 +263,7 @@ public class SurveyConroller {
             }
         }
 
-        relation360Service.read(rno).ifPresent(origin -> {
+        relationSurveyService.read(rno).ifPresent(origin -> {
             // relation객체를 만든 후 수정 함수로 보내기
             origin.setAnswers(tmpAnswers);
             origin.setComments(tmpComments);
@@ -271,7 +271,7 @@ public class SurveyConroller {
             // 저장 상태 고르기
             origin.setFinish(finish);
 
-            relation360Service.modify(origin);
+            relationSurveyService.modify(origin);
 
             // redirect 속성 만들기
             long tno = origin.getTno();

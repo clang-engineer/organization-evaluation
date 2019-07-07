@@ -21,23 +21,22 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.junit4.SpringRunner;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @Slf4j
-public class Relation360RepositoryTests {
+public class RelationSurveyRepositoryTests {
 
-    @Setter(onMethod_ = { @Autowired })
-    Relation360Repository relation360Repo;
+    @Autowired
+    RelationSurveyRepository relationSurveyRepo;
 
-    @Setter(onMethod_ = { @Autowired })
+    @Autowired
     StaffRepository staffRepo;
 
     @Test
     public void diTest() {
-        assertNotNull(relation360Repo);
+        assertNotNull(relationSurveyRepo);
     }
 
     @Test
@@ -85,7 +84,7 @@ public class Relation360RepositoryTests {
                 } else if (i % 2 == 1) {
                     relation360.setFinish("N");
                 }
-                relation360Repo.save(relation360);
+                relationSurveyRepo.save(relation360);
 
             });
         });
@@ -93,7 +92,7 @@ public class Relation360RepositoryTests {
 
     @Test
     public void readTest() {
-        Optional<Relation360> result = relation360Repo.findById(3L);
+        Optional<Relation360> result = relationSurveyRepo.findById(3L);
         log.info("===>" + result.get().getEvaluated().getEmail());
 
     }
@@ -101,7 +100,7 @@ public class Relation360RepositoryTests {
     @Test
     public void testList() {
         Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "rno");
-        Page<Relation360> result = relation360Repo.findAll(relation360Repo.makePredicate("evaluated", "102", 9L),
+        Page<Relation360> result = relationSurveyRepo.findAll(relationSurveyRepo.makePredicate("evaluated", "102", 9L),
                 pageable);
         log.info("PAGE : " + result.getPageable());
 
@@ -114,14 +113,14 @@ public class Relation360RepositoryTests {
     public void getDistinctEvaluatedListTest() {
         Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "rno");
 
-        Page<Staff> result = relation360Repo.getDistinctEvaluatedList(1L, pageable);
+        Page<Staff> result = relationSurveyRepo.getDistinctEvaluatedList(1L, pageable);
         result.getContent().forEach(relation360 -> log.info("" + relation360.getName()));
         // log.info("" + result.getContent());
     }
 
     @Test
     public void testFindEvaluatorByEvaulatedSno() {
-        relation360Repo.findByEvaulatedSno(47972L, 1L).ifPresent(origin -> {
+        relationSurveyRepo.findByEvaulated(47972L, 1L).ifPresent(origin -> {
             origin.forEach(relation -> {
                 log.info("" + relation.getRno());
             });
@@ -130,17 +129,17 @@ public class Relation360RepositoryTests {
 
     @Test
     public void findInEvaluator() {
-        log.info("" + relation360Repo.findInEvaluator(1L, "youm.huh@siliconmitus.com").isPresent());
+        log.info("" + relationSurveyRepo.findByEvaluatorEmail(1L, "youm.huh@siliconmitus.com").isPresent());
     }
 
     @Test
     public void testFindByEvaulaordSno() {
-        log.info("" + relation360Repo.findByEvaulaordSno(2L, 1L));
+        log.info("" + relationSurveyRepo.findByEvaulator(2L, 1L));
     }
 
     @Test
     public void findAllByTno() {
-        relation360Repo.findAllbyTno(1L).ifPresent(list -> {
+        relationSurveyRepo.findAllByTno(1L).ifPresent(list -> {
             list.forEach(relation -> {
                 log.info("" + relation.getRno());
             });
@@ -149,19 +148,19 @@ public class Relation360RepositoryTests {
 
     @Test
     public void findAllDistinctByTno() {
-        // relation360Repo.findAllDintinctbyTno(1L).ifPresent(list -> {
+        // relationSurveyRepo.findAllDintinctbyTno(1L).ifPresent(list -> {
         // list.forEach(staff -> {
         // log.info("" + staff.getName());
         // });
         // });
-        relation360Repo.findDintinctEavluatedbyTno(1L).forEach(staff -> {
+        relationSurveyRepo.findDintinctEavluatedByTno(1L).forEach(staff -> {
             log.info("" + staff.getName());
         });
     }
 
     @Test
     public void name() {
-        relation360Repo.progressOfSurevey(1L).ifPresent(list -> {
+        relationSurveyRepo.progressOfSurevey(1L).ifPresent(list -> {
             list.forEach(origin -> {
                 log.info("" + origin);
             });

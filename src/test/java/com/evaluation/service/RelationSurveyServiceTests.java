@@ -25,17 +25,17 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Slf4j
 @Transactional
-public class Relation360ServiceTests {
+public class RelationSurveyServiceTests {
 
     @Setter(onMethod_ = { @Autowired })
-    Relation360Service relation360Service;
+    RelationSurveyService relationSurveyService;
 
     @Setter(onMethod_ = { @Autowired })
     StaffService staffService;
 
     @Test
     public void diTest() {
-        assertNotNull(relation360Service);
+        assertNotNull(relationSurveyService);
     }
 
     @Test
@@ -50,17 +50,17 @@ public class Relation360ServiceTests {
         relation360.setFinish("N");
         relation360.setTno(9L);
 
-        relation360Service.register(relation360);
+        relationSurveyService.register(relation360);
     }
 
     @Test
     public void readTest() {
-        log.info("read ---->" + relation360Service.read(60L).get().getEvaluator());
+        log.info("read ---->" + relationSurveyService.read(60L).get().getEvaluator());
     }
 
     @Test
     public void removeTest() {
-        relation360Service.remove(61L);
+        relationSurveyService.remove(61L);
     }
 
     @Test
@@ -69,7 +69,7 @@ public class Relation360ServiceTests {
         vo.setType("evaluator");
         vo.setKeyword("id2");
 
-        Page<Staff> result = relation360Service.getDistinctEvaluatedList(9L, vo);
+        Page<Staff> result = relationSurveyService.getDistinctEvaluatedList(9L, vo);
 
         result.getContent().forEach(staff -> log.info("" + staff.getSno()));
     }
@@ -77,7 +77,7 @@ public class Relation360ServiceTests {
     @Test
     @Transactional
     public void getSurveyReultTest() {
-        relation360Service.findAllbyTno(1L).ifPresent(list -> {
+        relationSurveyService.findAllByTno(1L).ifPresent(list -> {
             Set<String> answerKey = new HashSet<String>();
             for (int i = 0; i < list.size(); i++) {
                 // answer를 위한
