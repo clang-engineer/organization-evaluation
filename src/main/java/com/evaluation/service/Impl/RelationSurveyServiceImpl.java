@@ -3,7 +3,7 @@ package com.evaluation.service.Impl;
 import java.util.List;
 import java.util.Optional;
 
-import com.evaluation.domain.Relation360;
+import com.evaluation.domain.RelationSurvey;
 import com.evaluation.domain.Staff;
 import com.evaluation.persistence.RelationSurveyRepository;
 import com.evaluation.service.RelationSurveyService;
@@ -24,32 +24,32 @@ public class RelationSurveyServiceImpl implements RelationSurveyService {
     RelationSurveyRepository relationSurveyRepo;
 
     @Override
-    public void register(Relation360 relation360) {
-        log.info("register : " + relation360);
+    public void register(RelationSurvey relationSurvey) {
+        log.info("register : " + relationSurvey);
 
-        relationSurveyRepo.save(relation360);
+        relationSurveyRepo.save(relationSurvey);
     }
 
     @Override
-    public Optional<Relation360> read(Long rno) {
+    public Optional<RelationSurvey> read(Long rno) {
         log.info("read : " + rno);
 
         return relationSurveyRepo.findById(rno);
     }
 
     @Override
-    public void modify(Relation360 relation360) {
-        log.info("modify : " + relation360);
+    public void modify(RelationSurvey relationSurvey) {
+        log.info("modify : " + relationSurvey);
 
-        relationSurveyRepo.findById(relation360.getRno()).ifPresent(origin -> {
-            origin.setRno(relation360.getRno());
-            origin.setEvaluated(relation360.getEvaluated());
-            origin.setEvaluator(relation360.getEvaluator());
-            origin.setRelation(relation360.getRelation());
-            origin.setTno(relation360.getTno());
-            origin.setAnswers(relation360.getAnswers());
-            origin.setComments(relation360.getComments());
-            origin.setFinish(relation360.getFinish());
+        relationSurveyRepo.findById(relationSurvey.getRno()).ifPresent(origin -> {
+            origin.setRno(relationSurvey.getRno());
+            origin.setEvaluated(relationSurvey.getEvaluated());
+            origin.setEvaluator(relationSurvey.getEvaluator());
+            origin.setRelation(relationSurvey.getRelation());
+            origin.setTno(relationSurvey.getTno());
+            origin.setAnswers(relationSurvey.getAnswers());
+            origin.setComments(relationSurvey.getComments());
+            origin.setFinish(relationSurvey.getFinish());
             relationSurveyRepo.save(origin);
         });
     }
@@ -82,7 +82,7 @@ public class RelationSurveyServiceImpl implements RelationSurveyService {
     }
 
     @Override
-    public Optional<List<Relation360>> findByEvaulated(long tno, long sno) {
+    public Optional<List<RelationSurvey>> findByEvaulated(long tno, long sno) {
         log.info("findByEvaulated " + sno);
 
         return relationSurveyRepo.findByEvaulated(tno, sno);
@@ -96,12 +96,12 @@ public class RelationSurveyServiceImpl implements RelationSurveyService {
 
     // 로그인 했을 때 평가할 대상자 뽑기 위한 서비스
     @Override
-    public Optional<List<Relation360>> findByEvaluator(long tno, long sno) {
+    public Optional<List<RelationSurvey>> findByEvaluator(long tno, long sno) {
         return relationSurveyRepo.findByEvaulator(tno, sno);
     }
 
     @Override
-    public Optional<List<Relation360>> findAllByTno(long tno) {
+    public Optional<List<RelationSurvey>> findAllByTno(long tno) {
         return relationSurveyRepo.findAllByTno(tno);
     }
 

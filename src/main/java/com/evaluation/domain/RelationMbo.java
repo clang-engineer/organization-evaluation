@@ -28,7 +28,7 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "tbl_relationmbo")
+@Table(name = "tbl_relation_mbo")
 public class RelationMbo {
 
     @Id
@@ -45,13 +45,13 @@ public class RelationMbo {
     private String relation;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_relationmbo_answers", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relation_mbo_answers", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "answer_key")
     @OrderBy(clause = "answer_key asc")
     private Map<String, RatioValue> answers;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_relationmbo_comments", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relation_mbo_comments", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "comment_key")
     @Column(name = "comment_value", length = 2000)
     @OrderBy(clause = "comment_key asc")

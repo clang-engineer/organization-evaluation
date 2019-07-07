@@ -74,16 +74,16 @@ public class SurveyConroller {
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/mbo/";
+            return "redirect:/survey/";
         }
 
         if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/mbo/";
+            return "redirect:/survey/";
         } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/mbo/";
+            return "redirect:/survey/";
         }
 
         // Staff evaluator = relationSurveyService.findInEvaluator(tno, staff.getEmail());

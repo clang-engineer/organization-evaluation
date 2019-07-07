@@ -26,8 +26,8 @@ import lombok.Setter;
 @Getter
 @Setter
 @Entity
-@Table(name = "tbl_relation360")
-public class Relation360 {
+@Table(name = "tbl_relation_survey")
+public class RelationSurvey {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -43,14 +43,14 @@ public class Relation360 {
     private String relation;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_relation360_answers", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relation_survey_answers", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "answer_key")
     @Column(name = "answer_value")
     @OrderBy(clause = "answer_key asc")
     private Map<String, Double> answers;
 
     @ElementCollection
-    @CollectionTable(name = "tbl_relation360_comments", joinColumns = @JoinColumn(name = "relation_rno"))
+    @CollectionTable(name = "tbl_relation_survey_comments", joinColumns = @JoinColumn(name = "relation_rno"))
     @MapKeyColumn(name = "comment_key")
     @Column(name = "comment_value", length = 2000)
     @OrderBy(clause = "comment_key asc")

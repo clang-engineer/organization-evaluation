@@ -18,11 +18,11 @@ import com.querydsl.core.types.Predicate;
 public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPredicateExecutor<Staff> {
 
 	//360 relation 설정 시 리스트에 등록 안된 피평가자 출력하기 위한 (본인 평가가 없는 사람 리스트)
-	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.relation='me') ORDER BY s.sno ASC ")
+	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM RelationSurvey r WHERE r.rno>0 AND r.tno=:tno AND r.relation='me') ORDER BY s.sno ASC ")
 	public Optional<List<Staff>> get360EvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
 
 	//360 relation 설정 시 평가자 출력하기 위해, 해당 피평가자에 대한 평가자에 속하지 않은 사람. + 본인이 아닌 사람 중에
-	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
+	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM RelationSurvey r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
 	public Optional<List<Staff>> get360EvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
 			@Param("sno") long sno);
 

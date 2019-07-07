@@ -11,7 +11,7 @@ import java.util.Optional;
 import javax.servlet.http.HttpServletResponse;
 
 import com.evaluation.domain.Company;
-import com.evaluation.domain.Relation360;
+import com.evaluation.domain.RelationSurvey;
 import com.evaluation.domain.Staff;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
@@ -55,13 +55,13 @@ public class RelationSurveyController {
     CompanyService companyService;
 
     @PostMapping("/register")
-    public String register(Relation360 relation360, PageVO vo, RedirectAttributes rttr) {
-        log.info("register " + relation360.getEvaluated().getSno());
+    public String register(RelationSurvey relationSurvey, PageVO vo, RedirectAttributes rttr) {
+        log.info("register " + relationSurvey.getEvaluated().getSno());
 
-        relationSurveyService.register(relation360);
+        relationSurveyService.register(relationSurvey);
 
         rttr.addFlashAttribute("msg", "register");
-        rttr.addAttribute("tno", relation360.getTno());
+        rttr.addAttribute("tno", relationSurvey.getTno());
         rttr.addAttribute("page", vo.getPage());
         rttr.addAttribute("size", vo.getSize());
         rttr.addAttribute("type", vo.getType());
@@ -97,10 +97,10 @@ public class RelationSurveyController {
         model.addAttribute("result", new PageMaker<>(result));
 
         // 화면에 표시되는 피평가자들의 관계별 relationTable만들기
-        List<Relation360> relationMe = new ArrayList<>();
-        List<Relation360> relation1 = new ArrayList<>();
-        List<Relation360> relation2 = new ArrayList<>();
-        List<Relation360> relation3 = new ArrayList<>();
+        List<RelationSurvey> relationMe = new ArrayList<>();
+        List<RelationSurvey> relation1 = new ArrayList<>();
+        List<RelationSurvey> relation2 = new ArrayList<>();
+        List<RelationSurvey> relation3 = new ArrayList<>();
         result.getContent().forEach(evaluated -> {
             relationSurveyService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
                 relation.forEach(origin -> {
@@ -206,14 +206,14 @@ public class RelationSurveyController {
 
                 // 본인 평가 설정
                 if (list.get(7).equals("Y")) {
-                    Relation360 relation360 = new Relation360();
+                    RelationSurvey relationSurvey = new RelationSurvey();
 
-                    relation360.setEvaluated(evaluated);
-                    relation360.setTno(tno);
+                    relationSurvey.setEvaluated(evaluated);
+                    relationSurvey.setTno(tno);
                     // 개별 설정
-                    relation360.setEvaluator(evaluated);
-                    relation360.setRelation("me");
-                    relationSurveyService.register(relation360);
+                    relationSurvey.setEvaluator(evaluated);
+                    relationSurvey.setRelation("me");
+                    relationSurveyService.register(relationSurvey);
                 }
 
                 // 1차 고과자 설정
@@ -244,13 +244,13 @@ public class RelationSurveyController {
                 String name = tmpList.get(i).trim();
                 Optional<Staff> origin = staffService.findByCnoAndName(cno, name);
 
-                Relation360 relation360 = new Relation360();
-                relation360.setEvaluated(evaluated);
-                relation360.setTno(tno);
-                relation360.setRelation(relation);
+                RelationSurvey relationSurvey = new RelationSurvey();
+                relationSurvey.setEvaluated(evaluated);
+                relationSurvey.setTno(tno);
+                relationSurvey.setRelation(relation);
                 // 평가자 정보 못 찾으면 null할당
                 if (!origin.isPresent()) {
-                    relation360.setEvaluator(null);
+                    relationSurvey.setEvaluator(null);
                 }
                 // 평가자 정보 찾았으면 할당
                 origin.ifPresent(evaluator -> {
@@ -258,9 +258,9 @@ public class RelationSurveyController {
                     if (evaluated.equals(evaluator)) {
                         evaluator = null;
                     }
-                    relation360.setEvaluator(evaluator);
+                    relationSurvey.setEvaluator(evaluator);
                 });
-                relationSurveyService.register(relation360);
+                relationSurveyService.register(relationSurvey);
 
             }
         }
@@ -281,7 +281,7 @@ public class RelationSurveyController {
 
             String fileName = "default";
             try {
-                fileName = URLEncoder.encode(company + "_relation360_" + format_time, "UTF-8");
+                fileName = URLEncoder.encode(company + "_relationSurvey_" + format_time, "UTF-8");
             } catch (UnsupportedEncodingException e1) {
                 e1.printStackTrace();
             }
