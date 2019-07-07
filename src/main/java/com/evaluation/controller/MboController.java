@@ -271,13 +271,19 @@ public class MboController {
             // 평가 단계에서 회답지 추가
             if (turn.getInfoMbo().getStatus().equals("see") || turn.getInfoMbo().getStatus().equals("count")) {
                 // 회답지 추가
-                bookService.read(turn.getInfoMbo().getReplyCode()).ifPresent(book -> {
-                    model.addAttribute("replyCodeList", book.getContents());
-                });
+                Integer replyCode = turn.getInfoMbo().getReplyCode();
+                if (replyCode != null) {
+                    bookService.read(replyCode).ifPresent(book -> {
+                        model.addAttribute("replyCodeList", book.getContents());
+                    });
+                }
                 // 가중치 추가
-                bookService.read(turn.getInfoMbo().getWeightCode()).ifPresent(book -> {
-                    model.addAttribute("weightCodeList", book.getContents());
-                });
+                Integer weightCode = turn.getInfoMbo().getWeightCode();
+                if (weightCode != null) {
+                    bookService.read(weightCode).ifPresent(book -> {
+                        model.addAttribute("weightCodeList", book.getContents());
+                    });
+                }
             }
         });
 
