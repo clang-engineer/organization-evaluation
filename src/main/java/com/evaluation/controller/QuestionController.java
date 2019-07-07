@@ -5,7 +5,6 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
 
@@ -13,7 +12,6 @@ import com.evaluation.domain.Company;
 import com.evaluation.domain.Question;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
-import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.QuestionService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
@@ -44,8 +42,6 @@ public class QuestionController {
 
     StaffService staffService;
 
-    DistinctInfoService distinctInfoservice;
-
     TurnService turnService;
 
     CompanyService companyService;
@@ -55,7 +51,11 @@ public class QuestionController {
         log.info("register get by " + tno + vo);
 
         model.addAttribute("tno", tno);
-        model.addAttribute("distinctInfo", distinctInfoservice.getDistinctQuestionInfo(tno));
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
+        });
     }
 
     @PostMapping("/register")
@@ -74,26 +74,32 @@ public class QuestionController {
     public void read(long qno, long tno, PageVO vo, Model model) {
         log.info("view by " + tno + vo);
 
-        Optional<Question> question = questionService.read(qno);
-
         model.addAttribute("tno", tno);
-        model.addAttribute("distinctInfo", distinctInfoservice.getDistinctQuestionInfo(tno));
 
-        Question result = question.get();
-        model.addAttribute("question", result);
+        questionService.read(qno).ifPresent(origin -> {
+            model.addAttribute("question", origin);
+        });
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
+        });
     }
 
     @GetMapping("/modify")
     public void modify(long qno, long tno, PageVO vo, Model model) {
         log.info("modify by " + tno + vo);
 
-        Optional<Question> question = questionService.read(qno);
-
         model.addAttribute("tno", tno);
-        model.addAttribute("distinctInfo", distinctInfoservice.getDistinctQuestionInfo(tno));
 
-        Question result = question.get();
-        model.addAttribute("question", result);
+        questionService.read(qno).ifPresent(origin -> {
+            model.addAttribute("question", origin);
+        });
+
+        turnService.get(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
+        });
     }
 
     @PostMapping("/modify")

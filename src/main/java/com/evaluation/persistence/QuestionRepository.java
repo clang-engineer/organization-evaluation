@@ -33,7 +33,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
     @Query("SELECT q FROM Question q WHERE tno=:tno")
     public Optional<List<Question>> findByTno(@Param("tno") long tno);
 
-    // 중복제거 category확보하기 위한 쿼리
+    //질문 등록 시 중복제거 category확보하기 위한 쿼리 
     @Query("SELECT DISTINCT q.category FROM Question q WHERE tno=?1 ORDER BY q.category ASC")
     public List<String> getListCategory(long tno);
 

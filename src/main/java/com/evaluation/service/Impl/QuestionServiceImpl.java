@@ -1,6 +1,8 @@
 package com.evaluation.service.Impl;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -9,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 
 import com.evaluation.domain.Question;
+import com.evaluation.persistence.DivisionRepository;
 import com.evaluation.persistence.QuestionRepository;
 import com.evaluation.service.QuestionService;
 import com.evaluation.vo.PageVO;
@@ -21,6 +24,9 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Autowired
 	QuestionRepository questionRepo;
+	
+	@Autowired
+	DivisionRepository divisionRepo;
 
 	@Override
 	public void register(Question question) {
@@ -87,5 +93,17 @@ public class QuestionServiceImpl implements QuestionService {
 
 	public Optional<List<Question>> findAllByTno(long tno) {
 		return questionRepo.findByTno(tno);
+	}
+
+	@Override
+	public Map<String, Object> getDistinctQuestionInfo(long cno, long tno) {
+
+		Map<String, Object> result = new HashMap<String, Object>();
+
+		result.put("division1", divisionRepo.getListDivision1(cno));
+		result.put("division2", divisionRepo.getListDivision2(cno));
+		result.put("category", questionRepo.getListCategory(tno));
+
+		return result;
 	}
 }

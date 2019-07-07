@@ -1,6 +1,7 @@
 package com.evaluation.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import com.evaluation.domain.Staff;
@@ -36,4 +37,6 @@ public interface StaffService {
 	public Optional<Staff> readByCnoAndName(long cno, String name);
 
 	public Optional<List<Staff>> readBycno(long cno);
+
+	public Map<String, Object> getDistinctInfo(long cno, long tno);
 }

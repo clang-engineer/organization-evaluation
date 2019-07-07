@@ -1,6 +1,7 @@
 package com.evaluation.service;
 
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import org.springframework.data.domain.Page;
@@ -26,4 +27,6 @@ public interface QuestionService {
 	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
 
 	public Optional<List<Question>> findAllByTno(long tno);
+
+	public Map<String, Object> getDistinctQuestionInfo(long cno, long tno);
 }

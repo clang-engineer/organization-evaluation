@@ -23,7 +23,6 @@ import com.evaluation.function.RandomPassword;
 import com.evaluation.persistence.StaffRepository;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.DepartmentService;
-import com.evaluation.service.DistinctInfoService;
 import com.evaluation.service.DivisionService;
 import com.evaluation.service.LevelService;
 import com.evaluation.service.Relation360Service;
@@ -60,8 +59,6 @@ public class StaffController {
 
 	TurnService turnService;
 
-	DistinctInfoService distinctInfoService;
-
 	LevelService levelService;
 
 	DepartmentService departmentService;
@@ -76,7 +73,11 @@ public class StaffController {
 	public void register(long tno, PageVO vo, Model model) {
 		log.info("controller : staff register get by " + tno + vo);
 
-		model.addAttribute("distinctInfo", distinctInfoService.getDistinctInfo(tno));
+		turnService.get(tno).ifPresent(turn -> {
+			long cno = turn.getCno();
+			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
+		});
+
 		model.addAttribute("tno", tno);
 	}
 
@@ -108,12 +109,17 @@ public class StaffController {
 	public void modify(long sno, long tno, PageVO vo, Model model) {
 		log.info("controller : staff modify by " + tno + vo);
 
-		Optional<Staff> staff = staffService.read(sno);
-		Staff result = staff.get();
-
-		model.addAttribute("distinctInfo", distinctInfoService.getDistinctInfo(tno));
 		model.addAttribute("tno", tno);
-		model.addAttribute("staff", result);
+
+		turnService.get(tno).ifPresent(turn -> {
+			long cno = turn.getCno();
+			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
+		});
+
+		staffService.read(sno).ifPresent(staff -> {
+			model.addAttribute("staff", staff);
+		});
+
 	}
 
 	@PostMapping("/modify")
@@ -174,7 +180,7 @@ public class StaffController {
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
 
-		//중복 제거를 위한 부서! 엑셀로 등록하는 부서 중에서만 생성. (부서만 tno참조이므로 (cno(X)))
+		// 중복 제거를 위한 부서! 엑셀로 등록하는 부서 중에서만 생성. (부서만 tno참조이므로 (cno(X)))
 		Set<List<String>> depList = new HashSet<List<String>>();
 
 		// 직원 등록
@@ -195,7 +201,7 @@ public class StaffController {
 			tmpDep.add(list.get(4));
 			depList.add(tmpDep);
 
-			//직원 정보 생성 및 등록
+			// 직원 정보 생성 및 등록
 			Staff row = new Staff();
 			row.setCno(cno);
 			row.setName(list.get(0));
