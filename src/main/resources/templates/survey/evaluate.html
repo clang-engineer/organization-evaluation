@@ -16,7 +16,7 @@
     <div class="container">
         <!-- Page Heading/Breadcrumbs -->
         <h2 class="mb-5">Suvey Questions
-            <small class="font-weight-light" th:if="${turn?.infoMBO?.status}!='see'">[[${relation?.evaluated?.name}]]님에 대한 질의 목록</small>
+            <small class="font-weight-light" th:if="${turn?.infoSurvey?.status}!='see'">[[${relation?.evaluated?.name}]]님에 대한 질의 목록</small>
         </h2>
         <!-- form -->
         <form id="f1" method="POST" th:action="@{submit}">
@@ -61,7 +61,7 @@
                 </div>
             </div>
             <!-- ./card -->
-            <input type="hidden" name="rno" th:value="${relation.rno}">
+            <input type="hidden" name="rno" th:value="${relation?.rno}">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
         </form>
         <!-- ./form -->

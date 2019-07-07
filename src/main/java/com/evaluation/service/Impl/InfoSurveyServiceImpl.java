@@ -11,7 +11,7 @@ import lombok.extern.slf4j.Slf4j;
 
 @Service
 @Slf4j
-public class Info360ServiceImpl implements InfoSurveyService {
+public class InfoSurveyServiceImpl implements InfoSurveyService {
 
 	@Autowired
 	private TurnRepository turnRepo;
@@ -19,37 +19,37 @@ public class Info360ServiceImpl implements InfoSurveyService {
 	@Override
 	public void register(Long tno, InfoSurvey infoSurvey) {
 
-		log.info("service : info360 register " + infoSurvey);
+		log.info("service : infoSurvey register " + infoSurvey);
 
 		turnRepo.findById(tno).ifPresent(origin -> {
-			origin.setInfo360(infoSurvey);
+			origin.setInfoSurvey(infoSurvey);
 			turnRepo.save(origin);
 		});
 	}
 
 	@Override
 	public InfoSurvey read(long tno) {
-		log.info("service : info360 get " + tno);
+		log.info("service : infoSurvey get " + tno);
 
-		return turnRepo.findById(tno).get().getInfo360();
+		return turnRepo.findById(tno).get().getInfoSurvey();
 	}
 
 	@Override
 	public void modify(Long tno, InfoSurvey infoSurvey) {
-		log.info("service : info360 modify " + tno);
+		log.info("service : infoSurvey modify " + tno);
 
 		turnRepo.findById(tno).ifPresent(origin -> {
-			origin.setInfo360(infoSurvey);
+			origin.setInfoSurvey(infoSurvey);
 			turnRepo.save(origin);
 		});
 	}
 
 	@Override
 	public void remove(long tno) {
-		log.info("service : info360 remove " + tno);
+		log.info("service : infoSurvey remove " + tno);
 
 		turnRepo.findById(tno).ifPresent(origin -> {
-			origin.setInfo360(null);
+			origin.setInfoSurvey(null);
 			turnRepo.save(origin);
 		});
 

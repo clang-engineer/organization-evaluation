@@ -23,13 +23,13 @@
                     <!-- card-body -->
                     <div class="card-body mb-1">
                         <h4 class="card-title">
-                            [[${turn.info360.title}]]
+                            [[${turn.infoSurvey.title}]]
                         </h4>
                         <p class="card-text">
                             - [[${turn.title}]]
                         </p>
                         <hr>
-                        <p class="card-text" th:utext="${turn.info360.content}"></p>
+                        <p class="card-text" th:utext="${turn.infoSurvey.content}"></p>
                         <a id="surveyStart" th:href="@{list(company=${companyInfo.id},tno=${turn.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
                             title="click!!">Survey start &rarr;</a>
                     </div>
@@ -50,10 +50,10 @@
                     <h5 class="card-header">Survey Period</h5>
                     <div class="card-body">
                         <div>
-                            시작일 : <span th:text="${#temporals.format(turn.info360.startDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                            시작일 : <span th:text="${#temporals.format(turn.infoSurvey.startDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
                         </div>
                         ~
-                        종료일 : <span th:text="${#temporals.format(turn.info360.endDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
+                        종료일 : <span th:text="${#temporals.format(turn.infoSurvey.endDate, 'yyyy-MM-dd HH:mm:ss')}">startTime</span>
                     </div>
                 </div>
                 <!--./ Search Widget -->

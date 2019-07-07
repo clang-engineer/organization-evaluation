@@ -217,9 +217,12 @@ public class SurveyConroller {
         turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("commentList", turn.getComments());
             // 회답지 추가
-            bookService.read(turn.getInfo360().getReplyCode()).ifPresent(book -> {
-                model.addAttribute("book", book.getContents());
-            });
+            Integer replyCode = turn.getInfoSurvey().getReplyCode();
+            if (replyCode != null) {
+                bookService.read(replyCode).ifPresent(book -> {
+                    model.addAttribute("book", book.getContents());
+                });
+            }
         });
 
         // 관계 정보가 존재하는 경우에 작동

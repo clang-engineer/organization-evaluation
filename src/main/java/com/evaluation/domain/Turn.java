@@ -36,7 +36,7 @@ import lombok.Setter;
 @Entity
 @Table(name = "tbl_turn")
 @SecondaryTables({
-		@SecondaryTable(name = "tbl_turn_info360", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")),
+		@SecondaryTable(name = "tbl_turn_infoSurvey", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")),
 		@SecondaryTable(name = "tbl_turn_infoMbo", pkJoinColumns = @PrimaryKeyJoinColumn(name = "turn_tno", referencedColumnName = "tno")), })
 @EqualsAndHashCode(of = "tno")
 public class Turn {
@@ -70,13 +70,13 @@ public class Turn {
 	private Long cno;
 
 	@Embedded
-	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_info360")),
-			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_info360", length = 2000)),
-			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_info360")),
-			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_info360")),
-			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_info360")),
-			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_info360")) })
-	private InfoSurvey info360;
+	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoSurvey")),
+			@AttributeOverride(name = "content", column = @Column(table = "tbl_turn_infoSurvey", length = 2000)),
+			@AttributeOverride(name = "replyCode", column = @Column(table = "tbl_turn_infoSurvey")),
+			@AttributeOverride(name = "status", column = @Column(table = "tbl_turn_infoSurvey")),
+			@AttributeOverride(name = "startDate", column = @Column(table = "tbl_turn_infoSurvey")),
+			@AttributeOverride(name = "endDate", column = @Column(table = "tbl_turn_infoSurvey")) })
+	private InfoSurvey infoSurvey;
 
 	@Embedded
 	@AttributeOverrides({ @AttributeOverride(name = "title", column = @Column(table = "tbl_turn_infoMbo")),

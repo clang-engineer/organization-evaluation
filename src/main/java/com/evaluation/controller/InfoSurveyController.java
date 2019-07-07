@@ -15,46 +15,46 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.extern.slf4j.Slf4j;
 
 @Controller
-@RequestMapping("/info360/*")
+@RequestMapping("/infoSurvey/*")
 @Slf4j
-public class Info360Controller {
+public class InfoSurveyController {
 
 	@Autowired
-	private InfoSurveyService info360Service;
+	private InfoSurveyService infoSurveyService;
 
 	@Autowired
 	private BookService bookService;
 
 	@GetMapping("/read")
 	public void view(long tno, Model model) {
-		log.info("info360 read get " + tno);
+		log.info("infoSurvey read get " + tno);
 
 		model.addAttribute("tno", tno);
 		bookService.findByType("360Reply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
-		model.addAttribute("info360", info360Service.read(tno));
+		model.addAttribute("infoSurvey", infoSurveyService.read(tno));
 	}
 
 	@GetMapping("/modify")
 	public void modify(long tno, Model model) {
-		log.info("info360 modify get" + tno);
+		log.info("infoSurvey modify get" + tno);
 
 		model.addAttribute("tno", tno);
 		bookService.findByType("360Reply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
-		model.addAttribute("info360", info360Service.read(tno));
+		model.addAttribute("infoSurvey", infoSurveyService.read(tno));
 	}
 
 	@PostMapping("/modify")
-	public String modify(long tno, InfoSurvey info360, RedirectAttributes rttr) {
-		log.info("controller : info360 modify post " + info360);
+	public String modify(long tno, InfoSurvey infoSurvey, RedirectAttributes rttr) {
+		log.info("controller : infoSurvey modify post " + infoSurvey);
 
-		log.info("" + info360.getStartDate());
-		info360Service.modify(tno, info360);
+		log.info("" + infoSurvey.getStartDate());
+		infoSurveyService.modify(tno, infoSurvey);
 
 		rttr.addAttribute("tno", tno);
-		return "redirect:/info360/read";
+		return "redirect:/infoSurvey/read";
 	}
 }

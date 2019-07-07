@@ -46,7 +46,7 @@ public class TurnController {
 	@PutMapping("/{cno}")
 	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
-		turn.setInfo360(turnService.read(turn.getTno()).get().getInfo360());
+		turn.setInfoSurvey(turnService.read(turn.getTno()).get().getInfoSurvey());
 		turn.setInfoMbo(turnService.read(turn.getTno()).get().getInfoMbo());
 		turnService.modify(turn);
 

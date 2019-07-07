@@ -32,7 +32,7 @@
             <h6 class="card-title">Choose Survey Info</h6>
             <p class="card-text">
               <select class="custom-select" name="tno">
-                <option th:each="turn:${turns}" th:value="${turn.tno}">[[${turn?.info360?.title}]]</option>
+                <option th:each="turn:${turns}" th:value="${turn.tno}">[[${turn?.infoSurvey?.title}]]</option>
                 <option value="0">--</option>
               </select>
             </p>
