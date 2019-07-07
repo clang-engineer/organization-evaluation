@@ -75,7 +75,7 @@ public class MboController {
             long cno = origin.getCno();
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
-            turnService.getListInMBO(cno).ifPresent(turn -> {
+            turnService.getTurnsInMbo(cno).ifPresent(turn -> {
                 model.addAttribute("turns", turn);
             });
         });
@@ -138,7 +138,7 @@ public class MboController {
         });
 
         // mbo turn에 따른 navbar 구분을 위해
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
     }
@@ -168,7 +168,7 @@ public class MboController {
             model.addAttribute("companyInfo", origin);
         });
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
 
@@ -223,7 +223,7 @@ public class MboController {
             model.addAttribute("relationMeList", relationMeList);
         });
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
 
@@ -263,11 +263,11 @@ public class MboController {
             model.addAttribute("companyInfo", origin);
         });
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             // 평가 단계에서 회답지 추가
             if (turn.getInfoMbo().getStatus().equals("see") || turn.getInfoMbo().getStatus().equals("count")) {
                 // 회답지 추가
@@ -405,7 +405,7 @@ public class MboController {
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
         // mbo turn에 따른 navbar 구분을 위해
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
         companyService.findByCompanyId(company).ifPresent(origin -> {
@@ -420,7 +420,7 @@ public class MboController {
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
         // mbo turn에 따른 navbar 구분을 위해
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
         companyService.findByCompanyId(company).ifPresent(origin -> {

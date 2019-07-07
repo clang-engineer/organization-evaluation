@@ -24,7 +24,7 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 
 	// 진행 중인 설문 정보 불러오기 한 회사 안에서 상태와 시작, 종료날짜를 제약 조건으로 한다.
 	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND t.infoMbo.status NOT IN ('setting', 'inactivation') AND :time BETWEEN t.infoMbo.startDate AND t.infoMbo.endDate ORDER BY t.tno DESC")
-	public Optional<List<Turn>> getTurnsInMBO(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
+	public Optional<List<Turn>> getTurnsInMbo(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
 
 	@Modifying
 	@Transactional

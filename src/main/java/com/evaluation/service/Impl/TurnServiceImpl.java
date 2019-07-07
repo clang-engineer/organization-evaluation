@@ -30,7 +30,7 @@ public class TurnServiceImpl implements TurnService {
 	}
 
 	@Override
-	public Optional<Turn> get(long tno) {
+	public Optional<Turn> read(long tno) {
 		log.info("service : turn get " + tno);
 		return turnRepo.findById(tno);
 	}
@@ -54,14 +54,14 @@ public class TurnServiceImpl implements TurnService {
 	}
 
 	@Override
-	public Optional<List<Turn>> getList(Long cno) {
+	public Optional<List<Turn>> getTurnsOfCompany(Long cno) {
 		log.info("service : turn getList by " + cno);
 		Optional<List<Turn>> result = turnRepo.getTurnsOfCompany(cno);
 		return result;
 	}
 
 	@Override
-	public Optional<List<Turn>> getListInSurvey(Long cno) {
+	public Optional<List<Turn>> getTurnsInSurvey(Long cno) {
 		log.info("service : turn getList by " + cno);
 
 		// 시간 제약 조건을 위해 localtime을 같이
@@ -70,11 +70,11 @@ public class TurnServiceImpl implements TurnService {
 	}
 
 	@Override
-	public Optional<List<Turn>> getListInMBO(Long cno) {
+	public Optional<List<Turn>> getTurnsInMbo(Long cno) {
 		log.info("service : turn getList by " + cno);
 
 		// 시간 제약 조건을 위해 localtime을 같이
-		Optional<List<Turn>> result = turnRepo.getTurnsInMBO(cno, LocalDateTime.now());
+		Optional<List<Turn>> result = turnRepo.getTurnsInMbo(cno, LocalDateTime.now());
 		return result;
 	}
 

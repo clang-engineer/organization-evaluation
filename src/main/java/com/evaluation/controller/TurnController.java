@@ -46,8 +46,8 @@ public class TurnController {
 	@PutMapping("/{cno}")
 	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
-		turn.setInfo360(turnService.get(turn.getTno()).get().getInfo360());
-		turn.setInfoMbo(turnService.get(turn.getTno()).get().getInfoMbo());
+		turn.setInfo360(turnService.read(turn.getTno()).get().getInfo360());
+		turn.setInfoMbo(turnService.read(turn.getTno()).get().getInfoMbo());
 		turnService.modify(turn);
 
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.CREATED);
@@ -73,6 +73,6 @@ public class TurnController {
 	private Optional<List<Turn>> getTurnList(Long cno) throws RuntimeException {
 		log.info("getTurnList" + cno);
 
-		return turnService.getList(cno);
+		return turnService.getTurnsOfCompany(cno);
 	}
 }

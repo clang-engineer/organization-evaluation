@@ -35,7 +35,7 @@ public class LevelController {
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCno();
+        long cno = turnService.read(tno).get().getCno();
         level.setCno(cno);
 
         levelService.register(level);
@@ -81,7 +81,7 @@ public class LevelController {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.get(tno).get().getCno();
+        long cno = turnService.read(tno).get().getCno();
         Page<Level> result = levelService.getList(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 

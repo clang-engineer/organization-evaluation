@@ -130,7 +130,7 @@ public class DepartmentController {
         });
 
         //leader를 전체 직원 명단 전송
-        long cno = turnService.get(tno).get().getCno();
+        long cno = turnService.read(tno).get().getCno();
         staffService.readBycno(cno).ifPresent(origin -> {
             model.addAttribute("staffList", origin);
         });

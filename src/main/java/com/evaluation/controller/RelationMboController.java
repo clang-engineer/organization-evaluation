@@ -133,7 +133,7 @@ public class RelationMboController {
     public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
         log.info("get All Staff List Exclude Evaluated....");
 
-        long cno = turnService.get(tno).get().getCno();
+        long cno = turnService.read(tno).get().getCno();
         return new ResponseEntity<>(staffService.getMboEvaluatedList(cno, tno), HttpStatus.OK);
     }
 
@@ -143,7 +143,7 @@ public class RelationMboController {
             @PathVariable("sno") long sno) {
         log.info("get All Staff List....");
 
-        long cno = turnService.get(tno).get().getCno();
+        long cno = turnService.read(tno).get().getCno();
         return new ResponseEntity<>(staffService.getMboEvaluatorList(cno, tno, sno), HttpStatus.OK);
     }
 
@@ -172,7 +172,7 @@ public class RelationMboController {
     public void xlUpload(long tno, Boolean deleteList, MultipartFile uploadFile, Model model) {
         log.info("read file" + uploadFile);
 
-        long cno = turnService.get(tno).get().getCno();
+        long cno = turnService.read(tno).get().getCno();
 
         if (deleteList == true) {
             relationMboService.findAllbyTno(tno).ifPresent(list -> {
@@ -270,7 +270,7 @@ public class RelationMboController {
     @ResponseBody
     public void xlDown(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 

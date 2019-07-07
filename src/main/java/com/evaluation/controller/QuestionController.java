@@ -52,7 +52,7 @@ public class QuestionController {
 
         model.addAttribute("tno", tno);
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
@@ -80,7 +80,7 @@ public class QuestionController {
             model.addAttribute("question", origin);
         });
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
@@ -96,7 +96,7 @@ public class QuestionController {
             model.addAttribute("question", origin);
         });
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
@@ -183,7 +183,7 @@ public class QuestionController {
     @ResponseBody
     public void xlDown(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 

@@ -57,7 +57,7 @@ public class SurveyConroller {
             long cno = origin.getCno();
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
-            turnService.getListInSurvey(cno).ifPresent(turn -> {
+            turnService.getTurnsInSurvey(cno).ifPresent(turn -> {
                 model.addAttribute("turns", turn);
             });
         });
@@ -144,7 +144,7 @@ public class SurveyConroller {
             model.addAttribute("question", origin);
         });
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
 
@@ -214,7 +214,7 @@ public class SurveyConroller {
         });
 
         // 회차에 속하는 comment list를 추가하기 위한.
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("commentList", turn.getComments());
             // 회답지 추가
             bookService.read(turn.getInfo360().getReplyCode()).ifPresent(book -> {
@@ -272,7 +272,7 @@ public class SurveyConroller {
 
             // redirect 속성 만들기
             long tno = origin.getTno();
-            turnService.get(tno).ifPresent(turn -> {
+            turnService.read(tno).ifPresent(turn -> {
                 long cno = turn.getCno();
                 companyService.read(cno).ifPresent(company -> {
                     rttr.addAttribute("company", company.getId());

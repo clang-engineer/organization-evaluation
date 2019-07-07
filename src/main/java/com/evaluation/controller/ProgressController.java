@@ -132,7 +132,7 @@ public class ProgressController {
     @ResponseBody
     public void surveyXlDownload(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 
@@ -209,7 +209,7 @@ public class ProgressController {
     @ResponseBody
     public void surveyResultDownload(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 
@@ -253,7 +253,7 @@ public class ProgressController {
 
                 // comment는 size로 키 추정.
                 Set<String> commentKeySet = new LinkedHashSet<String>();
-                turnService.get(tno).ifPresent(turn -> {
+                turnService.read(tno).ifPresent(turn -> {
                     for (int i = 0; i < turn.getComments().size(); i++) {
                         commentKeySet.add("c" + (i + 1));
                     }
@@ -316,7 +316,7 @@ public class ProgressController {
     @ResponseBody
     public void seeXlDownload(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 
@@ -393,7 +393,7 @@ public class ProgressController {
     @ResponseBody
     public void mboResultDownload(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 
@@ -573,7 +573,7 @@ public class ProgressController {
     @ResponseBody
     public void planXlDownload(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 
@@ -647,7 +647,7 @@ public class ProgressController {
     @ResponseBody
     public void mboPlanResultDownload(long tno, HttpServletResponse response) {
 
-        turnService.get(tno).ifPresent(origin -> {
+        turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
             String company = companyService.read(cno).map(Company::getName).orElse("etc");
 

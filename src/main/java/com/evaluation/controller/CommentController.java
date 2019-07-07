@@ -24,7 +24,7 @@ public class CommentController {
     public String register(long tno, String comment, RedirectAttributes rttr) {
         log.info("add " + comment);
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             turn.getComments().add(comment);
             turnService.commentRegister(turn);
         });
@@ -37,7 +37,7 @@ public class CommentController {
     public String modify(long tno, int idx, String comment, RedirectAttributes rttr) {
         log.info("Modify " + comment);
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             turn.getComments().set(idx, comment);
             turnService.commentRegister(turn);
         });
@@ -49,7 +49,7 @@ public class CommentController {
     @PostMapping("/remove")
     public String remove(long tno, int idx, RedirectAttributes rttr) {
         log.info("remove " + idx);
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             turn.getComments().remove(idx);
             turnService.commentRegister(turn);
         });
@@ -62,7 +62,7 @@ public class CommentController {
     public void readList(long tno, Model model) {
         log.info("question list by " + tno);
 
-        turnService.get(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(turn -> {
             log.info("" + turn.getComments());
             model.addAttribute("commentList", turn.getComments());
         });

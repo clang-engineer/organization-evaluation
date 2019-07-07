@@ -73,7 +73,7 @@ public class StaffController {
 	public void register(long tno, PageVO vo, Model model) {
 		log.info("controller : staff register get by " + tno + vo);
 
-		turnService.get(tno).ifPresent(turn -> {
+		turnService.read(tno).ifPresent(turn -> {
 			long cno = turn.getCno();
 			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
 		});
@@ -85,7 +85,7 @@ public class StaffController {
 	public String register(Staff staff, long tno, RedirectAttributes rttr) {
 		log.info("controller : staff register post by " + tno);
 
-		long cno = turnService.get(tno).get().getCno();
+		long cno = turnService.read(tno).get().getCno();
 		staff.setCno(cno);
 		staffService.register(staff);
 
@@ -111,7 +111,7 @@ public class StaffController {
 
 		model.addAttribute("tno", tno);
 
-		turnService.get(tno).ifPresent(turn -> {
+		turnService.read(tno).ifPresent(turn -> {
 			long cno = turn.getCno();
 			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
 		});
@@ -126,7 +126,7 @@ public class StaffController {
 	public String modify(Staff staff, long tno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff modify post by " + staff.getName());
 
-		long cno = turnService.get(tno).get().getCno();
+		long cno = turnService.read(tno).get().getCno();
 		staff.setCno(cno);
 
 		staffService.modify(staff);
@@ -164,7 +164,7 @@ public class StaffController {
 
 		model.addAttribute("tno", tno);
 
-		long cno = turnService.get(tno).get().getCno();
+		long cno = turnService.read(tno).get().getCno();
 		Page<Staff> result = staffService.getList(cno, vo);
 		model.addAttribute("result", new PageMaker<>(result));
 	}
@@ -175,7 +175,7 @@ public class StaffController {
 
 		log.info("read file" + uploadFile);
 
-		long cno = turnService.get(tno).get().getCno();
+		long cno = turnService.read(tno).get().getCno();
 
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
@@ -291,7 +291,7 @@ public class StaffController {
 	@ResponseBody
 	public void xlDown(long tno, HttpServletResponse response) {
 
-		turnService.get(tno).ifPresent(origin -> {
+		turnService.read(tno).ifPresent(origin -> {
 			long cno = origin.getCno();
 
 			String company = companyService.read(cno).map(Company::getName).orElse("etc");
