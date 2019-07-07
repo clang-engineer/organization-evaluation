@@ -74,40 +74,40 @@ public class RelationMboServiceImpl implements RelationMboService {
         if (type == null || type.isEmpty()) {
             result = relationMboRepo.getDistinctEvaluatedList(tno, page);
         } else if (type.equals("evaluated")) {
-            result = relationMboRepo.getDistinctEvaluatedListByEvaluated(keyword, tno, page);
+            result = relationMboRepo.getDistinctEvaluatedListByEvaluated(tno, keyword, page);
         } else if (type.equals("evaluator")) {
-            result = relationMboRepo.getDistinctEvaluatedListByEvaluator(keyword, tno, page);
+            result = relationMboRepo.getDistinctEvaluatedListByEvaluator(tno, keyword, page);
         }
         return result;
     }
 
     @Override
-    public Optional<List<RelationMbo>> findRelationByEvaulatedSno(long sno, long tno) {
-        log.info("findRelationByEvaulatedSno " + sno);
+    public Optional<List<RelationMbo>> findByEvaulated(long tno, long sno) {
+        log.info("findByEvaulated " + sno);
 
-        return relationMboRepo.findByEvaulatedSno(sno, tno);
+        return relationMboRepo.findByEvaulated(tno, sno);
     }
 
     // 회차에 속하는 평가자이면 로그인 true로 하기 위한 서비스
     @Override
-    public Optional<Staff> findInEvaluator(long tno, String email) {
-        return relationMboRepo.findInEvaluator(tno, email);
+    public Optional<Staff> findByEvaluatorEmail(long tno, String email) {
+        return relationMboRepo.findByEvaluatorEmail(tno, email);
     }
 
     // 로그인 했을 때 평가할 대상자 뽑기 위한 서비스
     @Override
-    public Optional<List<RelationMbo>> findByEvaluator(long sno, long tno) {
-        return relationMboRepo.findByEvaulaordSno(sno, tno);
+    public Optional<List<RelationMbo>> findByEvaluator(long tno, long sno) {
+        return relationMboRepo.findByEvaulator(tno, sno);
     }
 
     @Override
-    public Optional<List<RelationMbo>> findAllbyTno(long tno) {
-        return relationMboRepo.findAllbyTno(tno);
+    public Optional<List<RelationMbo>> findAllByTno(long tno) {
+        return relationMboRepo.findAllByTno(tno);
     }
 
     @Override
-    public List<Staff> findDintinctEavluatedbyTno(long tno) {
-        return relationMboRepo.findDintinctEavluatedbyTno(tno);
+    public List<Staff> findDintinctEavluatedByTno(long tno) {
+        return relationMboRepo.findDintinctEavluatedByTno(tno);
     }
 
     @Override

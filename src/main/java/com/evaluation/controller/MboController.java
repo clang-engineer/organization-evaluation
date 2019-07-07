@@ -94,17 +94,17 @@ public class MboController {
             return "redirect:/mbo/";
         }
 
-        if (!relationMboService.findInEvaluator(tno, staff.getEmail()).isPresent()) {
+        if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
             return "redirect:/mbo/";
-        } else if (!relationMboService.findInEvaluator(tno, staff.getEmail()).get().getPassword()
+        } else if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
             return "redirect:/mbo/";
         }
 
         // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
-        relationMboService.findInEvaluator(tno, staff.getEmail()).ifPresent(evaluator -> {
+        relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
@@ -193,7 +193,7 @@ public class MboController {
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
 
-        relationMboService.findByEvaluator(evaluator.getSno(), tno).ifPresent(relation -> {
+        relationMboService.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
             // 관계정보 전달
             model.addAttribute("evaluatedList", relation);
 

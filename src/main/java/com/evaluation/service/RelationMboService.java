@@ -21,15 +21,15 @@ public interface RelationMboService {
 
     public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
 
-    public Optional<List<RelationMbo>> findRelationByEvaulatedSno(long sno, long tno);
+    public Optional<List<RelationMbo>> findByEvaulated(long tno, long sno);
 
-    public Optional<Staff> findInEvaluator(long tno, String email);
+    public Optional<Staff> findByEvaluatorEmail(long tno, String email);
 
-    public Optional<List<RelationMbo>> findByEvaluator(long sno, long tno);
+    public Optional<List<RelationMbo>> findByEvaluator(long tno, long sno);
 
-    public Optional<List<RelationMbo>> findAllbyTno(long tno);
+    public Optional<List<RelationMbo>> findAllByTno(long tno);
 
-    public List<Staff> findDintinctEavluatedbyTno(long tno);
+    public List<Staff> findDintinctEavluatedByTno(long tno);
 
     public Optional<List<List<String>>> progressOfSurevey(long tno);
 

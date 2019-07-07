@@ -90,8 +90,8 @@ public class Relation360ServiceImpl implements Relation360Service {
 
     // 회차에 속하는 평가자이면 로그인 true로 하기 위한 서비스
     @Override
-    public Optional<Staff> findByTnoAndEvaluator(long tno, String email) {
-        return relation360Repo.findByTnoAndEvaluator(tno, email);
+    public Optional<Staff> findByEvaluatorEmail(long tno, String email) {
+        return relation360Repo.findByEvaluatorEmail(tno, email);
     }
 
     // 로그인 했을 때 평가할 대상자 뽑기 위한 서비스
@@ -101,13 +101,13 @@ public class Relation360ServiceImpl implements Relation360Service {
     }
 
     @Override
-    public Optional<List<Relation360>> findAllbyTno(long tno) {
-        return relation360Repo.findAllbyTno(tno);
+    public Optional<List<Relation360>> findAllByTno(long tno) {
+        return relation360Repo.findAllByTno(tno);
     }
 
     @Override
-    public List<Staff> findDintinctEavluatedbyTno(long tno) {
-        return relation360Repo.findDintinctEavluatedbyTno(tno);
+    public List<Staff> findDintinctEavluatedByTno(long tno) {
+        return relation360Repo.findDintinctEavluatedByTno(tno);
     }
 
     @Override

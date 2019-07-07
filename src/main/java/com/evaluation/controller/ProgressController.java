@@ -102,7 +102,7 @@ public class ProgressController {
                 model.addAttribute("evaluatedList", origin);
             });
         } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
-            relationMboService.findByEvaluator(sno, tno).ifPresent(origin -> {
+            relationMboService.findByEvaluator(tno, sno).ifPresent(origin -> {
                 model.addAttribute("evaluatedList", origin);
             });
         }
@@ -226,7 +226,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relation360Service.findAllbyTno(tno).ifPresent(list -> {
+            relation360Service.findAllByTno(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 
@@ -410,7 +410,7 @@ public class ProgressController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            relationMboService.findAllbyTno(tno).ifPresent(list -> {
+            relationMboService.findAllByTno(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 

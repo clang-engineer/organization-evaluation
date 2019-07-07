@@ -39,7 +39,7 @@ public interface Relation360Repository
 
     // 로그인 할 때 사용 회차에 있는 평가자면 로그인
     @Query("SELECT DISTINCT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.email=:email")
-    public Optional<Staff> findByTnoAndEvaluator(@Param("tno") long tno, @Param("email") String email);
+    public Optional<Staff> findByEvaluatorEmail(@Param("tno") long tno, @Param("email") String email);
 
     // 로그인 식 출력되는 피평가자 리스트.
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.sno=:sno")
@@ -47,12 +47,12 @@ public interface Relation360Repository
 
     // xl 다운로드를 위한 turn에 속하는 전체 관계
     @Query("SELECT r FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno")
-    public Optional<List<Relation360>> findAllbyTno(@Param("tno") Long tno);
+    public Optional<List<Relation360>> findAllByTno(@Param("tno") Long tno);
 
     // xl 다운로드를 위한 turn에 속하는 중복제거 피평가자, Optional로는 변환 오류 발생. Distinct는 안되는 듯.? 위에
     // 유사함수 있지만 페이지 처리 때문에 따로 만듬.
     @Query("SELECT DISTINCT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno")
-    public List<Staff> findDintinctEavluatedbyTno(@Param("tno") Long tno);
+    public List<Staff> findDintinctEavluatedByTno(@Param("tno") Long tno);
 
     // 평가현황을 위한 쿼리 count if 부분이 해결이 안돼서 native쿼리를 사용함.
     @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*)) as ratio, s.sno FROM tbl_relation360 as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)

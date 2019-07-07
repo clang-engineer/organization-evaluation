@@ -175,7 +175,7 @@ public class Relation360Controller {
         long cno = turnService.read(tno).get().getCno();
 
         if (deleteList == true) {
-            relation360Service.findAllbyTno(tno).ifPresent(list -> {
+            relation360Service.findAllByTno(tno).ifPresent(list -> {
                 list.forEach(relation -> {
                     relation360Service.remove(relation.getRno());
                 });
@@ -307,7 +307,7 @@ public class Relation360Controller {
             xlList.add(header);
 
             // 일단 중복제거한 피평가자 명단 가져오고
-            List<Staff> evaluatedList = relation360Service.findDintinctEavluatedbyTno(tno);
+            List<Staff> evaluatedList = relation360Service.findDintinctEavluatedByTno(tno);
 
             evaluatedList.forEach(evaluated -> {
                 List<String> tmpList = new ArrayList<String>();
@@ -328,7 +328,7 @@ public class Relation360Controller {
                 List<String> relation1 = new ArrayList<String>();
                 List<String> relation2 = new ArrayList<String>();
                 List<String> relation3 = new ArrayList<String>();
-                relation360Service.findAllbyTno(tno).get().forEach(relation -> {
+                relation360Service.findAllByTno(tno).get().forEach(relation -> {
                     String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName).orElse("null");
                     if (evaluated.getSno() == relation.getEvaluated().getSno()) {
                         switch (relation.getRelation()) {

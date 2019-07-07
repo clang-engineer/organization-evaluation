@@ -23,13 +23,13 @@ public interface Relation360Service {
 
     public Optional<List<Relation360>> findByEvaulated(long tno, long sno);
 
-    public Optional<Staff> findByTnoAndEvaluator(long tno, String email);
+    public Optional<Staff> findByEvaluatorEmail(long tno, String email);
 
     public Optional<List<Relation360>> findByEvaluator(long tno, long sno);
 
-    public Optional<List<Relation360>> findAllbyTno(long tno);
+    public Optional<List<Relation360>> findAllByTno(long tno);
 
-    public List<Staff> findDintinctEavluatedbyTno(long tno);
+    public List<Staff> findDintinctEavluatedByTno(long tno);
 
     public Optional<List<List<String>>> progressOfSurevey(long tno);
 }

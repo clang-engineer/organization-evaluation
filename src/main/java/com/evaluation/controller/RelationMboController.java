@@ -102,7 +102,7 @@ public class RelationMboController {
         List<RelationMbo> relation2 = new ArrayList<>();
         List<RelationMbo> relation3 = new ArrayList<>();
         result.getContent().forEach(evaluated -> {
-            relationMboService.findRelationByEvaulatedSno(evaluated.getSno(), tno).ifPresent(relation -> {
+            relationMboService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
                 relation.forEach(origin -> {
                     switch (origin.getRelation()) {
                     case "me":
@@ -151,7 +151,7 @@ public class RelationMboController {
     public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
         log.info("deleteEvaluatedInfo by " + tno);
 
-        relationMboService.findRelationByEvaulatedSno(sno, tno).ifPresent(list -> {
+        relationMboService.findByEvaulated(tno, sno).ifPresent(list -> {
             list.forEach(relation -> {
                 relationMboService.remove(relation.getRno());
             });
@@ -175,7 +175,7 @@ public class RelationMboController {
         long cno = turnService.read(tno).get().getCno();
 
         if (deleteList == true) {
-            relationMboService.findAllbyTno(tno).ifPresent(list -> {
+            relationMboService.findAllByTno(tno).ifPresent(list -> {
                 list.forEach(relation -> {
                     relationMboService.remove(relation.getRno());
                 });
@@ -307,7 +307,7 @@ public class RelationMboController {
             xlList.add(header);
 
             // 일단 중복제거한 피평가자 명단 가져오고
-            List<Staff> evaluatedList = relationMboService.findDintinctEavluatedbyTno(tno);
+            List<Staff> evaluatedList = relationMboService.findDintinctEavluatedByTno(tno);
 
             evaluatedList.forEach(evaluated -> {
                 List<String> tmpList = new ArrayList<String>();
@@ -328,7 +328,7 @@ public class RelationMboController {
                 List<String> relation1 = new ArrayList<String>();
                 List<String> relation2 = new ArrayList<String>();
                 List<String> relation3 = new ArrayList<String>();
-                relationMboService.findAllbyTno(tno).get().forEach(relation -> {
+                relationMboService.findAllByTno(tno).get().forEach(relation -> {
                     String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName).orElse("null");
                     if (evaluated.getSno() == relation.getEvaluated().getSno()) {
                         switch (relation.getRelation()) {
