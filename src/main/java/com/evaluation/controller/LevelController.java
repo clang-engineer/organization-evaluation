@@ -82,7 +82,7 @@ public class LevelController {
         model.addAttribute("tno", tno);
 
         long cno = turnService.get(tno).get().getCno();
-        Page<Level> result = levelService.getListWithPaging(cno, vo);
+        Page<Level> result = levelService.getList(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
     }

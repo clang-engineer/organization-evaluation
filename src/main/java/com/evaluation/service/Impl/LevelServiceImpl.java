@@ -54,7 +54,7 @@ public class LevelServiceImpl implements LevelService {
     }
 
     @Override
-    public Page<Level> getListWithPaging(long cno, PageVO vo) {
+    public Page<Level> getList(long cno, PageVO vo) {
         log.info("getListWithPaging by " + cno);
 
         Pageable page = vo.makePageable(1, "content");

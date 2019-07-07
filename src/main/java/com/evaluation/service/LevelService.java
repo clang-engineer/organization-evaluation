@@ -17,5 +17,5 @@ public interface LevelService {
 
 	public void remove(long lno);
 
-	public Page<Level> getListWithPaging(long cno, PageVO vo);
+	public Page<Level> getList(long cno, PageVO vo);
 }

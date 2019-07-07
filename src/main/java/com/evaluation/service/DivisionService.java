@@ -17,5 +17,5 @@ public interface DivisionService {
 
 	public void remove(long tno);
 
-	public Page<Division> getListWithPaging(long cno, PageVO vo);
+	public Page<Division> getList(long cno, PageVO vo);
 }

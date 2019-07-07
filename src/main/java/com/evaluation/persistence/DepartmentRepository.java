@@ -34,6 +34,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
     @Query("DELETE FROM Department d WHERE d.tno=?1")
     public void deleteByTno(long cno);
 
+    //mbo에서 사용자에게 본인 팀 목표 전달하기 위한
     @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.department1=:department1 AND d.department2=:department2")
     public Optional<Department> findByDeparment(@Param("tno") long tno, @Param("department1") String department1,
             @Param("department2") String department2);

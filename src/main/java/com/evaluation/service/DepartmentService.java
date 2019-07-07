@@ -18,7 +18,7 @@ public interface DepartmentService {
 
 	public void remove(long tno);
 
-	public Page<Department> getListWithPaging(long tno, PageVO vo);
+	public Page<Department> getList(long tno, PageVO vo);
 
 	public Optional<List<Department>> findByTnoSno(long tno, long sno);
 

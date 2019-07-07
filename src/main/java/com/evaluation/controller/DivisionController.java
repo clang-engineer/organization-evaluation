@@ -82,7 +82,7 @@ public class DivisionController {
         model.addAttribute("tno", tno);
 
         long cno = turnService.get(tno).get().getCno();
-        Page<Division> result = divisionService.getListWithPaging(cno, vo);
+        Page<Division> result = divisionService.getList(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
     }

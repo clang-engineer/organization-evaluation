@@ -94,7 +94,7 @@ public class DepartmentController {
 
         model.addAttribute("tno", tno);
 
-        Page<Department> result = departmentService.getListWithPaging(tno, vo);
+        Page<Department> result = departmentService.getList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
         List<StaffAndDno> leader = new ArrayList<StaffAndDno>();

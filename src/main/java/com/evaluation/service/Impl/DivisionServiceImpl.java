@@ -56,7 +56,7 @@ public class DivisionServiceImpl implements DivisionService {
     }
 
     @Override
-    public Page<Division> getListWithPaging(long cno, PageVO vo) {
+    public Page<Division> getList(long cno, PageVO vo) {
         log.info("getListWithPaging by " + cno);
 
         Pageable page = vo.makePageable(1, "division1");

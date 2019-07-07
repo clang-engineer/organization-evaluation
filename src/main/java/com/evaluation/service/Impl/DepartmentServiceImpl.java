@@ -56,7 +56,7 @@ public class DepartmentServiceImpl implements DepartmentService {
     }
 
     @Override
-    public Page<Department> getListWithPaging(long tno, PageVO vo) {
+    public Page<Department> getList(long tno, PageVO vo) {
         log.info("getListWithPaging by " + tno);
 
         Pageable page = vo.makePageable(1, "dno");
