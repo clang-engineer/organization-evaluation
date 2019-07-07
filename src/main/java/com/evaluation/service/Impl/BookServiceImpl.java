@@ -45,7 +45,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public Optional<List<Book>> list() {
+	public Optional<List<Book>> findAll() {
 		Sort sort = new Sort(Sort.Direction.ASC, "bno");
 		Optional<List<Book>> result = bookRepo.findAll(sort);
 		
@@ -53,7 +53,7 @@ public class BookServiceImpl implements BookService {
 	}
 
 	@Override
-	public Optional<List<Book>> listFindByType(String type) {
+	public Optional<List<Book>> findByType(String type) {
 		return bookRepo.findByType(type);
 	}
 }

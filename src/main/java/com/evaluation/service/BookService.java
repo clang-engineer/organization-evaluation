@@ -14,7 +14,7 @@ public interface BookService {
 
 	public void remove(int bno);
 
-	public Optional<List<Book>> list();
+	public Optional<List<Book>> findAll();
 
-	public Optional<List<Book>> listFindByType(String type);
+	public Optional<List<Book>> findByType(String type);
 }

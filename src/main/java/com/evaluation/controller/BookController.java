@@ -65,7 +65,7 @@ public class BookController {
 
 	@GetMapping("/list")
 	public void list(Model model) {
-		bookService.list().ifPresent(origin -> {
+		bookService.findAll().ifPresent(origin -> {
 			model.addAttribute("result", origin);
 		});
 	}

@@ -30,7 +30,7 @@ public class InfoMboController {
 		log.info("infoMbo read get " + tno);
 
 		model.addAttribute("tno", tno);
-		bookService.listFindByType("MboReply").ifPresent(origin -> {
+		bookService.findByType("MboReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
 		model.addAttribute("infoMbo", infoMboService.read(tno));
@@ -41,7 +41,7 @@ public class InfoMboController {
 		log.info("infoMBO modify get" + tno);
 
 		model.addAttribute("tno", tno);
-		bookService.listFindByType("MboReply").ifPresent(origin -> {
+		bookService.findByType("MboReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
 		model.addAttribute("infoMbo", infoMboService.read(tno));
