@@ -244,7 +244,7 @@ public class ProgressController {
 
                 // question중 문항 idx 중복 제거 최대값 구해서 해당 값들을 열 머릿글로 구성한다. 순서대로 입력하려고 linkedHashSet사용
                 Set<String> answerKeySet = new LinkedHashSet<String>();
-                questionService.findAllByTno(tno).ifPresent(qlist -> {
+                questionService.findByTno(tno).ifPresent(qlist -> {
                     for (int i = 0; i < qlist.size(); i++) {
                         answerKeySet.add('q' + Integer.toString(qlist.get(i).getIdx()));
                     }

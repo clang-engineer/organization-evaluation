@@ -22,11 +22,11 @@ public interface QuestionService {
 
 	public void deleteByTno(long tno);
 
-	public Optional<List<List<String>>> DistinctDivisionCountByTno(long tno);
+	public Optional<List<List<String>>> getDistinctDivisionCountByTno(long tno);
 
 	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
 
-	public Optional<List<Question>> findAllByTno(long tno);
+	public Optional<List<Question>> findByTno(long tno);
 
 	public Map<String, Object> getDistinctQuestionInfo(long cno, long tno);
 }

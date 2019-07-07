@@ -140,7 +140,7 @@ public class SurveyConroller {
             model.addAttribute("companyInfo", origin);
         });
 
-        questionService.DistinctDivisionCountByTno(tno).ifPresent(origin -> {
+        questionService.getDistinctDivisionCountByTno(tno).ifPresent(origin -> {
             model.addAttribute("question", origin);
         });
 

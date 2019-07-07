@@ -200,7 +200,7 @@ public class QuestionController {
             }
 
             response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-            questionService.findAllByTno(tno).ifPresent(list -> {
+            questionService.findByTno(tno).ifPresent(list -> {
                 List<List<String>> xlList = new ArrayList<List<String>>();
                 List<String> header = new ArrayList<String>();
 

@@ -29,7 +29,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
     @Query("SELECT q.division1, q.division2, COUNT(q.qno) FROM Question q WHERE tno=?1 GROUP BY q.division1, q.division2")
     public Optional<List<List<String>>> getDistinctDivisionCountByTno(long tno);
 
-    // xl파일로 질문 다운로드 위해
+    // xl파일로 모든 질문 다운로드 위해
     @Query("SELECT q FROM Question q WHERE tno=:tno")
     public Optional<List<Question>> findByTno(@Param("tno") long tno);
 
