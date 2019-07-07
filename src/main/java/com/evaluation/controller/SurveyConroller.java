@@ -309,7 +309,7 @@ public class SurveyConroller {
 
     @PostMapping("/modify")
     public String modify(Staff staff, String company, long tno, RedirectAttributes rttr, HttpServletRequest request) {
-        staffService.readByEmail(staff.getEmail()).ifPresent(origin -> {
+        staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
             long sno = origin.getSno();
             log.info("===>" + sno);
             staff.setSno(sno);

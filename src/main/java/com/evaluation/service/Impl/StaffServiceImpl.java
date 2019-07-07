@@ -87,7 +87,7 @@ public class StaffServiceImpl implements StaffService {
 	public Optional<List<Staff>> get360EvaluatedList(long cno, long tno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.get360Evaluated(cno, tno);
+		Optional<List<Staff>> result = staffRepo.get360EvaluatedList(cno, tno);
 		return result;
 	}
 
@@ -95,7 +95,7 @@ public class StaffServiceImpl implements StaffService {
 	public Optional<List<Staff>> get360EvaluatorList(long cno, long tno, long sno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.get360Evaluator(cno, tno, sno);
+		Optional<List<Staff>> result = staffRepo.get360EvaluatorList(cno, tno, sno);
 		return result;
 	}
 
@@ -103,7 +103,7 @@ public class StaffServiceImpl implements StaffService {
 	public Optional<List<Staff>> getMboEvaluatedList(long cno, long tno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.getMboEvaluated(cno, tno);
+		Optional<List<Staff>> result = staffRepo.getMboEvaluatedList(cno, tno);
 		return result;
 	}
 
@@ -111,7 +111,7 @@ public class StaffServiceImpl implements StaffService {
 	public Optional<List<Staff>> getMboEvaluatorList(long cno, long tno, long sno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.getMboEvaluator(cno, tno, sno);
+		Optional<List<Staff>> result = staffRepo.getMboEvaluatorList(cno, tno, sno);
 		return result;
 	}
 
@@ -133,17 +133,17 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Optional<Staff> readByEmail(String email) {
+	public Optional<Staff> findByEmail(String email) {
 		return staffRepo.findByEmail(email);
 	}
 
 	@Override
-	public Optional<Staff> readByCnoAndName(long cno, String name) {
+	public Optional<Staff> findByCnoAndName(long cno, String name) {
 		return staffRepo.findByCnoAndName(cno, name);
 	}
 
 	@Override
-	public Optional<List<Staff>> readBycno(long cno) {
+	public Optional<List<Staff>> findByCno(long cno) {
 		return staffRepo.findByCno(cno);
 	}
 

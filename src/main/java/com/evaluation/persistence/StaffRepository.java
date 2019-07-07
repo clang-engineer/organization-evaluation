@@ -19,20 +19,20 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 
 	//360 relation 설정 시 리스트에 등록 안된 피평가자 출력하기 위한
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> get360Evaluated(@Param("cno") long cno, @Param("tno") long tno);
+	public Optional<List<Staff>> get360EvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
 
 	//360 relation 설정 시 평가자 출력하기 위해, 해당 피평가자에 대한 평가자에 속하지 않은 사람. + 본인이 아닌 사람 중에
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM Relation360 r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> get360Evaluator(@Param("cno") long cno, @Param("tno") long tno,
+	public Optional<List<Staff>> get360EvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
 			@Param("sno") long sno);
 
 	//MBO relation 설정 시 리스트에 등록 안된 피평가자 출력하기 위한
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> getMboEvaluated(@Param("cno") long cno, @Param("tno") long tno);
+	public Optional<List<Staff>> getMboEvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
 
 	//MBO relation 설정 시 평가자 출력하기 위해, 해당 피평가자에 대한 평가자에 속하지 않은 사람. + 본인이 아닌 사람 중에
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> getMboEvaluator(@Param("cno") long cno, @Param("tno") long tno,
+	public Optional<List<Staff>> getMboEvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
 			@Param("sno") long sno);
 
 	// 직원 전원 삭제

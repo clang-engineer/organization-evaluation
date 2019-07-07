@@ -119,7 +119,7 @@ public class DepartmentController {
 
     @GetMapping("/leader")
     public void readLeader(long dno, long tno, PageVO vo, Model model) {
-        //dno일치하는 팀 정보와 리더 정보 전달.
+        // dno일치하는 팀 정보와 리더 정보 전달.
         departmentService.read(dno).ifPresent(department -> {
             if (department.getLeader() != null) {
                 model.addAttribute("team", department.getLeader());
@@ -129,10 +129,12 @@ public class DepartmentController {
             }
         });
 
-        //leader를 전체 직원 명단 전송
-        long cno = turnService.read(tno).get().getCno();
-        staffService.readBycno(cno).ifPresent(origin -> {
-            model.addAttribute("staffList", origin);
+        // leader를 전체 직원 중 등록하기 위해 직원 명단 전송
+        turnService.read(tno).ifPresent(turn -> {
+            long cno = turn.getCno();
+            staffService.findByCno(cno).ifPresent(origin -> {
+                model.addAttribute("staffList", origin);
+            });
         });
 
         model.addAttribute("dno", dno);

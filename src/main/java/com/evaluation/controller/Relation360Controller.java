@@ -196,7 +196,7 @@ public class Relation360Controller {
 
             // 피평가자 정보 공통설정
             String email = list.get(1);
-            Optional<Staff> origin = staffService.readByEmail(email);
+            Optional<Staff> origin = staffService.findByEmail(email);
 
             if (!origin.isPresent()) {
                 throw new IllegalArgumentException("피평가자 정보가 직원명단에 존재하지 않습니다." + email);
@@ -242,7 +242,7 @@ public class Relation360Controller {
 
                 // 평가자 설정
                 String name = tmpList.get(i).trim();
-                Optional<Staff> origin = staffService.readByCnoAndName(cno, name);
+                Optional<Staff> origin = staffService.findByCnoAndName(cno, name);
 
                 Relation360 relation360 = new Relation360();
                 relation360.setEvaluated(evaluated);

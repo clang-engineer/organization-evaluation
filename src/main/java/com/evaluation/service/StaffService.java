@@ -32,11 +32,11 @@ public interface StaffService {
 
 	public void deleteDistinctInfoByTnoCno(long tno, long cno);
 
-	public Optional<Staff> readByEmail(String email);
+	public Optional<Staff> findByEmail(String email);
 
-	public Optional<Staff> readByCnoAndName(long cno, String name);
+	public Optional<Staff> findByCnoAndName(long cno, String name);
 
-	public Optional<List<Staff>> readBycno(long cno);
+	public Optional<List<Staff>> findByCno(long cno);
 
 	public Map<String, Object> getDistinctInfo(long cno, long tno);
 }

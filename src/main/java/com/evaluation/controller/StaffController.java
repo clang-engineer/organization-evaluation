@@ -221,7 +221,7 @@ public class StaffController {
 			row.setUpdateId(admin.getUpdateId());
 
 			// 새로 등록할지 업데이트할지 선택
-			Optional<Staff> tmpStaff = staffService.readByEmail(list.get(1));
+			Optional<Staff> tmpStaff = staffService.findByEmail(list.get(1));
 			if (tmpStaff.isPresent()) {
 				row.setSno(tmpStaff.get().getSno());
 				staffService.modify(row);
@@ -236,7 +236,7 @@ public class StaffController {
 		Set<List<String>> divList = new HashSet<List<String>>();
 
 		// 회사에 속한 전 직원 정보 중복제거 하기
-		staffService.readBycno(cno).ifPresent(origin -> {
+		staffService.findByCno(cno).ifPresent(origin -> {
 			origin.forEach(staff -> {
 				// 중복제거 직급 생성
 				levList.add(staff.getLevel());
@@ -308,7 +308,7 @@ public class StaffController {
 			}
 
 			response.setHeader("Content-Disposition", "attachment; filename=" + fileName + ".xlsx");
-			staffService.readBycno(cno).ifPresent(list -> {
+			staffService.findByCno(cno).ifPresent(list -> {
 
 				List<List<String>> xlList = new ArrayList<List<String>>();
 				List<String> header = new ArrayList<String>();
