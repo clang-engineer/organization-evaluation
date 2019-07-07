@@ -21,6 +21,13 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
     @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.leader.sno=:sno")
     public Optional<List<Department>> findByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
+    //staff등록할 때 distinctInfo를 위한
+    @Query("SELECT DISTINCT d.department1 FROM Department d WHERE tno=?1 ORDER BY d.department1 ASC")
+    public List<String> getListDepartment1(long tno);
+
+    @Query("SELECT DISTINCT d.department2 FROM Department d WHERE tno=?1 ORDER BY d.department2 ASC")
+    public List<String> getListDepartment2(long tno);
+
     // 부서정보 전체 삭제
     @Transactional
     @Modifying

@@ -1,5 +1,7 @@
 package com.evaluation.persistence;
 
+import java.util.List;
+
 import com.evaluation.domain.Level;
 import com.evaluation.domain.QLevel;
 import com.querydsl.core.BooleanBuilder;
@@ -18,6 +20,10 @@ public interface LevelRepository extends CrudRepository<Level, Long>, QuerydslPr
     @Modifying
     @Query("DELETE FROM Level l WHERE l.cno=?1")
     public void deleteByCno(long cno);
+
+    //staff등록할 때 distinctInfo를 위한
+    @Query("SELECT DISTINCT l.content FROM Level l WHERE cno=?1 ORDER BY l.content ASC")
+    public List<String> getListLevel(long cno);
 
     public default Predicate makePredicate(String type, String keyword, long cno) {
 

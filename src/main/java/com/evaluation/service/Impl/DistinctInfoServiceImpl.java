@@ -1,54 +1,32 @@
 package com.evaluation.service.Impl;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
-import com.evaluation.persistence.DistinctInfoRepository;
+import com.evaluation.persistence.DepartmentRepository;
+import com.evaluation.persistence.DivisionRepository;
+import com.evaluation.persistence.LevelRepository;
+import com.evaluation.persistence.QuestionRepository;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.DistinctInfoService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import lombok.AllArgsConstructor;
+
 @Service
+@AllArgsConstructor
 class DistinctInfoServiceImpl implements DistinctInfoService {
 
-    @Autowired
-    DistinctInfoRepository repo;
-
-    @Autowired
     TurnRepository turnRepo;
 
-    @Override
-    public List<String> getListDepartment1(long tno) {
-        return repo.getListDepartment1(tno);
-    }
+    DepartmentRepository departmentRepo;
 
-    @Override
-    public List<String> getListDepartment2(long tno) {
-        return repo.getListDepartment2(tno);
-    }
+    DivisionRepository divisionRepo;
 
-    @Override
-    public List<String> getListDivision1(long cno) {
-        return repo.getListDivision1(cno);
-    }
+    LevelRepository levelRepo;
 
-    @Override
-    public List<String> getListDivision2(long cno) {
-        return repo.getListDivision2(cno);
-    }
-
-    @Override
-    public List<String> getListLevel(long cno) {
-        return repo.getListLevel(cno);
-    }
-
-    @Override
-    public List<String> getListCategory(long tno) {
-        return repo.getListCategory(tno);
-    }
+    QuestionRepository questionRepo;
 
     @Override
     public Map<String, Object> getDistinctInfo(long tno) {
@@ -56,11 +34,11 @@ class DistinctInfoServiceImpl implements DistinctInfoService {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        result.put("department1", repo.getListDepartment1(tno));
-        result.put("department2", repo.getListDepartment2(tno));
-        result.put("division1", repo.getListDivision1(cno));
-        result.put("division2", repo.getListDivision2(cno));
-        result.put("level", repo.getListLevel(cno));
+        result.put("department1", departmentRepo.getListDepartment1(tno));
+        result.put("department2", departmentRepo.getListDepartment2(tno));
+        result.put("division1", divisionRepo.getListDivision1(cno));
+        result.put("division2", divisionRepo.getListDivision2(cno));
+        result.put("level", levelRepo.getListLevel(cno));
 
         return result;
     }
@@ -71,9 +49,9 @@ class DistinctInfoServiceImpl implements DistinctInfoService {
 
         Map<String, Object> result = new HashMap<String, Object>();
 
-        result.put("division1", repo.getListDivision1(cno));
-        result.put("division2", repo.getListDivision2(cno));
-        result.put("category", repo.getListCategory(tno));
+        result.put("division1", divisionRepo.getListDivision1(cno));
+        result.put("division2", divisionRepo.getListDivision2(cno));
+        result.put("category", questionRepo.getListCategory(tno));
 
         return result;
     }
