@@ -52,14 +52,14 @@ public class CompanyController {
 	public void view(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
 		log.info("controller : company view get" + cno);
 
-		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
+		companyService.read(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@GetMapping("/modify")
 	public void modifyGet(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
 		log.info("controller : company modfiy get " + cno);
 
-		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
+		companyService.read(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@PostMapping("/modify")
@@ -98,6 +98,6 @@ public class CompanyController {
 	public void turnList(@ModelAttribute("cno") Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
 		log.info("controller : company surveyList");
 
-		companyService.get(cno).ifPresent(company -> model.addAttribute("vo", company));
+		companyService.read(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 }

@@ -34,7 +34,7 @@ public class CompanyServiceImpl implements CompanyService {
 	}
 
 	@Override
-	public Optional<Company> get(long cno) {
+	public Optional<Company> read(long cno) {
 		log.info("service : company get " + cno);
 
 		return companyRepo.findById(cno);
@@ -83,7 +83,7 @@ public class CompanyServiceImpl implements CompanyService {
 
 	// 회사이름으로 정보 불러오기 위함.
 	@Override
-	public Optional<Company> readByCompanyId(String name) {
+	public Optional<Company> findByCompanyId(String name) {
 		log.info("compny read by name " + name);
 		return companyRepo.findByCompanyId(name);
 	}

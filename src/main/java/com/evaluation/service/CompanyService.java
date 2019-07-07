@@ -11,7 +11,7 @@ public interface CompanyService {
 
 	public void register(Company company);
 
-	public Optional<Company> get(long cno);
+	public Optional<Company> read(long cno);
 
 	public void modify(Company company);
 
@@ -19,5 +19,5 @@ public interface CompanyService {
 
 	public Page<Company> getList(PageVO page);
 
-	public Optional<Company> readByCompanyId(String name);
+	public Optional<Company> findByCompanyId(String name);
 }

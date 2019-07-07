@@ -53,7 +53,7 @@ public class SurveyConroller {
         log.info("====>survey by company" + company);
 
         // 회사에 관한 정보 찾고
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             long cno = origin.getCno();
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
@@ -117,7 +117,7 @@ public class SurveyConroller {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -136,7 +136,7 @@ public class SurveyConroller {
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -162,7 +162,7 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -192,7 +192,7 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             rttr.addAttribute("companyInfo", origin);
         });
 
@@ -209,7 +209,7 @@ public class SurveyConroller {
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -274,7 +274,7 @@ public class SurveyConroller {
             long tno = origin.getTno();
             turnService.get(tno).ifPresent(turn -> {
                 long cno = turn.getCno();
-                companyService.get(cno).ifPresent(company -> {
+                companyService.read(cno).ifPresent(company -> {
                     rttr.addAttribute("company", company.getId());
                     rttr.addFlashAttribute("companyInfo", company);
                     rttr.addAttribute("tno", tno);
@@ -290,7 +290,7 @@ public class SurveyConroller {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -301,7 +301,7 @@ public class SurveyConroller {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -321,7 +321,7 @@ public class SurveyConroller {
 
         rttr.addAttribute("company", company);
         rttr.addAttribute("tno", tno);
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             rttr.addFlashAttribute("companyInfo", origin);
         });
 

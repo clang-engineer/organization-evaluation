@@ -185,7 +185,7 @@ public class QuestionController {
 
         turnService.get(tno).ifPresent(origin -> {
             long cno = origin.getCno();
-            String company = companyService.get(cno).map(Company::getName).orElse("etc");
+            String company = companyService.read(cno).map(Company::getName).orElse("etc");
 
             response.setContentType("application/vnd.ms-excel;charset=UTF-8");
             response.setCharacterEncoding("UTF-8");

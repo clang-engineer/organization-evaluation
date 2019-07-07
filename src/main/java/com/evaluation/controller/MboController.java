@@ -71,7 +71,7 @@ public class MboController {
         log.info("====>survey by company" + company);
 
         // 회사에 관한 정보 찾고
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             long cno = origin.getCno();
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
@@ -133,7 +133,7 @@ public class MboController {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -164,7 +164,7 @@ public class MboController {
             model.addAttribute("department", list);
         });
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -186,7 +186,7 @@ public class MboController {
             return "redirect:/mbo/";
         }
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -241,7 +241,7 @@ public class MboController {
             return "redirect:/mbo/";
         }
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             rttr.addFlashAttribute("companyInfo", origin);
         });
 
@@ -259,7 +259,7 @@ public class MboController {
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
 
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -408,7 +408,7 @@ public class MboController {
         turnService.get(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -423,7 +423,7 @@ public class MboController {
         turnService.get(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
@@ -443,7 +443,7 @@ public class MboController {
 
         rttr.addAttribute("company", company);
         rttr.addAttribute("tno", tno);
-        companyService.readByCompanyId(company).ifPresent(origin -> {
+        companyService.findByCompanyId(company).ifPresent(origin -> {
             rttr.addFlashAttribute("companyInfo", origin);
         });
 

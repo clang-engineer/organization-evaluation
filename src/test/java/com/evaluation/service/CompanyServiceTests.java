@@ -48,13 +48,13 @@ public class CompanyServiceTests {
 	@Test
 	public void get() {
 		log.info("========== test get");
-		log.info("" + service.get(1L));
+		log.info("" + service.read(1L));
 	}
 
 	@Test
 	public void testModify() {
 		log.info("========== test Modify");
-		Optional<Company> co = service.get(100L);
+		Optional<Company> co = service.read(100L);
 		Company company = co.get();
 		company.setId("test modify id 303");
 		company.setName("test modify name 303");
@@ -76,6 +76,6 @@ public class CompanyServiceTests {
 
 	@Test
 	public void testReadByName() {
-		log.info("" + service.readByCompanyId("siliconmitus"));
+		log.info("" + service.findByCompanyId("siliconmitus"));
 	}
 }
