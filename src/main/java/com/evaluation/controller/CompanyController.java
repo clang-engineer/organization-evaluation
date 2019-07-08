@@ -56,20 +56,22 @@ public class CompanyController {
 	}
 
 	@GetMapping("/modify")
-	public void modifyGet(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
+	public void modify(Long cno, @ModelAttribute("pageVO") PageVO vo, Model model) {
 		log.info("controller : company modfiy get " + cno);
 
 		companyService.read(cno).ifPresent(company -> model.addAttribute("vo", company));
 	}
 
 	@PostMapping("/modify")
-	public String modifyPost(Company company, PageVO vo, RedirectAttributes rttr) {
+	public String modify(Company company, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : company modify post" + company);
 
-		companyService.modify(company);
+		companyService.read(company.getCno()).ifPresent(origin -> {
+			companyService.modify(origin);
 
-		rttr.addFlashAttribute("msg", "modify");
-		rttr.addAttribute("cno", company.getCno());
+			rttr.addFlashAttribute("msg", "modify");
+			rttr.addAttribute("cno", company.getCno());
+		});
 
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
@@ -83,7 +85,10 @@ public class CompanyController {
 	public String delete(Long cno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : company delete " + cno);
 
-		companyService.remove(cno);
+		companyService.read(cno).ifPresent(origin -> {
+			companyService.remove(origin.getCno());
+		});
+
 		rttr.addFlashAttribute("msg", "remove");
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());

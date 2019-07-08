@@ -33,7 +33,7 @@ public class Info360ControllerTests {
 
 	@Test
 	public void testModify() throws Exception {
-		log.info(mockMvc.perform(MockMvcRequestBuilders.post("/info360/modify").param("tno", "1").param("title", "mockmvctest")).andReturn()
+		log.info(mockMvc.perform(MockMvcRequestBuilders.post("/infoSurvey/modify").param("tno", "1").param("title", "mockmvctest")).andReturn()
 				.getModelAndView().getViewName());
 	}
 

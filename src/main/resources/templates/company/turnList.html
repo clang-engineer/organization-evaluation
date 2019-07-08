@@ -44,10 +44,10 @@
 	</div>
 
 	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="page" th:value=${pageVO.page} />
-		<input type="hidden" name="size" th:value=${pageVO.size} />
-		<input type="hidden" name="type" th:value=${pageVO.type} />
-		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+		<input type="hidden" name="page" th:value=${pageVO?.page} />
+		<input type="hidden" name="size" th:value=${pageVO?.size} />
+		<input type="hidden" name="type" th:value=${pageVO?.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
 	</form>
 
 	<!-- Modal -->

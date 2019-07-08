@@ -50,8 +50,8 @@
 						<label>Home page address</label>
 						<input type="url" class="form-control" name="homepage" placeholder="Enter home page address">
 					</div>
-					<input type="hidden" name="writeId" th:value="${#authentication.name}">
-					<input type="hidden" name="updateId" th:value="${#authentication.name}">
+					<input type="hidden" name="writeId" th:value="${#authentication?.name}">
+					<input type="hidden" name="updateId" th:value="${#authentication?.name}">
 					<button type="submit" class="btn btn-primary">Submit</button>
 					<button id="list" class="btn btn-info">List</button>
 				</form>

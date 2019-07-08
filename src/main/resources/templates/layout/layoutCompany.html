@@ -64,11 +64,11 @@
                             <div sec:authorize="isAuthenticated()">
                                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                     <i class="fas fa-user-circle fa-fw"></i>
-                                    [[${#authentication.principal.admin.uname}]]
+                                    [[${#authentication?.principal?.admin?.uname}]]
                                 </a>
                                 <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdown">
                                     <!-- <div class="dropdown-divider"></div> -->
-                                    <a class="dropdown-item" th:href="@{/admin/read(uid=${#authentication.name})}">Profile</a>
+                                    <a class="dropdown-item" th:href="@{/admin/read(uid=${#authentication?.name})}">Profile</a>
                                     <div class="dropdown-divider"></div>
                                     <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
                                 </div>
@@ -101,7 +101,7 @@
 					<h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
                     <button type="button" class="close" data-dismiss="modal">&times;</button>
 				</div>
-				<div class="modal-body">[[${#authentication.principal.admin.uname}]]님의 계정에서 로그아웃 하시겠습니까?</div>
+				<div class="modal-body">[[${#authentication?.principal?.admin?.uname}]]님의 계정에서 로그아웃 하시겠습니까?</div>
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 					<a id="logOut" class="btn btn-primary" th:href="@{/logout}">Logout</a>
@@ -116,7 +116,7 @@
 
     <!-- form for logout -->
     <form id="logOutForm" method="POST" th:action="@{/logout}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
     <!-- ./form for logout -->
     

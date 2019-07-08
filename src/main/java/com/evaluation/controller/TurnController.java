@@ -46,8 +46,14 @@ public class TurnController {
 	@PutMapping("/{cno}")
 	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
-		turn.setInfoSurvey(turnService.read(turn.getTno()).get().getInfoSurvey());
-		turn.setInfoMbo(turnService.read(turn.getTno()).get().getInfoMbo());
+
+		turnService.read(turn.getTno()).map(Turn::getInfoSurvey).ifPresent(origin -> {
+			turn.setInfoSurvey(origin);
+		});
+		turnService.read(turn.getTno()).map(Turn::getInfoMbo).ifPresent(origin -> {
+			turn.setInfoMbo(origin);
+		});
+
 		turnService.modify(turn);
 
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.CREATED);
@@ -57,8 +63,10 @@ public class TurnController {
 	@DeleteMapping("/{cno}/{tno}")
 	public ResponseEntity<Optional<List<Turn>>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
 		log.info("controller : remove Turn " + tno);
-
-		turnService.remove(tno);
+		
+		turnService.read(tno).ifPresent(origin -> {
+			turnService.remove(origin.getTno());
+		});
 
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.OK);
 	}

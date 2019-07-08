@@ -24,10 +24,10 @@
 						<select class="form-control col-4" id="searchType">
 							<option>---
 								</optinon>
-							<option value="id" th:selected="${pageVO.type}=='id'">ID</option>
-							<option value="name" th:selected="${pageVO.type}=='name'">Name</option>
+							<option value="id" th:selected="${pageVO?.type}=='id'">ID</option>
+							<option value="name" th:selected="${pageVO?.type}=='name'">Name</option>
 						</select>
-						<input type="text" class="col-7 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+						<input type="text" class="col-7 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
 							<button class="btn btn-primary" id="searchBtn" type="button">
 								<i class="fas fa-search fa-sm"></i>
@@ -64,15 +64,15 @@
 						</thead>
 						<tbody>
 							<tr th:each="company:${result.content}">
-								<td>[[${company.cno}]]</td>
-								<td><a class="companyDetail" th:href="${company.cno}">[[${company.name}]]</a></td>
-								<td>[[${company.id}]]</td>
-								<td>[[${company.password}]]</td>
-								<td>[[${#dates.format(company.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-								<td>[[${#dates.format(company.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
-								<td><a th:href="${company.id}" class="userPage" data-type="360"><button type='button' class='btn btn-default'><i class='fas fa-users'></i></button></a></td>
-								<td><a th:href="${company.id}" class="userPage" data-type="MBO"><button type='button' class='btn btn-default'><i class='fas fa-map-marked-alt'></i></button></a></td>
-								<td><a th:href="${company.cno}" class="turnList">
+								<td>[[${company?.cno}]]</td>
+								<td><a class="companyDetail" th:href="${company?.cno}">[[${company?.name}]]</a></td>
+								<td>[[${company?.id}]]</td>
+								<td>[[${company?.password}]]</td>
+								<td>[[${#dates.format(company?.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+								<td>[[${#dates.format(company?.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+								<td><a th:href="${company?.id}" class="userPage" data-type="360"><button type='button' class='btn btn-default'><i class='fas fa-users'></i></button></a></td>
+								<td><a th:href="${company?.id}" class="userPage" data-type="MBO"><button type='button' class='btn btn-default'><i class='fas fa-map-marked-alt'></i></button></a></td>
+								<td><a th:href="${company?.cno}" class="turnList">
 									<button type="button" class="btn btn-default">
 											<i class="fas fa-sitemap"></i>
 										</button>
@@ -95,10 +95,10 @@
 	</div>
 
 	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="page" th:value=${result.currentPageNum} />
-		<input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
-		<input type="hidden" name="type" th:value=${pageVO.type} />
-		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
+		<input type="hidden" name="size" th:value=${result?.currentPage.pageSize} />
+		<input type="hidden" name="type" th:value=${pageVO?.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
 	</form>
 
 	<!-- /.container-fluid -->

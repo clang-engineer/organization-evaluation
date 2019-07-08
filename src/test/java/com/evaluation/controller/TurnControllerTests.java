@@ -12,12 +12,12 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.http.MediaType;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
 import lombok.Setter;
@@ -26,8 +26,8 @@ import lombok.extern.slf4j.Slf4j;
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
+@Transactional
 @Slf4j
-@Commit
 public class TurnControllerTests {
 
 	@Setter(onMethod_ = { @Autowired })
@@ -35,13 +35,28 @@ public class TurnControllerTests {
 
 	private MockMvc mockMvc;
 
+	private Turn turn;
+
 	@Before
-	public void setUp() {
+	public void setUp() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
+
+		turn = new Turn();
+		turn.setTitle("test controller turn 1");
+		Set<String> types = new HashSet<>();
+		types.add("360");
+		types.add("mbo");
+		turn.setTypes(types);
+		turn.setCno(1L);
+		turn.setTno(1L);
+		String jsonStr = new Gson().toJson(turn);
+		log.info("" + mockMvc.perform(
+				MockMvcRequestBuilders.post("/turns/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+				.andReturn());
 	}
 
 	@Test
-	public void testRegister() throws Exception {
+	public void testAddTurn() throws Exception {
 		log.info("register...");
 
 		Turn turn = new Turn();
@@ -54,16 +69,15 @@ public class TurnControllerTests {
 		String jsonStr = new Gson().toJson(turn);
 
 		log.info("" + mockMvc.perform(
-				MockMvcRequestBuilders.post("/turns/101").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+				MockMvcRequestBuilders.post("/turns/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
 				.andReturn());
 	}
 
 	@Test
 	public void testModify() throws Exception {
+
 		log.info("modify...");
 
-		Turn turn = new Turn();
-		turn.setTno(48L);
 		turn.setTitle("test Update turn 1");
 		Set<String> types = new HashSet<>();
 		types.add("360");
@@ -72,8 +86,9 @@ public class TurnControllerTests {
 
 		String jsonStr = new Gson().toJson(turn);
 
-		log.info("" + mockMvc.perform(
-				MockMvcRequestBuilders.put("/turns/101").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+		log.info("" + mockMvc
+				.perform(
+						MockMvcRequestBuilders.put("/turns/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
 				.andReturn());
 	}
 
@@ -81,13 +96,13 @@ public class TurnControllerTests {
 	public void testRemove() throws Exception {
 		log.info("remove...");
 
-		log.info("" + mockMvc.perform(MockMvcRequestBuilders.delete("/turns/101/53")).andReturn());
+		log.info("" + mockMvc.perform(MockMvcRequestBuilders.delete("/turns/1/1")).andReturn());
 	}
 
 	@Test
-	public void testGetList() throws Exception {
+	public void testGetTurnByCompany() throws Exception {
 		log.info("get List...");
 
-		log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/turns/101")).andReturn());
+		log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/turns/1")).andReturn());
 	}
 }
