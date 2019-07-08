@@ -10,23 +10,23 @@ import com.evaluation.domain.Question;
 import com.evaluation.vo.PageVO;
 
 public interface QuestionService {
-	public void register(Question question);
+	void register(Question question);
 
-	public Optional<Question> read(Long qno);
+	Optional<Question> read(Long qno);
 
-	public void modify(Question question);
+	void modify(Question question);
 
-	public void remove(Long qno);
+	void remove(Long qno);
 
-	public Page<Question> getList(long tno, PageVO vo);
+	Page<Question> getList(long tno, PageVO vo);
 
-	public void deleteByTno(long tno);
+	void deleteByTno(long tno);
 
-	public Optional<List<List<String>>> getDistinctDivisionCountByTno(long tno);
+	Optional<List<List<String>>> getDistinctDivisionCountByTno(long tno);
 
-	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
+	Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
 
-	public Optional<List<Question>> findByTno(long tno);
+	Optional<List<Question>> findByTno(long tno);
 
-	public Map<String, Object> getDistinctQuestionInfo(long cno, long tno);
+	Map<String, Object> getDistinctQuestionInfo(long cno, long tno);
 }

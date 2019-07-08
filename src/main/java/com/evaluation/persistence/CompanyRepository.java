@@ -24,7 +24,7 @@ public interface CompanyRepository extends CrudRepository<Company, Long>, Queryd
 	 * @return 회사정보
 	 */
 	@Query("SELECT c FROM Company c WHERE c.cno>0 AND c.id=:id")
-	public Optional<Company> findByCompanyId(@Param("id") String id);
+	Optional<Company> findByCompanyId(@Param("id") String id);
 
 	/**
 	 * 
@@ -32,7 +32,7 @@ public interface CompanyRepository extends CrudRepository<Company, Long>, Queryd
 	 * @param keyword 검색 키워드
 	 * @return querydsl을 사용해서 검색을 위한 builder를 리턴
 	 */
-	public default Predicate makePredicate(String type, String keyword) {
+	default Predicate makePredicate(String type, String keyword) {
 
 		BooleanBuilder builder = new BooleanBuilder();
 

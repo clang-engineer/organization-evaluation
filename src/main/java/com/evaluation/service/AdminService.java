@@ -6,13 +6,13 @@ import java.util.Optional;
 import com.evaluation.domain.Admin;
 
 public interface AdminService {
-    public void register(Admin admin);
+    void register(Admin admin);
 
-    public Optional<Admin> read(String uid);
+    Optional<Admin> read(String uid);
 
-    public void modify(Admin admin);
+    void modify(Admin admin);
 
-    public void remove(String uid);
+    void remove(String uid);
 
-    public Optional<List<Admin>> list();
+    Optional<List<Admin>> list();
 }

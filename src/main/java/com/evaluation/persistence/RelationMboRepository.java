@@ -30,7 +30,7 @@ public interface RelationMboRepository
      * @return Mbo 관계 정보 리스트
      */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno")
-    public Optional<List<RelationMbo>> findByEvaulated(@Param("tno") long tno, @Param("sno") long sno);
+    Optional<List<RelationMbo>> findByEvaulated(@Param("tno") long tno, @Param("sno") long sno);
 
     /* criteria 처리 필요 */
     /**
@@ -41,7 +41,7 @@ public interface RelationMboRepository
      * @return 중복제거한 피평가자 정보 리스트
      */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno ORDER BY r.evaluated.sno ASC")
-    public Page<Staff> getDistinctEvaluatedList(@Param("tno") long tno, Pageable pageable);
+    Page<Staff> getDistinctEvaluatedList(@Param("tno") long tno, Pageable pageable);
 
     /**
      * 피평가자 이름으로 검색했을 때의 중복 제거한 피평가자 리스트를 찾는다.
@@ -52,7 +52,7 @@ public interface RelationMboRepository
      * @return 중복제거한 피평가자 정보 리스트
      */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.name LIKE %:keyword%")
-    public Page<Staff> getDistinctEvaluatedListByEvaluated(@Param("tno") long tno, @Param("keyword") String keyword,
+    Page<Staff> getDistinctEvaluatedListByEvaluated(@Param("tno") long tno, @Param("keyword") String keyword,
             Pageable pageable);
 
     /**
@@ -64,7 +64,7 @@ public interface RelationMboRepository
      * @return 중복제거한 피평가자 정보 리스트
      */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.name LIKE %:keyword%")
-    public Page<Staff> getDistinctEvaluatedListByEvaluator(@Param("tno") long tno, @Param("keyword") String keyword,
+    Page<Staff> getDistinctEvaluatedListByEvaluator(@Param("tno") long tno, @Param("keyword") String keyword,
             Pageable pageable);
     /* ./criteria 처리 필요 */
 
@@ -76,7 +76,7 @@ public interface RelationMboRepository
      * @return 직원 객체
      */
     @Query("SELECT DISTINCT r.evaluator FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.email=:email")
-    public Optional<Staff> findByEvaluatorEmail(@Param("tno") long tno, @Param("email") String email);
+    Optional<Staff> findByEvaluatorEmail(@Param("tno") long tno, @Param("email") String email);
 
     /**
      * 한 회차에 속하는 평가자의 모든 관계 정보를 찾는다.
@@ -86,7 +86,7 @@ public interface RelationMboRepository
      * @return Mbo관계 객체 리스트
      */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.sno=:sno")
-    public Optional<List<RelationMbo>> findByEvaulator(@Param("tno") long tno, @Param("sno") long sno);
+    Optional<List<RelationMbo>> findByEvaulator(@Param("tno") long tno, @Param("sno") long sno);
 
     /**
      * 회차에 속하는 모든 관계 정보를 찾는다.(엑셀 다운)
@@ -95,7 +95,7 @@ public interface RelationMboRepository
      * @return mbo관계정보 객체 리스트
      */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno")
-    public Optional<List<RelationMbo>> findAllByTno(@Param("tno") Long tno);
+    Optional<List<RelationMbo>> findAllByTno(@Param("tno") Long tno);
 
     /**
      * 한 회차에 속하는 중복 제거한 모든 피평가자를 찾는다. (xl 다운로드 시 이용)
@@ -104,7 +104,7 @@ public interface RelationMboRepository
      * @return 직원 객체 리스트
      */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno")
-    public List<Staff> findDintinctEavluatedByTno(@Param("tno") Long tno);
+    List<Staff> findDintinctEavluatedByTno(@Param("tno") Long tno);
 
     /**
      * See 단계에서 전 직원의 평가 진행율을 찾는다.
@@ -113,7 +113,7 @@ public interface RelationMboRepository
      * @return 평가 진행율을 담은 리스트의 리스트
      */
     @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*)) as ratio, s.sno FROM tbl_relation_mbo as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
-    public Optional<List<List<String>>> progressOfSurevey(@Param("tno") long tno);
+    Optional<List<List<String>>> progressOfSurevey(@Param("tno") long tno);
 
     /**
      * Plan, Do단계에서 전 직원의 목표 작성 비율을 찾는다.
@@ -122,7 +122,7 @@ public interface RelationMboRepository
      * @return 목표 작성 비율을 담은 리스트의 리스트
      */
     @Query(value = "select s.sno, s.name, s.email, s.level, s.department1, s.department2, sum(if(m.finish='Y',m.ratio,null)) from tbl_relation_mbo r left join tbl_mbo m on r.evaluated = m.staff_sno left join tbl_staff s on r.evaluated= s.sno where r.relation='me' and r.turn_tno=:tno group by r.evaluated order by s.name asc", nativeQuery = true)
-    public Optional<List<List<String>>> progressOfPlan(@Param("tno") long tno);
+    Optional<List<List<String>>> progressOfPlan(@Param("tno") long tno);
 
     /**
      * 한 회차에서 특정 인원으이 본인평가 정보를 찾는다.(상사 평가시 본인 평가 정보를 확인하기 위한 쿼리)
@@ -132,7 +132,7 @@ public interface RelationMboRepository
      * @return mbo관계 객체
      */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.relation='me' AND r.tno=:tno AND r.evaluated.sno=:sno")
-    public Optional<RelationMbo> findMeRelationByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
+    Optional<RelationMbo> findMeRelationByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
     /**
      * @param type    검색을 위한 타입
@@ -140,7 +140,7 @@ public interface RelationMboRepository
      * @param tno     회차id
      * @return querydsl을 사용해서 검색을 위한 builder를 리턴
      */
-    public default Predicate makePredicate(String type, String keyword, Long tno) {
+    default Predicate makePredicate(String type, String keyword, Long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();
 

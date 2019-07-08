@@ -9,13 +9,13 @@ import org.springframework.data.domain.Page;
 
 public interface LevelService {
 
-	public void register(Level level);
+	void register(Level level);
 
-	public Optional<Level> read(long lno);
+	Optional<Level> read(long lno);
 
-	public void modify(Level level);
+	void modify(Level level);
 
-	public void remove(long lno);
+	void remove(long lno);
 
-	public Page<Level> getList(long cno, PageVO vo);
+	Page<Level> getList(long cno, PageVO vo);
 }

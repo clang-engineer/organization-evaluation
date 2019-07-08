@@ -10,17 +10,17 @@ import org.springframework.data.domain.Page;
 
 public interface DepartmentService {
 
-	public void register(Department department);
+	void register(Department department);
 
-	public Optional<Department> read(long dno);
+	Optional<Department> read(long dno);
 
-	public void modify(Department department);
+	void modify(Department department);
 
-	public void remove(long tno);
+	void remove(long tno);
 
-	public Page<Department> getList(long tno, PageVO vo);
+	Page<Department> getList(long tno, PageVO vo);
 
-	public Optional<List<Department>> findByTnoSno(long tno, long sno);
+	Optional<List<Department>> findByTnoSno(long tno, long sno);
 
-	public Optional<Department> findByDepartment(long tno, String department1, String department2);
+	Optional<Department> findByDepartment(long tno, String department1, String department2);
 }

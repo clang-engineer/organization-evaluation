@@ -27,7 +27,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
     @Transactional
     @Modifying
     @Query("DELETE FROM Question q WHERE q.tno=:tno")
-    public void deleteByTno(@Param("tno") long tno);
+    void deleteByTno(@Param("tno") long tno);
 
     /**
      * 사용자 페이지에서 피평가자의 직군 계층 정보에 따라 문항을 찾는다..
@@ -38,7 +38,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
      * @return 한 질문 정보 리스트의 리스트
      */
     @Query("SELECT q.idx, q.category, q.item FROM Question q WHERE q.qno>0 AND q.tno=:tno AND q.division1=:division1 AND q.division2=:division2 ORDER BY q.idx ASC")
-    public Optional<List<List<String>>> getListByDivision(@Param("tno") Long tno, @Param("division1") String division1,
+    Optional<List<List<String>>> getListByDivision(@Param("tno") Long tno, @Param("division1") String division1,
             @Param("division2") String division2);
 
     /**
@@ -48,7 +48,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
      * @return 직군-계층-문항수 리스트의 리스트
      */
     @Query("SELECT q.division1, q.division2, COUNT(q.qno) FROM Question q WHERE tno=:tno GROUP BY q.division1, q.division2")
-    public Optional<List<List<String>>> getDistinctDivisionCountByTno(@Param("tno") long tno);
+    Optional<List<List<String>>> getDistinctDivisionCountByTno(@Param("tno") long tno);
 
     /**
      * 한 회차에 존재하는 모든 질문 정보를 찾는다. (엑셀 다운)
@@ -57,7 +57,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
      * @return 질문 객체 리스트
      */
     @Query("SELECT q FROM Question q WHERE tno=:tno")
-    public Optional<List<Question>> findByTno(@Param("tno") long tno);
+    Optional<List<Question>> findByTno(@Param("tno") long tno);
 
     /**
      * 개별 질문 등록 시 중복제거한 category를 찾는다.
@@ -66,7 +66,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
      * @return 중복제거한 카테고리 리스트
      */
     @Query("SELECT DISTINCT q.category FROM Question q WHERE tno=:tno ORDER BY q.category ASC")
-    public List<String> getListCategory(@Param("tno") long tno);
+    List<String> getListCategory(@Param("tno") long tno);
 
     /**
      * @param type    검색을 위한 타입
@@ -74,7 +74,7 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
      * @param tno     회차id
      * @return querydsl을 사용해서 검색을 위한 builder를 리턴
      */
-    public default Predicate makePredicate(String type, String keyword, Long tno) {
+    default Predicate makePredicate(String type, String keyword, Long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();
 

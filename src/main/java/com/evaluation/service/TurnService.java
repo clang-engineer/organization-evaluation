@@ -7,19 +7,19 @@ import com.evaluation.domain.Turn;
 
 public interface TurnService {
 
-	public void register(Turn turn);
+	void register(Turn turn);
 
-	public Optional<Turn> read(long tno);
+	Optional<Turn> read(long tno);
 
-	public void modify(Turn turn);
+	void modify(Turn turn);
 
-	public void remove(long tno);
+	void remove(long tno);
 
-	public Optional<List<Turn>> getTurnsOfCompany(Long cno);
+	Optional<List<Turn>> getTurnsOfCompany(Long cno);
 
-	public Optional<List<Turn>> getTurnsInSurvey(Long cno);
+	Optional<List<Turn>> getTurnsInSurvey(Long cno);
 
-	public Optional<List<Turn>> getTurnsInMbo(Long cno);
+	Optional<List<Turn>> getTurnsInMbo(Long cno);
 
-	public void commentRegister(Turn turn);
+	void commentRegister(Turn turn);
 }

@@ -6,15 +6,15 @@ import java.util.Optional;
 import com.evaluation.domain.Book;
 
 public interface BookService {
-	public void register(Book book);
+	void register(Book book);
 
-	public Optional<Book> read(int bno);
+	Optional<Book> read(int bno);
 
-	public void modify(Book book);
+	void modify(Book book);
 
-	public void remove(int bno);
+	void remove(int bno);
 
-	public Optional<List<Book>> findAll();
+	Optional<List<Book>> findAll();
 
-	public Optional<List<Book>> findByType(String type);
+	Optional<List<Book>> findByType(String type);
 }

@@ -26,7 +26,7 @@ public interface LevelRepository extends CrudRepository<Level, Long>, QuerydslPr
     @Transactional
     @Modifying
     @Query("DELETE FROM Level l WHERE l.cno=?1")
-    public void deleteByCno(long cno);
+    void deleteByCno(long cno);
 
     /**
      * 직원 정보 등록할 때 중복제거한 직급 정보를 찾는다.
@@ -35,7 +35,7 @@ public interface LevelRepository extends CrudRepository<Level, Long>, QuerydslPr
      * @return 중복제거한 직급 리스트
      */
     @Query("SELECT DISTINCT l.content FROM Level l WHERE cno=?1 ORDER BY l.content ASC")
-    public List<String> getListLevel(long cno);
+    List<String> getListLevel(long cno);
 
     /**
      * @param type    검색을 위한 타입
@@ -43,7 +43,7 @@ public interface LevelRepository extends CrudRepository<Level, Long>, QuerydslPr
      * @param cno     회사id
      * @return querydsl을 사용해서 검색을 위한 builder를 리턴
      */
-    public default Predicate makePredicate(String type, String keyword, long cno) {
+    default Predicate makePredicate(String type, String keyword, long cno) {
 
         BooleanBuilder builder = new BooleanBuilder();
 

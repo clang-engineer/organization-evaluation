@@ -28,7 +28,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM RelationSurvey r WHERE r.rno>0 AND r.tno=:tno AND r.relation='me') ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> get360EvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
+	Optional<List<Staff>> get360EvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
 
 	/**
 	 * 전 직원 중에 직원 정보가 동일하지 않고(본인이 아닌), 평가자에 속하지 않은 직원정보를 찾는다. (설정 시 평가자 출력하기 위해)
@@ -39,7 +39,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM RelationSurvey r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> get360EvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
+	Optional<List<Staff>> get360EvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
 			@Param("sno") long sno);
 
 	/**
@@ -50,7 +50,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.relation='me') ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> getMboEvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
+	Optional<List<Staff>> getMboEvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
 
 	/**
 	 * 전 직원 중에 직원 정보가 동일하지 않고(본인이 아닌), 평가자에 속하지 않은 직원정보를 찾는다. (설정 시 평가자 출력하기 위해)
@@ -61,7 +61,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
-	public Optional<List<Staff>> getMboEvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
+	Optional<List<Staff>> getMboEvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
 			@Param("sno") long sno);
 
 	/**
@@ -72,7 +72,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	@Transactional
 	@Modifying
 	@Query("DELETE FROM Staff s WHERE s.cno=:cno")
-	public void deleteByCno(@Param("cno") long cno);
+	void deleteByCno(@Param("cno") long cno);
 
 	/**
 	 * 이메일로 직원 정보를 찾는다. (엑셀 피평가자)
@@ -81,7 +81,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.email=:email")
-	public Optional<Staff> findByEmail(@Param("email") String email);
+	Optional<Staff> findByEmail(@Param("email") String email);
 
 	/**
 	 * 이름으로 직원 정보를 찾는다. (엑셀 평가자)
@@ -91,7 +91,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.cno=?1 AND s.name=?2")
-	public Optional<Staff> findByCnoAndName(long cno, String name);
+	Optional<Staff> findByCnoAndName(long cno, String name);
 
 	/**
 	 * 한 회사에 속하는 모든 직원 정보를 찾는다.
@@ -100,7 +100,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.cno=:cno ORDER BY s.name ASC")
-	public Optional<List<Staff>> findByCno(@Param("cno") Long cno);
+	Optional<List<Staff>> findByCno(@Param("cno") Long cno);
 
 	/**
 	 * @param type    검색을 위한 타입
@@ -108,7 +108,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @param cno     회사id
 	 * @return querydsl을 사용해서 검색을 위한 builder를 리턴
 	 */
-	public default Predicate makePredicate(String type, String keyword, Long cno) {
+	default Predicate makePredicate(String type, String keyword, Long cno) {
 
 		BooleanBuilder builder = new BooleanBuilder();
 

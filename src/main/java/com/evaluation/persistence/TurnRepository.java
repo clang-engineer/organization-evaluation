@@ -24,7 +24,7 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 	 * @return 회차 객체 리스트
 	 */
 	@Query("SELECT t FROM Turn t WHERE t.cno=?1 AND t.tno>0 ORDER BY t.tno ASC")
-	public Optional<List<Turn>> getTurnsOfCompany(Long cno);
+	Optional<List<Turn>> getTurnsOfCompany(Long cno);
 
 	/**
 	 * 서베이 상태가 설정, 비활성화가 아니고 시작날짜와 종료날짜 사이에 현재날짜가 존재하는 회차 정보를 찾는다.
@@ -34,7 +34,7 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 	 * @return 회차 객체 리스트
 	 */
 	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND t.infoSurvey.status NOT IN ('setting', 'inactivation')  AND :time BETWEEN t.infoSurvey.startDate AND t.infoSurvey.endDate ORDER BY t.tno DESC")
-	public Optional<List<Turn>> getTurnsInSurvey(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
+	Optional<List<Turn>> getTurnsInSurvey(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
 
 	/**
 	 * Mb 상태가 설정, 비활성화가 아니고 시작날짜와 종료날짜 사이에 현재날짜가 존재하는 회차 정보를 찾는다.
@@ -44,7 +44,7 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 	 * @return 회차 객체 리스트
 	 */
 	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND t.infoMbo.status NOT IN ('setting', 'inactivation') AND :time BETWEEN t.infoMbo.startDate AND t.infoMbo.endDate ORDER BY t.tno DESC")
-	public Optional<List<Turn>> getTurnsInMbo(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
+	Optional<List<Turn>> getTurnsInMbo(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
 
 	/**
 	 * 한 회사에 속하는 회차를 모두 삭제한다.
@@ -54,5 +54,5 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 	@Modifying
 	@Transactional
 	@Query("DELETE FROM Turn t WHERE t.cno=?1")
-	public void deleteByCno(long cno);
+	void deleteByCno(long cno);
 }

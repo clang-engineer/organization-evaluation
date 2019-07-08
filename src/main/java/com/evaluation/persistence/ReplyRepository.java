@@ -21,5 +21,5 @@ public interface ReplyRepository extends CrudRepository<Reply, Long> {
      * @return 댓글 객체 리스트
      */
     @Query("SELECT r FROM Reply r WHERE r.mno=:mno")
-    public Optional<List<Reply>> listByMno(@Param("mno") long mno);
+    Optional<List<Reply>> listByMno(@Param("mno") long mno);
 }

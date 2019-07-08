@@ -9,15 +9,15 @@ import com.evaluation.vo.PageVO;
 
 public interface CompanyService {
 
-	public void register(Company company);
+	void register(Company company);
 
-	public Optional<Company> read(long cno);
+	Optional<Company> read(long cno);
 
-	public void modify(Company company);
+	void modify(Company company);
 
-	public void remove(long cno);
+	void remove(long cno);
 
-	public Page<Company> getList(PageVO page);
+	Page<Company> getList(PageVO page);
 
-	public Optional<Company> findByCompanyId(String name);
+	Optional<Company> findByCompanyId(String name);
 }

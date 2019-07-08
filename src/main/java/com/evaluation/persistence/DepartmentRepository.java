@@ -28,7 +28,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
      * @return 부서 리스트
      */
     @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.leader.sno=:sno")
-    public Optional<List<Department>> findByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
+    Optional<List<Department>> findByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
     /**
      * 직원등록할 때 중복제거한 부서정보를 찾는다.
@@ -37,7 +37,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
      * @return 중복제거한 부서1 리스트
      */
     @Query("SELECT DISTINCT d.department1 FROM Department d WHERE tno=:tno ORDER BY d.department1 ASC")
-    public List<String> getListDepartment1(@Param("tno") long tno);
+    List<String> getListDepartment1(@Param("tno") long tno);
 
     /**
      * 직원등록할 때 중복제거한 부서정보를 찾는다.
@@ -67,7 +67,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
      * @return
      */
     @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.department1=:department1 AND d.department2=:department2")
-    public Optional<Department> findByDeparment(@Param("tno") long tno, @Param("department1") String department1,
+    Optional<Department> findByDeparment(@Param("tno") long tno, @Param("department1") String department1,
             @Param("department2") String department2);
 
     /**
@@ -76,7 +76,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
      * @param tno     회차id
      * @return querydsl을 사용해서 검색을 위한 builder를 리턴
      */
-    public default Predicate makePredicate(String type, String keyword, long tno) {
+    default Predicate makePredicate(String type, String keyword, long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();
 

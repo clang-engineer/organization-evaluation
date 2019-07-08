@@ -11,25 +11,25 @@ import org.springframework.data.domain.Page;
 
 public interface RelationSurveyService {
 
-    public void register(RelationSurvey relationSurvey);
+    void register(RelationSurvey relationSurvey);
 
-    public Optional<RelationSurvey> read(Long rno);
+    Optional<RelationSurvey> read(Long rno);
 
-    public void modify(RelationSurvey relationSurvey);
+    void modify(RelationSurvey relationSurvey);
 
-    public void remove(Long rno);
+    void remove(Long rno);
 
-    public Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
+    Page<Staff> getDistinctEvaluatedList(long tno, PageVO vo);
 
-    public Optional<List<RelationSurvey>> findByEvaulated(long tno, long sno);
+    Optional<List<RelationSurvey>> findByEvaulated(long tno, long sno);
 
-    public Optional<Staff> findByEvaluatorEmail(long tno, String email);
+    Optional<Staff> findByEvaluatorEmail(long tno, String email);
 
-    public Optional<List<RelationSurvey>> findByEvaluator(long tno, long sno);
+    Optional<List<RelationSurvey>> findByEvaluator(long tno, long sno);
 
-    public Optional<List<RelationSurvey>> findAllByTno(long tno);
+    Optional<List<RelationSurvey>> findAllByTno(long tno);
 
-    public List<Staff> findDintinctEavluatedByTno(long tno);
+    List<Staff> findDintinctEavluatedByTno(long tno);
 
-    public Optional<List<List<String>>> progressOfSurevey(long tno);
+    Optional<List<List<String>>> progressOfSurevey(long tno);
 }

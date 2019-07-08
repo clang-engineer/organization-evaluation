@@ -26,7 +26,7 @@ public interface DivisionRepository extends CrudRepository<Division, Long>, Quer
     @Transactional
     @Modifying
     @Query("DELETE FROM Division d WHERE d.cno=?1")
-    public void deleteByCno(long cno);
+    void deleteByCno(long cno);
 
     /**
      * 직원 개별 등록할 때 중복제거한 직군 정보 위해
@@ -35,7 +35,7 @@ public interface DivisionRepository extends CrudRepository<Division, Long>, Quer
      * @return
      */
     @Query("SELECT DISTINCT d.division1 FROM Division d WHERE cno=?1 ORDER BY d.division1 ASC")
-    public List<String> getListDivision1(long cno);
+    List<String> getListDivision1(long cno);
 
     /**
      * 직원 개별 등록할 때 중복제거한 계층 정보 위해
@@ -44,7 +44,7 @@ public interface DivisionRepository extends CrudRepository<Division, Long>, Quer
      * @return
      */
     @Query("SELECT DISTINCT d.division2 FROM Division d WHERE cno=?1 ORDER BY d.division2 ASC")
-    public List<String> getListDivision2(long cno);
+    List<String> getListDivision2(long cno);
 
     /**
      * @param type    검색을 위한 타입
@@ -52,7 +52,7 @@ public interface DivisionRepository extends CrudRepository<Division, Long>, Quer
      * @param cno     회사id
      * @return querydsl을 사용해서 검색을 위한 builder를 리턴
      */
-    public default Predicate makePredicate(String type, String keyword, long cno) {
+    default Predicate makePredicate(String type, String keyword, long cno) {
 
         BooleanBuilder builder = new BooleanBuilder();
 
