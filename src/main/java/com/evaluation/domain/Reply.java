@@ -15,6 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Reply</code> 각 목표에 달린 댓글을 표현한다.
+ */
 @Getter
 @Setter
 @Entity

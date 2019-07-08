@@ -15,6 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Level</code> 객체는 회사의 직급 정보를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

@@ -31,6 +31,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Turn</code> 객체는 한 회사에 속하는 회차를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

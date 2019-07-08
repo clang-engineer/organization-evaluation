@@ -15,6 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Mbo</code> 객체는 개인이 저장하는 한 회차의 각 목표를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

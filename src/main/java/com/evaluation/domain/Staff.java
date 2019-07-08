@@ -15,6 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Staff</code> 객체는 한 회사에 속하는 직원 정보를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

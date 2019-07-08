@@ -8,7 +8,7 @@ import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 /**
- * Book에서 사용.
+ * <code>Content</code> 객체는 Book 객체에 속하는 회답 내용과 해당 회답을 점수를 표현한다
  */
 @Embeddable
 @Getter

@@ -10,7 +10,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Turn에서 사용.
+ * <code>InfoMbo</code> 객체는 Turn 객체에 속하는 Mbo 정보를 표현한다
  */
 @Embeddable
 @Getter

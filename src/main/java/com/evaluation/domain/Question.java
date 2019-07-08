@@ -15,6 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Question</code> 객체는 서베이에 이용되는 한 회차의 문항을 표현한다.
+ */
 @Getter
 @Setter
 @Entity

@@ -25,6 +25,9 @@ import com.evaluation.domain.embeddable.RatioValue;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>RelationMbo</code> 객체는 한 회차에 속하는 mbo관계 매핑을 표현한다.
+ */
 @Getter
 @Setter
 @Entity

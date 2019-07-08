@@ -6,7 +6,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Department에서 사용
+ * <code>Leader</code> 객체는 Department 객체에 속하는 리더 정보를 표현한다
  */
 @Embeddable
 @Getter

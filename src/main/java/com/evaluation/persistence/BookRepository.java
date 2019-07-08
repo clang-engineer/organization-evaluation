@@ -8,11 +8,24 @@ import org.springframework.data.repository.CrudRepository;
 
 import com.evaluation.domain.Book;
 
+/**
+ * <code>BookRepository</code> 객체는 Book 객체의 영속화를 위해 표현한다.
+ */
 public interface BookRepository extends CrudRepository<Book, Integer> {
 
-	//book은 페이지 없이 전부 정렬만해서 list보여줌
+	/**
+	 * 전체 Book list를 불러온다.
+	 * 
+	 * @param sort 정렬 지정.
+	 * @return book 리스트
+	 */
 	Optional<List<Book>> findAll(Sort sort);
 
-	//survey, mbo info등록할 때 회답유형 선택하기 위해
+	/**
+	 * 전체 Book list를 불러온다.
+	 * 
+	 * @param type book의 type 지정(survey or mbo).
+	 * @return book 리스트
+	 */
 	Optional<List<Book>> findByType(String type);
 }

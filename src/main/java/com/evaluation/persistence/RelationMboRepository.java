@@ -16,57 +16,130 @@ import org.springframework.data.querydsl.QuerydslPredicateExecutor;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.data.repository.query.Param;
 
+/**
+ * <code>RelationMboRepository</code> 객체는 RelationMbo 객체의 영속화를 위해 표현한다.
+ */
 public interface RelationMboRepository
         extends CrudRepository<RelationMbo, Long>, QuerydslPredicateExecutor<RelationMbo> {
 
-    // 모든 테이블 가져오니 넘 느려서, 페이지에 표시되는 관련 관계자 정보만 가져오기로 함.
+    /**
+     * 한 회차에 속하는 한 피평가자의 모든 관계 정보를 찾는다.
+     * 
+     * @param tno 회차id
+     * @param sno 직원id
+     * @return Mbo 관계 정보 리스트
+     */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno")
     public Optional<List<RelationMbo>> findByEvaulated(@Param("tno") long tno, @Param("sno") long sno);
 
     /* criteria 처리 필요 */
-    // 하나의 tno에 존재하는 모든 relation 중 중복을 제거한 피평가자 실질적으로 페이징 처리됨.
+    /**
+     * 하나의 회차에 존재하는 모든 관계 중 중복을 제거한 피평가자 리스트를 찾는다.
+     * 
+     * @param tno      회차id
+     * @param pageable 페이지 정보
+     * @return 중복제거한 피평가자 정보 리스트
+     */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno ORDER BY r.evaluated.sno ASC")
     public Page<Staff> getDistinctEvaluatedList(@Param("tno") long tno, Pageable pageable);
 
-    // ecaluated 이름으로 검색했을 때의 유일값!
+    /**
+     * 피평가자 이름으로 검색했을 때의 중복 제거한 피평가자 리스트를 찾는다.
+     * 
+     * @param tno      회차id
+     * @param keyword  검색keyword
+     * @param pageable 페이지 정보
+     * @return 중복제거한 피평가자 정보 리스트
+     */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.name LIKE %:keyword%")
     public Page<Staff> getDistinctEvaluatedListByEvaluated(@Param("tno") long tno, @Param("keyword") String keyword,
             Pageable pageable);
 
-    // ecaluator 이름으로 검색했을 때의 유일값!
+    /**
+     * 평가자 이름으로 검색했을 때의 중복 제거한 피평가자 리스트를 찾는다.
+     * 
+     * @param tno      회차id
+     * @param keyword  검색keyword
+     * @param pageable 페이지 정보
+     * @return 중복제거한 피평가자 정보 리스트
+     */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.name LIKE %:keyword%")
     public Page<Staff> getDistinctEvaluatedListByEvaluator(@Param("tno") long tno, @Param("keyword") String keyword,
             Pageable pageable);
     /* ./criteria 처리 필요 */
 
-    // 로그인 할 때 사용 회차에 있는 평가자면 로그인
+    /**
+     * 회차에 속하는 평가자 중에 이메일 정보가 존재하는지 찾는다.(로그인 시)
+     * 
+     * @param tno   회차id
+     * @param email 직원 email
+     * @return 직원 객체
+     */
     @Query("SELECT DISTINCT r.evaluator FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.email=:email")
     public Optional<Staff> findByEvaluatorEmail(@Param("tno") long tno, @Param("email") String email);
 
-    // 로그인 식 출력되는 피평가자 리스트.
+    /**
+     * 한 회차에 속하는 평가자의 모든 관계 정보를 찾는다.
+     * 
+     * @param tno 회차 id
+     * @param sno 직원 id
+     * @return Mbo관계 객체 리스트
+     */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno AND r.evaluator.sno=:sno")
     public Optional<List<RelationMbo>> findByEvaulator(@Param("tno") long tno, @Param("sno") long sno);
 
-    // xl 다운로드를 위한 turn에 속하는 전체 관계
+    /**
+     * 회차에 속하는 모든 관계 정보를 찾는다.(엑셀 다운)
+     * 
+     * @param tno 회차id
+     * @return mbo관계정보 객체 리스트
+     */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno")
     public Optional<List<RelationMbo>> findAllByTno(@Param("tno") Long tno);
 
-    // xl 다운로드를 위한 turn에 속하는 중복제거 피평가자, Optional로는 변환 오류 발생. Distinct는 안되는 듯.? 위에
-    // 유사함수 있지만 페이지 처리 때문에 따로 만듬.
+    /**
+     * 한 회차에 속하는 중복 제거한 모든 피평가자를 찾는다. (xl 다운로드 시 이용)
+     * 
+     * @param tno 회차id
+     * @return 직원 객체 리스트
+     */
     @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno")
     public List<Staff> findDintinctEavluatedByTno(@Param("tno") Long tno);
 
-    // 평가현황을 위한 쿼리 count if 부분이 해결이 안돼서 native쿼리를 사용함.
+    /**
+     * See 단계에서 전 직원의 평가 진행율을 찾는다.
+     * 
+     * @param tno 회차 id
+     * @return 평가 진행율을 담은 리스트의 리스트
+     */
     @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*)) as ratio, s.sno FROM tbl_relation_mbo as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
     public Optional<List<List<String>>> progressOfSurevey(@Param("tno") long tno);
 
+    /**
+     * Plan, Do단계에서 전 직원의 목표 작성 비율을 찾는다.
+     * 
+     * @param tno 회차id
+     * @return 목표 작성 비율을 담은 리스트의 리스트
+     */
     @Query(value = "select s.sno, s.name, s.email, s.level, s.department1, s.department2, sum(if(m.finish='Y',m.ratio,null)) from tbl_relation_mbo r left join tbl_mbo m on r.evaluated = m.staff_sno left join tbl_staff s on r.evaluated= s.sno where r.relation='me' and r.turn_tno=:tno group by r.evaluated order by s.name asc", nativeQuery = true)
     public Optional<List<List<String>>> progressOfPlan(@Param("tno") long tno);
 
-    // 상사 평가시 본인 평가 정보를 확인하기 위한 쿼리
+    /**
+     * 한 회차에서 특정 인원으이 본인평가 정보를 찾는다.(상사 평가시 본인 평가 정보를 확인하기 위한 쿼리)
+     * 
+     * @param tno 회차id
+     * @param sno 직원 id
+     * @return mbo관계 객체
+     */
     @Query("SELECT r FROM RelationMbo r WHERE r.rno>0 AND r.relation='me' AND r.tno=:tno AND r.evaluated.sno=:sno")
     public Optional<RelationMbo> findMeRelationByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
+    /**
+     * @param type    검색을 위한 타입
+     * @param keyword 검색 키워드
+     * @param tno     회차id
+     * @return querydsl을 사용해서 검색을 위한 builder를 리턴
+     */
     public default Predicate makePredicate(String type, String keyword, Long tno) {
 
         BooleanBuilder builder = new BooleanBuilder();

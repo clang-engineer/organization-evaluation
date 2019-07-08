@@ -17,12 +17,16 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Admin</code> 객체는 전체 시스템 관리자를 표현한다.
+ * 
+ */
 @Getter
 @Setter
 @Entity
 @Table(name = "tbl_admin")
 public class Admin {
-    
+
     @Id
     @Column(name = "uid")
     private String uid;

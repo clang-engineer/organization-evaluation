@@ -23,6 +23,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>RelationSurvey</code> 객체는 한 회차에 속하는 survey관계 매핑을 표현한다.
+ */
 @Getter
 @Setter
 @Entity

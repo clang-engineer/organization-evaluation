@@ -7,7 +7,8 @@ import lombok.Getter;
 import lombok.Setter;
 
 /**
- * Ratio와 평가 점수를 함께 전닫하기 위한 embeddable RelationMBO answers필드에서 사용.
+ * <code>RatioValue</code> 객체는 Ratio와 평가 점수를 함께 전닫하기 위해 RelationMBO answers필드에서
+ * 사용된다.
  */
 @Embeddable
 @Getter

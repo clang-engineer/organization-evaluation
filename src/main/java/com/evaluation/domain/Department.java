@@ -22,6 +22,9 @@ import com.evaluation.domain.embeddable.Leader;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Department</code> 객체는 한 회차에 속하는 부서와 leader 정보를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

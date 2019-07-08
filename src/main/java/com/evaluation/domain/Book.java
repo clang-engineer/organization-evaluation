@@ -22,6 +22,9 @@ import com.evaluation.domain.embeddable.Content;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Bokk</code> 객체는 survey나 mbo 회답 코드를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

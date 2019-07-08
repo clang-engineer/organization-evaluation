@@ -15,6 +15,9 @@ import org.hibernate.annotations.UpdateTimestamp;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * <code>Division</code>객체는 설문 문항을 위한 회사의 구분 정보를 표현한다.
+ */
 @Getter
 @Setter
 @Entity

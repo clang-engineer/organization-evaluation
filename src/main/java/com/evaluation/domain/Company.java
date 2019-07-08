@@ -16,6 +16,9 @@ import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.Setter;
 
+/**
+ * * <code>Company</code> 객체는 회사 정보를 표현한다.
+ */
 @Getter
 @Setter
 @Entity
