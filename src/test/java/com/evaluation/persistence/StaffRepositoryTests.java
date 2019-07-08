@@ -1,13 +1,18 @@
 package com.evaluation.persistence;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.IntStream;
 
+import com.evaluation.domain.RelationMbo;
+import com.evaluation.domain.RelationSurvey;
 import com.evaluation.domain.Staff;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,54 +22,67 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
+@Transactional
 @Slf4j
 public class StaffRepositoryTests {
 
 	@Autowired
-	StaffRepository staffRepo;
+	StaffRepository repo;
+
+	@Autowired
+	RelationSurveyRepository relationSurveyRepo;
+
+	@Autowired
+	RelationMboRepository relationMboRepo;
 
 	@Test
-	public void staffTests() {
-		log.info("===========================");
-		log.info("" + staffRepo);
+	public void testDI() {
+		assertNotNull(repo);
 	}
 
-	@Test
+	@Before
 	public void insertDummiesTests() {
 
-		Long[] arr = { 10L, 9L, 8L };
+		IntStream.range(1, 31).forEach(i -> {
+			Staff staff = new Staff();
+			staff.setEmail("test" + i + "@test.com");
+			staff.setPassword("test id" + i);
+			staff.setName("name" + i);
+			staff.setDepartment1("dep1" + i);
+			staff.setDepartment2("dep2" + i);
+			staff.setLevel("test id" + i);
+			staff.setDivision1("test id" + i);
+			staff.setDivision2("test id" + i);
+			staff.setCno(1L);
+			repo.save(staff);
 
-		Arrays.stream(arr).forEach(num -> {
+			RelationSurvey relationSurvey = new RelationSurvey();
+			relationSurvey.setEvaluator(staff);
+			relationSurvey.setEvaluated(staff);
+			relationSurvey.setTno(1L);
+			relationSurveyRepo.save(relationSurvey);
 
-			IntStream.range(1, 31).forEach(i -> {
-				Staff staff = new Staff();
-				staff.setEmail("testemail" + num + i + "@test.com");
-				staff.setPassword("test id" + i);
-				staff.setName("test id" + i);
-				staff.setDepartment1("test id" + i);
-				staff.setDepartment2("department2");
-				staff.setLevel("test id" + i);
-				staff.setDivision1("test id" + i);
-				staff.setDivision2("test id" + i);
-				staff.setCno(num);
+			RelationMbo relationMbo = new RelationMbo();
+			relationMbo.setEvaluator(staff);
+			relationMbo.setEvaluated(staff);
+			relationMbo.setTno(1L);
+			relationMboRepo.save(relationMbo);
 
-				staffRepo.save(staff);
-			});
 		});
 	}
 
 	@Test
 	public void testList1() {
 		Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "name");
-		Page<Staff> result = staffRepo.findAll(staffRepo.makePredicate(null, null, 100L), pageable);
+		Page<Staff> result = repo.findAll(repo.makePredicate(null, null, 1L), pageable);
 		log.info("PAGE : " + result.getPageable());
 
-		log.info("----------------");
 		result.getContent().forEach(staff -> log.info("" + staff));
 	}
 
@@ -72,17 +90,16 @@ public class StaffRepositoryTests {
 	public void testList2() {
 
 		Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "name");
-		Page<Staff> result = staffRepo.findAll(staffRepo.makePredicate("email", "02", 100L), pageable);
+		Page<Staff> result = repo.findAll(repo.makePredicate("email", "test", 1L), pageable);
 		log.info("PAGE : " + result.getPageable());
 
-		log.info("----------------");
 		result.getContent().forEach(staff -> log.info("" + staff));
 
 	}
 
 	@Test
-	public void testGetAllStaffListExcludeEvaluated() {
-		Optional<List<Staff>> result = staffRepo.get360Evaluated(10, 9);
+	public void testGet360EvaluatedList() {
+		Optional<List<Staff>> result = repo.get360EvaluatedList(1L, 1L);
 		result.ifPresent(staff -> {
 			log.info("===>" + staff);
 		});
@@ -90,8 +107,8 @@ public class StaffRepositoryTests {
 	}
 
 	@Test
-	public void testGetAllStaffListExcludeEvaluator() {
-		Optional<List<Staff>> result = staffRepo.get360Evaluator(8, 8, 70);
+	public void testGet360EvaluatorList() {
+		Optional<List<Staff>> result = repo.get360EvaluatorList(1L, 1L, 1L);
 		result.ifPresent(staff -> {
 			log.info("===>" + staff);
 		});
@@ -99,24 +116,43 @@ public class StaffRepositoryTests {
 	}
 
 	@Test
-	public void testDeleteAll() {
-		staffRepo.deleteByCno(1L);
+	public void testGetMBOEvaluatedList() {
+		Optional<List<Staff>> result = repo.getMboEvaluatedList(1L, 1L);
+		result.ifPresent(staff -> {
+			log.info("===>" + staff);
+		});
+
+	}
+
+	@Test
+	public void testGetMboEvaluatorList() {
+		Optional<List<Staff>> result = repo.getMboEvaluatorList(1L, 1L, 1L);
+		result.ifPresent(staff -> {
+			log.info("===>" + staff);
+		});
+	}
+
+	@Test
+	public void testDeleteByCno() {
+		relationSurveyRepo.deleteAll();
+		relationMboRepo.deleteAll();
+		repo.deleteByCno(1L);
 	}
 
 	@Test
 	public void testFindByCnoAndName() {
-		log.info("" + staffRepo.findByCnoAndName(1, "이동영"));
+		log.info("" + repo.findByCnoAndName(1, "name1"));
 	}
 
 	@Test
-	public void testFindByCnoAndEmail() {
-		log.info("" + staffRepo.findByEmail("choij@dwchem.co.kr"));
+	public void testFindByEmail() {
+		log.info("" + repo.findByEmail("test@test1.com"));
 	}
 
 	@Test
-	public void xlWriteTest() {
-
-		staffRepo.findByCno(1L).ifPresent(list -> {
+	public void testFindByCno() {
+		// xlwritetest
+		repo.findByCno(1L).ifPresent(list -> {
 			List<List<String>> xlList = new ArrayList<List<String>>();
 			List<String> header = new ArrayList<String>();
 			header.add("이름");
@@ -134,8 +170,6 @@ public class StaffRepositoryTests {
 				tmpList.add(list.get(i).getLevel());
 				xlList.add(tmpList);
 			}
-
-			// AboutExcel.writeExcel("test", xlList);
 		});
 
 	}

@@ -1,5 +1,7 @@
 package com.evaluation.persistence;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.Arrays;
 import java.util.stream.IntStream;
 
@@ -7,6 +9,7 @@ import javax.transaction.Transactional;
 
 import com.evaluation.domain.Question;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,29 +18,26 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort.Direction;
-import org.springframework.test.annotation.Commit;
 import org.springframework.test.context.junit4.SpringRunner;
 
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
-@Commit
 @Transactional
+@Slf4j
 public class QuestionRepositoryTests {
 
 	@Autowired
-	QuestionRepository questionRepo;
+	QuestionRepository repo;
 
 	@Test
-	public void QuestionTests() {
-		log.info("============");
-		log.info("" + questionRepo);
+	public void testDI() {
+		assertNotNull(repo);
 	}
 
-	@Test
-	public void testInertQuestion() {
+	@Before
+	public void testInsert() {
 
 		Long[] arr = { 1L, 2L, 3L };
 
@@ -49,19 +49,51 @@ public class QuestionRepositoryTests {
 				question.setIdx(i);
 				question.setCategory("category" + i);
 				question.setItem("question" + i);
-				question.setTno(num);
-				questionRepo.save(question);
+				question.setTno(1L);
+				repo.save(question);
 			});
+		});
+	}
+
+	@Test
+	public void testDeleteByTno() {
+		repo.deleteByTno(1L);
+	}
+
+	@Test
+	public void testGetListByDivision() {
+		repo.getListByDivision(1L, "division11", "division21").ifPresent(list -> log.info("" + list));
+	}
+
+	@Test
+	public void testGetDistinctDivisionCountByTno() {
+		repo.getDistinctDivisionCountByTno(1L).ifPresent(origin -> {
+			log.info("" + origin);
+		});
+	}
+
+	@Test
+	public void testFindByTno() {
+		repo.findByTno(1L).ifPresent(origin -> {
+			origin.forEach(question -> {
+				log.info("" + question);
+			});
+		});
+	}
+
+	@Test
+	public void testGetListCategory() {
+		repo.getListCategory(1L).forEach(question -> {
+			log.info("" + question);
 		});
 	}
 
 	@Test
 	public void testList1() {
 		Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "qno");
-		Page<Question> result = questionRepo.findAll(questionRepo.makePredicate(null, null, 2L), pageable);
+		Page<Question> result = repo.findAll(repo.makePredicate(null, null, 2L), pageable);
 		log.info("PAGE : " + result.getPageable());
 
-		log.info("----------------");
 		result.getContent().forEach(question -> log.info("" + question));
 	}
 
@@ -69,37 +101,11 @@ public class QuestionRepositoryTests {
 	public void testList2() {
 
 		Pageable pageable = PageRequest.of(0, 20, Direction.DESC, "qno");
-		Page<Question> result = questionRepo.findAll(questionRepo.makePredicate("division", "11", 1L), pageable);
+		Page<Question> result = repo.findAll(repo.makePredicate("division", "11", 1L), pageable);
 		log.info("PAGE : " + result.getPageable());
 
-		log.info("----------------");
 		result.getContent().forEach(question -> log.info("" + question.getQno()));
 
 	}
 
-	@Test
-	public void testDeleteAll() {
-		questionRepo.deleteByTno(41L);
-	}
-
-	@Test
-	public void testDistinctDivision() {
-		questionRepo.getDistinctDivisionCountByTno(1L).ifPresent(origin -> {
-			log.info("" + origin);
-		});
-	}
-
-	@Test
-	public void testGetListByDivision() {
-		questionRepo.getListByDivision(1L, "실리콘마이터스", "임원").ifPresent(list -> log.info("" + list));
-	}
-
-	@Test
-	public void testGetAllQuestionInTurn() {
-		questionRepo.findByTno(1L).ifPresent(origin -> {
-			origin.forEach(question -> {
-				log.info("" + question);
-			});
-		});
-	}
 }

@@ -49,7 +49,7 @@ public class TurnServiceTests {
 	@Test
 	public void testGet() {
 		log.info("========== test get");
-		log.info("" + service.get(1L));
+		log.info("" + service.read(1L));
 	}
 
 	@Test
@@ -78,7 +78,7 @@ public class TurnServiceTests {
 	public void testGetList() {
 		log.info("========== test getList");
 
-		service.getList(100L).ifPresent(origin -> {
+		service.getTurnsOfCompany(100L).ifPresent(origin -> {
 			origin.forEach(turn -> log.info("" + turn));
 		});
 	}

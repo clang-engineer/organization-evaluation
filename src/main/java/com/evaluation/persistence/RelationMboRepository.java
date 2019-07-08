@@ -57,10 +57,10 @@ public interface RelationMboRepository
     public List<Staff> findDintinctEavluatedByTno(@Param("tno") Long tno);
 
     // 평가현황을 위한 쿼리 count if 부분이 해결이 안돼서 native쿼리를 사용함.
-    @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*)) as ratio, s.sno FROM tbl_relationmbo as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
+    @Query(value = "SELECT s.name, s.email, s.level, s.department1, s.department2, count(if(finish='Y',rno,null)) as complete,count(*) as total, (count(if(finish='Y',rno,null))/count(*)) as ratio, s.sno FROM tbl_relation_mbo as r left join tbl_staff as s on r.evaluator=s.sno where r.turn_tno=:tno group by evaluator ORDER BY s.name ASC", nativeQuery = true)
     public Optional<List<List<String>>> progressOfSurevey(@Param("tno") long tno);
 
-    @Query(value = "select s.sno, s.name, s.email, s.level, s.department1, s.department2, sum(if(m.finish='Y',m.ratio,null)) from tbl_relationmbo r left join tbl_mbo m on r.evaluated = m.staff_sno left join tbl_staff s on r.evaluated= s.sno where r.relation='me' and r.turn_tno=:tno group by r.evaluated order by s.name asc", nativeQuery = true)
+    @Query(value = "select s.sno, s.name, s.email, s.level, s.department1, s.department2, sum(if(m.finish='Y',m.ratio,null)) from tbl_relation_mbo r left join tbl_mbo m on r.evaluated = m.staff_sno left join tbl_staff s on r.evaluated= s.sno where r.relation='me' and r.turn_tno=:tno group by r.evaluated order by s.name asc", nativeQuery = true)
     public Optional<List<List<String>>> progressOfPlan(@Param("tno") long tno);
 
     // 상사 평가시 본인 평가 정보를 확인하기 위한 쿼리

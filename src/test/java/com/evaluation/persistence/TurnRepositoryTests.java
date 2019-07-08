@@ -1,5 +1,7 @@
 package com.evaluation.persistence;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.time.LocalDateTime;
 import java.util.Arrays;
 import java.util.HashSet;
@@ -8,6 +10,7 @@ import java.util.stream.IntStream;
 
 import com.evaluation.domain.Turn;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,38 +26,38 @@ import lombok.extern.slf4j.Slf4j;
 @Commit
 public class TurnRepositoryTests {
 	@Autowired
-	TurnRepository turnRepo;
+	TurnRepository repo;
 
 	@Test
-	public void turnTests() {
-		log.info("===========================");
-		log.info("" + turnRepo);
+	public void testDI() {
+		assertNotNull(repo);
 	}
 
-	@Test
-	public void testInsertTurns() {
-		turnRepo.deleteAll();
-		Long[] arr = { 1L, 2L, 3L, 4L, 5L };
+	@Before
+	public void testInsert() {
+		repo.deleteAll();
 
-		Arrays.stream(arr).forEach(num -> {
-
-			IntStream.range(1, 4).forEach(i -> {
-				Turn turn = new Turn();
-				turn.setTitle("turn..." + i);
-				Set<String> types = new HashSet<>();
-				types.add("360");
-				types.add("mbo");
-				turn.setTypes(types);
-				turn.setCno(num);
-				turnRepo.save(turn);
-			});
+		IntStream.range(1, 4).forEach(i -> {
+			Turn turn = new Turn();
+			turn.setTitle("turn..." + i);
+			Set<String> types = new HashSet<>();
+			types.add("360");
+			types.add("mbo");
+			turn.setTypes(types);
+			turn.setCno(1L);
+			repo.save(turn);
 		});
 
 	}
 
 	@Test
-	public void testGetTurnsOfCompanyByStatus() {
-		turnRepo.getTurnsInSurvey(1L, LocalDateTime.now()).ifPresent(origin -> {
+	public void testGetTurnsOfCompany() {
+		repo.getTurnsOfCompany(1L);
+	}
+
+	@Test
+	public void testGetTurnsInSurvey() {
+		repo.getTurnsInSurvey(1L, LocalDateTime.now()).ifPresent(origin -> {
 			origin.forEach(turn -> {
 				log.info("===>" + turn.getTitle());
 			});
@@ -62,8 +65,8 @@ public class TurnRepositoryTests {
 	}
 
 	@Test
-	public void testGetTurnsOfCompanyByStatusMBO() {
-		turnRepo.getTurnsInMBO(1L, LocalDateTime.now()).ifPresent(origin -> {
+	public void testGetTurnsInMbo() {
+		repo.getTurnsInMbo(1L, LocalDateTime.now()).ifPresent(origin -> {
 			origin.forEach(turn -> {
 				log.info("===>" + turn.getTitle());
 			});

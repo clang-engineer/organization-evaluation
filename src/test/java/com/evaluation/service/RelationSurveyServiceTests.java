@@ -6,7 +6,7 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.evaluation.domain.Relation360;
+import com.evaluation.domain.RelationSurvey;
 import com.evaluation.domain.Staff;
 import com.evaluation.vo.PageVO;
 
@@ -43,14 +43,14 @@ public class RelationSurveyServiceTests {
         Staff evaluated = staffService.read(2L).get();
         Staff evaluator = staffService.read(15L).get();
 
-        Relation360 relation360 = new Relation360();
-        relation360.setEvaluated(evaluated);
-        relation360.setEvaluator(evaluator);
-        relation360.setRelation("me");
-        relation360.setFinish("N");
-        relation360.setTno(9L);
+        RelationSurvey relationSurvey = new RelationSurvey();
+        relationSurvey.setEvaluated(evaluated);
+        relationSurvey.setEvaluator(evaluator);
+        relationSurvey.setRelation("me");
+        relationSurvey.setFinish("N");
+        relationSurvey.setTno(9L);
 
-        relationSurveyService.register(relation360);
+        relationSurveyService.register(relationSurvey);
     }
 
     @Test

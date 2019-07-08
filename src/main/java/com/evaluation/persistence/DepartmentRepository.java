@@ -22,17 +22,17 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
     public Optional<List<Department>> findByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
     //staff등록할 때 distinctInfo를 위한
-    @Query("SELECT DISTINCT d.department1 FROM Department d WHERE tno=?1 ORDER BY d.department1 ASC")
-    public List<String> getListDepartment1(long tno);
+    @Query("SELECT DISTINCT d.department1 FROM Department d WHERE tno=:tno ORDER BY d.department1 ASC")
+    public List<String> getListDepartment1(@Param("tno") long tno);
 
-    @Query("SELECT DISTINCT d.department2 FROM Department d WHERE tno=?1 ORDER BY d.department2 ASC")
-    public List<String> getListDepartment2(long tno);
+    @Query("SELECT DISTINCT d.department2 FROM Department d WHERE tno=:tno ORDER BY d.department2 ASC")
+    public List<String> getListDepartment2(@Param("tno") long tno);
 
     // 부서정보 전체 삭제
     @Transactional
     @Modifying
-    @Query("DELETE FROM Department d WHERE d.tno=?1")
-    public void deleteByTno(long cno);
+    @Query("DELETE FROM Department d WHERE d.tno=:tno")
+    public void deleteByTno(@Param("tno") long tno);
 
     //mbo에서 사용자에게 본인 팀 목표 전달하기 위한
     @Query("SELECT d FROM Department d WHERE d.tno=:tno AND d.department1=:department1 AND d.department2=:department2")

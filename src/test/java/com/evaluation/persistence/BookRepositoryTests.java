@@ -1,16 +1,19 @@
 package com.evaluation.persistence;
 
+import static org.junit.Assert.assertNotNull;
+
 import java.util.ArrayList;
 import java.util.List;
 
 import com.evaluation.domain.Book;
 import com.evaluation.domain.embeddable.Content;
 
+import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.test.annotation.Commit;
+import org.springframework.data.domain.Sort;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -18,22 +21,40 @@ import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
-@Slf4j
-@Commit
 @Transactional
+@Slf4j
 public class BookRepositoryTests {
 
 	@Autowired
-	BookRepository bookRepo;
+	BookRepository repo;
+
+	public static Book book;
 
 	@Test
-	public void turnTests() {
-		log.info("============");
-		log.info("" + bookRepo);
+	public void testtDI() {
+		assertNotNull(repo);
+	}
+
+	@Before
+	public void setBefore() {
+		book = new Book();
+		book.setTitle("High - Low");
+		book.setType("MboReply");
+		book.setTitle("test");
+		List<Content> contents = new ArrayList<Content>();
+		contents.add(new Content("매우 그렇지 않다", 1));
+		contents.add(new Content("그렇지 않다", 2));
+		contents.add(new Content("보통이다", 3));
+		contents.add(new Content("그렇다", 4));
+		contents.add(new Content("매우 그렇다", 5));
+
+		book.setContents(contents);
+		book.setType("360Reply");
+		repo.save(book);
 	}
 
 	@Test
-	public void testInertBook() {
+	public void testInert360() {
 
 		Book book = new Book();
 		book.setTitle("매우 긍정 - 매우 부정");
@@ -46,7 +67,7 @@ public class BookRepositoryTests {
 
 		book.setContents(contents);
 		book.setType("360Reply");
-		bookRepo.save(book);
+		repo.save(book);
 
 		Book book2 = new Book();
 		book2.setTitle("아주 긍정 - 아주 부정");
@@ -60,7 +81,7 @@ public class BookRepositoryTests {
 
 		book2.setContents(contents2);
 		book2.setType("360Reply");
-		bookRepo.save(book2);
+		repo.save(book2);
 
 		Book book3 = new Book();
 		book3.setTitle("매우 우수하다 - 매우 부족하다");
@@ -74,12 +95,12 @@ public class BookRepositoryTests {
 
 		book3.setContents(contents3);
 		book3.setType("360Reply");
-		bookRepo.save(book3);
-		
+		repo.save(book3);
+
 	}
 
 	@Test
-	public void testMboInertBook() {
+	public void testInertMbo() {
 
 		Book book = new Book();
 		book.setTitle("High - Low");
@@ -92,7 +113,7 @@ public class BookRepositoryTests {
 
 		book.setContents(contents);
 		book.setType("MboReply");
-		bookRepo.save(book);
+		repo.save(book);
 
 		Book book2 = new Book();
 		book2.setTitle("A - E");
@@ -105,7 +126,7 @@ public class BookRepositoryTests {
 
 		book2.setContents(contents2);
 		book2.setType("MboReply");
-		bookRepo.save(book2);
+		repo.save(book2);
 
 		Book book3 = new Book();
 		book3.setTitle("weight H - L");
@@ -116,22 +137,53 @@ public class BookRepositoryTests {
 
 		book3.setContents(contents3);
 		book3.setType("MboReply");
-		bookRepo.save(book3);
+		repo.save(book3);
+	}
 
+	@Test
+	public void testRead() {
+		Book book = new Book();
+		book.setTitle("High - Low");
+		book.setType("MboReply");
 
+		repo.save(book);
+
+		repo.findById(book.getBno());
+	}
+
+	@Test
+	public void testUpdate() {
+
+		repo.findById(book.getBno()).ifPresent(origin -> {
+			origin.setTitle("modified");
+			repo.save(origin);
+		});
+	}
+
+	@Test
+	public void testDelete() {
+		repo.deleteById(book.getBno());
 	}
 
 	@Test
 	public void testRemoveContents() {
-		Book book = bookRepo.findById(10).get();
-		List<Content> contents = book.getContents();
-		contents.remove(1);
-		book.setContents(contents);
-		bookRepo.save(book);
+		repo.findById(book.getBno()).ifPresent(origin -> {
+			origin.getContents().remove(1);
+			repo.save(origin);
+		});
 	}
 
 	@Test
-	public void testfindByType() {
-		log.info("" + bookRepo.findByType("360Reply"));
+	public void testFindAll() {
+		Sort sort = new Sort(Sort.Direction.ASC, "bno");
+		repo.findAll(sort).ifPresent(origin -> {
+			origin.forEach(book -> log.info("" + book.getBno()));
+		});
+		;
+	}
+
+	@Test
+	public void testFindByType() {
+		log.info("" + repo.findByType("360Reply"));
 	}
 }
