@@ -38,8 +38,8 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	// 직원 전원 삭제
 	@Transactional
 	@Modifying
-	@Query("DELETE FROM Staff s WHERE s.cno=?1")
-	public void deleteByCno(long cno);
+	@Query("DELETE FROM Staff s WHERE s.cno=:cno")
+	public void deleteByCno(@Param("cno") long cno);
 
 	// xl파일로 relation 설정할 때 직원 불러오기 위해! evaluated 위해
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.email=:email")

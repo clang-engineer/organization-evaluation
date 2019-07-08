@@ -133,9 +133,14 @@ public class StaffRepositoryTests {
 
 	@Test
 	public void testDeleteByCno() {
+
 		relationSurveyRepo.deleteAll();
+
 		relationMboRepo.deleteAll();
-		repo.deleteByCno(1L);
+
+		if ((relationSurveyRepo.findAll() == null) && (relationMboRepo.findAll() == null)) {
+			repo.deleteByCno(1L);
+		}
 	}
 
 	@Test

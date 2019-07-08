@@ -4,7 +4,6 @@ import static org.junit.Assert.assertNotNull;
 
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Optional;
 import java.util.stream.IntStream;
 
 import com.evaluation.domain.RelationSurvey;
@@ -49,7 +48,10 @@ public class RelationSurveyRepositoryTests {
 
             Staff evaluated = new Staff();
             Staff evaluator = new Staff();
-            evaluator.setEmail("test" + i + "@test.com");
+            evaluator.setEmail("test" + i + "@test1.com");
+            evaluated.setEmail("test" + i + "@test2.com");
+            staffRepo.save(evaluated);
+            staffRepo.save(evaluator);
             relationSurvey.setEvaluated(evaluated);
             relationSurvey.setEvaluator(evaluator);
             if (i % 4 == 0) {
@@ -91,9 +93,7 @@ public class RelationSurveyRepositoryTests {
 
     @Test
     public void readTest() {
-        Optional<RelationSurvey> result = repo.findById(3L);
-        log.info("===>" + result.get().getEvaluated().getEmail());
-
+        repo.findById(1L);
     }
 
     @Test
@@ -128,7 +128,7 @@ public class RelationSurveyRepositoryTests {
 
     @Test
     public void testFindByEvaluator() {
-        log.info("" + repo.findByEvaluatorEmail(1L, "test@test.com").isPresent());
+        log.info("" + repo.findByEvaluatorEmail(1L, "test@test1.com").isPresent());
     }
 
     @Test
