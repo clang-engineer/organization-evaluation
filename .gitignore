@@ -54,7 +54,6 @@ hs_err_pid*
 
 
 #customize youNg
-static/
 .mvn/
 mvnw
 mvnw.cmd
