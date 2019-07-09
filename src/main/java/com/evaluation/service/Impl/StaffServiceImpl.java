@@ -123,7 +123,7 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public void deleteDistinctInfoByTnoCno(long tno, long cno) {
+	public void deleteDistinctInfoByTnoCno(long cno, long tno) {
 		log.info("deleteDistinctInfoByTnoCno " + tno);
 
 		departmentRepo.deleteByTno(tno);

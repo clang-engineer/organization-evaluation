@@ -243,7 +243,7 @@ public class StaffController {
 		});
 
 		// level, department, division의 정보 우선 모두 제거. 이건 체크박스 여부에 관계없이 엑셀로 업로드 될 때 항상 실행.
-		staffService.deleteDistinctInfoByTnoCno(tno, cno);
+		staffService.deleteDistinctInfoByTnoCno(cno, tno);
 
 		// 중복 제거된 list에서 lev등록
 		levList.forEach(origin -> {

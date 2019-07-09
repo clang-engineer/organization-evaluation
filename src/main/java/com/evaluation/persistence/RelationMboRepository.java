@@ -125,7 +125,7 @@ public interface RelationMboRepository
     Optional<List<List<String>>> progressOfPlan(@Param("tno") long tno);
 
     /**
-     * 한 회차에서 특정 인원으이 본인평가 정보를 찾는다.(상사 평가시 본인 평가 정보를 확인하기 위한 쿼리)
+     * 한 회차에서 특정 인원의 본인평가 정보를 찾는다.(상사 평가시 본인 평가 정보를 확인하기 위한 쿼리)
      * 
      * @param tno 회차id
      * @param sno 직원 id

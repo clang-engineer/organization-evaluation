@@ -46,7 +46,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
      * @return 중복제거한 부서2 리스트
      */
     @Query("SELECT DISTINCT d.department2 FROM Department d WHERE tno=:tno ORDER BY d.department2 ASC")
-    public List<String> getListDepartment2(@Param("tno") long tno);
+    List<String> getListDepartment2(@Param("tno") long tno);
 
     /**
      * 회차에 속하는 부서정보 전체 삭제
@@ -56,7 +56,7 @@ public interface DepartmentRepository extends CrudRepository<Department, Long>, 
     @Transactional
     @Modifying
     @Query("DELETE FROM Department d WHERE d.tno=:tno")
-    public void deleteByTno(@Param("tno") long tno);
+    void deleteByTno(@Param("tno") long tno);
 
     /**
      * 부문명과 부서명으로 팀장이 설정한 팀 목표를 찾는다.

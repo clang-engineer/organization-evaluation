@@ -20,18 +20,21 @@ public class AdminServiceImpl implements AdminService {
     @Autowired
     AdminRepository adminRepo;
 
+    @Override
     public void register(Admin admin) {
         log.info("register : " + admin);
 
         adminRepo.save(admin);
     }
 
+    @Override
     public Optional<Admin> read(String uid) {
         log.info("read by : " + uid);
 
         return adminRepo.findById(uid);
     }
 
+    @Override
     public void modify(Admin admin) {
         log.info("modify : " + admin);
 
