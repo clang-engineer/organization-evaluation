@@ -3,7 +3,7 @@ var noteService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: '/mbo/note/' + param.rno + "/" + param.step,
+            url: 'note/' + param.rno + "/" + param.step,
             //문자열을 전송 받기 위해 json parse와 contenttype지정을 제거 했다.
             // contentType: "application/json; charset:utf-8",
             data: 'note=' + param.note,
@@ -25,7 +25,7 @@ var noteService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("/mbo/note/" + param.rno + "/" + param.step,
+        $.get("note/" + param.rno + "/" + param.step,
             function (data) {
                 if (callback) {
                     callback(data);

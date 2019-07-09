@@ -3,7 +3,7 @@ var objectService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: '/object',
+            url: '../object',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var objectService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("/object/" + param.mno,
+        $.get("../object/" + param.mno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var objectService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/object/' + param.mno + '/' + param.step,
+            url: '../object/' + param.mno + '/' + param.step,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var objectService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '/object/' + param.mno + '/' + param.step,
+            url: '../object/' + param.mno + '/' + param.step,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
@@ -83,7 +83,7 @@ var objectService = (function () {
     function submit(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/mbo/submit',
+            url: 'submit',
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",

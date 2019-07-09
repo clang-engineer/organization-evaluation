@@ -120,7 +120,7 @@
 
     <!-- MD/Modal -->
     <div id="viewLoading">
-        <img src="/img/loading.gif" />
+        <img th:src="@{/img/loading.gif}" />
     </div>
 </div>
 
@@ -238,7 +238,7 @@
                 formData.append("deleteList", modalDeleteList.prop('checked'));
 
                 $.ajax({
-                    url: '/question/xlUpload',
+                    url: './xlUpload',
                     processData: false,
                     contentType: false,
                     beforeSend: function (xhr) {

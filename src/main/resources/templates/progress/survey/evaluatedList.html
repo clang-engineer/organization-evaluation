@@ -54,7 +54,7 @@
                 }
                 $.ajax({
                     type: 'put',
-                    url: '/progress/survey/evaluatedList',
+                    url: 'evaluatedList',
                     data: 'rno=' + param.rno + '&finish=' + param.finish,
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)

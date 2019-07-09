@@ -11,11 +11,11 @@
     <title>Company Admin</title>
 
     <!-- Bootstrap core CSS -->
-    <link th:href="@{~/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
-    <link th:href="@{~/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
+    <link th:href="@{/vendor/bootstrap/css/bootstrap.min.css}" rel="stylesheet">
+    <link th:href="@{/vendor/fontawesome-free/css/all.min.css}" rel="stylesheet" type="text/css">
     <!-- Custom styles for this template -->
-    <link th:href="@{~/css/simple-sidebar.css}" rel="stylesheet">
-    <link th:href="@{~/css/sb-admin-2.min.css}" rel="stylesheet">
+    <link th:href="@{/css/simple-sidebar.css}" rel="stylesheet">
+    <link th:href="@{/css/sb-admin-2.min.css}" rel="stylesheet">
     <style>
         table {
             text-align: center;
@@ -32,9 +32,9 @@
         <div class="bg-light border-right" id="sidebar-wrapper">
             <div class="sidebar-heading"><a href="#">Company Admin</a></div>
             <div class="list-group list-group-flush">
-                <a href="/admin/list" class="list-group-item list-group-item-action bg-light">Admin</a>
-                <a href="/book/list" class="list-group-item list-group-item-action bg-light">Code Book</a>
-                <a href="/company/list" class="list-group-item list-group-item-action bg-light">Company</a>
+                <a th:href="@{/admin/list}" class="list-group-item list-group-item-action bg-light">Admin</a>
+                <a th:href="@{/book/list}" class="list-group-item list-group-item-action bg-light">Code Book</a>
+                <a th:href="@{/company/list}" class="list-group-item list-group-item-action bg-light">Company</a>
             </div>
         </div>
         <!-- /#sidebar-wrapper -->
@@ -111,8 +111,8 @@
 	</div>
 
     <!-- Bootstrap core JavaScript -->
-    <script src="/vendor/jquery/jquery.min.js"></script>
-    <script src="/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
+    <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
     <!-- form for logout -->
     <form id="logOutForm" method="POST" th:action="@{/logout}">

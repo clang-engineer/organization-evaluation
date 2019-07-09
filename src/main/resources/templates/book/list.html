@@ -66,7 +66,7 @@
 
 		</div>
 		
-		<form id="f1" th:action="@{book/list}" method="get">
+		<form id="f1" th:action="@{list}" method="get">
 		</form>
 	</div>
 </div>
@@ -106,7 +106,7 @@
 				e.preventDefault();
 
 				var bookBno = $(this).attr("href");
-				formObj.attr("action", [['/book/read']]);
+				formObj.attr("action", [['read']]);
 				formObj.append("<input type='hidden' name='bno' value='" + bookBno + "'/>");
 				formObj.submit();
 			});
@@ -115,7 +115,7 @@
 			$("#register").click(function (e) {
 				e.preventDefault();
 
-				formObj.attr("action", '/book/register');
+				formObj.attr("action", 'register');
 				formObj.empty();
 				formObj.submit();
 			});
@@ -125,7 +125,7 @@
 				var contentBno = $(this).attr("href");
 				formObj.empty();
 				formObj.append("<input type='hidden' name='bno' value='" + contentBno + "'/>");
-				formObj.attr("action", [['/book/contents']]).attr("method", "get");
+				formObj.attr("action", [['contents']]).attr("method", "get");
 				formObj.submit();
 			});
 		});

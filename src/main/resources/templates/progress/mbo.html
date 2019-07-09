@@ -67,13 +67,13 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.attr("action", "/progress/mbo");
+                formObj.attr("action", "./mbo");
                 formObj.submit();
             });
 
             //rawdata 다운로드 함수
             $("#xlRawdata").click(function (e) {
-                formObj.attr("action", "/progress/mbo/result");
+                formObj.attr("action", "./mbo/result");
                 formObj.submit();
             });
 
@@ -88,7 +88,7 @@
                 formObj.attr("method", "GET")
                 formObj.append("<input type='hidden' name='tno' value='" + tno + "'>");
                 formObj.append("<input type='hidden' name='sno' value='" + sno + "'>");
-                formObj.attr("action", "/progress/" + type + "/evaluatedList");
+                formObj.attr("action", "mbo/evaluatedList");
                 formObj.submit();
             });
 

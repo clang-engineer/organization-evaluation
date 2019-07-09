@@ -88,7 +88,7 @@
     </form>
 
     <div id="viewLoading">
-        <img src="/img/loading.gif" />
+        <img th:src="@{/img/loading.gif}" />
     </div>
 
 
@@ -105,13 +105,13 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.attr("action", "/progress/mbo/plan");
+                formObj.attr("action", "./plan");
                 formObj.submit();
             });
 
             //rawdata 다운로드 함수
             $("#xlRawdata").click(function (e) {
-                formObj.attr("action", "/progress/mbo/plan/result");
+                formObj.attr("action", "./plan/result");
                 formObj.submit();
             });
 

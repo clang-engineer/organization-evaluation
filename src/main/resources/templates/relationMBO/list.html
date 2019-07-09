@@ -78,7 +78,7 @@
 
     <!-- ajax loading view -->
     <div id="viewLoading">
-        <img src="/img/loading.gif" />
+        <img th:src="@{/img/loading.gif}" />
     </div>
     <!-- ./ajax loading view -->
 
@@ -89,7 +89,7 @@
 
 
 <th:block layout:fragment="script">
-    <script type="text/javascript" src="/public/js/relationMbo.js"></script>
+    <script type="text/javascript" th:src="@{/public/js/relation.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
 
@@ -304,7 +304,7 @@
                     formData.append("deleteList", modalDeleteList.prop('checked'));
 
                     $.ajax({
-                        url: '/relationMbo/xlUpload',
+                        url: './xlUpload',
                         processData: false,
                         contentType: false,
                         beforeSend: function (xhr) {

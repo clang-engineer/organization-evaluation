@@ -81,7 +81,7 @@
 		$(document).ready(function () {
 			$("#list").click(function (e) {
 				e.preventDefault();
-				formObj.attr("action", '/company/list').attr("method", "get");
+				formObj.attr("action", './list').attr("method", "get");
 				formObj.empty();
 				console.log($(this));
 				formObj.submit();

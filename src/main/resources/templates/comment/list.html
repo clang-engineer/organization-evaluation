@@ -172,14 +172,14 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				formObj.attr("action", "./register").attr("method", "post");
+				formObj.attr("action", "register").attr("method", "post");
 				formObj.append("<input type='hidden' name='comment' value='" + modalContent1.val() + "'/>");
 				formObj.submit();
 			});
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				formObj.attr("action", "./modify").attr("method", "post");
+				formObj.attr("action", "modify").attr("method", "post");
 				formObj.append("<input type='hidden' name='comment' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='idx' value='" + modal.data("idx") + "'/>");
 				formObj.submit();
@@ -193,7 +193,7 @@
 				} else {
 					return;
 				};
-				formObj.attr("action", "./remove").attr("method", "post");
+				formObj.attr("action", "remove").attr("method", "post");
 				formObj.append("<input type='hidden' name='idx' value='" + modal.data("idx") + "'/>");
 				formObj.submit();
 			});

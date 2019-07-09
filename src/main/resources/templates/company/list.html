@@ -152,7 +152,7 @@
 				e.preventDefault();
 
 				var companyCno = $(this).attr("href");
-				formObj.attr("action", '/company/view');
+				formObj.attr("action", 'view');
 				formObj.append("<input type='hidden' name='cno' value='" + companyCno + "'/>");
 				formObj.submit();
 			});
@@ -170,7 +170,7 @@
 
 			$("#register").click(function (e) {
 				e.preventDefault();
-				formObj.attr("action", '/company/register');
+				formObj.attr("action", 'register');
 				formObj.submit();
 			})
 
@@ -181,9 +181,9 @@
 					e.preventDefault();
 					$("#f1").empty();
 					if (type == "360") {
-						$("#f1").attr("action", '/survey/');
+						$("#f1").attr("action", '../survey/');
 					} else if (type == "MBO") {
-						$("#f1").attr("action", '/mbo/');
+						$("#f1").attr("action", '../mbo/');
 					}
 					$("#f1").append("<input type='hidden' name='company' value='" + $(this).attr('href') + "'/>");
 					$("#f1").submit();

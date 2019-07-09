@@ -91,7 +91,7 @@
             $("#list").click(function(e) {
                 e.preventDefault();
                 formObj.empty();
-                formObj.attr("action", "/admin/list").attr("method", "get");
+                formObj.attr("action", "./list").attr("method", "get");
                 formObj.submit();
             });
 
@@ -99,7 +99,7 @@
                 e.preventDefault();
 
                 if (delchk() == true) {
-                    formObj.attr("action", "/admin/remove").attr("method", "post");
+                    formObj.attr("action", "./remove").attr("method", "post");
                     formObj.submit();
                 } else {
                     return;

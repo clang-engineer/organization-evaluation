@@ -3,7 +3,7 @@ var contentService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: '/contents/' + param.bno,
+            url: '../contents/' + param.bno,
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var contentService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("/contents/" + param.bno + "/" + param.idx,
+        $.get("../contents/" + param.bno + "/" + param.idx,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var contentService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '/contents/' + param.bno + "/" + param.idx,
+            url: '../contents/' + param.bno + "/" + param.idx,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var contentService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '/contents/' + param.bno + "/" + param.idx,
+            url: '../contents/' + param.bno + "/" + param.idx,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
@@ -80,7 +80,7 @@ var contentService = (function () {
     }
 
     function getList(bno, callback, error) {
-        $.getJSON("/contents/" + bno,
+        $.getJSON("../contents/" + bno,
             function (data) {
                 if (callback) {
                     callback(data);

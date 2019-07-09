@@ -124,7 +124,7 @@
 
 
 	<div id="viewLoading">
-		<img src="/img/loading.gif" />
+		<img th:src="@{/img/loading.gif}" />
 	</div>
 
 
@@ -242,7 +242,7 @@
 				formData.append("tno", tno);
 
 				$.ajax({
-					url: '/staff/xlUpload',
+					url: 'xlUpload',
 					processData: false,
 					contentType: false,
 					beforeSend: function (xhr) {

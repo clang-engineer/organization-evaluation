@@ -64,7 +64,7 @@
 
 		</div>
 		
-		<form id="f1" th:action="@{admin/list}" method="get">
+		<form id="f1" th:action="@{list}" method="get">
 		</form>
 	</div>
 </div>
@@ -111,7 +111,7 @@
 				e.preventDefault();
 
 				var adminUid = $(this).attr("href");
-				formObj.attr("action", [['/admin/read']]);
+				formObj.attr("action", [['read']]);
 				formObj.append("<input type='hidden' name='uid' value='" + adminUid + "'/>");
 				formObj.submit();
 			});
@@ -119,7 +119,7 @@
 			$("#register").click(function (e) {
 				e.preventDefault();
 
-				formObj.attr("action", '/admin/register');
+				formObj.attr("action", 'register');
 				formObj.empty();
 				formObj.submit();
 			});
@@ -130,7 +130,7 @@
 				var adminUid = $(this).attr("href");
 				formObj.empty();
 				formObj.append("<input type='hidden' name='uid' value='" + adminUid + "'/>");
-				formObj.attr("action", [['/role/contents']]).attr("method", "get");
+				formObj.attr("action", [['role/contents']]).attr("method", "get");
 				formObj.submit();
 			});
 		});
