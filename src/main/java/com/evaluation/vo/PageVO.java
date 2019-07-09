@@ -4,6 +4,9 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 
+/**
+ * <code>PageVO</code> 객체는 page, size, keyword, type으로 구성된 페이지 정보를 표현한다.
+ */
 public class PageVO {
 
 	private static final int DEFAULT_SIZE = 10;

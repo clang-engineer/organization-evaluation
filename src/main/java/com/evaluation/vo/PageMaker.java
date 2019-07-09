@@ -9,6 +9,9 @@ import org.springframework.data.domain.Pageable;
 import groovy.transform.ToString;
 import lombok.Getter;
 
+/**
+ * <code>PageMaker</code> 객체는 pageing에 필요한 객체를 구성하고 표현한다.
+ */
 @Getter
 @ToString
 public class PageMaker<T> {
@@ -42,7 +45,7 @@ public class PageMaker<T> {
 
 		Pageable startPage = this.currentPage;
 
-		for (int i = startNum; i < this.currentPageNum; i++) {	
+		for (int i = startNum; i < this.currentPageNum; i++) {
 			startPage = startPage.previousOrFirst();
 		}
 		this.prevPage = startPage.getPageNumber() <= 0 ? null : startPage.previousOrFirst();
@@ -55,8 +58,9 @@ public class PageMaker<T> {
 			pageList.add(startPage);
 			startPage = startPage.next();
 		}
-		
-		//마지막 this.nextPage에 할당되는 값은 화면의 마지막 페이지 번호가 전체 페이지 수보다 작으면 next에 startPage를 할당하고, 아니면 null을 할당.
+
+		// 마지막 this.nextPage에 할당되는 값은 화면의 마지막 페이지 번호가 전체 페이지 수보다 작으면 next에 startPage를
+		// 할당하고, 아니면 null을 할당.
 		this.nextPage = startPage.getPageNumber() < this.totalPageNum ? startPage : null;
 	}
 }
