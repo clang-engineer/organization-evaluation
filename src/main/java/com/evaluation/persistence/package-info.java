@@ -1,4 +1,7 @@
 /**
- * persistence layer Package
+ * persistence layer Package.
+ * 
+ * @author young
+ * @version 1.0
  */
 package com.evaluation.persistence;
