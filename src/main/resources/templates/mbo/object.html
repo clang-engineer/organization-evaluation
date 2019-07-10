@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
-    layout:decorate="~{/layout/layoutMBO}">
+    layout:decorate="~{/layout/layoutMbo}">
 <!-- div content -->
 <div layout:fragment="content">
     <style>
@@ -208,8 +208,8 @@
             var objectListTable = $('#objectListTable');
 
             //댓글 colspan 지정
-            var step = [[${ turn.infoMbo.status }]];
-            var relation = [[${ relation.relation }]];
+            var step = [[${ turn?.infoMbo?.status }]];
+            var relation = [[${ relation?.relation }]];
 
             replyColspan(step, relation);
             function replyColspan(step, relation) {
@@ -274,8 +274,8 @@
             });
 
             var tno = [[${ tno }]];
-            var sno = [[${ relation.evaluated.sno }]];
-            var sessionId = [[${ session.evaluator.email }]];
+            var sno = [[${ relation?.evaluated?.sno }]];
+            var sessionId = [[${ session?.evaluator?.email }]];
 
             modalRegisterBtn.click(function (e) {
                 var param = {
@@ -578,8 +578,8 @@
             $("#departmentObject").click(function (e) {
                 var dep1 = [[${ department?.department1 }]];
                 var dep2 = [[${ department?.department2 }]];
-                var title = [[${ department?.leader ?.title }]];
-                var content = [[${ department?.leader ?.content }]];
+                var title = [[${ department?.leader?.title }]];
+                var content = [[${ department?.leader?.content }]];
                 var contetnModal = $("#contentModal");
                 contetnModal.find("#modalTitle").text(dep1 + " - " + dep2 + " 팀 목표");
                 contetnModal.find("#modalLabel1").text("Title");
@@ -625,7 +625,7 @@
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit,#btnPause").click(function (e) {
                 e.preventDefault();
-                var evaluatedName = [[${ relation?.evaluated ?.name }]];
+                var evaluatedName = [[${ relation?.evaluated?.name }]];
                 //form 꽉 찾는지 확인하기
                 var btnType = $(this).attr('id');
                 var tmpModal = $("#basicModal");
