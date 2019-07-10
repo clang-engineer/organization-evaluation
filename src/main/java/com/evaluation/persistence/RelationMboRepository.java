@@ -121,7 +121,7 @@ public interface RelationMboRepository
      * @param tno 회차id
      * @return 목표 작성 비율을 담은 리스트의 리스트
      */
-    @Query(value = "select s.sno, s.name, s.email, s.level, s.department1, s.department2, sum(if(m.finish='Y',m.ratio,null)) from tbl_relation_mbo r left join tbl_mbo m on r.evaluated = m.staff_sno left join tbl_staff s on r.evaluated= s.sno where r.relation='me' and r.turn_tno=:tno group by r.evaluated order by s.name asc", nativeQuery = true)
+    @Query(value = "select s.sno, s.name, s.email, s.level, s.department1, s.department2, sum(if(m.finish='Y' and m.turn_tno=:tno,m.ratio,null)) from tbl_relation_mbo r left join tbl_mbo m on r.evaluated = m.staff_sno left join tbl_staff s on r.evaluated= s.sno where r.relation='me' and r.turn_tno=:tno group by r.evaluated order by s.name asc", nativeQuery = true)
     Optional<List<List<String>>> progressOfPlan(@Param("tno") long tno);
 
     /**
