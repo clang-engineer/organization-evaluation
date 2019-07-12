@@ -40,7 +40,7 @@ public interface MboRepository extends CrudRepository<Mbo, Long> {
      * @param sno 직원 id
      * @return 직원 목표가 들어있는 리스트의 전인원 리스트
      */
-    @Query(value = "select staff_sno,turn_tno,sum(ratio) from tbl_mbo where finish='Y' group by staff_sno having turn_tno=:tno and staff_sno=:sno", nativeQuery = true)
+    @Query(value = "select staff_sno,turn_tno,sum(ratio) from tbl_mbo where finish='Y' and turn_tno=:tno and staff_sno=:sno group by staff_sno", nativeQuery = true)
     Optional<List<List<String>>> ratioByTnoSno(@Param("tno") long tno, @Param("sno") long sno);
 
 }
