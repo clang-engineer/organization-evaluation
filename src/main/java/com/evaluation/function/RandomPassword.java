@@ -3,7 +3,7 @@ package com.evaluation.function;
 import java.util.Random;
 
 /**
- * RandomPassword
+ * <code>RandomPassword</code> 객체는 무작위 패스워드를 생성하기 위해 표현한다.
  */
 public class RandomPassword {
 

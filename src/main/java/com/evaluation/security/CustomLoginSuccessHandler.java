@@ -13,6 +13,9 @@ import org.springframework.security.web.authentication.AuthenticationSuccessHand
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>CustomLoginSuccessHandler</code> 객체는 로그인 성공시의 동작을 통제한다.
+ */
 @Slf4j
 public class CustomLoginSuccessHandler implements AuthenticationSuccessHandler {
     @Override

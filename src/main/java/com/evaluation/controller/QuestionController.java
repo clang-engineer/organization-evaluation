@@ -32,6 +32,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>QuestionController</code>객체는 질문 정보를 관리한다.
+ */
 @Controller
 @RequestMapping("/question/*")
 @Slf4j
@@ -46,6 +49,13 @@ public class QuestionController {
 
     CompanyService companyService;
 
+    /**
+     * 질문 등록 페이지를 읽어온다.
+     * 
+     * @param tno   회차 id
+     * @param vo    페이지 정보
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/register")
     public void register(long tno, PageVO vo, Model model) {
         log.info("register get by " + tno + vo);
@@ -58,8 +68,16 @@ public class QuestionController {
         });
     }
 
+    /**
+     * 질문을 등록한다.
+     * 
+     * @param question 질문 정보
+     * @param tno      회차 id
+     * @param rttr     재전송 정보
+     * @return 질문 목록 페이지
+     */
     @PostMapping("/register")
-    public String register(Question question, long tno, RedirectAttributes rttr) {
+    public String register(long tno, Question question, RedirectAttributes rttr) {
         log.info("register post by " + question);
 
         question.setTno(tno);
@@ -70,8 +88,16 @@ public class QuestionController {
         return "redirect:/question/list";
     }
 
+    /**
+     * 질문을 읽는다.
+     * 
+     * @param tno   회차 id
+     * @param qno   질문 id
+     * @param vo    페이지 정보
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/view")
-    public void read(long qno, long tno, PageVO vo, Model model) {
+    public void read(long tno, long qno, PageVO vo, Model model) {
         log.info("view by " + tno + vo);
 
         model.addAttribute("tno", tno);
@@ -86,8 +112,16 @@ public class QuestionController {
         });
     }
 
+    /**
+     * 질문 정보를 수정페이지를 읽는다.
+     * 
+     * @param tno   회차 id
+     * @param qno   질문 id
+     * @param vo    페이지 정보
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/modify")
-    public void modify(long qno, long tno, PageVO vo, Model model) {
+    public void modify(long tno, long qno, PageVO vo, Model model) {
         log.info("modify by " + tno + vo);
 
         model.addAttribute("tno", tno);
@@ -102,6 +136,15 @@ public class QuestionController {
         });
     }
 
+    /**
+     * 질문 정보를 수정한다.
+     * 
+     * @param question 질문 정보
+     * @param tno      회차 id
+     * @param vo       페이지 정보
+     * @param rttr     재전송 정보
+     * @return 질문 목록 페이지
+     */
     @PostMapping("/modify")
     public String modify(Question question, long tno, PageVO vo, RedirectAttributes rttr) {
         log.info("modify" + question);
@@ -118,8 +161,17 @@ public class QuestionController {
         return "redirect:/question/view";
     }
 
+    /**
+     * 질문 정보를 삭제한다.
+     * 
+     * @param tno  회차 id
+     * @param qno  질문 id
+     * @param vo   페이지 정보
+     * @param rttr 재전송 정보
+     * @return 질문 목록 페이지
+     */
     @PostMapping("/remove")
-    public String remove(long qno, long tno, PageVO vo, RedirectAttributes rttr) {
+    public String remove(long tno, long qno, PageVO vo, RedirectAttributes rttr) {
         log.info("remove " + qno);
 
         questionService.remove(qno);
@@ -134,6 +186,13 @@ public class QuestionController {
         return "redirect:/question/list";
     }
 
+    /**
+     * 질문 목록을 읽어온다.
+     * 
+     * @param tno   회차 id
+     * @param vo    페이지 정보
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/list")
     public void readList(long tno, PageVO vo, Model model) {
         log.info("question list by " + tno + vo);
@@ -144,6 +203,14 @@ public class QuestionController {
         model.addAttribute("result", new PageMaker<>(result));
     }
 
+    /**
+     * 질문 정보를 xl 업로드 한다.
+     * 
+     * @param question   질문 정보
+     * @param deleteList 이전 내용 삭제 여부
+     * @param uploadFile 업로드할 파일
+     * @param model      화면 전달 정보
+     */
     @PostMapping("/xlUpload")
     @ResponseBody
     public void xlUpload(Question question, Boolean deleteList, MultipartFile uploadFile, Model model) {
@@ -179,6 +246,12 @@ public class QuestionController {
         }
     }
 
+    /**
+     * 회차에 등록한 모든 질문을 xl다운로드한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping(value = "/xlDownload")
     @ResponseBody
     public void xlDown(long tno, HttpServletResponse response) {

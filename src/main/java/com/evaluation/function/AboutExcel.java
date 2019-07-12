@@ -10,9 +10,17 @@ import org.apache.poi.xssf.usermodel.XSSFSheet;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.web.multipart.MultipartFile;
 
+/**
+ * <code>AboutExcel</code> 객체는 엑셀 파일을 읽고 쓰는데 사용한다..
+ */
 public class AboutExcel {
 
-    // xlsx 읽어들이는 함수
+    /**
+     * 엑셀 파일을 읽는다.
+     * 
+     * @param uploadFile 업로드 파일
+     * @return 엑셀 파일을 행<열리스트>리스트로 변환
+     */
     public static List<List<String>> readExcel(MultipartFile uploadFile) {
         List<List<String>> ret = new ArrayList<List<String>>();
 

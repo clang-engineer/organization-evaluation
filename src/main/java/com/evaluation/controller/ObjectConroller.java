@@ -20,7 +20,11 @@ import org.springframework.web.bind.annotation.RestController;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
-// 목표 REST하기 위한 컨트롤러!!
+/**
+ * <code>ObjectConroller</code>객체는 목표를 REST로 관리한다.
+ * 
+ * path 포괄을 위해 ** 을 사용..
+ */
 @RestController
 @RequestMapping("/object/**")
 @Slf4j
@@ -31,6 +35,12 @@ public class ObjectConroller {
 
     ReplyService replyService;
 
+    /**
+     * 목표를 등록한다.
+     * 
+     * @param mbo 목표 정보
+     * @return 목표 정보
+     */
     @PostMapping("/")
     public ResponseEntity<Mbo> register(@RequestBody Mbo mbo) {
         log.info("add object ");
@@ -39,6 +49,12 @@ public class ObjectConroller {
         return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 
+    /**
+     * 목표를 읽는다.
+     * 
+     * @param mno 목표 id
+     * @return 목표 정보
+     */
     @GetMapping("/{mno}")
     public ResponseEntity<Mbo> read(@PathVariable("mno") long mno) {
         log.info("add object ");
@@ -47,6 +63,14 @@ public class ObjectConroller {
         return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 
+    /**
+     * 목표를 수정한다.
+     * 
+     * @param mno  목표 id
+     * @param step 단계
+     * @param mbo  목표
+     * @return http 상태
+     */
     @PutMapping("/{mno}/{step}")
     public ResponseEntity<HttpStatus> modify(@PathVariable("mno") long mno, @PathVariable("step") String step,
             @RequestBody Mbo mbo) {
@@ -56,6 +80,7 @@ public class ObjectConroller {
         if (!step.equals("plan")) {
             mboService.read(mno).ifPresent(origin -> {
                 try {
+                    // 객체를 복사하고, 수정되는 것을 막기 위해 mno를 0으로 셋팅한다.
                     Mbo tmp = (Mbo) origin.clone();
                     tmp.setMno(0);
                     tmp.setFinish("M");
@@ -68,10 +93,16 @@ public class ObjectConroller {
 
         // 단계가 어찌됐던 수정은 함
         mboService.modify(mbo);
-
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * 목표를 삭제한다.
+     * 
+     * @param mno  목표 id
+     * @param step 단계
+     * @return http 상태 정보
+     */
     @DeleteMapping("/{mno}/{step}")
     public ResponseEntity<HttpStatus> delete(@PathVariable("mno") long mno, @PathVariable("step") String step) {
         log.info("delete " + mno);
@@ -92,7 +123,6 @@ public class ObjectConroller {
                             replyService.modify(reply);
                         });
                     });
-                    log.info("================>" + tmp.getMno());
                 } catch (CloneNotSupportedException e) {
                     e.printStackTrace();
                 }

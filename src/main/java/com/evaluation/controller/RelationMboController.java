@@ -13,6 +13,7 @@ import javax.servlet.http.HttpServletResponse;
 import com.evaluation.domain.Company;
 import com.evaluation.domain.RelationMbo;
 import com.evaluation.domain.Staff;
+import com.evaluation.domain.Turn;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.RelationMboService;
@@ -39,6 +40,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>RelationMboController</code> 객체는 mbo 관계정보를 관리한다.
+ */
 @Controller
 @RequestMapping("/relationMbo/*")
 @Slf4j
@@ -54,6 +58,14 @@ public class RelationMboController {
 
     CompanyService companyService;
 
+    /**
+     * 관계를 등록한다.
+     * 
+     * @param relationMbo mbo 관계 정보
+     * @param vo          페이지 정보
+     * @param rttr        재전송 정보
+     * @return 관계 목록 페이지
+     */
     @PostMapping("/register")
     public String register(RelationMbo relationMbo, PageVO vo, RedirectAttributes rttr) {
         log.info("register " + relationMbo.getEvaluated().getSno());
@@ -70,8 +82,17 @@ public class RelationMboController {
         return "redirect:/relationMbo/list";
     }
 
+    /**
+     * 관계를 삭제한다.
+     * 
+     * @param tno  회차 id
+     * @param rno  관계 id
+     * @param vo   페이지 정보
+     * @param rttr 재전송 정보
+     * @return 관계 목록 페이지
+     */
     @PostMapping("/remove")
-    public String remove(long rno, long tno, PageVO vo, RedirectAttributes rttr) {
+    public String remove(long tno, long rno, PageVO vo, RedirectAttributes rttr) {
         log.info("remove " + tno + rno);
 
         relationMboService.remove(rno);
@@ -86,6 +107,13 @@ public class RelationMboController {
         return "redirect:/relationMbo/list";
     }
 
+    /**
+     * 관계 목록을 읽는다.
+     * 
+     * @param tno   회차 id
+     * @param vo    페이지 정보
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/list")
     public void getList(long tno, PageVO vo, Model model) {
         log.info("getList by " + tno);
@@ -128,25 +156,47 @@ public class RelationMboController {
         model.addAttribute("relation3", relation3);
     }
 
+    /**
+     * 회차의 피평가자 등록 후보 명단을 REST로 읽어온다.
+     * 
+     * @param tno 회차 id
+     * @return 피평가자 등록 후보 명단
+     */
     @GetMapping("/evaluated/{tno}")
     @ResponseBody
     public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
         log.info("get All Staff List Exclude Evaluated....");
 
-        long cno = turnService.read(tno).get().getCno();
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
         return new ResponseEntity<>(staffService.getMboEvaluatedList(cno, tno), HttpStatus.OK);
     }
 
+    /**
+     * 회차 내의 해당 피평가자의 평가자 등록 후보 명단을 REST로 읽어온다.
+     * 
+     * @param tno 회차 id
+     * @param sno 피평가자 id
+     * @return 평가자 등록 후보 명단
+     */
     @GetMapping("/evaluator/{tno}/{sno}")
     @ResponseBody
     public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluator(@PathVariable("tno") long tno,
             @PathVariable("sno") long sno) {
         log.info("get All Staff List....");
 
-        long cno = turnService.read(tno).get().getCno();
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
         return new ResponseEntity<>(staffService.getMboEvaluatorList(cno, tno, sno), HttpStatus.OK);
     }
 
+    /**
+     * 회차 내의 피평가자의 모든 관계 정보를 삭제한다.
+     * 
+     * @param tno  회차 id
+     * @param sno  피평가자 id
+     * @param vo   페이지 정보
+     * @param rttr 재전송 정보
+     * @return 관계 목록 페이지
+     */
     @PostMapping("/removeRow")
     public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
         log.info("deleteEvaluatedInfo by " + tno);
@@ -167,12 +217,20 @@ public class RelationMboController {
         return "redirect:/relationMbo/list";
     }
 
+    /**
+     * 관계 정보를 xl 업로드 한다.
+     * 
+     * @param tno        회차 id
+     * @param deleteList 기존 관계 삭제 여부
+     * @param uploadFile 업로드 파일
+     * @param model      화면 전달 정보
+     */
     @PostMapping("/xlUpload")
     @ResponseBody
     public void xlUpload(long tno, Boolean deleteList, MultipartFile uploadFile, Model model) {
         log.info("read file" + uploadFile);
 
-        long cno = turnService.read(tno).get().getCno();
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
 
         if (deleteList == true) {
             relationMboService.findAllByTno(tno).ifPresent(list -> {
@@ -217,18 +275,26 @@ public class RelationMboController {
                 }
 
                 // 1차 고과자 설정
-                insertEvaluator(list, tno, cno, 8, "1", evaluated);
+                insertEvaluator(tno, cno, 8, "1", evaluated, list);
                 // 2차 고과자 설정
-                insertEvaluator(list, tno, cno, 9, "2", evaluated);
+                insertEvaluator(tno, cno, 9, "2", evaluated, list);
                 // 3차 고과자 설정
-                insertEvaluator(list, tno, cno, 10, "3", evaluated);
+                insertEvaluator(tno, cno, 10, "3", evaluated, list);
             });
         }
     }
 
-    // 각 열의 ,로 연결된 고과자를 쪼개서 삽입하는 함수! 피평가자는 위에서 스태프로 체크 되기 때문에 삽입해줌. 각 고과자리스트, tno,
-    // cno, 고과자가 위치한 열, 관계를 함께 삽입해줌.
-    public void insertEvaluator(List<String> list, Long tno, Long cno, int lineNum, String relation, Staff evaluated) {
+    /**
+     * 해당 열의 평가자 이름을 ,로 나눠서 등록한다.
+     * 
+     * @param tno       회차 id
+     * @param cno       회사 id
+     * @param lineNum   열 번호
+     * @param relation  관계
+     * @param evaluated 피평가자
+     * @param list      평가자 이름 리스트
+     */
+    public void insertEvaluator(Long tno, Long cno, int lineNum, String relation, Staff evaluated, List<String> list) {
         // if 분기문에서 null check을 먼저 해야함. null인 값과 equals를 하는 것은 모순 이기 때문에 <-> check
         // equals && null (x)
         if (!(list.get(lineNum) == null) && !(list.get(lineNum).equals("N"))) {
@@ -266,6 +332,11 @@ public class RelationMboController {
         }
     }
 
+    /**
+     * 회차 내의 관계 정보를 xl 다운로드 한다.
+     * @param tno 회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping(value = "/xlDownload")
     @ResponseBody
     public void xlDown(long tno, HttpServletResponse response) {

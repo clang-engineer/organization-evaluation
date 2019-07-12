@@ -29,6 +29,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>SurveyConroller</code>객체는 survey를 관리한다.
+ */
 @Controller
 @RequestMapping("/survey/*")
 @Slf4j
@@ -48,6 +51,13 @@ public class SurveyConroller {
 
     StaffService staffService;
 
+    /**
+     * 로그인 페이지에 회차 정보를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param model   화면 전달 정보
+     * @return Survey 로그인 페이지
+     */
     @GetMapping("/")
     public String survey(String company, Model model) {
         log.info("====>survey by company" + company);
@@ -65,6 +75,16 @@ public class SurveyConroller {
         return "/survey/index";
     }
 
+    /**
+     * 로그인 처리를 한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param staff   직원 정보
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @return Survey 메인 페이지
+     */
     @PostMapping("/login")
     public String userLogin(String company, long tno, Staff staff, RedirectAttributes rttr,
             HttpServletRequest request) {
@@ -86,7 +106,6 @@ public class SurveyConroller {
             return "redirect:/survey/";
         }
 
-        // Staff evaluator = relationSurveyService.findInEvaluator(tno, staff.getEmail());
         relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
@@ -100,6 +119,14 @@ public class SurveyConroller {
         return "redirect:/survey/main";
     }
 
+    /**
+     * 로그아웃 처리를 한다.
+     * 
+     * @param company 회자 이름
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @return 로그인 페이지
+     */
     @PostMapping("/logout")
     public String userLogOut(String company, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("log out!");
@@ -112,6 +139,13 @@ public class SurveyConroller {
         return "redirect:/survey/";
     }
 
+    /**
+     * 문의 사항 페이지
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     */
     @GetMapping("/contact")
     public void contact(String company, Long tno, Model model) {
 
@@ -120,11 +154,20 @@ public class SurveyConroller {
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
-
     }
 
+    /**
+     * 메인 페이지를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @param model   화면 전달 정보
+     * @return Survey 메인 페이자
+     */
     @GetMapping("/main")
-    public String main(String company, Long tno, Model model, HttpServletRequest request, RedirectAttributes rttr) {
+    public String main(String company, Long tno, HttpServletRequest request, RedirectAttributes rttr, Model model) {
         log.info("====>turn main by company" + company);
 
         HttpSession session = request.getSession();
@@ -151,6 +194,16 @@ public class SurveyConroller {
         return "/survey/main";
     }
 
+    /**
+     * Survey목록 페이지를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param request 요청 객체 정보
+     * @param model   화면 전달 정보
+     * @param rttr    재전송 정보
+     * @return Survey 대상자 목록 페이지
+     */
     @GetMapping("/list")
     public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
         log.info("====>turn list by company" + company);
@@ -181,7 +234,15 @@ public class SurveyConroller {
         return "/survey/list";
     }
 
-    // 새로 고침시 리스트로 복귀하기 위한 매핑
+    /**
+     * Survey 페이지에서 새로 고침시 목록 페이지로 재전송한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param request 요청 객체 정보
+     * @param rttr    재전송 정보
+     * @return Survey 대상자 목록 페이지
+     */
     @GetMapping("/evaluate")
     public String evaluate(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
@@ -201,9 +262,17 @@ public class SurveyConroller {
         return "redirect:/survey/list";
     }
 
+    /**
+     * 피평가자에 대한 서베이를 실시한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param rno     관계 id
+     * @param model   화면 전달 정보
+     */
     // @GetMapping("/evaluate")
     @PostMapping("/evaluate")
-    public void evaluate(Long rno, long tno, String company, Model model) {
+    public void evaluate(String company, long tno, Long rno, Model model) {
         log.info("" + rno);
 
         model.addAttribute("company", company);
@@ -247,6 +316,15 @@ public class SurveyConroller {
         });
     }
 
+    /**
+     * 평가를 제출한다.
+     * 
+     * @param rno    관계 id
+     * @param finish 완료 여부
+     * @param answer 회답 정보
+     * @param rttr   재전송 정보
+     * @return 목록 페이지
+     */
     @PostMapping("/submit")
     public String submit(long rno, String finish, @RequestParam Map<String, String> answer, RedirectAttributes rttr) {
         log.info("" + answer + rno + finish);
@@ -288,6 +366,13 @@ public class SurveyConroller {
         return "redirect:/survey/list";
     }
 
+    /**
+     * 사용자 정보를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     */
     @GetMapping("/profile")
     public void profile(String company, long tno, Model model) {
 
@@ -299,6 +384,13 @@ public class SurveyConroller {
 
     }
 
+    /**
+     * 사용자 정보 수정 페이지를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     */
     @GetMapping("/modify")
     public void modify(String company, long tno, Model model) {
 
@@ -310,6 +402,16 @@ public class SurveyConroller {
 
     }
 
+    /**
+     * 사용자 정보를 수정한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param staff   직원 정보
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @return 사용자 프로필 페이지
+     */
     @PostMapping("/modify")
     public String modify(Staff staff, String company, long tno, RedirectAttributes rttr, HttpServletRequest request) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {

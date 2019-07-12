@@ -12,11 +12,12 @@ import org.springframework.security.core.userdetails.User;
 
 import lombok.Getter;
 import lombok.Setter;
-import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>CustomAdmin</code> 객체는 User를 상속받고, 생성자로 전달 받은 정보를 User객체화 한다
+ */
 @Getter
 @Setter
-@Slf4j
 public class CustomAdmin extends User {
 
     private static final String ROLE_PREFIX = "ROLE_";
@@ -25,19 +26,35 @@ public class CustomAdmin extends User {
 
     private Admin admin;
 
+    /**
+     * 부모 생성자(User)를 호출한다.
+     * 
+     * @param username    사용자 id
+     * @param password    passsword
+     * @param authorities 권한을 담은 객체
+     */
     public CustomAdmin(String username, String password, Collection<? extends GrantedAuthority> authorities) {
         super(username, password, authorities);
     }
 
+    /**
+     * 권한 객체를 받아서 security 객체로 만든다.
+     * 
+     * @param vo 권한 정보
+     */
     public CustomAdmin(Admin vo) {
         super(vo.getUid(), vo.getUpw(), makeGrantedAuthority(vo.getRoles()));
         this.admin = vo;
     }
 
+    /**
+     * spring security가 인지할 수 있는 형태(SimpleGrantedAuthority)로 권한객체를 만든다.
+     * 
+     * @param roles
+     * @return security용 권한 객체
+     */
     private static Set<GrantedAuthority> makeGrantedAuthority(Set<String> roles) {
         Set<GrantedAuthority> list = new HashSet<>();
-        
-        roles.forEach(role -> log.info(ROLE_PREFIX + role));
         roles.forEach(role -> list.add(new SimpleGrantedAuthority(ROLE_PREFIX + role)));
 
         return list;

@@ -43,6 +43,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>MboController</code>객체는 Mbo정보를 관리한다.
+ */
 @Controller
 @RequestMapping("/mbo/*")
 @Slf4j
@@ -66,8 +69,15 @@ public class MboController {
 
     StaffService staffService;
 
+    /**
+     * 로그인 페이지에 회차 정보를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param model   화면 전달 정보
+     * @return Mbo로그인 페이지
+     */
     @GetMapping("/")
-    public String survey(String company, Model model) {
+    public String mbo(String company, Model model) {
         log.info("====>survey by company" + company);
 
         // 회사에 관한 정보 찾고
@@ -83,9 +93,19 @@ public class MboController {
         return "/mbo/index";
     }
 
+    /**
+     * 로그인 처리를 한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param staff   직원 정보
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @return mbo 메인 페이지
+     */
     @PostMapping("/login")
-    public String userLogin(String company, long tno, Staff staff, RedirectAttributes rttr,
-            HttpServletRequest request) {
+    public String userLogin(String company, long tno, Staff staff, HttpServletRequest request,
+            RedirectAttributes rttr) {
         log.info("user login" + tno + staff);
         rttr.addAttribute("company", company);
 
@@ -103,7 +123,6 @@ public class MboController {
             return "redirect:/mbo/";
         }
 
-        // Staff evaluator = relation360Service.findInEvaluator(tno, staff.getEmail());
         relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
@@ -116,6 +135,14 @@ public class MboController {
         return "redirect:/mbo/main";
     }
 
+    /**
+     * 로그아웃 처리를 한다.
+     * 
+     * @param company 회자 이름
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @return 로그인 페이지
+     */
     @PostMapping("/logout")
     public String userLogOut(String company, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("log out!");
@@ -128,6 +155,13 @@ public class MboController {
         return "redirect:/mbo/";
     }
 
+    /**
+     * 문의 사항 페이지
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     */
     @GetMapping("/contact")
     public void contact(String company, Long tno, Model model) {
 
@@ -143,8 +177,18 @@ public class MboController {
         });
     }
 
+    /**
+     * 메인 페이지를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @param model   화면 전달 정보
+     * @return mbo 메인 페이자
+     */
     @GetMapping("/main")
-    public String main(String company, Long tno, Model model, HttpServletRequest request, RedirectAttributes rttr) {
+    public String main(String company, Long tno, HttpServletRequest request, RedirectAttributes rttr, Model model) {
         log.info("====>turn main by company" + company);
 
         HttpSession session = request.getSession();
@@ -160,14 +204,17 @@ public class MboController {
         Staff staff = (Staff) session.getAttribute("evaluator");
         long sno = staff.getSno();
 
+        // 사용자의 부서 정보
         departmentService.findByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("department", list);
         });
 
+        // 회사 정보
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
+        // 회차 정보
         turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
@@ -175,6 +222,16 @@ public class MboController {
         return "/mbo/main";
     }
 
+    /**
+     * mbo목록 페이지를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param request 요청 객체 정보
+     * @param model   화면 전달 정보
+     * @param rttr    재전송 정보
+     * @return mbo 대상자 목록 페이지
+     */
     @GetMapping("/list")
     public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
         log.info("====>turn list by company" + company);
@@ -186,8 +243,14 @@ public class MboController {
             return "redirect:/mbo/";
         }
 
+        // 회사 정보
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
+        });
+
+        // 회차 정보
+        turnService.read(tno).ifPresent(turn -> {
+            model.addAttribute("turn", turn);
         });
 
         model.addAttribute("tno", tno);
@@ -223,14 +286,18 @@ public class MboController {
             model.addAttribute("relationMeList", relationMeList);
         });
 
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
-        });
-
         return "/mbo/list";
     }
 
-    // 새로 고침시 리스트로 복귀하기 위한 매핑
+    /**
+     * 목표 페이지에서 새로 고침시 목록 페이지로 재전송한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param request 요청 객체 정보
+     * @param rttr    재전송 정보
+     * @return mbo 대상자 목록 페이지
+     */
     @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("" + tno);
@@ -250,19 +317,28 @@ public class MboController {
         return "redirect:/mbo/list";
     }
 
-    // 목표와 목표댓글을 불러오기 위한
+    /**
+     * 사용자의 목표 정보를 불러온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param rno     관계 id
+     * @param model   화면 전달 정보
+     */
     // @GetMapping("/object")
     @PostMapping("/object")
-    public void object(Long rno, long tno, String company, Model model) {
+    public void object(String company, long tno, Long rno, Model model) {
         log.info("" + rno);
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
 
+        // 회사 정보
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
 
+        // 회차 정보
         turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
@@ -343,14 +419,21 @@ public class MboController {
     }
 
     /**
-     * 댓글수를 같이 가져가기 위한 내부 클래스
+     * <code>ObjectWithReplyNum</code>객체는 목표와 댓글수를 목표 목록에서 험께 표한하기 위해 사용한다.
      */
     public class ObjectWithReplyNum {
         public Mbo mbo;
         public int replyNum;
     }
 
-    // 면담 내용을 쓰기 위한 REST!!!
+    /**
+     * 면담 내용을 REST로 작성한다.
+     * 
+     * @param rno  관계 id
+     * @param step 단계 id
+     * @param note 면담 내용
+     * @return http 성공메시지
+     */
     @PostMapping("/note/{rno}/{step}")
     public ResponseEntity<HttpStatus> noteCreate(@PathVariable("rno") long rno, @PathVariable("step") String step,
             String note) {
@@ -364,7 +447,13 @@ public class MboController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // 면담 내용을 읽기 위한 REST!!!
+    /**
+     * 면담 내용을 REST로 읽어온다.
+     * 
+     * @param rno  관계 id
+     * @param step 단계 id
+     * @return 면담 내용
+     */
     @GetMapping("/note/{rno}/{step}")
     @ResponseBody
     public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
@@ -376,7 +465,13 @@ public class MboController {
         return new ResponseEntity<String>(note, HttpStatus.OK);
     }
 
-    // 평가 제출하기 위한 REST
+    /**
+     * 화면에서 평가를 REST방식으로 제출한다. (select 변할 때마다 전송)
+     * 
+     * @param answer 회답
+     * @param rttr   재전송 정보
+     * @return http 성공 ㅔ시지
+     */
     @PutMapping("/submit")
     @ResponseBody
     public ResponseEntity<HttpStatus> submit(@RequestBody Map<String, Object> answer, RedirectAttributes rttr) {
@@ -405,6 +500,13 @@ public class MboController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * 사용자 정보를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     */
     @GetMapping("/profile")
     public void profile(String company, long tno, Model model) {
 
@@ -420,6 +522,13 @@ public class MboController {
 
     }
 
+    /**
+     * 사용자 정보 수정 페이지를 읽어온다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     */
     @GetMapping("/modify")
     public void modify(String company, long tno, Model model) {
 
@@ -435,8 +544,18 @@ public class MboController {
 
     }
 
+    /**
+     * 사용자 정보를 수정한다.
+     * 
+     * @param company 회사 이름
+     * @param tno     회차 id
+     * @param staff   직원 정보
+     * @param request 요청 정보 객체
+     * @param rttr    재전송 정보
+     * @return 사용자 프로필 페이지
+     */
     @PostMapping("/modify")
-    public String modify(Staff staff, String company, long tno, RedirectAttributes rttr, HttpServletRequest request) {
+    public String modify(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
             long sno = origin.getSno();
             staff.setSno(sno);

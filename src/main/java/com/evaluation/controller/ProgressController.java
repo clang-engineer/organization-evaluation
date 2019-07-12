@@ -37,6 +37,9 @@ import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
 
+/**
+ * <code>ProgressController</code>객체는 survey, mbo의 진행 상황을 관리한다.
+ */
 @Controller
 @RequestMapping("/progress/*")
 @AllArgsConstructor
@@ -54,10 +57,18 @@ public class ProgressController {
 
     MboService mboService;
 
+    /**
+     * 서베이, Mbo평가 진행 상황을 읽어온다.
+     * 
+     * @param tno     회차 id
+     * @param model   화면 전달 정보
+     * @param request 요청 정보 객체
+     */
     @GetMapping(value = { "/survey", "/mbo" })
     public void survey(long tno, Model model, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
 
+        // survey와 mbo를 요청했을 때를 if문으로 구분
         if (whatYouCall.equals("/progress/survey")) {
             relationSurveyService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
@@ -92,7 +103,14 @@ public class ProgressController {
         model.addAttribute("tno", tno);
     }
 
-    // 평가자의 피평가자 리스트 얻어오는 컨트롤러 중복 제거 위해, 합침. 다형성 이용해서 중복 더 줄이고 싶으나, 복잡성 증가해서 스탑.
+    /**
+     * 해당 평가자의 피평가자 리스트를 읽는다.
+     * 
+     * @param tno     회차 id
+     * @param sno     평가자 id
+     * @param model   화면 전달 정보
+     * @param request 요청 정보 객체
+     */
     @GetMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
     public void mboEvaluated(long tno, long sno, Model model, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
@@ -109,7 +127,14 @@ public class ProgressController {
         model.addAttribute("tno", tno);
     }
 
-    // 평가자의 피평가자 서베이 저장 상태 바꿀 수 있도록하는 REST
+    /**
+     * 평가자의 피평가자 서베이 저장 상태 바꿀 수 있도록하는 REST
+     * 
+     * @param rno     관계 id
+     * @param finish  완료 정보 (Y,Y,N)
+     * @param request 요청 정보 객체
+     * @return http 상태 정보
+     */
     @PutMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
     public ResponseEntity<HttpStatus> mboEvaluatedFinishChange(long rno, String finish, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
@@ -128,6 +153,12 @@ public class ProgressController {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+    /**
+     * 서베이 평가자의 서베이 진행률을 xl다운로드 한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping("/survey")
     @ResponseBody
     public void surveyXlDownload(long tno, HttpServletResponse response) {
@@ -205,6 +236,12 @@ public class ProgressController {
         });
     }
 
+    /**
+     * 서베이 진행 결과를 xl 다운로드 한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping("/survey/result")
     @ResponseBody
     public void surveyResultDownload(long tno, HttpServletResponse response) {
@@ -311,7 +348,12 @@ public class ProgressController {
         });
     }
 
-    // mbo의 평가 progress 다운받기
+    /**
+     * mbo의 평가자의 평가 진행률을 xl다운로드 한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping("/mbo")
     @ResponseBody
     public void seeXlDownload(long tno, HttpServletResponse response) {
@@ -389,6 +431,12 @@ public class ProgressController {
         });
     }
 
+    /**
+     * mbo 평가 결과를 xl 다운로드 한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping("/mbo/result")
     @ResponseBody
     public void mboResultDownload(long tno, HttpServletResponse response) {
@@ -527,7 +575,11 @@ public class ProgressController {
         });
     }
 
-    // 커스텀 sort를 위한
+    /**
+     * mbo 질문 리스트(xl header)를 정렬하기 위한 함수
+     * 
+     * @param list 정렬 하고 싶은 대상
+     */
     public void questionSort(List<String> list) {
         Collections.sort(list, new Comparator<String>() {
             @Override
@@ -546,6 +598,12 @@ public class ProgressController {
         });
     }
 
+    /**
+     * 각 개인의 mbo 목표 설정 상황을 읽어온다.
+     * 
+     * @param tno   회차 id
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/mbo/plan")
     public void progressOfPlan(long tno, Model model) {
         relationMboService.progressOfPlan(tno).ifPresent(list -> {
@@ -561,6 +619,13 @@ public class ProgressController {
         model.addAttribute("tno", tno);
     }
 
+    /**
+     * 각 개인이 작성한 목표 내용을 읽어온다.
+     * 
+     * @param tno   회차 id
+     * @param sno   직원 id
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/mbo/objectList")
     public void objectList(long tno, long sno, Model model) {
         model.addAttribute("tno", tno);
@@ -569,6 +634,12 @@ public class ProgressController {
         });
     }
 
+    /**
+     * mbo 목표 설정 현황을 xl다운로드한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping("/mbo/plan")
     @ResponseBody
     public void planXlDownload(long tno, HttpServletResponse response) {
@@ -643,6 +714,12 @@ public class ProgressController {
         });
     }
 
+    /**
+     * 회차 내에 전 직원의 목표 작성 내용을 xl다운로드한다.
+     * 
+     * @param tno      회차 id
+     * @param response 응답 정보 객체
+     */
     @PostMapping("/mbo/plan/result")
     @ResponseBody
     public void mboPlanResultDownload(long tno, HttpServletResponse response) {

@@ -1,6 +1,7 @@
 package com.evaluation.controller;
 
 import com.evaluation.domain.Level;
+import com.evaluation.domain.Turn;
 import com.evaluation.service.LevelService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -17,6 +18,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>LevelController 직급 정보를 관리한다.</code>
+ */
 @Controller
 @RequestMapping("/level/*")
 @Slf4j
@@ -28,6 +32,14 @@ public class LevelController {
     @Autowired
     TurnService turnService;
 
+    /**
+     * 직급 정보를 등록한다.
+     * 
+     * @param tno   회차 id
+     * @param level 직급 정보
+     * @param rttr  재전송 정보
+     * @return 직급 목록 페이지
+     */
     @PostMapping("/register")
     public String register(long tno, Level level, RedirectAttributes rttr) {
         log.info("level register by " + tno + level);
@@ -35,16 +47,26 @@ public class LevelController {
         rttr.addFlashAttribute("msg", "register");
         rttr.addAttribute("tno", tno);
 
-        long cno = turnService.read(tno).get().getCno();
-        level.setCno(cno);
-
-        levelService.register(level);
+        turnService.read(tno).ifPresent(origin -> {
+            long cno = origin.getCno();
+            level.setCno(cno);
+            levelService.register(level);
+        });
 
         return "redirect:/level/list";
     }
 
+    /**
+     * 직급 정보를 수정한다.
+     * 
+     * @param tno   회차 id
+     * @param level 직급 정보
+     * @param vo    페이지 정보
+     * @param rttr  재전송 정보
+     * @return 직급 목록 페이지
+     */
     @PostMapping("/modify")
-    public String modify(Level level, long tno, PageVO vo, RedirectAttributes rttr) {
+    public String modify(long tno, Level level, PageVO vo, RedirectAttributes rttr) {
         log.info("modify " + level);
 
         levelService.modify(level);
@@ -59,8 +81,17 @@ public class LevelController {
         return "redirect:/level/list";
     }
 
+    /**
+     * 직급 정보를 삭제한다.
+     * 
+     * @param tno  회차 id
+     * @param lno  직급 id
+     * @param vo   페이지 정보
+     * @param rttr 재전송 정보
+     * @return 직급 목록 페이지
+     */
     @PostMapping("/remove")
-    public String remove(long lno, long tno, PageVO vo, RedirectAttributes rttr) {
+    public String remove(long tno, long lno, PageVO vo, RedirectAttributes rttr) {
         log.info("remove " + lno);
 
         levelService.remove(lno);
@@ -75,16 +106,22 @@ public class LevelController {
         return "redirect:/level/list";
     }
 
+    /**
+     * 직급 목록을 읽어온다.
+     * 
+     * @param tno   회차 id
+     * @param vo    페이지 정보
+     * @param model 화면 전달 정보
+     */
     @GetMapping("/list")
     public void readList(long tno, PageVO vo, Model model) {
         log.info("level list by " + tno);
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.read(tno).get().getCno();
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
         Page<Level> result = levelService.getList(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
-
     }
 
 }

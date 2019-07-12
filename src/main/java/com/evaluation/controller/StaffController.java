@@ -18,6 +18,7 @@ import com.evaluation.domain.Department;
 import com.evaluation.domain.Division;
 import com.evaluation.domain.Level;
 import com.evaluation.domain.Staff;
+import com.evaluation.domain.Turn;
 import com.evaluation.function.AboutExcel;
 import com.evaluation.function.RandomPassword;
 import com.evaluation.service.CompanyService;
@@ -44,6 +45,9 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>StaffController</code>객체는 직원 정보를 관리한다.
+ */
 @Controller
 @RequestMapping("/staff/*")
 @Slf4j
@@ -63,6 +67,13 @@ public class StaffController {
 
 	DivisionService divisionService;
 
+	/**
+	 * 직원 등록 페이지를 읽어온다.
+	 * 
+	 * @param tno   회차 id
+	 * @param vo    페이지 정보
+	 * @param model 화면 전달 정보
+	 */
 	@GetMapping("/register")
 	public void register(long tno, PageVO vo, Model model) {
 		log.info("controller : staff register get by " + tno + vo);
@@ -75,8 +86,16 @@ public class StaffController {
 		model.addAttribute("tno", tno);
 	}
 
+	/**
+	 * 직원을 등록한다.
+	 * 
+	 * @param tno   회차 id
+	 * @param staff 직원정보
+	 * @param rttr  재전송 정보
+	 * @return 직원 목록 페이지
+	 */
 	@PostMapping("/register")
-	public String register(Staff staff, long tno, RedirectAttributes rttr) {
+	public String register(long tno, Staff staff, RedirectAttributes rttr) {
 		log.info("controller : staff register post by " + tno);
 
 		long cno = turnService.read(tno).get().getCno();
@@ -88,8 +107,16 @@ public class StaffController {
 		return "redirect:/staff/list";
 	}
 
+	/**
+	 * 직원 정보를 읽어온다.
+	 * 
+	 * @param tno   회차 id
+	 * @param sno   직원 id
+	 * @param vo    페이지 정보
+	 * @param model 화면 전달 정보
+	 */
 	@GetMapping("/view")
-	public void read(long sno, long tno, PageVO vo, Model model) {
+	public void read(long tno, long sno, PageVO vo, Model model) {
 		log.info("controller : staff read by " + tno + vo);
 
 		Optional<Staff> staff = staffService.read(sno);
@@ -99,8 +126,16 @@ public class StaffController {
 		model.addAttribute("staff", result);
 	}
 
+	/**
+	 * 직원 정보 수젱 페이지를 읽어온다.
+	 * 
+	 * @param tno   회차 id
+	 * @param sno   직원 id
+	 * @param vo    페이지 정보
+	 * @param model 화면 전달 정보
+	 */
 	@GetMapping("/modify")
-	public void modify(long sno, long tno, PageVO vo, Model model) {
+	public void modify(long tno, long sno, PageVO vo, Model model) {
 		log.info("controller : staff modify by " + tno + vo);
 
 		model.addAttribute("tno", tno);
@@ -113,11 +148,19 @@ public class StaffController {
 		staffService.read(sno).ifPresent(staff -> {
 			model.addAttribute("staff", staff);
 		});
-
 	}
 
+	/**
+	 * 직원 정보를 수정한다.
+	 * 
+	 * @param tno   회차 id
+	 * @param staff 직원 정보
+	 * @param vo    페이지 정보
+	 * @param rttr  재전송 정보
+	 * @return 직원 정보 페이지
+	 */
 	@PostMapping("/modify")
-	public String modify(Staff staff, long tno, PageVO vo, RedirectAttributes rttr) {
+	public String modify(long tno, Staff staff, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff modify post by " + staff.getName());
 
 		long cno = turnService.read(tno).get().getCno();
@@ -137,8 +180,17 @@ public class StaffController {
 		return "redirect:/staff/view";
 	}
 
+	/**
+	 * 직원 정보를 삭제한다.
+	 * 
+	 * @param tno  회차 id
+	 * @param sno  직원 id
+	 * @param vo   페이지 정보
+	 * @param rttr 재전송 정보
+	 * @return 직원 목록 페이지
+	 */
 	@PostMapping("/remove")
-	public String remove(long sno, long tno, PageVO vo, RedirectAttributes rttr) {
+	public String remove(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff delete by " + sno);
 
 		staffService.remove(sno);
@@ -152,24 +204,40 @@ public class StaffController {
 		return "redirect:/staff/list";
 	}
 
+	/**
+	 * 회차의 직원 목록을 읽는다.
+	 * 
+	 * @param tno   회차 id
+	 * @param vo    페이지 정보
+	 * @param model 화면 전달 정보
+	 */
 	@GetMapping("/list")
 	public void readList(long tno, PageVO vo, Model model) {
 		log.info("controller : staff list by " + tno + vo);
 
 		model.addAttribute("tno", tno);
 
-		long cno = turnService.read(tno).get().getCno();
+		long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
+
 		Page<Staff> result = staffService.getList(cno, vo);
 		model.addAttribute("result", new PageMaker<>(result));
 	}
 
+	/**
+	 * 직원 정보를 xl업로드 한다.
+	 * 
+	 * @param tno        회차 id
+	 * @param admin      단순히 기록일, 수정일을 받아오기 위해 사용.(parameter 줄이려고) 추후 수정하자.
+	 * @param uploadFile 업로드 파일
+	 * @param model      화면 전달 정보
+	 */
 	@PostMapping("/xlUpload")
 	@ResponseBody
 	public void xlUpload(long tno, Admin admin, MultipartFile uploadFile, Model model) {
 
 		log.info("read file" + uploadFile);
 
-		long cno = turnService.read(tno).get().getCno();
+		long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
 
 		int iteration = 0;
 		List<List<String>> allData = AboutExcel.readExcel(uploadFile);
@@ -281,6 +349,12 @@ public class StaffController {
 
 	}
 
+	/**
+	 * 회차에 속원 직원 목록을 xl 다운로드 한다.
+	 * 
+	 * @param tno      회차 id
+	 * @param response 응답 정보 객체
+	 */
 	@PostMapping(value = "/xlDownload")
 	@ResponseBody
 	public void xlDown(long tno, HttpServletResponse response) {

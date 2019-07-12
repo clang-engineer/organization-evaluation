@@ -22,6 +22,9 @@ import org.springframework.web.bind.annotation.RestController;
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>TurnController</code>객체는 회차 정보를 REST로 관리한다.
+ */
 @RestController
 @RequestMapping("/turns/*")
 @Slf4j
@@ -30,18 +33,31 @@ public class TurnController {
 	@Autowired
 	private TurnService turnService;
 
+	/**
+	 * 회차를 등록한다.
+	 * 
+	 * @param cno  회사 id
+	 * @param turn 회차 정보
+	 * @return 회차 목록 + 상태
+	 */
 	@Transactional
 	@PostMapping("/{cno}")
 	public ResponseEntity<Optional<List<Turn>>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : addTurn " + turn);
 
 		turn.setCno(cno);
-
 		turnService.register(turn);
 
 		return new ResponseEntity<>(getTurnList(cno), HttpStatus.CREATED);
 	}
 
+	/**
+	 * 회차를 수정한다.
+	 * 
+	 * @param cno  회사 id
+	 * @param turn 회차 정보
+	 * @return 회차 목록 + 상태
+	 */
 	@Transactional
 	@PutMapping("/{cno}")
 	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
@@ -59,11 +75,18 @@ public class TurnController {
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.CREATED);
 	}
 
+	/**
+	 * 회차를 삭제한다.
+	 * 
+	 * @param cno 회사 id
+	 * @param tno 회차 id
+	 * @return 회차 목록 + 상태
+	 */
 	@Transactional
 	@DeleteMapping("/{cno}/{tno}")
 	public ResponseEntity<Optional<List<Turn>>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
 		log.info("controller : remove Turn " + tno);
-		
+
 		turnService.read(tno).ifPresent(origin -> {
 			turnService.remove(origin.getTno());
 		});
@@ -71,6 +94,12 @@ public class TurnController {
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.OK);
 	}
 
+	/**
+	 * 한 회사에 속한 모든 회차 목록을 읽는다.
+	 * 
+	 * @param cno 회사 id
+	 * @return 회차 목록 + 상태
+	 */
 	@GetMapping("/{cno}")
 	public ResponseEntity<Optional<List<Turn>>> getTurnByCompany(@PathVariable("cno") Long cno) {
 		log.info("controller : get all turns by " + cno);
@@ -78,7 +107,13 @@ public class TurnController {
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.OK);
 	}
 
-	private Optional<List<Turn>> getTurnList(Long cno) throws RuntimeException {
+	/**
+	 * 회차 목록을 읽는 함수
+	 * 
+	 * @param cno 회사 id
+	 * @return 회차 목록
+	 */
+	private Optional<List<Turn>> getTurnList(Long cno) {
 		log.info("getTurnList" + cno);
 
 		return turnService.getTurnsOfCompany(cno);

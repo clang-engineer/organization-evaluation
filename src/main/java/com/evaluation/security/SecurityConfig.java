@@ -15,6 +15,9 @@ import org.springframework.security.web.authentication.rememberme.PersistentToke
 
 import lombok.extern.slf4j.Slf4j;
 
+/**
+ * <code>SecurityConfig</code> 객체는 스프링 시큐리티를 설정하는데 사용한다..
+ */
 @Slf4j
 @EnableWebSecurity
 public class SecurityConfig extends WebSecurityConfigurerAdapter {
@@ -25,6 +28,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
     @Autowired
     CustomAdminService customAdminService;
 
+    /**
+     * url 접근을 관리한다.
+     */
     @Override
     protected void configure(HttpSecurity http) throws Exception {
         log.info("security config...");
@@ -40,9 +46,9 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/info360/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/relation360/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/question/**").hasAnyRole("MANAGER", "ADMIN");
-        
+
         http.authorizeRequests().antMatchers("/survey/**").permitAll();
-        
+
         http.formLogin().loginPage("/login").successHandler(new CustomLoginSuccessHandler());
 
         http.exceptionHandling().accessDeniedPage("/accessDenied");
@@ -60,11 +66,22 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         return repo;
     }
 
+    /**
+     * 패스워드를 암호화한다.
+     * 
+     * @return BCryptPasswordEncoder
+     */
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    /**
+     * 전달 받은 정보를 security가 인식할 수 있도록 동작한다.
+     * 
+     * @param auth
+     * @throws Exception
+     */
     public void configureGlobal(AuthenticationManagerBuilder auth) throws Exception {
         log.info("build auth global,,");
         auth.userDetailsService(customAdminService).passwordEncoder(passwordEncoder());
