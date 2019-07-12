@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<configuration>
+	<property name="LOGS_ABSOLUTE_PATH" value="./logs" />
+
+	<appender name="console" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>%d %5p [%c] %m%n</pattern>
+		</encoder>
+	</appender>
+	<appender name="console-infolog" class="ch.qos.logback.core.ConsoleAppender">
+		<encoder>
+			<pattern>>%d %5p %m%n</pattern>
+		</encoder>
+	</appender>
+
+	<!-- logger -->
+	<springProfile name="dev">
+		<logger name="com.evaluation" level="DEBUG" appender-ref="console"/>
+		<logger name="jdbc.sqlonly" level="INFO" appender-ref="console-infolog"/>
+		<logger name="jdbc.resultsettable" level="INFO" appender-ref="console-infolog"/>
+	</springProfile>
+	<springProfile name="production">
+		<logger name="com.evaluation" level="ERROR" appender-ref="console"/>
+	</springProfile>
+
+	<!-- root logger -->
+	<root level="ERROR">
+		<appender-ref ref="console" />
+	</root>
+
+</configuration>
