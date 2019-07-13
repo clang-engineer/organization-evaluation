@@ -119,7 +119,7 @@ public class LevelController {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
         Page<Level> result = levelService.getList(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
     }

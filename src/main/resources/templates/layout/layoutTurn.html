@@ -76,10 +76,10 @@
 			<li class="nav-item dropdown no-arrow">
 				<a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
 					<i class="fas fa-user-circle fa-fw"></i>
-					<span>[[${#authentication.principal.admin.uname}]]</span>
+					<span>[[${#authentication?.principal?.admin?.uname}]]</span>
 				</a>
 				<div class="dropdown-menu dropdown-menu-right" aria-labelledby="userDropdown">
-					<a class="dropdown-item" th:href="@{/admin/read(uid=${#authentication.name})}">Profile</a>
+					<a class="dropdown-item" th:href="@{/admin/read(uid=${#authentication?.name})}">Profile</a>
 					<div class="dropdown-divider"></div>
 					<a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
 				</div>
@@ -202,7 +202,7 @@
 						<span aria-hidden="true">&times;</span>
 					</button>
 				</div>
-				<div class="modal-body">[[${#authentication.principal.admin.uname}]]님의 계정에서 로그아웃 하시겠습니까?</div>
+				<div class="modal-body">[[${#authentication?.principal?.admin?.uname}]]님의 계정에서 로그아웃 하시겠습니까?</div>
 				<div class="modal-footer">
 					<button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
 					<a id="logOut" class="btn btn-primary" th:href="@{/logout}">Logout</a>
@@ -213,7 +213,7 @@
 	<!-- ./Logout Modal-->
 	 <!-- form for logout -->
 	 <form method="POST" th:action="@{/logout}">
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
     <!-- ./form for logout -->
    

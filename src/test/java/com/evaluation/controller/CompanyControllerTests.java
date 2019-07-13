@@ -31,8 +31,8 @@ public class CompanyControllerTests {
 	@Before
 	public void setup() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-		mockMvc.perform(MockMvcRequestBuilders.post("/company/register").param("id", "mockTest1").param("name",
-				"mock test name1").param("cno","1"));
+		mockMvc.perform(MockMvcRequestBuilders.post("/company/register").param("id", "mockTest1")
+				.param("name", "mock test name1").param("cno", "1"));
 	}
 
 	@Test
@@ -42,7 +42,14 @@ public class CompanyControllerTests {
 	}
 
 	@Test
-	public void testRegister() throws Exception {
+	public void testRegisterGet() throws Exception {
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.get("/company/register")).andReturn()
+				.getModelAndView().getViewName();
+		log.info(resultPage);
+	}
+
+	@Test
+	public void testRegisterPost() throws Exception {
 		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/company/register")
 				.param("id", "mock test id1").param("name", "mock test name1")).andReturn().getModelAndView()
 				.getViewName();
@@ -56,7 +63,14 @@ public class CompanyControllerTests {
 	}
 
 	@Test
-	public void testModify() throws Exception {
+	public void testModifyrGet() throws Exception {
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.get("/company/modify").param("cno", "1")).andReturn()
+				.getModelAndView().getViewName();
+		log.info(resultPage);
+	}
+
+	@Test
+	public void testModifyPost() throws Exception {
 		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/company/modify").param("cno", "1")
 				.param("id", "mock modify id").param("name", "mock modify name")).andReturn().getModelAndView()
 				.getViewName();
@@ -70,6 +84,11 @@ public class CompanyControllerTests {
 				.andReturn().getModelAndView().getViewName();
 
 		log.info(resultPage);
+	}
 
+	@Test
+	public void testTurnList() throws Exception {
+		log.info("=>" + mockMvc.perform(MockMvcRequestBuilders.get("/company/turnList").param("cno", "1")).andReturn()
+				.getModelAndView().getModelMap());
 	}
 }

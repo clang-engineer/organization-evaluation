@@ -59,7 +59,7 @@ public class BookController {
 	public void read(int bno, Model model) {
 		log.info("read" + bno);
 
-		model.addAttribute("book", bookService.read(bno).get());
+		model.addAttribute("book", bookService.read(bno).orElse(null));
 	}
 
 	/**

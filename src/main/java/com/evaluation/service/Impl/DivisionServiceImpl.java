@@ -51,8 +51,9 @@ public class DivisionServiceImpl implements DivisionService {
     @Override
     public void remove(long dno) {
         log.info("remove " + dno);
-
-        divisionRepo.deleteById(dno);
+        divisionRepo.findById(dno).ifPresent(origin -> {
+            divisionRepo.deleteById(origin.getDno());
+        });
     }
 
     @Override

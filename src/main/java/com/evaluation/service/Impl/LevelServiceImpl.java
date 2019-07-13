@@ -49,8 +49,9 @@ public class LevelServiceImpl implements LevelService {
     @Override
     public void remove(long lno) {
         log.info("remove " + lno);
-
-        levelRepo.deleteById(lno);
+        levelRepo.findById(lno).ifPresent(origin -> {
+            levelRepo.deleteById(origin.getLno());
+        });
     }
 
     @Override

@@ -42,6 +42,7 @@ public class InfoMboController {
 		bookService.findByType("MboReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
+
 		model.addAttribute("infoMbo", infoMboService.read(tno));
 	}
 

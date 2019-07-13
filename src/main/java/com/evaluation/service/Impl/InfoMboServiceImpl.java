@@ -1,5 +1,6 @@
 package com.evaluation.service.Impl;
 
+import com.evaluation.domain.Turn;
 import com.evaluation.domain.embeddable.InfoMbo;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.InfoMboService;
@@ -31,7 +32,7 @@ public class InfoMboServiceImpl implements InfoMboService {
 	public InfoMbo read(long tno) {
 		log.info("service : infoMbo get " + tno);
 
-		return turnRepo.findById(tno).get().getInfoMbo();
+		return turnRepo.findById(tno).map(Turn::getInfoMbo).orElse(null);
 	}
 
 	@Override

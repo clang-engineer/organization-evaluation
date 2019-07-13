@@ -12,16 +12,15 @@ import org.springframework.test.web.servlet.request.MockMvcRequestBuilders;
 import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.web.context.WebApplicationContext;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 @Slf4j
-public class Info360ControllerTests {
+public class InfoSurveyControllerTests {
 
-	@Setter(onMethod_ = { @Autowired })
+	@Autowired
 	private WebApplicationContext ctx;
 
 	private MockMvc mockMvc;
@@ -33,8 +32,21 @@ public class Info360ControllerTests {
 
 	@Test
 	public void testModify() throws Exception {
-		log.info(mockMvc.perform(MockMvcRequestBuilders.post("/infoSurvey/modify").param("tno", "1").param("title", "mockmvctest")).andReturn()
-				.getModelAndView().getViewName());
+		log.info(mockMvc.perform(
+				MockMvcRequestBuilders.post("/infoSurvey/modify").param("tno", "1").param("title", "mockmvctest"))
+				.andReturn().getModelAndView().getViewName());
 	}
 
+	@Test
+	public void testModfiyGet() throws Exception {
+		log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/infoSurvey/read").param("tno", "1")).andReturn()
+				.getModelAndView().getModelMap());
+	}
+
+	@Test
+	public void testModifyPost() throws Exception {
+		String resultPage = mockMvc.perform(MockMvcRequestBuilders.post("/infoSurvey/modify").param("tno", "1")
+				.param("title", "testmoidfy").param("content", "test")).andReturn().getModelAndView().getViewName();
+		log.info(resultPage);
+	}
 }

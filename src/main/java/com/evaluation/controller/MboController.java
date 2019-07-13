@@ -77,7 +77,7 @@ public class MboController {
      * @return Mbo로그인 페이지
      */
     @GetMapping("/")
-    public String mbo(String company, Model model) {
+    public String login(String company, Model model) {
         log.info("====>survey by company" + company);
 
         // 회사에 관한 정보 찾고
@@ -104,7 +104,7 @@ public class MboController {
      * @return mbo 메인 페이지
      */
     @PostMapping("/login")
-    public String userLogin(String company, long tno, Staff staff, HttpServletRequest request,
+    public String login(String company, long tno, Staff staff, HttpServletRequest request,
             RedirectAttributes rttr) {
         log.info("user login" + tno + staff);
         rttr.addAttribute("company", company);

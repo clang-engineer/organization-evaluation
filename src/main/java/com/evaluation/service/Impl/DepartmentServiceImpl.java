@@ -43,7 +43,6 @@ public class DepartmentServiceImpl implements DepartmentService {
         departmentRepo.findById(department.getDno()).ifPresent(origin -> {
             origin.setDepartment1(department.getDepartment1());
             origin.setDepartment2(department.getDepartment2());
-            origin.setUpdateId(department.getUpdateId());
             departmentRepo.save(origin);
         });
     }
@@ -51,8 +50,9 @@ public class DepartmentServiceImpl implements DepartmentService {
     @Override
     public void remove(long dno) {
         log.info("remove " + dno);
-
-        departmentRepo.deleteById(dno);
+        departmentRepo.findById(dno).ifPresent(origin -> {
+            departmentRepo.deleteById(origin.getDno());
+        });
     }
 
     @Override

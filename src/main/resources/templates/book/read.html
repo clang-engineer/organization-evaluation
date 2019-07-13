@@ -19,38 +19,36 @@
             </div>
             <div class="card-body">
                 <form id="f1" th:action="@{modify}" method="post">
-                    <input type="hidden" class="form-control" name="bno" required="required" th:value="${book.bno}">
+                    <input type="hidden" class="form-control" name="bno" required="required" th:value="${book?.bno}">
                     <div class="form-group">
                         <label>Book Type</label>
                         <select class="form-control" name="type">
                             <option>--</option>
-                            <!-- <option value="360" th:selected="${book.type}=='360'">360 Survey</option>
-                            <option value="mbo" th:selected="${book.type}=='mbo'">MBO</option> -->
-                            <option value="360Reply" th:selected="${book.type}=='360Reply'">360 Reply</option>
-                            <option value="MBOReply" th:selected="${book.type}=='MBOReply'">MBO Reply</option>
+                            <option value="360Reply" th:selected="${book?.type}=='360Reply'">360 Reply</option>
+                            <option value="MBOReply" th:selected="${book?.type}=='MBOReply'">MBO Reply</option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Book Title</label>
-                        <input type="text" class="form-control" name="title" required="required" th:value="${book.title}">
+                        <input type="text" class="form-control" name="title" required="required" th:value="${book?.title}">
                     </div>
-                    <input type="hidden" name="updateId" th:value="${#authentication.name}">
+                    <input type="hidden" name="updateId" th:value="${#authentication?.name}">
                 </form>
                 <div class="form-group">
                     <label>Write Id</label>
-                    <input type="text" class="form-control" readonly th:value="${book.writeId}">
+                    <input type="text" class="form-control" readonly th:value="${book?.writeId}">
                 </div>
                 <div class="form-group">
                     <label>Write Date</label>
-                    <input type="text" class="form-control" readonly th:value="${#dates.format(book.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+                    <input type="text" class="form-control" readonly th:value="${#dates.format(book?.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
                 </div>
                 <div class="form-group">
                     <label>update Id</label>
-                    <input type="text" class="form-control" readonly th:value="${book.updateId}">
+                    <input type="text" class="form-control" readonly th:value="${book?.updateId}">
                 </div>
                 <div class="form-group">
                     <label>update Date</label>
-                    <input type="text" class="form-control" readonly th:value="${#dates.format(book.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+                    <input type="text" class="form-control" readonly th:value="${#dates.format(book?.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
                 </div>
                 <span sec:authorize="hasRole('ROLE_ADMIN')">
                         <button type="modify" data-oper="modify" class="btn btn-primary">Modify</button>

@@ -41,14 +41,16 @@ public class BookServiceImpl implements BookService {
 
 	@Override
 	public void remove(int bno) {
-		bookRepo.deleteById(bno);
+		bookRepo.findById(bno).ifPresent(origin->{
+			bookRepo.deleteById(origin.getBno());
+		});
 	}
 
 	@Override
 	public Optional<List<Book>> findAll() {
 		Sort sort = new Sort(Sort.Direction.ASC, "bno");
 		Optional<List<Book>> result = bookRepo.findAll(sort);
-		
+
 		return result;
 	}
 

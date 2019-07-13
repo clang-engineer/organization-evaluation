@@ -1,5 +1,6 @@
 package com.evaluation.service.Impl;
 
+import com.evaluation.domain.Turn;
 import com.evaluation.domain.embeddable.InfoSurvey;
 import com.evaluation.persistence.TurnRepository;
 import com.evaluation.service.InfoSurveyService;
@@ -31,7 +32,7 @@ public class InfoSurveyServiceImpl implements InfoSurveyService {
 	public InfoSurvey read(long tno) {
 		log.info("service : infoSurvey get " + tno);
 
-		return turnRepo.findById(tno).get().getInfoSurvey();
+		return turnRepo.findById(tno).map(Turn::getInfoSurvey).orElse(null);
 	}
 
 	@Override

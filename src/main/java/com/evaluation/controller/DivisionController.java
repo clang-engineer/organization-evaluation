@@ -119,10 +119,9 @@ public class DivisionController {
 
         model.addAttribute("tno", tno);
 
-        long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
         Page<Division> result = divisionService.getList(cno, vo);
         model.addAttribute("result", new PageMaker<>(result));
-
     }
 
 }

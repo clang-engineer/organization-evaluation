@@ -20,7 +20,6 @@ import org.springframework.test.web.servlet.setup.MockMvcBuilders;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.context.WebApplicationContext;
 
-import lombok.Setter;
 import lombok.extern.slf4j.Slf4j;
 
 @RunWith(SpringRunner.class)
@@ -30,7 +29,7 @@ import lombok.extern.slf4j.Slf4j;
 @Slf4j
 public class TurnControllerTests {
 
-	@Setter(onMethod_ = { @Autowired })
+	@Autowired
 	private WebApplicationContext ctx;
 
 	private MockMvc mockMvc;

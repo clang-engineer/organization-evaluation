@@ -2,7 +2,6 @@ package com.evaluation.controller;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Optional;
 
 import com.evaluation.domain.Department;
 import com.evaluation.domain.Staff;
@@ -165,6 +164,7 @@ public class DepartmentController {
      */
     @GetMapping("/leader")
     public void readLeader(long tno, long dno, PageVO vo, Model model) {
+        log.info("read leader " + tno + dno);
         // dno일치하는 팀 정보와 리더 정보 전달.
         departmentService.read(dno).ifPresent(department -> {
             if (department.getLeader() != null) {
@@ -203,7 +203,7 @@ public class DepartmentController {
      */
     @PostMapping("/leader/register")
     public String registerLeader(long tno, long dno, Leader leader, PageVO vo, RedirectAttributes rttr) {
-
+        log.info("register leader " + tno + dno + leader);
         departmentService.read(dno).ifPresent(origin -> {
             origin.setLeader(leader);
             departmentService.modify(origin);
@@ -219,8 +219,7 @@ public class DepartmentController {
     }
 
     /**
-     * 부서 정보를 읽어오는 REST 
-     *(Mbo 목표 작성 시 부서 정보 읽어오기 위해)
+     * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
      * 
      * @param dno 부서 id
      * @return 부서 정보
@@ -228,13 +227,13 @@ public class DepartmentController {
     @GetMapping("/{dno}")
     @ResponseBody
     public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
-        Department department = Optional.ofNullable(departmentService.read(dno)).map(Optional::get).orElse(null);
+        log.info("read leader " + dno);
+        Department department = departmentService.read(dno).orElse(null);
         return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
     /**
-     * 부서 정보 등록 하는 REST 
-     *(Mbo에서 팀장이 팀 목표 등록시)
+     * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
      * 
      * @param dno    부서 id
      * @param leader 리더 정보
@@ -243,11 +242,13 @@ public class DepartmentController {
     @PutMapping("/{dno}")
     @ResponseBody
     public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
-
+        log.info("modify leader info " + dno);
         departmentService.read(dno).ifPresent(origin -> {
-            origin.getLeader().setTitle(leader.getTitle());
-            origin.getLeader().setContent(leader.getContent());
-            departmentService.modify(origin);
+            if (origin.getLeader() != null) {
+                origin.getLeader().setTitle(leader.getTitle());
+                origin.getLeader().setContent(leader.getContent());
+                departmentService.modify(origin);
+            }
         });
 
         return new ResponseEntity<>(HttpStatus.OK);

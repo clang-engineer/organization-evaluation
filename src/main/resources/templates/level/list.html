@@ -28,9 +28,9 @@
 						<select class="form-control col-sm-4" id="searchType">
 							<option>---
 								</optinon>
-							<option value="level" th:selected="${pageVO.type}=='level'">Level</option>
+							<option value="level" th:selected="${pageVO?.type}=='level'">Level</option>
 						</select>
-						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
 							<button class="btn btn-default border" id="searchBtn" type="button">
 								<i class="fas fa-search fa-sm"></i>
@@ -43,7 +43,7 @@
 			<!-- /search box -->
 			<div class="card-body">
 				<div class="table-responsive">
-					<table th:with="idxpageNum=${result.currentPageNum}, result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<table th:with="idxpageNum=${result?.currentPageNum}, result=${result?.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -59,10 +59,10 @@
 							</tr>
 						</tfoot>
 						<tbody>
-							<tr th:each="level,status:${result.content}">
+							<tr th:each="level,status:${result?.content}">
 								<td>[[${idxpageNum-1}*10+${status.count}]]</td>
-								<td>[[${level.content}]]</td>
-								<td><a th:href="${level.lno}" class="detail">
+								<td>[[${level?.content}]]</td>
+								<td><a th:href="${level?.lno}" class="detail">
 										<button type="button" class="btn btn-detail"><i class="fas fa-pen"></i></button>
 									</a></td>
 							</tr>
@@ -86,11 +86,11 @@
 	<!-- /.container-fluid -->
 	<form id="f1" th:action="@{list}" method="get">
 		<input type="hidden" name="tno" th:value="${tno}" />
-		<input type="hidden" name="page" th:value=${result.currentPageNum} />
-		<input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
-		<input type="hidden" name="type" th:value=${pageVO.type} />
-		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
+		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
+		<input type="hidden" name="type" th:value=${pageVO?.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
+		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 	</form>
 
 	<!-- Modal -->
@@ -121,7 +121,7 @@
 			modalContent2.hide();
 
 			var msg = [[${ msg }]];
-			var authName = [[${ #authentication.name }]];
+			var authName = [[${ #authentication?.name }]];
 
 			if (history.state == null) {
 				if (msg == 'register') {

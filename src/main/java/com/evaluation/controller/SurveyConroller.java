@@ -59,7 +59,7 @@ public class SurveyConroller {
      * @return Survey 로그인 페이지
      */
     @GetMapping("/")
-    public String survey(String company, Model model) {
+    public String login(String company, Model model) {
         log.info("====>survey by company" + company);
 
         // 회사에 관한 정보 찾고
@@ -86,7 +86,7 @@ public class SurveyConroller {
      * @return Survey 메인 페이지
      */
     @PostMapping("/login")
-    public String userLogin(String company, long tno, Staff staff, RedirectAttributes rttr,
+    public String login(String company, long tno, Staff staff, RedirectAttributes rttr,
             HttpServletRequest request) {
         log.info("user login" + tno + staff);
 

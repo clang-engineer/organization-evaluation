@@ -67,7 +67,7 @@
 	<!-- /.container-fluid -->
 	<form id="f1" th:action="@{list}" method="get">
 		<input type="hidden" name="tno" th:value="${tno}" />
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 	</form>
 
 
@@ -99,7 +99,7 @@
 			modalContent2.hide();
 
 			var msg = [[${ msg }]];
-			var authName = [[${ #authentication.name }]];
+			var authName = [[${ #authentication?.name }]];
 
 			if (history.state == null) {
 				if (msg == 'register') {
