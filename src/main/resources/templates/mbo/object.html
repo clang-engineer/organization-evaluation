@@ -39,6 +39,9 @@
                 <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn?.infoMbo?.status}=='see' OR ${turn?.infoMbo?.status}=='count') and ${relation?.relation}!='me'">상사평가</th>
                 <th scope="col" class="text-nowrap">댓글</th>
             </thead>
+            <tfoot class="table-active" id="tfoot">
+                <th scope="col" colspan="10" class="text-nowrap"><i class="fas fa-angle-double-up"></i></th>
+            </tfoot>
             <tbody>
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
                     <!-- object -->
@@ -208,7 +211,7 @@
             var objectListTable = $('#objectListTable');
 
             //댓글 colspan 지정
-            var step = [[${ turn?.infoMbo?.status }]];
+            var step = [[${ turn?.infoMbo ?.status }]];
             var relation = [[${ relation?.relation }]];
 
             replyColspan(step, relation);
@@ -274,8 +277,8 @@
             });
 
             var tno = [[${ tno }]];
-            var sno = [[${ relation?.evaluated?.sno }]];
-            var sessionId = [[${ session?.evaluator?.email }]];
+            var sno = [[${ relation?.evaluated ?.sno }]];
+            var sessionId = [[${ session?.evaluator ?.email }]];
 
             modalRegisterBtn.click(function (e) {
                 var param = {
@@ -578,8 +581,8 @@
             $("#departmentObject").click(function (e) {
                 var dep1 = [[${ department?.department1 }]];
                 var dep2 = [[${ department?.department2 }]];
-                var title = [[${ department?.leader?.title }]];
-                var content = [[${ department?.leader?.content }]];
+                var title = [[${ department?.leader ?.title }]];
+                var content = [[${ department?.leader ?.content }]];
                 var contetnModal = $("#contentModal");
                 contetnModal.find("#modalTitle").text(dep1 + " - " + dep2 + " 팀 목표");
                 contetnModal.find("#modalLabel1").text("Title");
@@ -625,7 +628,7 @@
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit,#btnPause").click(function (e) {
                 e.preventDefault();
-                var evaluatedName = [[${ relation?.evaluated?.name }]];
+                var evaluatedName = [[${ relation?.evaluated ?.name }]];
                 //form 꽉 찾는지 확인하기
                 var btnType = $(this).attr('id');
                 var tmpModal = $("#basicModal");
@@ -743,11 +746,16 @@
             });
 
             //스크롤 부드럽게 이동
-            $('#top').click(function () {
+            $('#top,#tfoot').click(function () {
                 $('html, body').animate({ scrollTop: 0 }, 400);
                 return false;
             });
 
+            //removedListTable 맨 위로
+            $('#modal-tfoot').click(function () {
+                $('#removedListModal, #modalBody').animate({ scrollTop: 0 }, 400);
+                return false;
+            });
 
             //toolitip에 관한 설정
             $('#btnSubmit,#btnPause').tooltip('show');

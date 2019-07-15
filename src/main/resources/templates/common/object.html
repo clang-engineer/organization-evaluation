@@ -21,6 +21,9 @@
                             <th class="text-nowrap" style="width: 5%" scope="col">최종 변경일</th>
                             <th class="text-nowrap" style="width: 5%" scope="col">댓글</th>
                         </thead>
+                        <tfoot class="table-active" id="modal-tfoot">
+                            <th scope="col" colspan="10" class="text-nowrap"><i class="fas fa-angle-double-up"></i></th>
+                        </tfoot>
                         <tbody>
                             <div th:each="object,status:${removedList}">
                                 <!-- object -->
