@@ -107,12 +107,10 @@ public class CompanyController {
 	public String modify(Company company, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : company modify post" + company);
 
-		companyService.read(company.getCno()).ifPresent(origin -> {
-			companyService.modify(origin);
+		companyService.modify(company);
 
-			rttr.addFlashAttribute("msg", "modify");
-			rttr.addAttribute("cno", company.getCno());
-		});
+		rttr.addFlashAttribute("msg", "modify");
+		rttr.addAttribute("cno", company.getCno());
 
 		rttr.addAttribute("page", vo.getPage());
 		rttr.addAttribute("size", vo.getSize());
@@ -134,9 +132,7 @@ public class CompanyController {
 	public String delete(Long cno, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : company delete " + cno);
 
-		companyService.read(cno).ifPresent(origin -> {
-			companyService.remove(origin.getCno());
-		});
+		companyService.remove(cno);
 
 		rttr.addFlashAttribute("msg", "remove");
 		rttr.addAttribute("page", vo.getPage());
@@ -151,8 +147,8 @@ public class CompanyController {
 	/**
 	 * 회사에 속한 회차 목록을 표현한다.
 	 * 
-	 * @param cno 회사 id
-	 * @param vo 페이지 정보
+	 * @param cno   회사 id
+	 * @param vo    페이지 정보
 	 * @param model 화면 전달 정보
 	 */
 	@GetMapping("/turnList")
