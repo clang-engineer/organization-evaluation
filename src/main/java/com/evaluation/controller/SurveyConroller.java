@@ -86,8 +86,7 @@ public class SurveyConroller {
      * @return Survey 메인 페이지
      */
     @PostMapping("/login")
-    public String login(String company, long tno, Staff staff, RedirectAttributes rttr,
-            HttpServletRequest request) {
+    public String login(String company, long tno, Staff staff, RedirectAttributes rttr, HttpServletRequest request) {
         log.info("user login" + tno + staff);
 
         rttr.addAttribute("company", company);
@@ -307,7 +306,7 @@ public class SurveyConroller {
                         // 중복 제거한 카테고리를 위해
                         Set<String> category = new LinkedHashSet<String>();
                         question.forEach(q -> {
-                            category.add(q.get(1));
+                            category.add(q.getCategory());
                         });
                         model.addAttribute("category", category);
                         model.addAttribute("questionList", question);

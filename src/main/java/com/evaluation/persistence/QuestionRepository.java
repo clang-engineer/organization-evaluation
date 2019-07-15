@@ -37,8 +37,8 @@ public interface QuestionRepository extends CrudRepository<Question, Long>, Quer
      * @param division2 계층명칭
      * @return 한 질문 정보 리스트의 리스트
      */
-    @Query("SELECT q.idx, q.category, q.item FROM Question q WHERE q.qno>0 AND q.tno=:tno AND q.division1=:division1 AND q.division2=:division2 ORDER BY q.idx ASC")
-    Optional<List<List<String>>> getListByDivision(@Param("tno") Long tno, @Param("division1") String division1,
+    @Query("SELECT q FROM Question q WHERE q.qno>0 AND q.tno=:tno AND q.division1=:division1 AND q.division2=:division2 ORDER BY q.idx ASC")
+    Optional<List<Question>> getListByDivision(@Param("tno") Long tno, @Param("division1") String division1,
             @Param("division2") String division2);
 
     /**

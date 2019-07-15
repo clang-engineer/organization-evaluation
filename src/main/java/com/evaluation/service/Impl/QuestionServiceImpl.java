@@ -24,7 +24,7 @@ public class QuestionServiceImpl implements QuestionService {
 
 	@Autowired
 	QuestionRepository questionRepo;
-	
+
 	@Autowired
 	DivisionRepository divisionRepo;
 
@@ -87,7 +87,7 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	public Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2) {
+	public Optional<List<Question>> getListByDivision(long tno, String division1, String division2) {
 		log.info("getDivision by tno : " + tno);
 
 		return questionRepo.getListByDivision(tno, division1, division2);
@@ -98,7 +98,7 @@ public class QuestionServiceImpl implements QuestionService {
 	}
 
 	@Override
-	//질문 등록할 때 중복제거한 리스트 전달하기 위한 서비스
+	// 질문 등록할 때 중복제거한 리스트 전달하기 위한 서비스
 	public Map<String, Object> getDistinctQuestionInfo(long cno, long tno) {
 
 		Map<String, Object> result = new HashMap<String, Object>();

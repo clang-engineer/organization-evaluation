@@ -74,7 +74,7 @@ public interface QuestionService {
 	 * @param division2 계층명
 	 * @return 질문 정보 리스트의 리스트
 	 */
-	Optional<List<List<String>>> getListByDivision(long tno, String division1, String division2);
+	Optional<List<Question>> getListByDivision(long tno, String division1, String division2);
 
 	/**
 	 * 한 회차의 모든 질문 정보를 찾는다.
