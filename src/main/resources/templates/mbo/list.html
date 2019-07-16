@@ -42,21 +42,21 @@
                             <p class="card-text" th:if="${turn?.infoMbo?.status}=='see'">본인 평가를 진행 합니다.</p>
                             <p class="card-text" th:if="${turn?.infoMbo?.status}=='count'">본인 평가 결과를 확인 합니다.</p>
 
-                            <span th:each="relation:${evaluatedList}" th:if="${relation.relation}=='me'">
+                            <span th:each="relation:${evaluatedList}" th:if="${relation?.relation}=='me'">
                                 <table>
                                     <tbody>
                                         <tr>
                                             <td>
-                                                <button class="btn btn-primary" th:if="${turn?.infoMbo?.status}!='see'" data-type="mbo" th:data-rno="${relation.rno}" data-name="본인" data-toggle="tooltip" data-placement="right"
+                                                <button class="btn btn-primary" th:if="${turn?.infoMbo?.status}!='see'" data-type="mbo" th:data-rno="${relation?.rno}" data-name="본인" data-toggle="tooltip" data-placement="right"
                                                     title="본인 목표 관리 페이지로 이동">목표 작성률
-                                                    <span th:each="ratio:${ratioList}" th:if="${ratio[0]}==${session.evaluator.sno}">[[${#numbers.formatPercent(ratio[2],0,0)}]]</span>
+                                                    <span th:each="ratio:${ratioList}" th:if="${ratio[0]}==${session?.evaluator?.sno}">[[${#numbers.formatPercent(ratio[2],0,0)}]]</span>
                                                 </button>
                                                 <span th:if="${turn?.infoMbo?.status}=='see'">
-                                                    <button class="btn btn-primary" th:if="${relation.finish}=='N'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="N" data-toggle="tooltip"
+                                                    <button class="btn btn-primary" th:if="${relation?.finish}=='N'" data-type="survey" th:data-rno="${relation?.rno}" data-name="본인" data-finish="N" data-toggle="tooltip"
                                                         data-placement="right" title="실시 전 입니다.">Go to my MBO!</button>
-                                                    <button class="btn btn-danger" th:if="${relation.finish}=='T'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="T" data-toggle="tooltip"
+                                                    <button class="btn btn-danger" th:if="${relation?.finish}=='T'" data-type="survey" th:data-rno="${relation?.rno}" data-name="본인" data-finish="T" data-toggle="tooltip"
                                                         data-placement="right" title="임시 저장 상태 입니다.">임시 저장</button>
-                                                    <button class="btn btn-secondary" th:if="${relation.finish}=='Y'" data-type="survey" th:data-rno="${relation.rno}" data-name="본인" data-finish="Y" disabled>
+                                                    <button class="btn btn-secondary" th:if="${relation?.finish}=='Y'" data-type="survey" th:data-rno="${relation?.rno}" data-name="본인" data-finish="Y" disabled>
                                                         <span data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다.">
                                                             제출 완료
                                                         </span>
@@ -75,9 +75,9 @@
                     <div th:with="relationArray = ${ {'1', '2', '3'} }">
                         <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
                             <h5 class="card-header">[[${r}]]차 평가자로서 목표 관리 대상자
-                                <small class="float-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 직속상사 입니다.</small>
-                                <small class="float-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 차상위상사 입니다.</small>
-                                <small class="float-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 차차상위상사 입니다.</small>
+                                <small class="float-right" th:if="${r}=='1'">[[${session?.evaluator?.name}]] 님은 아래 대상자의 직속상사 입니다.</small>
+                                <small class="float-right" th:if="${r}=='2'">[[${session?.evaluator?.name}]] 님은 아래 대상자의 차상위상사 입니다.</small>
+                                <small class="float-right" th:if="${r}=='3'">[[${session?.evaluator?.name}]] 님은 아래 대상자의 차차상위상사 입니다.</small>
                             </h5>
                             <!-- card body -->
                             <div class="card-body pb-0">
@@ -103,33 +103,33 @@
                                             <td class="align-middle">[[${relation?.evaluated?.level}]]</td>
                                             <td  class="align-middle">
                                                 <div class="progress">
-                                                    <div class="progress-bar" th:each="ratio:${ratioList}" th:if="${ratio[0]}==${relation.evaluated.sno}" role="progressbar" th:style="'width:'+ ${ratio[2]}*100 +'%'" aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(ratio[2],0,0)}]]</div>
+                                                    <div class="progress-bar" th:each="ratio:${ratioList}" th:if="${ratio[0]}==${relation?.evaluated?.sno}" role="progressbar" th:style="'width:'+ ${ratio[2]}*100 +'%'" aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(ratio[2],0,0)}]]</div>
                                                 </div>
                                             </td>
                                             <!-- 목표 설정 버튼 열 -->
-                                            <td class="align-items-center align-middle" th:if="${turn.infoMbo?.status}!='see'">
-                                                <button class="btn btn-default" data-type="mbo" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
+                                            <td class="align-items-center align-middle" th:if="${turn?.infoMbo?.status}!='see'">
+                                                <button class="btn btn-default" data-type="mbo" th:data-rno="${relation?.rno}" th:data-name="${relation?.evaluated?.name}"><i class="fas fa-map-marked-alt fa-fw"></i></button>
                                             </td>
                                             <!-- 본인 평가 확인 열 -->
-                                            <td class="align-items-center align-middle" th:if="${turn.infoMbo?.status}=='see'">
+                                            <td class="align-items-center align-middle" th:if="${turn?.infoMbo?.status}=='see'">
                                                 <span th:each="relationMe:${relationMeList}">
-                                                    <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe.finish}=='Y'">
+                                                    <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe?.finish}=='Y'">
                                                         <i class="far fa-circle"></i>
                                                     </span>
-                                                    <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe.finish}=='N'">
+                                                    <span th:if="(${relationMe?.evaluator?.sno}==${relation?.evaluated?.sno}) AND ${relationMe?.finish}=='N'">
                                                         <i class="fas fa-times"></i>
                                                     </span>
                                                 </span>
                                             </td>
                                             <!-- 평가 버튼 열 -->
-                                            <td th:if="${turn.infoMbo?.status}=='see'">
-                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='N'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
-                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='T'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
-                                                <button class="btn btn-default" data-type="survey" th:if="${relation.finish}=='Y'" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
+                                            <td th:if="${turn?.infoMbo?.status}=='see'">
+                                                <button class="btn btn-default" data-type="survey" th:if="${relation?.finish}=='N'" th:data-rno="${relation?.rno}" th:data-name="${relation?.evaluated?.name}"><i class="fas fa-user-edit fa-fw" data-toggle="tooltip" data-placement="right" title="실시 전 입니다."></i></button>
+                                                <button class="btn btn-default" data-type="survey" th:if="${relation?.finish}=='T'" th:data-rno="${relation?.rno}" th:data-name="${relation?.evaluated?.name}"><i class="fas fa-pause fa-fw" data-toggle="tooltip" data-placement="right" title="임시 저장 상태 입니다."></i></button>
+                                                <button class="btn btn-default" data-type="survey" th:if="${relation?.finish}=='Y'" th:data-rno="${relation?.rno}" th:data-name="${relation?.evaluated?.name}" disabled><i class="fas fa-lock fa-fw" data-toggle="tooltip2" data-placement="right" title="제출을 완료 했습니다."></i></button>
                                             </td>
                                             <!-- 면담 시트 버튼 열 -->
                                             <td class="align-items-center align-middle">
-                                                <button class="btn btn-default" data-type="note" th:data-step="${turn?.infoMbo?.status}" th:data-rno="${relation.rno}" th:data-name="${relation.evaluated.name}"><i class="fas fa-scroll fa-fw"></i></button>
+                                                <button class="btn btn-default" data-type="note" th:data-step="${turn?.infoMbo?.status}" th:data-rno="${relation?.rno}" th:data-name="${relation?.evaluated?.name}"><i class="fas fa-scroll fa-fw"></i></button>
                                             </td>
                                         </tr>
                                     </tbody>    
@@ -157,7 +157,7 @@
 
     <form id="f1" th:action="@{object(company=${company},tno=${tno})}" method="POST">
         <input type="hidden" th:valu="${turn?.infoMbo?.status}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 
     <!-- Modal -->

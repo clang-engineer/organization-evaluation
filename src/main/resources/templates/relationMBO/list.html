@@ -28,10 +28,10 @@
                         <select class="form-control col-sm-4" id="searchType">
                             <option>---
                                 </optinon>
-                            <option value="evaluated" th:selected="${pageVO.type}=='evaluated'">evaluated name</option>
-                            <option value="evaluator" th:selected="${pageVO.type}=='evaluator'">evaluator name</option>
+                            <option value="evaluated" th:selected="${pageVO?.type}=='evaluated'">evaluated name</option>
+                            <option value="evaluator" th:selected="${pageVO?.type}=='evaluator'">evaluator name</option>
                         </select>
-                        <input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+                        <input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
                         <div class="input-group-append">
                             <button class="btn btn-default border" id="searchBtn" type="button">
                                 <i class="fas fa-search fa-sm"></i>
@@ -65,11 +65,11 @@
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="get">
         <input type="hidden" name="tno" th:value="${tno}" />
-        <input type="hidden" name="page" th:value=${result.currentPageNum} />
-        <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
-        <input type="hidden" name="type" th:value=${pageVO.type} />
-        <input type="hidden" name="keyword" th:value=${pageVO.keyword} />
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" name="page" th:value=${result?.currentPageNum} />
+        <input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
+        <input type="hidden" name="type" th:value=${pageVO?.type} />
+        <input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 
     <!-- Modal -->

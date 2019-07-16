@@ -32,7 +32,7 @@
                     <h5 class="card-header bg-light mb-4 category">[[${category}]]</h5>
                     <div class="card-body ml-3 mb-3" th:each="question:${questionList}" th:if="${question?.category}==${category}">
                         <h6 class="card-text pb-2 mb-4">
-                            [[${question?.idx}]] - [[${question?.item}]]
+                            Q[[${question?.idx}]]. [[${question?.item}]]
                         </h6>
                         <div class="qparent">
                             <div th:each="book,idx:${book}" class="mr-5 mb-4 question custom-control custom-radio">
@@ -53,7 +53,7 @@
                 </h5>
                 <div class="card m-3">
                     <div class="card-body" th:each="question, status:${commentList}">
-                        <div class="card-text mb-3">[[${status.count}]] - [[${question}]]</div>
+                        <div class="card-text mb-3">Q[[${status.count}]]. [[${question}]]</div>
                         <textarea required th:name="'c'+${status.count}" class="form-control" rows="7" th:text="${relation?.comments?.get('c'+status.count)}" th:disabled="${relation.finish}=='Y'">
                         </textarea>
                         <p class="float-md-right mb-0" id="count_message">0/2000</p>
