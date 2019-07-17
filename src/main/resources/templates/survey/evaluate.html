@@ -137,7 +137,6 @@
             $(".essay").find("textarea").keyup();
 
             // load했을 때 버튼 사이즈
-            var win = $(this);
             bottomBtnSize();
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
@@ -145,13 +144,13 @@
             });
 
             function bottomBtnSize() {
-                if (win.width() < 768) {
+                if ($(window).width() < 768) {
                     $('#bottomBtn').addClass('btn-group-sm');
                     $('#bottomBtn').removeClass('btn-group-xs');
                     $('#bottomBtn').removeClass('btn-group-lg');
                     $('#bottomBtn').removeClass('btn-group-vertical');
 
-                } else if ((win.width() < 1200)) {
+                } else if (($(window).width() < 1200)) {
                     $('#bottomBtn').removeClass('btn-group-sm');
                     $('#bottomBtn').addClass('btn-group-xs');
                     $('#bottomBtn').removeClass('btn-group-lg');

@@ -241,8 +241,20 @@
             }, 1500);
 
             $(function () {
-                $('[data-toggle="tooltip2"]').tooltip()
-            })
+                $('[data-toggle="tooltip2"]').tooltip();
+            });
+
+            //모달 백그라운드 크기를 로딩할 때 재조정
+            $(".modal").on('shown.bs.modal', function () {
+                var $backdrop = $('.modal-backdrop');
+                $backdrop.css({
+                    height: $(document).height()
+                });
+
+                $backdrop.css({
+                    width: $(document).width()
+                });
+            });
         });
     </script>
 </th:block>

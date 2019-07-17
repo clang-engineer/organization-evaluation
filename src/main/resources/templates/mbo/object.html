@@ -4,9 +4,15 @@
 <!-- div content -->
 <div layout:fragment="content">
     <style>
-        .container {
+        /* .container {
             max-width: 1500px;
             width: 100%;
+        } */
+
+        /*목표시트 반응형 제거*/
+        .container {
+            width: 1500px;
+            max-width: none !important;
         }
 
         h2 small {
@@ -30,17 +36,21 @@
         </div>
         <table class="table table-border" id="objectListTable">
             <thead class="thead-dark">
-                <th scope="col" class="text-nowrap">#</th>
-                <th scope="col" class="text-nowrap" style="width: 30%">목표</th>
-                <th scope="col" class="text-nowrap" style="width: 40%">달성기준</th>
-                <th scope="col" class="text-nowrap">비중%</th>
-                <th scope="col" class="text-nowrap" th:if="(${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do') AND ${relation?.relation}=='me'">수정</th>
-                <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn?.infoMbo?.status}=='see' OR ${turn?.infoMbo?.status}=='count'">본인평가</th>
-                <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn?.infoMbo?.status}=='see' OR ${turn?.infoMbo?.status}=='count') and ${relation?.relation}!='me'">상사평가</th>
-                <th scope="col" class="text-nowrap">댓글</th>
+                <tr>
+                    <th scope="col" class="text-nowrap">#</th>
+                    <th scope="col" class="text-nowrap" style="width: 30%">목표</th>
+                    <th scope="col" class="text-nowrap" style="width: 40%">달성기준</th>
+                    <th scope="col" class="text-nowrap">비중%</th>
+                    <th scope="col" class="text-nowrap" th:if="(${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do') AND ${relation?.relation}=='me'">수정</th>
+                    <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn?.infoMbo?.status}=='see' OR ${turn?.infoMbo?.status}=='count'">본인평가</th>
+                    <th scope="col" class="text-nowrap" style="width:15%" th:if="(${turn?.infoMbo?.status}=='see' OR ${turn?.infoMbo?.status}=='count') and ${relation?.relation}!='me'">상사평가</th>
+                    <th scope="col" class="text-nowrap">댓글</th>
+                </tr>
             </thead>
             <tfoot class="table-active" id="tfoot">
-                <th scope="col" colspan="10" class="text-nowrap"><i class="fas fa-angle-double-up"></i></th>
+                <tr>
+                    <th scope="col" colspan="10" class="text-nowrap"><i class="fas fa-angle-double-up"></i></th>
+                </tr>
             </tfoot>
             <tbody>
                 <div th:each="object,status:${objectList}" th:if="${object?.mbo?.finish}=='Y'">
@@ -708,7 +718,6 @@
             });
 
             // load했을 때 버튼 사이즈
-            var win = $(this);
             bottomBtnSize();
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
@@ -716,13 +725,14 @@
             });
 
             function bottomBtnSize() {
-                if (win.width() < 768) {
+                
+                if ($(window).width() < 768) {
                     $('#bottomBtn').addClass('btn-group-sm');
                     $('#bottomBtn').removeClass('btn-group-xs');
                     $('#bottomBtn').removeClass('btn-group-lg');
                     $('#bottomBtn').removeClass('btn-group-vertical');
 
-                } else if ((win.width() < 1200)) {
+                } else if (($(window).width() < 1200)) {
                     $('#bottomBtn').removeClass('btn-group-sm');
                     $('#bottomBtn').addClass('btn-group-xs');
                     $('#bottomBtn').removeClass('btn-group-lg');
@@ -795,7 +805,22 @@
                     return [yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd].join('');
                 }
             };
+
+            //모달 백그라운드 크기를 로딩할 때 재조정
+            $(".modal").on('shown.bs.modal', function () {
+                var $backdrop = $('.modal-backdrop');
+                $backdrop.css({
+                    height: $(document).height()
+                });
+
+                $backdrop.css({
+                    width: $(document).width()
+                });
+            });
         });
 
+        function toggleZoomScreen() {
+            document.body.style.zoom = "80%";
+        } 
     </script>
 </th:block>

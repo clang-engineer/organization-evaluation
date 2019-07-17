@@ -53,7 +53,7 @@
                                     <ul class="list-unstyled mb-0">
                                         <li th:each="department,index:${department}">
                                             [[${department?.department1}]] - [[${department?.department2}]]
-                                            팀 목표 설정<button th:data-dno="${department?.dno}" class="department btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
+                                            목표 설정<button th:data-dno="${department?.dno}" class="department btn btn-default"><i class="fas fa-chalkboard-teacher"></i></button>
                                         </li>
                                     </ul>
                                 </div>
@@ -216,7 +216,7 @@
 
                 dno = $(this).data('dno');
                 departmentService.read(dno, function (result) {
-                    modalTitle.text(result.department1 + " - " + result.department2 + "팀 목표 설정");
+                    modalTitle.text(result.department1 + " - " + result.department2 + " 목표 설정");
                     modalContent1.val(result.leader.title);
                     modalContent2.text(result.leader.content).keyup();
                 });
