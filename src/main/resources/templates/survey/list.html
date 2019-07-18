@@ -3,11 +3,17 @@
     layout:decorate="~{/layout/layoutSurvey}">
 <!-- div content -->
 <div layout:fragment="content">
+
     <style>
         .mb-5 small,
         .card-header,
         .card small {
             font-size: 1.08rem;
+        }
+
+        .modal-backdrop {
+            height: 100%;
+            width: 100%;
         }
     </style>
     <!-- Page Content -->
@@ -56,7 +62,7 @@
                                 <small class="float-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
                             </h5>
                             <!-- card body -->
-                            <div class="card-body pb-0">
+                            <div class="card-body pb-0 table-responsive">
                                 <table class="table" id="table">
                                     <thead class="thead-dark">
                                         <tr>
@@ -102,7 +108,7 @@
 <!-- button -->
 
     <form id="f1" th:action="@{evaluate(company=${company},tno=${tno})}" method="POST">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 
     <!-- Modal -->
@@ -156,8 +162,11 @@
                 modal.find("button[id!='modalCloseBtn']").hide();
                 modalRegisterBtn.show().text("Go Survey");
 
+                // $("#customViewport").attr("content", "minimum-scale=1.0,width=device-width");
+
+                // $("head").append("<meta name='viewport' content=' initial-scale=1.0,maximum-scale=1.0,minimum-scale=1.0,width=device-width'>");
                 modal.modal('show');
-            })
+            });
 
             //modal 등록 버튼 클릭 시
             modalRegisterBtn.click(function (e) {
@@ -244,17 +253,13 @@
                 $('[data-toggle="tooltip2"]').tooltip();
             });
 
-            //모달 백그라운드 크기를 로딩할 때 재조정
-            $(".modal").on('shown.bs.modal', function () {
-                var $backdrop = $('.modal-backdrop');
-                $backdrop.css({
-                    height: $(document).height()
-                });
-
-                $backdrop.css({
-                    width: $(document).width()
-                });
+            $('.container').css("width", $(document).width());
+            $(window).on('resize', function () {
+                $('.container').css("width", $(document).width());
+                console.log($('body').css('zoom'))
             });
         });
+
+
     </script>
 </th:block>

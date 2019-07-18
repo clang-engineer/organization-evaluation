@@ -14,7 +14,7 @@ public class HomeController {
      * 
      * @return 최초 화면
     */
-    @GetMapping("/")
+    @GetMapping("")
     public String home() {
         return "redirect:/company/list";
     }

@@ -18,6 +18,11 @@
         h2 small {
             font-size: 1.1rem;
         }
+
+        .modal-backdrop {
+            height: 100%;
+            width: 100%;
+        }
     </style>
     <!-- Page Content -->
     <div class="container">
@@ -725,7 +730,7 @@
             });
 
             function bottomBtnSize() {
-                
+
                 if ($(window).width() < 768) {
                     $('#bottomBtn').addClass('btn-group-sm');
                     $('#bottomBtn').removeClass('btn-group-xs');
@@ -806,21 +811,6 @@
                 }
             };
 
-            //모달 백그라운드 크기를 로딩할 때 재조정
-            $(".modal").on('shown.bs.modal', function () {
-                var $backdrop = $('.modal-backdrop');
-                $backdrop.css({
-                    height: $(document).height()
-                });
-
-                $backdrop.css({
-                    width: $(document).width()
-                });
-            });
         });
-
-        function toggleZoomScreen() {
-            document.body.style.zoom = "80%";
-        } 
     </script>
 </th:block>

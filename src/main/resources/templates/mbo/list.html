@@ -9,6 +9,11 @@
         .card small {
             font-size: 1.08rem;
         }
+
+        .modal-backdrop {
+            height: 100%;
+            width: 100%;
+        }
     </style>
     <!-- container -->
     <div class="container">
@@ -80,7 +85,7 @@
                                 <small class="float-right" th:if="${r}=='3'">[[${session?.evaluator?.name}]] 님은 아래 대상자의 차차상위상사 입니다.</small>
                             </h5>
                             <!-- card body -->
-                            <div class="card-body pb-0">
+                            <div class="card-body pb-0 table-responsive">
                                 <table id="table" class="table">
                                     <thead class="thead-dark">
                                         <tr>
@@ -88,7 +93,7 @@
                                             <th scope="col" class="text-nowrap align-middle">Department</th>
                                             <th scope="col" class="text-nowrap align-middle">Division</th>
                                             <th scope="col" class="text-nowrap align-middle">Level</th>
-                                            <th scope="col" class="text-nowrap align-middle" style="width: 20%">작성률</th>
+                                            <th scope="col" class="text-nowrap align-middle">작성률</th>
                                             <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMbo?.status}!='see'">MBO</th>
                                             <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMbo?.status}=='see'">본인평가<h6 class="pt-1" style="font-size: 0.5rem">(완료O/미완료X)</h6></th>
                                             <th scope="col" class="text-nowrap align-middle" th:if="${turn.infoMbo?.status}=='see'">목표평가</th>
@@ -210,7 +215,7 @@
                 var rno = $(this).data("rno");
                 var name = $(this).data("name");
                 var type = $(this).data("type");
-                
+
                 //모달 data
                 modal.data("rno", rno);
 
@@ -320,7 +325,7 @@
 
             //라디오로 이전 면담 볼수 있도록
             $("input:radio[name=modalContent3]").click(function () {
-                var now = [[${ turn?.infoMbo?.status}]];
+                var now = [[${ turn?.infoMbo ?.status}]];
                 var step = $("input[name='modalContent3']:checked").val();
                 var rno = $("#contentModal").data("rno");
                 $("#contentModal").find("textarea[name=modalContent2]").val("");
@@ -421,16 +426,9 @@
                 $('[data-toggle="tooltip2"]').tooltip();
             });
 
-            //모달 백그라운드 크기를 로딩할 때 재조정
-            $(".modal").on('shown.bs.modal', function () {
-                var $backdrop = $('.modal-backdrop');
-                $backdrop.css({
-                    height: $(document).height()
-                });
-
-                $backdrop.css({
-                    width: $(document).width()
-                });
+            $('.container').css("width", $(document).width());
+            $(window).on('resize', function () {
+                $('.container').css("width", $(document).width());
             });
         });
     </script>
