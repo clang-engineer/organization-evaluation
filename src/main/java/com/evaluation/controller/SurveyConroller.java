@@ -93,16 +93,16 @@ public class SurveyConroller {
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/survey/";
+            return "redirect:/survey";
         }
 
         if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/survey/";
+            return "redirect:/survey";
         } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/survey/";
+            return "redirect:/survey";
         }
 
         relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
@@ -135,7 +135,7 @@ public class SurveyConroller {
 
         rttr.addAttribute("company", company);
 
-        return "redirect:/survey/";
+        return "redirect:/survey";
     }
 
     /**

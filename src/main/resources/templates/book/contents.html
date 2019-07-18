@@ -89,7 +89,7 @@
                         return;
                     }
                     for (var i = 0, len = result.length || 0; i < len; i++) {
-                        str += "<tr><td>" + i + "</td><td>" + result[i].name + "</td><td>" + result[i].ratio + "</td>" +
+                        str += "<tr><td>" + (i + 1) + "</td><td>" + result[i].name + "</td><td>" + result[i].ratio + "</td>" +
                             "</td><td><button data-idx='" + i + "' class='btn btn-default'><i class='fas fa-pen'></i></button></td></tr>"
                     }
                     contentsBody.html(str);

@@ -109,16 +109,16 @@ public class MboController {
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/mbo/";
+            return "redirect:/mbo";
         }
 
         if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/mbo/";
+            return "redirect:/mbo";
         } else if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/mbo/";
+            return "redirect:/mbo";
         }
 
         relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
@@ -150,7 +150,7 @@ public class MboController {
 
         rttr.addAttribute("company", company);
 
-        return "redirect:/mbo/";
+        return "redirect:/mbo";
     }
 
     /**

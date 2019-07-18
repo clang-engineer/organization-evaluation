@@ -47,7 +47,7 @@
                             <tr class="table-secondary">
                                 <th colspan="6">Total</th>
                                 <td>
-                                    <div class="progress">
+                                    <div class="progress" th:if="${count}!=null AND ${count}!=0">
                                         <div class="progress-bar bg-success" role="progressbar" th:style="'width:'+${#numbers.formatPercent(total/count,0,0)}" aria-valuenow="25"
                                             aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(total/count,0,0)}]]</div>
                                     </div>

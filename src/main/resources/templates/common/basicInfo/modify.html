@@ -56,9 +56,7 @@
                 <button type="submit" class="btn btn-danger">Modify</button>
             </form>
         </div>
-        <div class="card-footer text-muted">
-            Posted on January 1, 2017 by
-            <a href="#">Start Bootstrap</a>
+        <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}" >
         </div>
     </div>
     <!--./ Blog Post -->
