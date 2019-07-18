@@ -10,6 +10,14 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/*")
 public class HomeController {
+    /** 
+     * 
+     * @return 최초 화면
+    */
+    @GetMapping("/")
+    public String home() {
+        return "redirect:/company/list";
+    }
 
     /**
      * login 페이지를 읽어온다.

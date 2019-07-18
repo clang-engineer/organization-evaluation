@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>SurveyConroller</code>객체는 survey를 관리한다.
  */
 @Controller
-@RequestMapping("/survey/*")
+@RequestMapping("/survey")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -58,7 +58,7 @@ public class SurveyConroller {
      * @param model   화면 전달 정보
      * @return Survey 로그인 페이지
      */
-    @GetMapping("/")
+    @GetMapping("")
     public String login(String company, Model model) {
         log.info("====>survey by company" + company);
 

@@ -5,7 +5,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -47,7 +46,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>MboController</code>객체는 Mbo정보를 관리한다.
  */
 @Controller
-@RequestMapping("/mbo/*")
+@RequestMapping("/mbo")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -76,7 +75,7 @@ public class MboController {
      * @param model   화면 전달 정보
      * @return Mbo로그인 페이지
      */
-    @GetMapping("/")
+    @GetMapping("")
     public String login(String company, Model model) {
         log.info("====>survey by company" + company);
 
@@ -104,8 +103,7 @@ public class MboController {
      * @return mbo 메인 페이지
      */
     @PostMapping("/login")
-    public String login(String company, long tno, Staff staff, HttpServletRequest request,
-            RedirectAttributes rttr) {
+    public String login(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("user login" + tno + staff);
         rttr.addAttribute("company", company);
 
@@ -459,8 +457,8 @@ public class MboController {
     public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
         log.info("read" + rno + step);
 
-        Optional<String> object = Optional.ofNullable(relationMboService.read(rno).get().getComments().get(step));
-        String note = object.get();
+        Map<String, String> comments = relationMboService.read(rno).map(RelationMbo::getComments).orElse(null);
+        String note = comments.get(step);
 
         return new ResponseEntity<String>(note, HttpStatus.OK);
     }
