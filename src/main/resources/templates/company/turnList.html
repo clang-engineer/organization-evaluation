@@ -224,6 +224,7 @@
 
 			/* 행 클릭 시!! modify, delete turn */
 			$("#turnTable").on("click", "tr", function (e) {
+
 				var tds = $(this).find('td')
 				tno = tds.find('a').attr('href');
 				modalContent1.val(tds[1].innerHTML);
@@ -249,7 +250,10 @@
 				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
 				modalModifyBtn.show();
-				modalRemoveBtn.show();
+				var role = [[${ #authorization.expression('hasRole(''ADMIN'')') }]];
+				if (role == true) {
+					modalRemoveBtn.show();
+				}
 
 				modal.modal("show");
 			});

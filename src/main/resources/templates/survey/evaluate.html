@@ -28,9 +28,9 @@
                 </h5>
                 <!-- ./card-header -->
                 <!-- card-body -->
-                <div class="card mt-3 mr-3 ml-3 mb-3" th:each="category:${category}">
+                <div class="card ml-3 mr-3 mt-3 mb-3" th:each="category:${category}">
                     <h5 class="card-header bg-light mb-4 category">[[${category}]]</h5>
-                    <div class="card-body ml-3 mb-3" th:each="question:${questionList}" th:if="${question?.category}==${category}">
+                    <div class="card-body ml-3 mr-3 mb-3" th:each="question:${questionList}" th:if="${question?.category}==${category}">
                         <h6 class="card-text pb-2 mb-4">
                             Q[[${question?.idx}]]. [[${question?.item}]]
                         </h6>

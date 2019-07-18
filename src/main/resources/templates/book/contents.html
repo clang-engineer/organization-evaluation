@@ -138,6 +138,12 @@
 
             //각 행 클릭 시.. 
             $(".contents").on("click", "button", function (e) {
+                var role = [[${ #authorization.expression('hasRole(''ADMIN'')') }]];
+                if (role == false) {
+                    alert("접근 권한이 존재하지 않습니다.");
+                    return false;
+                }
+
                 idxValue = $(this).data('idx');
                 var param = {
                     bno: bnoValue,

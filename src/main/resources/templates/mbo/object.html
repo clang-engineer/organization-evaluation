@@ -4,16 +4,16 @@
 <!-- div content -->
 <div layout:fragment="content">
     <style>
-        /* .container {
+        .container {
             max-width: 1500px;
             width: 100%;
-        } */
+        }
 
         /*목표시트 반응형 제거*/
-        .container {
+        /* .container {
             width: 1500px;
             max-width: none !important;
-        }
+        } */
 
         h2 small {
             font-size: 1.1rem;
@@ -43,8 +43,8 @@
             <thead class="thead-dark">
                 <tr>
                     <th scope="col" class="text-nowrap">#</th>
-                    <th scope="col" class="text-nowrap" style="width: 30%">목표</th>
-                    <th scope="col" class="text-nowrap" style="width: 40%">달성기준</th>
+                    <th scope="col" class="text-nowrap" style="min-width: 300px">목표</th>
+                    <th scope="col" class="text-nowrap" style="min-width: 300px">달성기준</th>
                     <th scope="col" class="text-nowrap">비중%</th>
                     <th scope="col" class="text-nowrap" th:if="(${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do') AND ${relation?.relation}=='me'">수정</th>
                     <th scope="col" class="text-nowrap" style="width:15%" th:if="${turn?.infoMbo?.status}=='see' OR ${turn?.infoMbo?.status}=='count'">본인평가</th>
@@ -811,6 +811,10 @@
                 }
             };
 
+            $('.container').css("width", $(document).width());
+            $(window).on('resize', function () {
+                $('.container').css("width", $(document).width());
+            });
         });
     </script>
 </th:block>
