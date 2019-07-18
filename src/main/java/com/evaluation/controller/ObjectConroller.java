@@ -2,7 +2,10 @@ package com.evaluation.controller;
 
 import java.util.Optional;
 
+import com.evaluation.domain.Department;
 import com.evaluation.domain.Mbo;
+import com.evaluation.domain.embeddable.Leader;
+import com.evaluation.service.DepartmentService;
 import com.evaluation.service.MboService;
 import com.evaluation.service.ReplyService;
 
@@ -34,6 +37,8 @@ public class ObjectConroller {
     MboService mboService;
 
     ReplyService replyService;
+
+    DepartmentService departmentService;
 
     /**
      * 목표를 등록한다.
@@ -142,4 +147,37 @@ public class ObjectConroller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
+        /**
+     * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
+     * 
+     * @param dno 부서 id
+     * @return 부서 정보
+     */
+    @GetMapping("/department/{dno}")
+    public ResponseEntity<Department> teamObjectRead(@PathVariable("dno") long dno) {
+        log.info("read leader " + dno);
+        Department department = departmentService.read(dno).orElse(null);
+        return new ResponseEntity<>(department, HttpStatus.OK);
+    }
+
+    /**
+     * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
+     * 
+     * @param dno    부서 id
+     * @param leader 리더 정보
+     * @return http 상태 정보
+     */
+    @PutMapping("/department/{dno}")
+    public ResponseEntity<HttpStatus> teamObjectModify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
+        log.info("modify leader info " + dno);
+        departmentService.read(dno).ifPresent(origin -> {
+            if (origin.getLeader() != null) {
+                origin.getLeader().setTitle(leader.getTitle());
+                origin.getLeader().setContent(leader.getContent());
+                departmentService.modify(origin);
+            }
+        });
+
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
 }

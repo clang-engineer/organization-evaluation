@@ -2,7 +2,7 @@ var departmentService = (function () {
 
     function read(dno, callback, error) {
         console.log("read");
-        $.get("../../department/" + dno,
+        $.get("../../object/department/" + dno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -17,7 +17,7 @@ var departmentService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '../../department/' + param.dno,
+            url: '../../object/department/' + param.dno,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",

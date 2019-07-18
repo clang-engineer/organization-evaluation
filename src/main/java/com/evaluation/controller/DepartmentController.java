@@ -13,17 +13,11 @@ import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
 import org.springframework.data.domain.Page;
-import org.springframework.http.HttpStatus;
-import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
@@ -218,39 +212,39 @@ public class DepartmentController {
         return "redirect:/department/list";
     }
 
-    /**
-     * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
-     * 
-     * @param dno 부서 id
-     * @return 부서 정보
-     */
-    @GetMapping("/{dno}")
-    @ResponseBody
-    public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
-        log.info("read leader " + dno);
-        Department department = departmentService.read(dno).orElse(null);
-        return new ResponseEntity<>(department, HttpStatus.OK);
-    }
+    // /**
+    //  * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
+    //  * 
+    //  * @param dno 부서 id
+    //  * @return 부서 정보
+    //  */
+    // @GetMapping("/{dno}")
+    // @ResponseBody
+    // public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
+    //     log.info("read leader " + dno);
+    //     Department department = departmentService.read(dno).orElse(null);
+    //     return new ResponseEntity<>(department, HttpStatus.OK);
+    // }
 
-    /**
-     * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
-     * 
-     * @param dno    부서 id
-     * @param leader 리더 정보
-     * @return http 상태 정보
-     */
-    @PutMapping("/{dno}")
-    @ResponseBody
-    public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
-        log.info("modify leader info " + dno);
-        departmentService.read(dno).ifPresent(origin -> {
-            if (origin.getLeader() != null) {
-                origin.getLeader().setTitle(leader.getTitle());
-                origin.getLeader().setContent(leader.getContent());
-                departmentService.modify(origin);
-            }
-        });
+    // /**
+    //  * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
+    //  * 
+    //  * @param dno    부서 id
+    //  * @param leader 리더 정보
+    //  * @return http 상태 정보
+    //  */
+    // @PutMapping("/{dno}")
+    // @ResponseBody
+    // public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
+    //     log.info("modify leader info " + dno);
+    //     departmentService.read(dno).ifPresent(origin -> {
+    //         if (origin.getLeader() != null) {
+    //             origin.getLeader().setTitle(leader.getTitle());
+    //             origin.getLeader().setContent(leader.getContent());
+    //             departmentService.modify(origin);
+    //         }
+    //     });
 
-        return new ResponseEntity<>(HttpStatus.OK);
-    }
+    //     return new ResponseEntity<>(HttpStatus.OK);
+    // }
 }
