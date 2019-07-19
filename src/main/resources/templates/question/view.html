@@ -64,7 +64,7 @@
                     <button data-oper="list" type="button" class="btn btn-info">List</button>
                 </div>
             </div>
-            <form action="modify" method="GET">
+            <form id="myForm" action="modify" method="GET">
                 <input type='hidden' name='page' th:value='${ pageVO.page }' />
                 <input type='hidden' name='size' th:value='${ pageVO.size }' />
                 <input type='hidden' name='type' th:value='${ pageVO.type }' />
@@ -80,7 +80,7 @@
 <th:block layout:fragment="script">
     <script th:inline="javascript">
         $(document).ready(function () {
-            var formObj = $("form");
+            var formObj = $("#myForm");
 
             $('button').on("click", function (e) {
                 e.preventDefault();

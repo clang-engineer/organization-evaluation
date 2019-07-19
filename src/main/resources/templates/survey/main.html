@@ -25,8 +25,7 @@
                         <h4 class="card-title">
                             [[${turn.infoSurvey.title}]]
                         </h4>
-                        <p class="card-text">
-                            - [[${turn.title}]]
+                        <p class="card-text" th:if="${turn.title}!=''" th:text="'- '+${turn.title}">
                         </p>
                         <hr>
                         <p class="card-text" th:utext="${turn.infoSurvey.content}"></p>

@@ -110,7 +110,6 @@
         <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
         <input type="hidden" name="type" th:value=${pageVO.type} />
         <input type="hidden" name="keyword" th:value=${pageVO.keyword} />
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
     </form>
 
 
@@ -163,16 +162,23 @@
             //페이지에 붙은 링크 클릭 시
             $(".pagination a").click(function (e) {
                 e.preventDefault();
-
+                formObj.attr("action", "list");
+                formObj.attr("method", "get");
+                formObj.find("input[name='_csrf']").remove();
                 formObj.find('[name="page"]').val($(this).attr('href'));
                 formObj.submit();
             });
 
             //검색 버튼 클릭 시
             $("#searchBtn").click(function (e) {
+                e.preventDefault();
+                
+                formObj.attr("action", "list");
+                formObj.attr("method", "get");
+
                 var typeStr = $("#searchType").find(":selected").val();
                 var keywordStr = $("#searchKeyword").val();
-
+                formObj.find("input[name='_csrf']").remove();
                 formObj.find("[name='type']").val(typeStr);
                 formObj.find("[name='keyword']").val(keywordStr);
                 formObj.find("[name='page']").val("1");
@@ -184,6 +190,7 @@
                 e.preventDefault();
 
                 var questionQno = $(this).attr("href");
+                formObj.attr("method", "get");
                 formObj.attr("action", './view');
                 formObj.append("<input type='hidden' name='qno' value='" + questionQno + "'/>");
                 formObj.submit();
@@ -192,7 +199,7 @@
             //등록 버튼 클릭 시
             $("#register").click(function (e) {
                 e.preventDefault();
-                console.log(this);
+                formObj.attr("method", "get");
                 formObj.attr("action", './register');
                 formObj.submit();
             });
@@ -262,6 +269,7 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
+                formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
                 formObj.attr("action", "xlDownload");
                 formObj.attr("method", "POST");
                 formObj.submit();

@@ -115,7 +115,6 @@
 		<input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO.type} />
 		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
-		<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 	</form>
 
 	<!-- Modal -->
@@ -170,12 +169,18 @@
 			$(".pagination a").click(function (e) {
 				e.preventDefault();
 
+                formObj.attr("action", "list");
+                formObj.attr("method", "get");
 				formObj.find('[name="page"]').val($(this).attr('href'));
 				formObj.submit();
 			});
 
 			//검색 버튼 클릭 시
 			$("#searchBtn").click(function (e) {
+				e.preventDefault();
+                formObj.attr("action", "list");
+                formObj.attr("method", "get");
+
 				var typeStr = $("#searchType").find(":selected").val();
 				var keywordStr = $("#searchKeyword").val();
 
@@ -190,8 +195,10 @@
 				e.preventDefault();
 
 				var detailNo = $(this).attr("href");
+				formObj.attr("method", "get");
 				formObj.attr("action", './view');
 				formObj.append("<input type='hidden' name='sno' value='" + detailNo + "'/>");
+				formObj.find("input[name='_csrf']").remove();
 				formObj.submit();
 			});
 
@@ -200,6 +207,8 @@
 				e.preventDefault();
 
 				formObj.attr("action", './register');
+				formObj.attr("method", "get");
+				formObj.find("input[name='_csrf']").remove();
 				formObj.submit();
 			});
 
@@ -267,6 +276,7 @@
 
 			//xl 다운로드 함수
 			$("#xlDownload").click(function (e) {
+				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
 				formObj.attr("action", "xlDownload");
 				formObj.attr("method", "POST");
 				formObj.submit();

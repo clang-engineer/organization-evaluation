@@ -24,9 +24,7 @@
                         <h4 class="card-title">
                             [[${turn?.infoMbo?.title}]]
                         </h4>
-                        <p class="card-text">
-                            - [[${turn?.title}]]
-                        </p>
+                        <p class="card-text" th:if="${turn.title}!=''" th:text="'- '+${turn.title}"></p>
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoMbo?.content}"></p>
                         <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"

@@ -90,7 +90,6 @@
 		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
 		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
-		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 	</form>
 
 	<!-- Modal -->
@@ -194,6 +193,7 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
+				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
 				formObj.attr("action", "./register").attr("method", "post");
 				formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='writeId' value='" + authName + "'/>");
@@ -203,6 +203,7 @@
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
+				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
 				formObj.attr("action", "./modify").attr("method", "post");
 				formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
@@ -213,6 +214,7 @@
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
+				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
 				if (delchk() == true) {
 					formObj.attr("action", "delete");
 				} else {
