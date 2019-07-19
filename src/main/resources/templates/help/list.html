@@ -55,8 +55,8 @@
                             </tr>
                         </thead>
                         <tbody>
-                            <tr th:each="help:${result.content}">
-                                <td>[[${help?.hno}]]</td>
+                            <tr th:each="help,status:${result.content}">
+                                <td>[[${status?.count}]]</td>
                                 <td><a class="helpDetail" th:href="${help?.hno}">[[${help?.surveyInfo}]]</a></td>
                                 <td>[[${help?.company}]]</td>
                                 <td>[[${help?.name}]]</td>

@@ -41,10 +41,10 @@ public class HelpDesk {
     @Column(name = "content", length = 2000)
     private String content;
 
-    private String complete;
+    private String complete = "N";
 
     private String writeId;
-    
+
     private String updateId;
 
     @CreationTimestamp
