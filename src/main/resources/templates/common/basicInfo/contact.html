@@ -36,26 +36,30 @@
         </div>
     </div>
     <!-- /.row -->
-
     <!-- Contact Form -->
     <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <form name="sentMessage" id="contactForm">
+            <form th:action="@{help}" method="post" name="sentMessage" id="contactForm">
                 <div class="control-group form-group">
                     <div class="controls">
                         <label>Phone Number:</label>
-                        <input type="tel" class="form-control" id="phone" required data-validation-required-message="Please enter your phone number.">
+                        <input type="tel" class="form-control" name="telephone" required data-validation-required-message="Please enter your phone number.">
                     </div>
                 </div>
                 <div class="control-group form-group">
                     <div class="controls">
                         <label>Message:</label>
-                        <textarea rows="10" cols="100" class="form-control" id="message" required data-validation-required-message="Please enter your message" maxlength="999"
+                        <textarea name="content" rows="10" cols="100" class="form-control" id="message" required data-validation-required-message="Please enter your message" maxlength="999"
                             style="resize:none"></textarea>
                     </div>
                 </div>
-                <div id="success"></div>
+                <input type="hidden" name="company" th:value="${company}">
+                <input type="hidden" name="name" th:value="${session?.evaluator?.name}">
+                <input type="hidden" name="email" th:value="${session?.evaluator?.email}">
+                <input type="hidden" name="writeId" th:value="${session?.evaluator?.email}">
+                <input type="hidden" name="updateId" th:value="${session?.evaluator?.email}">
+                <input type="hidden" name="tno" th:value="${tno}">
                 <!-- For success/fail messages -->
                 <button type="submit" class="btn btn-primary" id="sendMessageButton">Send Message</button>
             </form>

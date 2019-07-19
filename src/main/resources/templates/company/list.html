@@ -181,9 +181,9 @@
 					e.preventDefault();
 					$("#f1").empty();
 					if (type == "360") {
-						$("#f1").attr("action", '../survey/');
+						$("#f1").attr("action", '../survey');
 					} else if (type == "MBO") {
-						$("#f1").attr("action", '../mbo/');
+						$("#f1").attr("action", '../mbo');
 					}
 					$("#f1").append("<input type='hidden' name='company' value='" + $(this).attr('href') + "'/>");
 					$("#f1").submit();

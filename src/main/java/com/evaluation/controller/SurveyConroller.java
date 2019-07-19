@@ -52,110 +52,6 @@ public class SurveyConroller {
     StaffService staffService;
 
     /**
-     * 로그인 페이지에 회차 정보를 읽어온다.
-     * 
-     * @param company 회사 이름
-     * @param model   화면 전달 정보
-     * @return Survey 로그인 페이지
-     */
-    @GetMapping("")
-    public String login(String company, Model model) {
-        log.info("====>survey by company" + company);
-
-        // 회사에 관한 정보 찾고
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            long cno = origin.getCno();
-            model.addAttribute("company", origin);
-            // 회사 cno로 turn정보를 찾는다.
-            turnService.getTurnsInSurvey(cno).ifPresent(turn -> {
-                model.addAttribute("turns", turn);
-            });
-        });
-
-        return "/survey/index";
-    }
-
-    /**
-     * 로그인 처리를 한다.
-     * 
-     * @param company 회사 이름
-     * @param tno     회차 id
-     * @param staff   직원 정보
-     * @param request 요청 정보 객체
-     * @param rttr    재전송 정보
-     * @return Survey 메인 페이지
-     */
-    @PostMapping("/login")
-    public String login(String company, long tno, Staff staff, RedirectAttributes rttr, HttpServletRequest request) {
-        log.info("user login" + tno + staff);
-
-        rttr.addAttribute("company", company);
-
-        if (tno == 0) {
-            rttr.addFlashAttribute("error", "tno");
-            return "redirect:/survey";
-        }
-
-        if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
-            rttr.addFlashAttribute("error", "email");
-            return "redirect:/survey";
-        } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
-                .equals(staff.getPassword())) {
-            rttr.addFlashAttribute("error", "password");
-            return "redirect:/survey";
-        }
-
-        relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
-            if (evaluator.getPassword().equals(staff.getPassword())) {
-                HttpSession session = request.getSession();
-                session.setAttribute("evaluator", evaluator);
-            }
-        });
-
-        rttr.addAttribute("tno", tno);
-
-        // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
-        return "redirect:/survey/main";
-    }
-
-    /**
-     * 로그아웃 처리를 한다.
-     * 
-     * @param company 회자 이름
-     * @param request 요청 정보 객체
-     * @param rttr    재전송 정보
-     * @return 로그인 페이지
-     */
-    @PostMapping("/logout")
-    public String userLogOut(String company, HttpServletRequest request, RedirectAttributes rttr) {
-        log.info("log out!");
-
-        HttpSession session = request.getSession();
-        session.invalidate();
-
-        rttr.addAttribute("company", company);
-
-        return "redirect:/survey";
-    }
-
-    /**
-     * 문의 사항 페이지
-     * 
-     * @param company 회사 이름
-     * @param tno     회차 id
-     * @param model   화면 전달 정보
-     */
-    @GetMapping("/contact")
-    public void contact(String company, Long tno, Model model) {
-
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
-        });
-    }
-
-    /**
      * 메인 페이지를 읽어온다.
      * 
      * @param company 회사 이름
@@ -172,7 +68,7 @@ public class SurveyConroller {
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
             rttr.addAttribute("company", company);
-            return "redirect:/survey/";
+            return "redirect:/survey";
         }
 
         model.addAttribute("company", company);
@@ -211,7 +107,7 @@ public class SurveyConroller {
 
         if (evaluator == null) {
             rttr.addAttribute("company", company);
-            return "redirect:/survey/";
+            return "redirect:/survey";
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
@@ -249,7 +145,7 @@ public class SurveyConroller {
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
             rttr.addAttribute("company", company);
-            return "redirect:/survey/";
+            return "redirect:/survey";
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
@@ -365,70 +261,4 @@ public class SurveyConroller {
         return "redirect:/survey/list";
     }
 
-    /**
-     * 사용자 정보를 읽어온다.
-     * 
-     * @param company 회사 이름
-     * @param tno     회차 id
-     * @param model   화면 전달 정보
-     */
-    @GetMapping("/profile")
-    public void profile(String company, long tno, Model model) {
-
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
-        });
-
-    }
-
-    /**
-     * 사용자 정보 수정 페이지를 읽어온다.
-     * 
-     * @param company 회사 이름
-     * @param tno     회차 id
-     * @param model   화면 전달 정보
-     */
-    @GetMapping("/modify")
-    public void modify(String company, long tno, Model model) {
-
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
-        });
-
-    }
-
-    /**
-     * 사용자 정보를 수정한다.
-     * 
-     * @param company 회사 이름
-     * @param tno     회차 id
-     * @param staff   직원 정보
-     * @param request 요청 정보 객체
-     * @param rttr    재전송 정보
-     * @return 사용자 프로필 페이지
-     */
-    @PostMapping("/modify")
-    public String modify(Staff staff, String company, long tno, RedirectAttributes rttr, HttpServletRequest request) {
-        staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
-            long sno = origin.getSno();
-            log.info("===>" + sno);
-            staff.setSno(sno);
-            staffService.modify(staff);
-
-            HttpSession session = request.getSession();
-            session.setAttribute("evaluator", staff);
-        });
-
-        rttr.addAttribute("company", company);
-        rttr.addAttribute("tno", tno);
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addFlashAttribute("companyInfo", origin);
-        });
-
-        return "redirect:/survey/profile";
-    }
 }
