@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+	layout:decorate="~{/layout/layoutCompany}">
+
+<div layout:fragment="content">
+	<!-- Begin Page Content -->
+	<div class="container-fluid">
+
+		<h1 class="mt-4">Help Register</h1>
+		<!-- Page Heading -->
+		<p class="mb-4">
+			DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+			<a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+			.
+		</p>
+
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-header py-3">
+				<h4 class="m-0 font-weight-bold text-primary">Help Register</h4>
+
+			</div>
+			<div class="card-body">
+				<fieldset disabled>
+					<div class="form-group">
+						<label>SurveyInfo</label>
+						<select class="form-control" name="surveyInfo">
+							<option value="">--</option>
+							<option value="mbo" th:selected="${help?.surveyInfo}=='mbo'">MBO 실적평가</option>
+							<option value="360" th:selected="${help?.surveyInfo}=='360'">360 다면평가</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>회사명</label>
+						<input type="text" class="form-control" name="company" placeholder="Enter Company Name" th:value="${help?.company}">
+					</div>
+					<div class="form-group">
+						<label>이름</label>
+						<input type="text" class="form-control" name="name" placeholder="Enter Name" th:value="${help?.name}">
+					</div>
+					<div class="form-group">
+						<label>Email</label>
+						<input type="text" class="form-control" name="email" placeholder="Enter Email" th:value="${help?.email}">
+					</div>
+					<div class="form-group">
+						<label>전화번호</label>
+						<input type="text" class="form-control" name="telephone" placeholder="Enter Telephone Number" th:value="${help?.telephone}">
+					</div>
+					<div class="form-group">
+						<label>문의 내용</label>
+						<textarea class="form-control" rows="5" name="content">[[${help?.content}]]</textarea>
+					</div>
+					<div class="form-group">
+						<label>처리 완료</label>
+						<select class="form-control" name="complete">
+							<option value="">--</option>
+							<option value="N" th:selected="${help?.complete}=='N'">처리 전</option>
+							<option value="Y" th:selected="${help?.complete}=='Y'">처리 완료</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>WriteId</label>
+						<input type="url" class="form-control" name="writeId" readonly th:value="${help?.writeId}">
+					</div>
+					<div class="form-group">
+						<label>WriteDate</label>
+						<input type="url" class="form-control" name="writeDate" readonly th:value="${#dates.format(help?.writeDate,'yyyy-MM-dd  hh:mm:ss')}">
+					</div>
+					<div class="form-group">
+						<label>UpdateId</label>
+						<input type="url" class="form-control" name="updateId" readonly th:value="${help?.updateId}">
+					</div>
+					<div class="form-group">
+						<label>updateDate</label>
+						<input type="url" class="form-control" name="updateDate" readonly th:value="${#dates.format(help?.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
+					</div>
+				</fieldset>
+				<button data-oper="modify" class="btn btn-default border">Modify</button>
+				<button data-oper="list" class="btn btn-info">List</button>
+
+			</div>
+		</div>
+		<form id="openForm" th:action="@{list}" method="get">
+			<input type="hidden" id="hno" name="hno" th:value="${help?.hno}">
+			<input type="hidden" name="page" th:value="${pageVO?.page}">
+			<input type="hidden" name="size" th:value="${pageVO?.size}">
+			<input type="hidden" name="type" th:value="${pageVO?.type}">
+			<input type="hidden" name="keyword" th:value="${pageVO?.keyword}">
+		</form>
+
+	</div>
+	<!-- /.container-fluid -->
+</div>
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			var openForm = $("#openForm");
+
+			//작업 메시지 세트
+			var msg = [[${ msg }]];
+
+			if (history.state == null) {
+				if (msg == 'register') {
+					alert("등록 되었습니다.");
+				} else if (msg == 'modify') {
+					alert("수정 되었습니다.");
+				} else if (msg == 'remove') {
+					alert("삭제 되었습니다.");
+				}
+			}
+
+			history.replaceState({}, null, null);
+
+
+			$("button[data-oper='modify']").on("click", function (e) {
+				openForm.attr("action", "modify").submit();
+			});
+			$("button[data-oper='list']").on("click", function (e) {
+				openForm.find("#hno").remove();
+				openForm.attr("action", "list").submit();
+			});
+
+		});
+	</script>
+</th:block>
+</script>
+</body>
+
+</html>

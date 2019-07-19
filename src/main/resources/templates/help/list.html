@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/thymeleaf-extras-springsecurity4" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout"
+    layout:decorate="~{/layout/layoutCompany}">
+<div layout:fragment="content">
+    <!-- Begin Page Content -->
+    <div class="container-fluid">
+        <h1 class="mt-4">Help List</h1>
+        <!-- Page Heading -->
+        <p class="mb-4">
+            DataTables is a third party plugin that is used to generate the demo table below. For more information about DataTables, please visit the
+            <a target="_blank" href="https://datatables.net">official DataTables documentation</a>
+        </p>
+
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-header py-3">
+                <h4 class="m-0 font-weight-bold text-primary" style="display:inline">Help Tables</h4>
+                <!-- serarch box -->
+                <div style="float:right">
+                    <div class="input-group">
+                        <select class="form-control col-4" id="searchType">
+                            <option>---
+                                </optinon>
+                            <option value="id" th:selected="${pageVO?.type}=='id'">ID</option>
+                            <option value="name" th:selected="${pageVO?.type}=='name'">Name</option>
+                        </select>
+                        <input type="text" class="col-7 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
+                        <div class="input-group-append">
+                            <button class="btn btn-primary" id="searchBtn" type="button">
+                                <i class="fas fa-search fa-sm"></i>
+                            </button>
+                        </div>
+                    </div>
+                </div>
+                <!-- /serarch box -->
+                <div class="mr-2" style="float: right">
+                    <button id="register" class="btn btn-primary border btn-block">Register</button>
+                </div>
+            </div>
+            <div class="card-body">
+                <div class="table-responsive">
+                    <table th:with="result=${result.result}" class="table table table-striped table-bordered" id="dataTable" width="100%" cellspacing="0">
+                        <thead>
+                            <tr>
+                                <th>#No</th>
+                                <th>SuveyInfo</th>
+                                <th>회사명</th>
+                                <th>이름</th>
+                                <th>이메일</th>
+                                <th>전화번호</th>
+                                <th>작성 일</th>
+                                <th>처리 일</th>
+                                <th>처리완료</th>
+
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr th:each="help:${result.content}">
+                                <td>[[${help?.hno}]]</td>
+                                <td><a class="helpDetail" th:href="${help?.hno}">[[${help?.surveyInfo}]]</a></td>
+                                <td>[[${help?.company}]]</td>
+                                <td>[[${help?.name}]]</td>
+                                <td>[[${help?.email}]]</td>
+                                <td>[[${help?.telephone}]]</td>
+                                <td>[[${#dates.format(help?.writeDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+                                <td>[[${#dates.format(help?.updateDate,'yyyy-MM-dd hh:mm:ss')}]]</td>
+                                <td>[[${help?.complete}]]</td>
+							</tr>
+						</tbody>
+					</table>
+				</div>
+
+				<!-- page nation -->
+				<nav th:insert="~{common/turnAdmin/pagenation::pagenation}">
+				</nav>
+				<!--/ page nation -->
+
+			</div>
+		</div>
+
+	</div>
+
+	<form id="f1" th:action="@{list}" method="get">
+		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
+		<input type="hidden" name="size" th:value=${result?.currentPage.pageSize} />
+		<input type="hidden" name="type" th:value=${pageVO?.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
+	</form>
+
+	<!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+	<script th:inline="javascript">
+
+        $(document).ready(function () {
+            var formObj = $("#f1");
+
+            //작업 메시지 세트
+            var msg = [[${ msg }]];
+
+            if (history.state == null) {
+                if (msg == 'register') {
+                    alert("등록 되었습니다.");
+                } else if (msg == 'modify') {
+                    alert("수정 되었습니다.");
+                } else if (msg == 'remove') {
+                    alert("삭제 되었습니다.");
+                }
+            }
+
+            history.replaceState({}, null, null);
+
+
+            //페이지에 붙은 링크 클릭 시
+            $(".pagination a").click(function (e) {
+                e.preventDefault();
+
+                formObj.find('[name="page"]').val($(this).attr('href'));
+                formObj.submit();
+            });
+
+            //검색 버튼 클릭 시
+            $("#searchBtn").click(function (e) {
+                var typeStr = $("#searchType").find(":selected").val();
+                var keywordStr = $("#searchKeyword").val();
+
+                formObj.find("[name='type']").val(typeStr);
+                formObj.find("[name='keyword']").val(keywordStr);
+                formObj.find("[name='page']").val("1");
+                formObj.submit();
+            });
+
+            //디테일 버튼 클릭 시
+            $(".helpDetail").click(function (e) {
+                e.preventDefault();
+
+                var hno = $(this).attr("href");
+                formObj.attr("action", 'read');
+                formObj.append("<input type='hidden' name='hno' value='" + hno + "'/>");
+                formObj.submit();
+            });
+
+            $("#register").click(function (e) {
+                e.preventDefault();
+                formObj.attr("action", 'register');
+                formObj.submit();
+            })
+
+        });
+
+    </script>
+</th:block>
+</body>
+
+</html>
