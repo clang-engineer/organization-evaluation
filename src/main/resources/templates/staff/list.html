@@ -255,7 +255,7 @@
 					processData: false,
 					contentType: false,
 					beforeSend: function (xhr) {
-						xhr.setRequestHeader(csrf?.headerName, csrf.token);
+						xhr.setRequestHeader(csrf.headerName, csrf.token);
 					},
 					data: formData,
 					type: 'POST',
