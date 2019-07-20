@@ -75,7 +75,7 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}==${r}">
-                                            <td class="align-middle">[[${relation.evaluated.name}]]</td>
+                                            <td class="align-middle text-nowrap">[[${relation.evaluated.name}]]</td>
                                             <td class="align-middle">[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
                                             <td class="align-middle">[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>
                                             <td class="align-middle">[[${relation.evaluated.level}]]</td>

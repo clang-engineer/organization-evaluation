@@ -102,7 +102,7 @@
                                     </thead>
                                     <tbody>
                                         <tr th:each="relation:${evaluatedList}" th:if="${relation.relation}==${r}">
-                                            <th scope="row" class="align-middle font-weight-normal">[[${relation?.evaluated?.name}]]</th>
+                                            <td scope="row" class="align-middle text-nowrap">[[${relation?.evaluated?.name}]]</td>
                                             <td class="align-middle">[[${relation?.evaluated?.department1}]]-[[${relation?.evaluated?.department2}]]</td>
                                             <td class="align-middle">[[${relation?.evaluated?.division1}]]-[[${relation?.evaluated?.division2}]]</td>
                                             <td class="align-middle">[[${relation?.evaluated?.level}]]</td>
@@ -430,6 +430,7 @@
             $(window).on('resize', function () {
                 $('.container').css("width", $(document).width());
             });
+
         });
     </script>
 </th:block>
