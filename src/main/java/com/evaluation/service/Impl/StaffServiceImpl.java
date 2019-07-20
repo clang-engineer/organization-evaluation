@@ -71,7 +71,9 @@ public class StaffServiceImpl implements StaffService {
 	public void remove(Long sno) {
 		log.info("service : staff remove " + sno);
 
-		staffRepo.deleteById(sno);
+		staffRepo.findById(sno).ifPresent(origin -> {
+			staffRepo.deleteById(origin.getSno());
+		});
 	}
 
 	@Override
@@ -84,18 +86,18 @@ public class StaffServiceImpl implements StaffService {
 	}
 
 	@Override
-	public Optional<List<Staff>> get360EvaluatedList(long cno, long tno) {
+	public Optional<List<Staff>> getSurveyEvaluatedList(long cno, long tno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.get360EvaluatedList(cno, tno);
+		Optional<List<Staff>> result = staffRepo.getSurveyEvaluatedList(cno, tno);
 		return result;
 	}
 
 	@Override
-	public Optional<List<Staff>> get360EvaluatorList(long cno, long tno, long sno) {
+	public Optional<List<Staff>> getSurveyEvaluatorList(long cno, long tno, long sno) {
 		log.info("get EvaluatedList list by " + cno);
 
-		Optional<List<Staff>> result = staffRepo.get360EvaluatorList(cno, tno, sno);
+		Optional<List<Staff>> result = staffRepo.getSurveyEvaluatorList(cno, tno, sno);
 		return result;
 	}
 

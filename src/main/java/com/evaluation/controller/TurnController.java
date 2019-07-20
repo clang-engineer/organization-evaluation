@@ -42,7 +42,7 @@ public class TurnController {
 	 */
 	@Transactional
 	@PostMapping("/{cno}")
-	public ResponseEntity<Optional<List<Turn>>> addTurn(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
+	public ResponseEntity<Optional<List<Turn>>> register(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : addTurn " + turn);
 
 		turn.setCno(cno);
@@ -63,6 +63,7 @@ public class TurnController {
 	public ResponseEntity<Optional<List<Turn>>> modify(@PathVariable("cno") Long cno, @RequestBody Turn turn) {
 		log.info("controller : modfify turn " + turn);
 
+		// 기본 정보 초기화 되는 것 때문에, 아래의 수식을 추가함.
 		turnService.read(turn.getTno()).map(Turn::getInfoSurvey).ifPresent(origin -> {
 			turn.setInfoSurvey(origin);
 		});
@@ -87,9 +88,7 @@ public class TurnController {
 	public ResponseEntity<Optional<List<Turn>>> remove(@PathVariable("cno") Long cno, @PathVariable("tno") Long tno) {
 		log.info("controller : remove Turn " + tno);
 
-		turnService.read(tno).ifPresent(origin -> {
-			turnService.remove(origin.getTno());
-		});
+		turnService.remove(tno);
 
 		return new ResponseEntity<Optional<List<Turn>>>(getTurnList(cno), HttpStatus.OK);
 	}

@@ -58,7 +58,7 @@ public interface StaffService {
 	 * @param tno 회차 id
 	 * @return 직원 객체 리스트
 	 */
-	Optional<List<Staff>> get360EvaluatedList(long cno, long tno);
+	Optional<List<Staff>> getSurveyEvaluatedList(long cno, long tno);
 
 	/**
 	 * 전 직원 중에 직원 정보가 동일하지 않고(본인이 아닌), 평가자에 속하지 않은 직원정보를 찾는다. (설정 시 평가자 출력하기 위해)
@@ -68,7 +68,7 @@ public interface StaffService {
 	 * @param sno 직원id
 	 * @return 직원 객체 리스트
 	 */
-	Optional<List<Staff>> get360EvaluatorList(long cno, long tno, long sno);
+	Optional<List<Staff>> getSurveyEvaluatorList(long cno, long tno, long sno);
 
 	/**
 	 * 한 회사에서 한 회차에 속하는 본인 평가 관계정보에 없는 직원정보를 찾는다. (설정 시 펴핑가자 출력하기 위해)

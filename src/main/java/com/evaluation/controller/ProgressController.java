@@ -65,7 +65,7 @@ public class ProgressController {
      * @param request 요청 정보 객체
      */
     @GetMapping(value = { "/survey", "/mbo" })
-    public void survey(long tno, Model model, HttpServletRequest request) {
+    public void progressList(long tno, Model model, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
 
         // survey와 mbo를 요청했을 때를 if문으로 구분
@@ -112,7 +112,7 @@ public class ProgressController {
      * @param request 요청 정보 객체
      */
     @GetMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
-    public void mboEvaluated(long tno, long sno, Model model, HttpServletRequest request) {
+    public void evaluatedList(long tno, long sno, Model model, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
 
         if (whatYouCall.equals("/progress/survey/evaluatedList")) {
@@ -136,7 +136,7 @@ public class ProgressController {
      * @return http 상태 정보
      */
     @PutMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
-    public ResponseEntity<HttpStatus> mboEvaluatedFinishChange(long rno, String finish, HttpServletRequest request) {
+    public ResponseEntity<HttpStatus> evaluatedFinishChange(long rno, String finish, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
 
         if (whatYouCall.equals("/progress/survey/evaluatedList")) {

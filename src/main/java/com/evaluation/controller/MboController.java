@@ -361,7 +361,7 @@ public class MboController {
      * 
      * @param answer 회답
      * @param rttr   재전송 정보
-     * @return http 성공 ㅔ시지
+     * @return http 성공 메시지
      */
     @PutMapping("/submit")
     @ResponseBody

@@ -164,7 +164,7 @@ public class RelationMboController {
      */
     @GetMapping("/evaluated/{tno}")
     @ResponseBody
-    public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
+    public ResponseEntity<Optional<List<Staff>>> getMboEvaluatedList(@PathVariable("tno") long tno) {
         log.info("get All Staff List Exclude Evaluated....");
 
         long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
@@ -180,7 +180,7 @@ public class RelationMboController {
      */
     @GetMapping("/evaluator/{tno}/{sno}")
     @ResponseBody
-    public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluator(@PathVariable("tno") long tno,
+    public ResponseEntity<Optional<List<Staff>>> getMboEvaluatorList(@PathVariable("tno") long tno,
             @PathVariable("sno") long sno) {
         log.info("get All Staff List....");
 
@@ -339,7 +339,7 @@ public class RelationMboController {
      */
     @PostMapping(value = "/xlDownload")
     @ResponseBody
-    public void xlDown(long tno, HttpServletResponse response) {
+    public void xlDownload(long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();

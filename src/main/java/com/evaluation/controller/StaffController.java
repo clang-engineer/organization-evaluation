@@ -98,7 +98,7 @@ public class StaffController {
 	public String register(long tno, Staff staff, RedirectAttributes rttr) {
 		log.info("controller : staff register post by " + tno);
 
-		long cno = turnService.read(tno).get().getCno();
+		long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
 		staff.setCno(cno);
 		staffService.register(staff);
 
@@ -119,11 +119,10 @@ public class StaffController {
 	public void read(long tno, long sno, PageVO vo, Model model) {
 		log.info("controller : staff read by " + tno + vo);
 
-		Optional<Staff> staff = staffService.read(sno);
+		Staff staff = staffService.read(sno).orElse(null);
 
 		model.addAttribute("tno", tno);
-		Staff result = staff.get();
-		model.addAttribute("staff", result);
+		model.addAttribute("staff", staff);
 	}
 
 	/**
@@ -163,7 +162,7 @@ public class StaffController {
 	public String modify(long tno, Staff staff, PageVO vo, RedirectAttributes rttr) {
 		log.info("controller : staff modify post by " + staff.getName());
 
-		long cno = turnService.read(tno).get().getCno();
+		long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
 		staff.setCno(cno);
 
 		staffService.modify(staff);

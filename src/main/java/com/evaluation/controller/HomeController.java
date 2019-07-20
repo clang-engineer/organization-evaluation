@@ -130,8 +130,8 @@ public class HomeController {
         if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
             return "redirect:/survey";
-        } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
-                .equals(staff.getPassword())) {
+        } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).map(Staff::getPassword)
+                .orElse(null).equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
             return "redirect:/survey";
         }
@@ -172,7 +172,7 @@ public class HomeController {
         if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
             return "redirect:/mbo";
-        } else if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).get().getPassword()
+        } else if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).map(Staff::getPassword).orElse(null)
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
             return "redirect:/mbo";
@@ -223,7 +223,7 @@ public class HomeController {
      * @param model   화면 전달 정보
      */
     @GetMapping(value = { "/survey/profile", "/mbo/profile" })
-    public String profile(String company, long tno, HttpServletRequest request, Model model) {
+    public String userProfile(String company, long tno, HttpServletRequest request, Model model) {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -248,7 +248,7 @@ public class HomeController {
      * @param model   화면 전달 정보
      */
     @GetMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String modify(String company, long tno, HttpServletRequest request, Model model) {
+    public String userProfileModify(String company, long tno, HttpServletRequest request, Model model) {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -276,7 +276,7 @@ public class HomeController {
      * @return 사용자 프로필 페이지
      */
     @PostMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String modify(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
+    public String userProfileModify(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
             long sno = origin.getSno();
             staff.setSno(sno);
@@ -309,7 +309,7 @@ public class HomeController {
      * @param model   화면 전달 정보
      */
     @GetMapping(value = { "/survey/contact", "/mbo/contact" })
-    public String contact(String company, Long tno, HttpServletRequest request, Model model) {
+    public String userContact(String company, Long tno, HttpServletRequest request, Model model) {
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -340,7 +340,7 @@ public class HomeController {
      * @return 문의 페이지
      */
     @PostMapping(value = { "/survey/help", "/mbo/help" })
-    public String helpDesk(String company, long tno, HelpDesk helpDesk, HttpServletRequest request,
+    public String userContact(String company, long tno, HelpDesk helpDesk, HttpServletRequest request,
             RedirectAttributes rttr) {
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");

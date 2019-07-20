@@ -28,7 +28,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND s NOT IN (SELECT r.evaluated FROM RelationSurvey r WHERE r.rno>0 AND r.tno=:tno AND r.relation='me') ORDER BY s.sno ASC ")
-	Optional<List<Staff>> get360EvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
+	Optional<List<Staff>> getSurveyEvaluatedList(@Param("cno") long cno, @Param("tno") long tno);
 
 	/**
 	 * 전 직원 중에 직원 정보가 동일하지 않고(본인이 아닌), 평가자에 속하지 않은 직원정보를 찾는다. (설정 시 평가자 출력하기 위해)
@@ -39,7 +39,7 @@ public interface StaffRepository extends CrudRepository<Staff, Long>, QuerydslPr
 	 * @return 직원 객체 리스트
 	 */
 	@Query("SELECT s FROM Staff s WHERE s.sno>0 AND s.cno=:cno AND NOT s.sno=:sno AND s NOT IN (SELECT r.evaluator FROM RelationSurvey r WHERE r.rno>0 AND r.tno=:tno AND r.evaluated.sno=:sno) ORDER BY s.sno ASC ")
-	Optional<List<Staff>> get360EvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
+	Optional<List<Staff>> getSurveyEvaluatorList(@Param("cno") long cno, @Param("tno") long tno,
 			@Param("sno") long sno);
 
 	/**

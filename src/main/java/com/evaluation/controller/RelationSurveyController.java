@@ -161,11 +161,11 @@ public class RelationSurveyController {
      */
     @GetMapping("/evaluated/{tno}")
     @ResponseBody
-    public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluated(@PathVariable("tno") long tno) {
+    public ResponseEntity<Optional<List<Staff>>> getSurveyEvaluatedList(@PathVariable("tno") long tno) {
         log.info("get All Staff List Exclude Evaluated....");
 
         long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
-        return new ResponseEntity<>(staffService.get360EvaluatedList(cno, tno), HttpStatus.OK);
+        return new ResponseEntity<>(staffService.getSurveyEvaluatedList(cno, tno), HttpStatus.OK);
     }
 
     /**
@@ -177,12 +177,12 @@ public class RelationSurveyController {
      */
     @GetMapping("/evaluator/{tno}/{sno}")
     @ResponseBody
-    public ResponseEntity<Optional<List<Staff>>> getStaffForEvaluator(@PathVariable("tno") long tno,
+    public ResponseEntity<Optional<List<Staff>>> getSurveyEvaluatorList(@PathVariable("tno") long tno,
             @PathVariable("sno") long sno) {
         log.info("get All Staff List....");
 
         long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
-        return new ResponseEntity<>(staffService.get360EvaluatorList(cno, tno, sno), HttpStatus.OK);
+        return new ResponseEntity<>(staffService.getSurveyEvaluatorList(cno, tno, sno), HttpStatus.OK);
     }
 
     /**
