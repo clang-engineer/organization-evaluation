@@ -57,8 +57,9 @@ public class RelationSurveyServiceImpl implements RelationSurveyService {
     @Override
     public void remove(Long rno) {
         log.info("remove : " + rno);
-
-        relationSurveyRepo.deleteById(rno);
+        relationSurveyRepo.findById(rno).ifPresent(origin -> {
+            relationSurveyRepo.deleteById(origin.getRno());
+        });
     }
 
     @Override

@@ -50,7 +50,10 @@ public class TurnServiceImpl implements TurnService {
 	@Override
 	public void remove(long tno) {
 		log.info("service : turn remove " + tno);
-		turnRepo.deleteById(tno);
+
+		turnRepo.findById(tno).ifPresent(origin -> {
+			turnRepo.deleteById(tno);
+		});
 	}
 
 	@Override

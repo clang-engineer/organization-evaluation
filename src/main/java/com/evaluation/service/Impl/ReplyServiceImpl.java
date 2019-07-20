@@ -50,8 +50,9 @@ public class ReplyServiceImpl implements ReplyService {
     @Override
     public void remove(long rno) {
         log.info("remove " + rno);
-
-        replyRepo.deleteById(rno);
+        replyRepo.findById(rno).ifPresent(origin -> {
+            replyRepo.deleteById(origin.getRno());
+        });
     }
 
     @Override

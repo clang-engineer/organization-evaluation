@@ -57,8 +57,9 @@ public class RelationMboServiceImpl implements RelationMboService {
     @Override
     public void remove(Long rno) {
         log.info("remove : " + rno);
-
-        relationMboRepo.deleteById(rno);
+        relationMboRepo.findById(rno).ifPresent(origin -> {
+            relationMboRepo.deleteById(origin.getRno());
+        });
     }
 
     @Override

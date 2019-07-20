@@ -54,7 +54,9 @@ public class MboServiceImpl implements MboService {
     public void remove(long mno) {
         log.info("remove " + mno);
 
-        mboRepo.deleteById(mno);
+        mboRepo.findById(mno).ifPresent(origin -> {
+            mboRepo.deleteById(origin.getMno());
+        });
     }
 
     @Override

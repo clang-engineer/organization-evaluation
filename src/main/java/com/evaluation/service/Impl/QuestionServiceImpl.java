@@ -59,7 +59,9 @@ public class QuestionServiceImpl implements QuestionService {
 	@Override
 	public void remove(Long qno) {
 		log.info("delete " + qno);
-		questionRepo.deleteById(qno);
+		questionRepo.findById(qno).ifPresent(origin -> {
+			questionRepo.deleteById(origin.getQno());
+		});
 	}
 
 	@Override
