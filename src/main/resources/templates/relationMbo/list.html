@@ -284,7 +284,7 @@
 
             //modal내의 register 클릭 시 type별로 나눠서 처리
             modalRegisterBtn.on("click", function () {
-                formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+                formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
                 if (modal.data("type") == "evaluated") {
                     var evaluated = $(":input:radio[name=evaluated]:checked").val();
                     var evaluator = $(":input:radio[name=evaluated]:checked").val();
@@ -344,7 +344,7 @@
 
             //모달 내의 삭제 버튼 클릭 시
             modalRemoveBtn.on("click", function (e) {
-                formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+                formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
                 if (delchk() == true) {
                     formObj.attr("action", "delete");
                 } else {
@@ -453,7 +453,7 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+                formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
                 formObj.attr("action", "xlDownload");
                 formObj.attr("method", "POST");
                 formObj.submit();

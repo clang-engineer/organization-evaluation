@@ -25,7 +25,7 @@
             <div class="card-header">Login</div>
             <div class="card-body">
                 <form method="POST">
-                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                    <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
                     <button class="btn btn-primary btn-block" type="submit">Logout</button>
                 </form>
                 <!-- <div class="text-center"><a class="d-block small mt-3" href="register.html">Register an Account</a>
@@ -36,7 +36,7 @@
     </div>
 
     <!-- Bootstrap core JavaScript-->
-    <script th:src="@{/vendor/jquery/jquery.min.js"}></script>
+    <script th:src="@{/vendor/jquery/jquery.min.js}"></script>
     <script th:src="@{/vendor/bootstrap/js/bootstrap.bundle.min.js}"></script>
 
     <!-- Core plugin JavaScript-->

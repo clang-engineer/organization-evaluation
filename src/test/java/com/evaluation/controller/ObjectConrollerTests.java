@@ -1,6 +1,7 @@
 package com.evaluation.controller;
 
-import com.evaluation.domain.embeddable.Content;
+import com.evaluation.domain.Mbo;
+import com.evaluation.domain.embeddable.Leader;
 import com.google.gson.Gson;
 
 import org.junit.Before;
@@ -20,14 +21,14 @@ import org.springframework.web.context.WebApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * ContentControllerTests
+ * ObjectConrollerTests
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 @Transactional
 @Slf4j
-public class ContentControllerTests {
+public class ObjectConrollerTests {
 
     @Autowired
     private WebApplicationContext ctx;
@@ -40,36 +41,33 @@ public class ContentControllerTests {
     }
 
     @Test
-    public void testAddContent() throws Exception {
+    public void testRegister() throws Exception {
         log.info("register...");
 
-        Content content = new Content();
-        content.setName("test name");
-        content.setRatio(10);
+        Mbo mbo = new Mbo();
+        mbo.setObject("test");
+        String jsonStr = new Gson().toJson(mbo);
 
-        String jsonStr = new Gson().toJson(content);
-
-        log.info("" + mockMvc.perform(
-                MockMvcRequestBuilders.post("/contents/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+        log.info("" + mockMvc
+                .perform(
+                        MockMvcRequestBuilders.post("/object").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
                 .andReturn());
     }
 
     @Test
     public void testRead() throws Exception {
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/contents/1/1")).andReturn());
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/objecgt/1")).andReturn());
     }
 
     @Test
     public void testModify() throws Exception {
 
-        Content content = new Content();
-        content.setName("test name");
-        content.setRatio(10);
-
-        String jsonStr = new Gson().toJson(content);
+        Mbo mbo = new Mbo();
+        mbo.setObject("test modify");
+        String jsonStr = new Gson().toJson(mbo);
 
         log.info("" + mockMvc.perform(
-                MockMvcRequestBuilders.put("/contents/1/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+                MockMvcRequestBuilders.put("/object/1/do").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
                 .andReturn());
     }
 
@@ -77,14 +75,21 @@ public class ContentControllerTests {
     public void testRemove() throws Exception {
         log.info("remove...");
 
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.delete("/contents/1/1")).andReturn());
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.delete("/object/1/do")).andReturn());
     }
 
     @Test
-    public void testGetLists() throws Exception {
-        log.info("get List...");
-
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/contents/1")).andReturn());
+    public void testTeamObjectRead() throws Exception {
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/object/department/1")).andReturn());
     }
 
+    @Test
+    public void testTeamObjectModify() throws Exception {
+        Leader leader = new Leader();
+        leader.setTitle("test");
+        String jsonStr = new Gson().toJson(leader);
+
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.post("/object/department/1")
+                .contentType(MediaType.APPLICATION_JSON).content(jsonStr)).andReturn());
+    }
 }

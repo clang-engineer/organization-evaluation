@@ -4,16 +4,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 import com.evaluation.domain.Staff;
-import com.evaluation.domain.embeddable.RatioValue;
 import com.evaluation.service.StaffService;
-import com.google.gson.Gson;
 
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.http.MediaType;
 import org.springframework.mock.web.MockHttpServletRequest;
 import org.springframework.mock.web.MockHttpSession;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -29,14 +26,14 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * MboControllerTests
+ * SurveyConrollerTests
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 @Transactional
 @Slf4j
-public class MboControllerTests {
+public class SurveyConrollerTests {
 
     @Autowired
     private WebApplicationContext ctx;
@@ -55,8 +52,6 @@ public class MboControllerTests {
     @Before
     public void setUp() throws Exception {
         this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-        mockMvc.perform(MockMvcRequestBuilders.post("/admin/register").param("uid", "testid").param("uname", "testname")
-                .param("upw", "test").param("roles", "ADMIN"));
         this.staff = staffService.read(207L).orElse(null);
 
         session = new MockHttpSession();
@@ -70,7 +65,7 @@ public class MboControllerTests {
     @Test
     public void testMain() throws Exception {
         String resultPage = mockMvc.perform(
-                MockMvcRequestBuilders.get("/mbo/main").session(session).param("company", "test").param("tno", "1"))
+                MockMvcRequestBuilders.get("/survey/main").session(session).param("company", "test").param("tno", "1"))
                 .andReturn().getModelAndView().getViewName();
         log.info(resultPage);
     }
@@ -78,50 +73,34 @@ public class MboControllerTests {
     @Test
     public void testList() throws Exception {
         String resultPage = mockMvc.perform(
-                MockMvcRequestBuilders.get("/mbo/list").session(session).param("company", "test").param("tno", "1"))
+                MockMvcRequestBuilders.get("/survey/list").session(session).param("company", "test").param("tno", "1"))
                 .andReturn().getModelAndView().getViewName();
         log.info(resultPage);
     }
 
     @Test
-    public void testObjectGet() throws Exception {
-        String resultPage = mockMvc.perform(
-                MockMvcRequestBuilders.get("/mbo/object").session(session).param("company", "test").param("tno", "1"))
-                .andReturn().getModelAndView().getViewName();
+    public void testEvaluateGet() throws Exception {
+        String resultPage = mockMvc.perform(MockMvcRequestBuilders.get("/survey/evaluate").session(session)
+                .param("company", "test").param("tno", "1")).andReturn().getModelAndView().getViewName();
         log.info(resultPage);
     }
 
     @Test
-    public void testObjectpost() throws Exception {
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.post("/mbo/object").param("company", "test")
+    public void testEvaluatepost() throws Exception {
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.post("/survey/evaluate").param("company", "test")
                 .param("tno", "1").param("rno", "10")).andReturn().getModelAndView().getModelMap());
-    }
-
-    @Test
-    public void testNoteCreate() throws Exception {
-
-        String note = "test";
-        String jsonStr = new Gson().toJson(note);
-
-        log.info("" + mockMvc.perform(
-                MockMvcRequestBuilders.post("/note/1/plan").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
-                .andReturn());
-    }
-
-    @Test
-    public void testNoteRead() throws Exception {
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/note/1/plan")).andReturn());
     }
 
     @Test
     public void testSubmit() throws Exception {
         Map<String, String> map = new HashMap<>();
-        map.put("rno", "1L");
-        map.put("finish", "T");
-        RatioValue value = new RatioValue();
-        value.setRatio(1.1);
-        value.setValue(2.2);
-        map.put("key", "" + value);
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.put("/mbo/submit").param("answer", "" + map)).andReturn());
+        map.put("q1", "1");
+        map.put("q2", "2");
+        map.put("q3", "3");
+        map.put("c1", "test1");
+        map.put("c2", "test2");
+        map.put("c3", "test3");
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.post("/survey/submit").param("rno", "10")
+                .param("finish", "T").param("answer", "" + map)).andReturn().getModelAndView().getModelMap());
     }
 }

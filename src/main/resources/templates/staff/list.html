@@ -30,13 +30,13 @@
 						<select class="form-control col-sm-4" id="searchType">
 							<option>---
 								</optinon>
-							<option value="name" th:selected="${pageVO.type}=='name'">Name</option>
-							<option value="email" th:selected="${pageVO.type}=='email'">Email</option>
-							<option value="department" th:selected="${pageVO.type}=='department'">Department</option>
-							<option value="level" th:selected="${pageVO.type}=='level'">Level</option>
-							<option value="division" th:selected="${pageVO.type}=='division'">Division</option>
+							<option value="name" th:selected="${pageVO?.type}=='name'">Name</option>
+							<option value="email" th:selected="${pageVO?.type}=='email'">Email</option>
+							<option value="department" th:selected="${pageVO?.type}=='department'">Department</option>
+							<option value="level" th:selected="${pageVO?.type}=='level'">Level</option>
+							<option value="division" th:selected="${pageVO?.type}=='division'">Division</option>
 						</select>
-						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
 							<button class="btn btn-default border" id="searchBtn" type="button">
 								<i class="fas fa-search fa-sm"></i>
@@ -49,7 +49,7 @@
 			<!-- /search box -->
 			<div class="card-body">
 				<div class="table-responsive text-nowrap">
-					<table th:with="idxpageNum=${result.currentPageNum}, result=${result.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<table th:with="idxpageNum=${result?.currentPageNum}, result=${result?.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 						<thead>
 							<tr>
 								<th>No</th>
@@ -79,14 +79,14 @@
 						<tbody>
 							<tr th:each="staff,status:${result.content}">
 								<td>[[${idxpageNum-1}*10+${status.count}]]</td>
-								<td>[[${staff.name}]]</td>
-								<td>[[${staff.email}]]</td>
-								<td>[[${staff.level}]]</td>
-								<td>[[${staff.department1}]]</td>
-								<td>[[${staff.department2}]]</td>
-								<td>[[${staff.division1}]]</td>
-								<td>[[${staff.division2}]]</td>
-								<td><a th:href="${staff.sno}" class="staffDetail">
+								<td>[[${staff?.name}]]</td>
+								<td>[[${staff?.email}]]</td>
+								<td>[[${staff?.level}]]</td>
+								<td>[[${staff?.department1}]]</td>
+								<td>[[${staff?.department2}]]</td>
+								<td>[[${staff?.division1}]]</td>
+								<td>[[${staff?.division2}]]</td>
+								<td><a th:href="${staff?.sno}" class="staffDetail">
 										<button type="button" class="btn btn-default"><i class="fas fa-pen"></i></button>
 									</a></td>
 							</tr>
@@ -111,10 +111,10 @@
 	<!-- /.container-fluid -->
 	<form id="f1" th:action="@{list}" method="get">
 		<input type="hidden" name="tno" th:value="${tno}" />
-		<input type="hidden" name="page" th:value=${result.currentPageNum} />
-		<input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
-		<input type="hidden" name="type" th:value=${pageVO.type} />
-		<input type="hidden" name="keyword" th:value=${pageVO.keyword} />
+		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
+		<input type="hidden" name="size" th:value=${result?.currentPage.pageSize} />
+		<input type="hidden" name="type" th:value=${pageVO?.type} />
+		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
 	</form>
 
 	<!-- Modal -->
@@ -139,7 +139,7 @@
 			var csrf = JSON.parse('[[${_csrf}]]');
 
 			var tno = [[${ tno }]];
-			var writeId = [[${ #authentication.name }]];
+			var writeId = [[${ #authentication?.name }]];
 
 			//modal 사용 변수 선언
 			var modal = $("#basicModal");
@@ -255,7 +255,7 @@
 					processData: false,
 					contentType: false,
 					beforeSend: function (xhr) {
-						xhr.setRequestHeader(csrf.headerName, csrf.token);
+						xhr.setRequestHeader(csrf?.headerName, csrf.token);
 					},
 					data: formData,
 					type: 'POST',
@@ -276,7 +276,7 @@
 
 			//xl 다운로드 함수
 			$("#xlDownload").click(function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
 				formObj.attr("action", "xlDownload");
 				formObj.attr("method", "POST");
 				formObj.submit();

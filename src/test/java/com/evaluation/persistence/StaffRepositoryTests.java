@@ -97,8 +97,8 @@ public class StaffRepositoryTests {
 	}
 
 	@Test
-	public void testGet360EvaluatedList() {
-		Optional<List<Staff>> result = repo.get360EvaluatedList(1L, 1L);
+	public void testGetSurveyEvaluatedList() {
+		Optional<List<Staff>> result = repo.getSurveyEvaluatedList(1L, 1L);
 		result.ifPresent(staff -> {
 			log.info("===>" + staff);
 		});
@@ -106,8 +106,8 @@ public class StaffRepositoryTests {
 	}
 
 	@Test
-	public void testGet360EvaluatorList() {
-		Optional<List<Staff>> result = repo.get360EvaluatorList(1L, 1L, 1L);
+	public void testGetSurveyEvaluatorList() {
+		Optional<List<Staff>> result = repo.getSurveyEvaluatorList(1L, 1L, 1L);
 		result.ifPresent(staff -> {
 			log.info("===>" + staff);
 		});

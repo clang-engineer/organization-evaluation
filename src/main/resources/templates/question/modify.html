@@ -19,57 +19,57 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <form id="f1" th:action="@{modify}" method="POST">
-                    <input type="hidden" name="qno" th:value="${question.qno}">
+                    <input type="hidden" name="qno" th:value="${question?.qno}">
                     <div class="form-group">
                         <label>Category</label>
                         <select name="category" class="form-control">
                             <option value="">--</option>
-                            <option th:each="res:${distinctInfo.category}" th:text="${res}" th:value="${res}" th:selected="${res}==${question.category}"></option>
+                            <option th:each="res:${distinctInfo?.category}" th:text="${res}" th:value="${res}" th:selected="${res}==${question?.category}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Order Idx</label>
-                        <input type="text" class="form-control" name="idx" th:value="${question.idx}">
+                        <input type="text" class="form-control" name="idx" th:value="${question?.idx}">
                     </div>
                     <div class="form-group">
                         <label>Division1</label>
                         <select name="division1" class="form-control">
                             <option value="">--</option>
-                            <option th:each="res:${distinctInfo.division1}" th:text="${res}" th:value="${res}" th:selected="${res}==${question.division1}"></option>
+                            <option th:each="res:${distinctInfo?.division1}" th:text="${res}" th:value="${res}" th:selected="${res}==${question?.division1}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Division2</label>
                         <select name="division2" class="form-control">
                             <option value="">--</option>
-                            <option th:each="res:${distinctInfo.division2}" th:text="${res}" th:value="${res}" th:selected="${res}==${question.division2}"></option>
+                            <option th:each="res:${distinctInfo?.division2}" th:text="${res}" th:value="${res}" th:selected="${res}==${question?.division2}"></option>
                         </select>
                     </div>
                     <div class="form-group">
                         <label>Question</label>
-                        <input type="text" class="form-control" name="item" th:value="${question.item}">
+                        <input type="text" class="form-control" name="item" th:value="${question?.item}">
                     </div>
                     <div class="form-group">
                         <label>Ratio</label>
-                        <input type="text" class="form-control" name="ratio" th:value="${question.ratio}">
+                        <input type="text" class="form-control" name="ratio" th:value="${question?.ratio}">
                     </div>
-                    <input type="hidden" name="updateId" th:value="${#authentication.name}">
+                    <input type="hidden" name="updateId" th:value="${#authentication?.name}">
                 </form>
                 <div class="form-group">
                     <label>WriteId</label>
-                    <input type="text" class="form-control" name="writeId" th:value="${question.writeId}" readonly>
+                    <input type="text" class="form-control" name="writeId" th:value="${question?.writeId}" readonly>
                 </div>
                 <div class="form-group">
                     <label>WriteDate</label>
-                    <input type="text" class="form-control" name="writeDate" th:value="${#dates.format(question.writeDate,'yyyy-MM-dd  hh:mm:ss')}" readonly/>
+                    <input type="text" class="form-control" name="writeDate" th:value="${#dates.format(question?.writeDate,'yyyy-MM-dd  hh:mm:ss')}" readonly/>
                 </div>
                 <div class="form-group">
                      <label>UpdateId</label>
-                     <input type="text" class="form-control" name="updateId" th:value="${#authentication.name}" readonly>
+                     <input type="text" class="form-control" name="updateId" th:value="${#authentication?.name}" readonly>
                 </div>
                 <div class="form-group">
                     <label>UpdateDate</label>
-                    <input type="text" class="form-control" name="updateDate" th:value="${#dates.format(question.updateDate,'yyyy-MM-dd  hh:mm:ss')}" readonly>
+                    <input type="text" class="form-control" name="updateDate" th:value="${#dates.format(question?.updateDate,'yyyy-MM-dd  hh:mm:ss')}" readonly>
                 </div>
                 <div class="form-group">
                     <button data-oper="modify" type="button" class="btn btn-success">Modfiy</button>
@@ -106,10 +106,10 @@
                     }
                 }
 
-                formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO.page }]] + "'/>");
-                formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO.size }]] + "'/>");
-                formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO.type }]] + "'/>");
-                formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO.keyword }]] + "'/>");
+                formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO?.page }]] + "'/>");
+                formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO?.size }]] + "'/>");
+                formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO?.type }]] + "'/>");
+                formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO?.keyword }]] + "'/>");
                 formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
                 formObj.submit();
             });

@@ -34,28 +34,13 @@ public class TurnControllerTests {
 
 	private MockMvc mockMvc;
 
-	private Turn turn;
-
 	@Before
 	public void setUp() throws Exception {
 		this.mockMvc = MockMvcBuilders.webAppContextSetup(ctx).build();
-
-		turn = new Turn();
-		turn.setTitle("test controller turn 1");
-		Set<String> types = new HashSet<>();
-		types.add("360");
-		types.add("mbo");
-		turn.setTypes(types);
-		turn.setCno(1L);
-		turn.setTno(1L);
-		String jsonStr = new Gson().toJson(turn);
-		log.info("" + mockMvc.perform(
-				MockMvcRequestBuilders.post("/turns/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
-				.andReturn());
 	}
 
 	@Test
-	public void testAddTurn() throws Exception {
+	public void testRegister() throws Exception {
 		log.info("register...");
 
 		Turn turn = new Turn();
@@ -76,7 +61,8 @@ public class TurnControllerTests {
 	public void testModify() throws Exception {
 
 		log.info("modify...");
-
+		Turn turn = new Turn();
+		turn.setTno(1L);
 		turn.setTitle("test Update turn 1");
 		Set<String> types = new HashSet<>();
 		types.add("360");

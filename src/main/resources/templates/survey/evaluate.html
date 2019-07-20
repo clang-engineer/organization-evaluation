@@ -37,7 +37,7 @@
                         <div class="qparent">
                             <div th:each="book,idx:${book}" class="mr-5 mb-4 question custom-control custom-radio">
                                 <input class="mr-2  custom-control-input" th:id="${question?.idx}+'-'+${idx?.count}" th:name="'q'+${question?.idx}" type="radio" required th:value="${book?.ratio}"
-                                    th:checked="${book?.ratio}==${relation?.answers?.get('q'+question?.idx)}" th:disabled="${relation.finish}=='Y'">
+                                    th:checked="${book?.ratio}==${relation?.answers?.get('q'+question?.idx)}" th:disabled="${relation?.finish}=='Y'">
                                 <label class="custom-control-label" th:for="${question?.idx}+'-'+${idx?.count}">[[${book.name}]]</label>
                             </div>
                         </div>
@@ -47,14 +47,14 @@
             </div>
             <!-- ./card -->
             <!-- card -->
-            <div class="card mb-3 essay" th:if="${#lists.size(commentList)}>0 and ${relation.relation!='me'}">
+            <div class="card mb-3 essay" th:if="${#lists.size(commentList)}>0 and ${relation?.relation!='me'}">
                 <h5 class="card-header text-white bg-dark">주관식
-                    <small class="float-md-right">[[${relation.evaluated.name}]] 님에 대한 주관식 질의 입니다.</small>
+                    <small class="float-md-right">[[${relation?.evaluated?.name}]] 님에 대한 주관식 질의 입니다.</small>
                 </h5>
                 <div class="card m-3">
                     <div class="card-body" th:each="question, status:${commentList}">
                         <div class="card-text mb-3">Q[[${status.count}]]. [[${question}]]</div>
-                        <textarea required th:name="'c'+${status.count}" class="form-control" rows="7" th:text="${relation?.comments?.get('c'+status.count)}" th:disabled="${relation.finish}=='Y'">
+                        <textarea required th:name="'c'+${status?.count}" class="form-control" rows="7" th:text="${relation?.comments?.get('c'+status?.count)}" th:disabled="${relation?.finish}=='Y'">
                         </textarea>
                         <p class="float-md-right mb-0" id="count_message">0/2000</p>
                     </div>
@@ -62,7 +62,7 @@
             </div>
             <!-- ./card -->
             <input type="hidden" name="rno" th:value="${relation?.rno}">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
         </form>
         <!-- ./form -->
         <div class="mt-3 mb-5 justify-content-md-center">
@@ -121,7 +121,7 @@
             modalRegisterBtn.text("Submit");
             modalBody.addClass("pb-0")
             modalLabel2.css("fontSize", "0.9rem");
-            var evaluatedName = [[${ relation.evaluated.name }]];
+            var evaluatedName = [[${ relation?.evaluated?.name }]];
 
             var formObj = $("#f1");
             var csrf = JSON.parse('[[${_csrf}]]');

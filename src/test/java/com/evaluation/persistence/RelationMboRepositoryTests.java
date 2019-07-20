@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
 @SpringBootTest
 @Transactional
 @Slf4j
-public class RelationMboTests {
+public class RelationMboRepositoryTests {
 
     @Autowired
     RelationMboRepository repo;

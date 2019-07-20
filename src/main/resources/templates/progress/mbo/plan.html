@@ -84,7 +84,7 @@
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="POST">
         <input type="hidden" name="tno" th:value="${tno}">
-        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 
     <div id="viewLoading">

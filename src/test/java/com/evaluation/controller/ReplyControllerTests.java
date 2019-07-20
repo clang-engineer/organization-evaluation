@@ -1,6 +1,6 @@
 package com.evaluation.controller;
 
-import com.evaluation.domain.embeddable.Content;
+import com.evaluation.domain.Reply;
 import com.google.gson.Gson;
 
 import org.junit.Before;
@@ -20,14 +20,14 @@ import org.springframework.web.context.WebApplicationContext;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * ContentControllerTests
+ * ReplyControllerTests
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 @WebAppConfiguration
 @Transactional
 @Slf4j
-public class ContentControllerTests {
+public class ReplyControllerTests {
 
     @Autowired
     private WebApplicationContext ctx;
@@ -40,51 +40,45 @@ public class ContentControllerTests {
     }
 
     @Test
-    public void testAddContent() throws Exception {
+    public void testRegister() throws Exception {
         log.info("register...");
 
-        Content content = new Content();
-        content.setName("test name");
-        content.setRatio(10);
+        Reply reply = new Reply();
+        reply.setMno(1L);
+        reply.setComment("test");
 
-        String jsonStr = new Gson().toJson(content);
+        String jsonStr = new Gson().toJson(reply);
 
-        log.info("" + mockMvc.perform(
-                MockMvcRequestBuilders.post("/contents/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+        log.info("" + mockMvc
+                .perform(MockMvcRequestBuilders.post("/reply").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
                 .andReturn());
     }
 
     @Test
     public void testRead() throws Exception {
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/contents/1/1")).andReturn());
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/reply/1")).andReturn());
     }
 
     @Test
     public void testModify() throws Exception {
+        log.info("register...");
 
-        Content content = new Content();
-        content.setName("test name");
-        content.setRatio(10);
+        Reply reply = new Reply();
+        reply.setRno(1L);
+        reply.setComment("test modify");
 
-        String jsonStr = new Gson().toJson(content);
+        String jsonStr = new Gson().toJson(reply);
 
-        log.info("" + mockMvc.perform(
-                MockMvcRequestBuilders.put("/contents/1/1").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
+        log.info("" + mockMvc
+                .perform(MockMvcRequestBuilders.put("/reply").contentType(MediaType.APPLICATION_JSON).content(jsonStr))
                 .andReturn());
     }
 
+    
     @Test
     public void testRemove() throws Exception {
         log.info("remove...");
 
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.delete("/contents/1/1")).andReturn());
+        log.info("" + mockMvc.perform(MockMvcRequestBuilders.delete("/reply/1")).andReturn());
     }
-
-    @Test
-    public void testGetLists() throws Exception {
-        log.info("get List...");
-
-        log.info("" + mockMvc.perform(MockMvcRequestBuilders.get("/contents/1")).andReturn());
-    }
-
 }
