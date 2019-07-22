@@ -77,7 +77,7 @@
                 </div>
                 <!--./ Categories Widget -->
                 <!-- Categories Widget -->
-                <div class="card mb-4">
+                <!-- <div class="card mb-4">
                     <h5 class="card-header dep-card" data-html="true" data-toggle="tooltip" data-placement="right" title="최근 변경 내역 입니다.">Recent Changes</h5>
                     <div class="card-body">
                         <div class="row">
@@ -92,7 +92,7 @@
                     <div class="card-footer p-0" data-page="2" id="pageNum" align="center">
                         <i class="fas fa-angle-double-down"></i>
                     </div>
-                </div>
+                </div> -->
                 <!--./ Categories Widget -->
 
                 <!-- Search Widget -->
@@ -245,8 +245,8 @@
 
             $("#instructionBtn").click(function (e) {
                 $("#instructionModal").modal("show");
-                $(".modal-content, .modal-dialog").css("height", "85%");
-                $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
+                $("#instructionModal").find(".modal-content, .modal-dialog").css("height", "85%");
+                $("#instructionModal").find(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
             });
 
             //toolitip에 관한 설정
@@ -257,7 +257,6 @@
             }, 2500);
 
             $(".department").click(function (e) {
-
                 dno = $(this).data('dno');
                 departmentService.read(dno, function (result) {
                     modalTitle.text(result.department1 + " - " + result.department2 + " 목표 설정");
@@ -266,11 +265,12 @@
                 });
 
                 //모달 data
+                modal.find("button[id='modalRegisterBtn']").text("Save").show();
                 modal.data("dno", dno);
                 modal.modal("show");
             });
 
-            modalRegisterBtn.click(function (e) {
+            $("#contentModal").find("#modalRegisterBtn").click(function (e) {
                 dno = modal.data("dno");
                 var param = {
                     dno: dno,
@@ -284,12 +284,6 @@
                     modal.modal("hide");
                 });
             });
-
-            //close button click 시
-            modalCloseBtn.on("click", function (e) {
-                modal.modal('hide');
-            });
-
 
             //글자 수 카운터
             modalGroupContent2.on("keyup", "textarea", function (e) {
@@ -353,6 +347,7 @@
                 $(this).closest('.modal').modal('hide');
             });
 
+            $('#viewLoading').hide();
         }).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
             console.log('ajax start');
             $('#viewLoading').show();
@@ -361,7 +356,8 @@
             $('#viewLoading').hide();
         });
 
-        getRecentChangeList(1);
+        //최근 변경 내역을 호출하는 함수
+        // getRecentChangeList(1);
         function getRecentChangeList(page) {
             $.getJSON("/mbo/recentChange/" + [[${ turn?.tno }]] + "/" + page,
                 function (result) {

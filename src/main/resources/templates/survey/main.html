@@ -121,14 +121,14 @@
         $(document).ready(function (e) {
             $("#instructionBtn").click(function (e) {
                 $("#instructionModal").modal("show");
-                $(".modal-content, .modal-dialog").css("height", "85%");
-                $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
+                $("#instructionModal").find(".modal-content, .modal-dialog").css("height", "85%");
+                $("#instructionModal").find(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
             });
 
             $("#surveyStart").click(function (e) {
                 e.preventDefault();
                 $("#basicModal").find("div[class='modal-body']").hide();
-                $("#basicModal").find("#modalTitle").text("다면 평가를 시작합니다.").css("font-size", "1.1rem");
+                $("#basicModal").find("#modalTitle").text("360 다면 평가를 시작합니다.").css("font-size", "1.1rem");
                 $("#basicModal").find("button").addClass("btn-sm");
                 $("#basicModal").find("button[id!='modalCloseBtn']").hide();
                 $("#basicModal").find("button[id='modalRegisterBtn']").text("Start").show();

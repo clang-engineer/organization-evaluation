@@ -651,9 +651,10 @@
                 if (btnType == 'btnPause') {
                     //모달 data
                     tmpModal.data("finish", "T");
-
+                    
                     //modal Text
                     tmpModal.find("#modalTitle").text("Pause Evaluation");
+                    tmpModal.find("#modalRegisterBtn").text("Pause");
                     tmpModal.find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 임시 저장합니다.").attr("readonly", true);
                     tmpModal.find("#modalLabel2").text("*임시저장이 아닌 최종제출을 다시 하셔야 집계에 반영됩니다.").css("fontSize", "0.9rem");
                 } else if (btnType == 'btnSubmit') {
@@ -670,6 +671,7 @@
 
                     //modal Text
                     tmpModal.find("#modalTitle").text("Submit Evaluation");
+                    tmpModal.find("#modalRegisterBtn").text("Submit");
                     tmpModal.find("input[name='modalContent1']").val(evaluatedName + "님에 대한 평가를 최종 제출합니다.").attr("readonly", true);
                     tmpModal.find("#modalLabel2").text("*제출을 원치 않으시면 임시저장버튼 이용하실 수 있습니다.").css("fontSize", "0.9rem");
 
@@ -682,7 +684,7 @@
 
                 //모달 button
                 tmpModal.find("button[id!='modalCloseBtn']").hide();
-                tmpModal.find("#modalRegisterBtn").show().text("Submit");
+                tmpModal.find("#modalRegisterBtn").show();
 
                 tmpModal.modal('show');
             })
