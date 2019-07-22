@@ -5,6 +5,7 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Set;
 
 import javax.servlet.http.HttpServletRequest;
@@ -86,7 +87,7 @@ public class MboController {
 
         if (session.getAttribute("evaluator") == null) {
             rttr.addAttribute("company", company);
-            return "redirect:/mbo/";
+            return "redirect:/mbo";
         }
 
         model.addAttribute("company", company);
@@ -111,6 +112,19 @@ public class MboController {
         });
 
         return "/mbo/main";
+    }
+
+    @GetMapping("/recentChange/{tno}/{page}")
+    @ResponseBody
+    public ResponseEntity<Optional<List<String>>> name(@PathVariable("tno") long tno, @PathVariable("page") int page,
+            HttpServletRequest request) {
+        log.info("recentChange by");
+        HttpSession session = request.getSession();
+        Staff staff = (Staff) session.getAttribute("evaluator");
+        long sno = staff.getSno();
+
+        return new ResponseEntity<Optional<List<String>>>(mboService.recentChangeOfEvaluatedList(tno, sno, page),
+                HttpStatus.OK);
     }
 
     /**
@@ -219,7 +233,7 @@ public class MboController {
     // @GetMapping("/object")
     @PostMapping("/object")
     public void object(String company, long tno, Long rno, Model model) {
-        log.info("" + rno);
+        log.info("" + company + "/" + tno + "/" + rno);
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);

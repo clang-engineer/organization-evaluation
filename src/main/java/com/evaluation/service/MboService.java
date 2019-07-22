@@ -63,4 +63,14 @@ public interface MboService {
      * @return 회차의 모든 목표
      */
     Optional<List<List<String>>> listByTno(long tno);
+
+    /**
+     * 평가 관계인의 목표나 댓글 목록을 찾는다.
+     * 
+     * @param tno 회차 id
+     * @param sno 평가자 id
+     * @param page 페이지 number
+     * @return 목표, 댓글 변화 정보 목록
+     */
+    Optional<List<String>> recentChangeOfEvaluatedList(long tno, long sno, int page);
 }

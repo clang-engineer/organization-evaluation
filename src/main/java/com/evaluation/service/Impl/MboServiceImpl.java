@@ -78,4 +78,11 @@ public class MboServiceImpl implements MboService {
         log.info("list by tno : " + tno);
         return mboRepo.listByTno(tno);
     }
+
+    @Override
+    public Optional<List<String>> recentChangeOfEvaluatedList(long tno, long sno, int page) {
+        log.info("recentChangeOfEvaluatedList by " + tno + "/" + sno);
+        int offset = (page - 1) * 5;
+        return mboRepo.recentChangeOfEvaluatedList(tno, sno, offset);
+    }
 }

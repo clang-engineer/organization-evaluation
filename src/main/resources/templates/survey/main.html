@@ -91,6 +91,7 @@
                                 시스템 관련 문의 : 
                             </label>
                             <br>김영준
+                            <br>Tel : 010-9314-9431
                             </p>
                             <button id="instructionBtn" class="btn btn-xs float-md-right" data-toggle="tooltip" data-placement="right" title="click!!"><i class="fas fa-book-reader mr-2"></i>Survey instrunction</button>
                     </div>
@@ -103,7 +104,11 @@
 
     </div>
     <!-- /.container -->
+    <form id="f1" th:action="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" method="get">
+        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
+    </form>
 
+    <div th:insert="~{common/modal::basic}"></div>
     <div th:insert="~{common/modal::instruction}"></div>
 </div>
 <!-- ./div content -->
@@ -115,12 +120,35 @@
     <script th:inline="javascript">
         $(document).ready(function (e) {
             $("#instructionBtn").click(function (e) {
-                console.log(1)
                 $("#instructionModal").modal("show");
                 $(".modal-content, .modal-dialog").css("height", "85%");
                 $(".modal-body").css("overflow-y", "scroll").css("max-height", "calc(100% - 120px)");
             });
 
+            $("#surveyStart").click(function (e) {
+                e.preventDefault();
+                $("#basicModal").find("div[class='modal-body']").hide();
+                $("#basicModal").find("#modalTitle").text("다면 평가를 시작합니다.").css("font-size", "1.1rem");
+                $("#basicModal").find("button").addClass("btn-sm");
+                $("#basicModal").find("button[id!='modalCloseBtn']").hide();
+                $("#basicModal").find("button[id='modalRegisterBtn']").text("Start").show();
+                $("#basicModal").modal('show');
+            });
+
+            //변경 내용 링크 modal 등록 버튼 클릭 시
+            $("#basicModal").find("#modalRegisterBtn").click(function (e) {
+                e.preventDefault();
+                var formObj = $("#f1");
+                formObj.empty();
+                formObj.append("<input type='hidden' name='company' value='" + [[${ companyInfo?.id }]] + "'/>");
+                formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
+                formObj.submit();
+            });
+
+            // //close button click 시
+            $("button[id='modalCloseBtn']").on("click", function (e) {
+                $(this).closest('.modal').modal('hide');
+            });
             //toolitip에 관한 설정
             $('#instructionBtn,#surveyStart').tooltip('show');
             //몇초 후에 사라짐

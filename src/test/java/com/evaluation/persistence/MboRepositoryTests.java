@@ -71,4 +71,9 @@ public class MboRepositoryTests {
             });
         });
     }
+
+    @Test
+    public void testRecentChangeInObject() {
+        log.info("" + repo.recentChangeOfEvaluatedList(1L, 207L, 0));
+    }
 }
