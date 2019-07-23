@@ -36,18 +36,23 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         log.info("security config...");
 
         http.authorizeRequests().antMatchers("/admin/**").hasAnyRole("MANAGER", "ADMIN");
-        // http.authorizeRequests().antMatchers("/admin/**").permitAll();
         http.authorizeRequests().antMatchers("/book/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/company/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/help/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/staff/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/department/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/level/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/division/**").hasAnyRole("MANAGER", "ADMIN");
-        http.authorizeRequests().antMatchers("/info360/**").hasAnyRole("MANAGER", "ADMIN");
-        http.authorizeRequests().antMatchers("/relation360/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/infoSurvey/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/relationSurvey/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/question/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/comment/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/progress/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/infoMbo/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/relationMbo/**").hasAnyRole("MANAGER", "ADMIN");
 
-        http.authorizeRequests().antMatchers("/survey/**").permitAll();
+        http.authorizeRequests().antMatchers("/survey/*").permitAll();
+        http.authorizeRequests().antMatchers("/mbo/*").permitAll();
 
         http.formLogin().loginPage("/login").successHandler(new CustomLoginSuccessHandler());
 

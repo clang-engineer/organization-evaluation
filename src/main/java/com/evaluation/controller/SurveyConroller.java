@@ -63,7 +63,7 @@ public class SurveyConroller {
      */
     @GetMapping("/main")
     public String main(String company, Long tno, HttpServletRequest request, RedirectAttributes rttr, Model model) {
-        log.info("====>turn main by company" + company);
+        log.info("survey main by " + company + "/" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
@@ -101,7 +101,7 @@ public class SurveyConroller {
      */
     @GetMapping("/list")
     public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
-        log.info("====>turn list by company" + company);
+        log.info("survey list by " + company + "/" + tno);
         HttpSession session = request.getSession();
         Staff evaluator = (Staff) session.getAttribute("evaluator");
 
@@ -140,7 +140,7 @@ public class SurveyConroller {
      */
     @GetMapping("/evaluate")
     public String evaluate(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
-        log.info("" + tno);
+        log.info("evaluate redirect by " + company + "/" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
@@ -168,7 +168,7 @@ public class SurveyConroller {
     // @GetMapping("/evaluate")
     @PostMapping("/evaluate")
     public void evaluate(String company, long tno, Long rno, Model model) {
-        log.info("" + rno);
+        log.info("evaluate by " + company + "/" + tno + "/" + rno);
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);

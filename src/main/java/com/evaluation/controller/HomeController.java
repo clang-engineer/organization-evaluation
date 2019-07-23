@@ -82,7 +82,7 @@ public class HomeController {
      */
     @GetMapping(value = { "/survey", "/mbo" })
     public String userLogin(String company, HttpServletRequest request, Model model) {
-        log.info("====>login by company" + company);
+        log.info("user login by " + company);
 
         String whatYouCall = request.getServletPath();
 
@@ -118,7 +118,7 @@ public class HomeController {
     @PostMapping("/survey/login")
     public String surveyLogin(String company, long tno, Staff staff, RedirectAttributes rttr,
             HttpServletRequest request) {
-        log.info("user login" + tno + staff);
+        log.info("user login by" + company + "/" + tno + "/" + staff);
 
         rttr.addAttribute("company", company);
 
@@ -161,7 +161,7 @@ public class HomeController {
      */
     @PostMapping("/mbo/login")
     public String login(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
-        log.info("user login" + tno + staff);
+        log.info("user login by " + company + "/" + tno + "/" + staff);
         rttr.addAttribute("company", company);
 
         if (tno == 0) {
@@ -223,7 +223,15 @@ public class HomeController {
      * @param model   화면 전달 정보
      */
     @GetMapping(value = { "/survey/profile", "/mbo/profile" })
-    public String userProfile(String company, long tno, HttpServletRequest request, Model model) {
+    public String userProfile(String company, long tno, HttpServletRequest request, Model model,
+            RedirectAttributes rttr) {
+        log.info("profile by " + company + "/" + tno);
+
+        HttpSession session = request.getSession();
+        if (session.getAttribute("evaluator") == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey";
+        }
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -248,14 +256,24 @@ public class HomeController {
      * @param model   화면 전달 정보
      */
     @GetMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String userProfileModify(String company, long tno, HttpServletRequest request, Model model) {
+    public String userProfileModify(String company, long tno, HttpServletRequest request, Model model,
+            RedirectAttributes rttr) {
+        log.info("profile by " + company + "/" + tno);
+
+        HttpSession session = request.getSession();
+        if (session.getAttribute("evaluator") == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey";
+        }
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
+
         // mbo turn에 따른 navbar 구분을 위해
         turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
         });
+
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("companyInfo", origin);
         });
@@ -276,7 +294,8 @@ public class HomeController {
      * @return 사용자 프로필 페이지
      */
     @PostMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String userProfileModify(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
+    public String userProfileModify(String company, long tno, Staff staff, HttpServletRequest request,
+            RedirectAttributes rttr) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
             long sno = origin.getSno();
             staff.setSno(sno);
@@ -309,7 +328,14 @@ public class HomeController {
      * @param model   화면 전달 정보
      */
     @GetMapping(value = { "/survey/contact", "/mbo/contact" })
-    public String userContact(String company, Long tno, HttpServletRequest request, Model model) {
+    public String userContact(String company, Long tno, HttpServletRequest request, Model model,
+            RedirectAttributes rttr) {
+        log.info("contact by " + company + "/" + tno);
+        HttpSession session = request.getSession();
+        if (session.getAttribute("evaluator") == null) {
+            rttr.addAttribute("company", company);
+            return "redirect:/survey";
+        }
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);

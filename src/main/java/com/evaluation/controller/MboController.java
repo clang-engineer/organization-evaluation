@@ -81,7 +81,7 @@ public class MboController {
      */
     @GetMapping("/main")
     public String main(String company, Long tno, HttpServletRequest request, RedirectAttributes rttr, Model model) {
-        log.info("====>turn main by company" + company);
+        log.info("mbo main by " + company);
 
         HttpSession session = request.getSession();
 
@@ -118,7 +118,7 @@ public class MboController {
     @ResponseBody
     public ResponseEntity<Optional<List<String>>> name(@PathVariable("tno") long tno, @PathVariable("page") int page,
             HttpServletRequest request) {
-        log.info("recentChange by");
+        log.info("recentChange by " + tno + "/" + page);
         HttpSession session = request.getSession();
         Staff staff = (Staff) session.getAttribute("evaluator");
         long sno = staff.getSno();
@@ -139,8 +139,10 @@ public class MboController {
      */
     @GetMapping("/list")
     public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
-        log.info("====>turn list by company" + company);
+        log.info("mbo list by company" + company + "/" + tno);
+
         HttpSession session = request.getSession();
+        // 밑에 또 사용할 일이 있어서 따로 객체 만듬.
         Staff evaluator = (Staff) session.getAttribute("evaluator");
 
         if (evaluator == null) {
@@ -205,7 +207,7 @@ public class MboController {
      */
     @GetMapping("/object")
     public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
-        log.info("" + tno);
+        log.info("object redirect by " + company + "/" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
@@ -233,7 +235,7 @@ public class MboController {
     // @GetMapping("/object")
     @PostMapping("/object")
     public void object(String company, long tno, Long rno, Model model) {
-        log.info("" + company + "/" + tno + "/" + rno);
+        log.info("object list by " + company + "/" + tno + "/" + rno);
 
         model.addAttribute("company", company);
         model.addAttribute("tno", tno);
@@ -342,7 +344,7 @@ public class MboController {
     @PostMapping("/note/{rno}/{step}")
     public ResponseEntity<HttpStatus> noteCreate(@PathVariable("rno") long rno, @PathVariable("step") String step,
             String note) {
-        log.info("" + note);
+        log.info("regiter note by " + rno + "/" + step + "/" + note);
 
         relationMboService.read(rno).ifPresent(origin -> {
             origin.getComments().put(step, note);
@@ -362,7 +364,7 @@ public class MboController {
     @GetMapping("/note/{rno}/{step}")
     @ResponseBody
     public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
-        log.info("read" + rno + step);
+        log.info("read note by " + rno + step);
 
         Map<String, String> comments = relationMboService.read(rno).map(RelationMbo::getComments).orElse(null);
         String note = comments.get(step);
@@ -380,7 +382,7 @@ public class MboController {
     @PutMapping("/submit")
     @ResponseBody
     public ResponseEntity<HttpStatus> submit(@RequestBody Map<String, Object> answer, RedirectAttributes rttr) {
-        log.info("" + answer);
+        log.info("evaluate by " + answer);
         long tmpRno = Long.parseLong(answer.get("rno").toString());
         String tmpFinish = String.valueOf(answer.get("finish"));
         // key-value를 전달하는 경우랑 finish만 전달하는 경우를 나눠서 처리함
