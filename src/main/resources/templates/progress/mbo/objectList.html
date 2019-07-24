@@ -7,9 +7,9 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a href="#">Dashboard</a>
+                <a th:href="@{/progress/mbo(tno=${tno})}">List</a>
             </li>
-            <li class="breadcrumb-item active">Tables</li>
+            <li class="breadcrumb-item active">Object List</li>
         </ol>
         <!-- DataTables Example -->
         <div class="card mb-3">
@@ -51,13 +51,8 @@
 
                 </div>
             </div>
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
-
+            <div class="card-footer small text-muted" th:text="${#calendars.format(#calendars.createNow())}"></div>
         </div>
-
-        <p class="small text-center text-muted my-5">
-            <em>More table examples coming soon...</em>
-        </p>
     </div>
     <!-- /.container-fluid -->
 

@@ -7,10 +7,7 @@
 
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
-            <li class="breadcrumb-item">
-                <a href="#">Dashboard</a>
-            </li>
-            <li class="breadcrumb-item active">Tables</li>
+            <li class="breadcrumb-item active">List</li>
         </ol>
 
         <!-- DataTables Example -->
@@ -35,13 +32,9 @@
                 </div>
             </div>
             <!-- .card-body -->
-            <div class="card-footer small text-muted">Updated yesterday at 11:59 PM</div>
+            <div class="card-footer small text-muted" th:text="${#calendars.format(#calendars.createNow())}"></div>
 
         </div>
-
-        <p class="small text-center text-muted my-5">
-            <em>More table examples coming soon...</em>
-        </p>
     </div>
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="POST">

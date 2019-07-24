@@ -13,6 +13,10 @@
             height: 100%;
             width: 100%;
         }
+
+        h2 small {
+            display: inline;
+        }
     </style>
     <!-- Page Content -->
     <div class="container">
@@ -641,7 +645,7 @@
                 if (btnType == 'btnPause') {
                     //모달 data
                     tmpModal.data("finish", "T");
-                    
+
                     //modal Text
                     tmpModal.find("#modalTitle").text("Pause Evaluation");
                     tmpModal.find("#modalRegisterBtn").text("Pause");
