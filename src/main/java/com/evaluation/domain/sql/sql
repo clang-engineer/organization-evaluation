@@ -4,3 +4,6 @@ create table persistent_logins (
     token varchar(64) not null,
     last_used timestamp not null
 );
+
+insert into tbl_admin(uid, uname, upw, write_date) values('admin','김영준','$2a$10$SByIPUS46XlvWfBccDcigOjxt6McQUjl8F82o4pMZwOb/1Z7E8amO',now());
+insert into tbl_admin_roles(admin_uid,role) values('admin','ADMIN');

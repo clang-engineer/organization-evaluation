@@ -18,6 +18,10 @@
     <link th:href="@{/css/modern-business.css}" rel="stylesheet">
 
     <style>
+        h2 small {
+            font-size: 1.08rem;
+        }
+
         table {
             text-align: center;
             vertical-align: middle;
@@ -31,21 +35,18 @@
         }
 
         @media (max-width:768px) {
-            .question {
-                /* background: red; */
-            }
-
             #bottomGroup {
                 bottom: 5%;
                 right: 1%;
             }
+
+            h2 small {
+                display: block;
+                margin-top: 1.3rem;
+            }
         }
 
         @media (min-width:768px) {
-            .question {
-                /* background: orange; */
-            }
-
             #bottomGroup {
                 bottom: 5%;
                 right: 1%;
@@ -54,8 +55,7 @@
 
         @media (min-width:992px) {
             .question {
-                displays: inline;
-                /* background: yellow; */
+                display: inline;
             }
 
             #bottomGroup {
@@ -67,7 +67,6 @@
         @media (min-width:1200px) {
             .question {
                 display: inline;
-                /* background: green; */
             }
 
             #bottomGroup {
@@ -79,7 +78,6 @@
         #top {
             display: none;
         }
-
 
         /* introduction 폰트 조정 */
         blockquote p {
@@ -93,25 +91,6 @@
         .card-body .collapse {
             font-size: 0.9rem;
         }
-
-        /* ./introduction 폰트 조정 */
-
-        /* .fa-save{
-            color: powderblue;
-        } */
-        /* input[type=radio] { */
-        /* Double-sized Checkboxes */
-        /* -ms-transform: scale(1.5); */
-        /* IE */
-        /* -moz-transform: scale(1.5); */
-        /* FF */
-        /* -webkit-transform: scale(1.5); */
-        /* Safari and Chrome */
-        /* -o-transform: scale(1.5); */
-        /* Opera */
-        /* padding: 5px; */
-        /* } */
-        /* Hide the browser's default radio button */
     </style>
 </head>
 
@@ -125,7 +104,8 @@
 
                 <!-- <img src="http://placehold.it/150x50?text=Logo" alt=""> -->
             </a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">

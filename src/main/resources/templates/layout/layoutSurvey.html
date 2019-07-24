@@ -18,11 +18,16 @@
     <link th:href="@{/css/modern-business.css}" rel="stylesheet">
 
     <style>
+        h2 small {
+            font-size: 1.08rem;
+        }
+
         table {
             text-align: center;
             vertical-align: middle;
         }
 
+        /* 설문 회답지를 뒤집는 css */
         @media (max-width:992px) {
             .qparent {
                 display: flex;
@@ -31,21 +36,18 @@
         }
 
         @media (max-width:768px) {
-            .question {
-                /* background: red; */
-            }
-
             #bottomGroup {
                 bottom: 7%;
                 right: 5%;
             }
+
+            h2 small{
+                display: block;
+                margin-top: 1.3rem;
+            }
         }
 
         @media (min-width:768px) {
-            .question {
-                /* background: orange; */
-            }
-
             #bottomGroup {
                 bottom: 7%;
                 right: 5%;
@@ -55,7 +57,6 @@
         @media (min-width:992px) {
             .question {
                 display: inline;
-                /* background: yellow; */
             }
 
             #bottomGroup {
@@ -67,7 +68,6 @@
         @media (min-width:1200px) {
             .question {
                 display: inline;
-                /* background: green; */
             }
 
             #bottomGroup {
@@ -125,7 +125,8 @@
 
                 <!-- <img src="http://placehold.it/150x50?text=Logo" alt=""> -->
             </a>
-            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler navbar-toggler-right" type="button" data-toggle="collapse" data-target="#navbarResponsive" aria-controls="navbarResponsive" aria-expanded="false"
+                aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarResponsive">

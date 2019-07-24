@@ -43,7 +43,7 @@
 			<!-- /search box -->
 			<div class="card-body">
 				<div class="table-responsive">
-					<table th:with="idxpageNum=${result?.currentPageNum}, result=${result?.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+					<table th:with="idxPageNum=${result?.currentPageNum}, result=${result?.result}" class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
 						<thead>
 							<tr>
 								<th>Name</th>
@@ -64,7 +64,7 @@
 						</tfoot>
 						<tbody>
 							<tr th:each="department,status:${result?.content}">
-								<td>[[${idxpageNum-1}*10+${status?.count}]]</td>
+								<td>[[${idxPageNum-1}*10+${status?.count}]]</td>
 								<td>[[${department?.department1}]]</td>
 								<td>[[${department?.department2}]]</td>
 								<td><a th:href="${department?.dno}" class="leader">

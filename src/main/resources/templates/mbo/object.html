@@ -9,16 +9,6 @@
             width: 100%;
         }
 
-        /*목표시트 반응형 제거*/
-        /* .container {
-            width: 1500px;
-            max-width: none !important;
-        } */
-
-        h2 small {
-            font-size: 1.1rem;
-        }
-
         .modal-backdrop {
             height: 100%;
             width: 100%;
@@ -118,7 +108,7 @@
                             </div>
                         </td>
                         <td th:if="${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do'">
-                            <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify" th:if="${reply.writeId}==${session?.evaluator.email}"><i class="fas fa-times"></i></button>
+                            <button type="button" th:data-rno="${reply.rno}" class="btn btn-default btn-sm replyModify" th:if="${reply.writeId}==${session?.evaluator.email}"><i class="fas fa-eraser"></i></button>
                             <span th:if="${reply.writeId}!=${session?.evaluator.email}">-</span>
                         </td>
                     </tr>
@@ -487,7 +477,7 @@
                     }
                     var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comment-dots fa-flip-horizontal'></i></div></td>"
                         + "<td colspan='" + colspan + "' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div></div></td>"
-                        + "<td><button type='button' data-rno='" + result.rno + "' class='btn btn-default btn-sm replyModify'><i class='fas fa-times'></i></button></td ></tr >";
+                        + "<td><button type='button' data-rno='" + result.rno + "' class='btn btn-default btn-sm replyModify'><i class='fas fa-eraser'></i></button></td ></tr >";
 
                     objectListTable.find("tr[id='collapse" + mno + "']").last().before(str);
                     objectListTable.find("tr[id='collapse" + mno + "']").parent().find('input').val('');

@@ -2,8 +2,7 @@
 직원들 간에 관계를 설정한 뒤, 다면평가 또는 실적평가를 직접 운영할 수 있는 WEB 프로그램입니다. :-)
 
 ## Stack
-![](https://img.shields.io/badge/springboot-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/jpa-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/mysql-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/maven-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/jenkins-✓-blue.svg) ![](https://img.shields.io/badge/thymeleaf-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/bootstrap-%E2%9C%93-blue.svg)
-![](https://img.shields.io/badge/font--awesome-✓-blue.svg) ![](https://img.shields.io/badge/jquery-%E2%9C%93-blue.svg)
+![](https://img.shields.io/badge/springboot-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/jpa-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/querydsl-✓-blue.svg) ![](https://img.shields.io/badge/springwebsecurity-✓-blue.svg) ![](https://img.shields.io/badge/maven-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/mysql-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/thymeleaf-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/bootstrap-%E2%9C%93-blue.svg)![](https://img.shields.io/badge/font--awesome-✓-blue.svg) ![](https://img.shields.io/badge/jquery-%E2%9C%93-blue.svg)
 
 ## 개요
 ### 다면평가
@@ -68,4 +67,4 @@
 - 항목, 관계 설정은 회차마다 설정되기 때문에 초기화가 가능합니다.
 - 평가 상태는 실시 전, 임시 저장, 최종 제출로 구분되며 최종 제출 후에는 평가 재실시가 불가능합니다.
 - 고객의 요청에 의해 불가피하게 평가 상태를 변경해주어야 하는 경우에는 관리자 페이지에서 변경이 가능합니다.
-- Mbo 실적평가 진행 시 본인 목표에 달린 댓글(목표x) 또는 타인 목표, 댓글 변경 내용은 메인 페이지에서 확인이 가능합니다.
+- Mbo 실적평가 진행 시 등록, 수정된 관계인의 목표, 댓글은 메인 페이지에서 확인이 가능합니다.
