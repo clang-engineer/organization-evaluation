@@ -120,6 +120,21 @@
     <script th:inline="javascript">
         $(document).ready(function (e) {
 
+            //작업 메시지 세트
+            var msg = [[${ msg }]];
+
+            if (history.state == null) {
+                if (msg == 'register') {
+                    alert("최종 제출 완료하였습니다.");
+                } else if (msg == 'modify') {
+                    alert("임시 저장 완료하였습니다.");
+                } else if (msg == 'error') {
+                    alert("저장 과정에서 이상이 생겼습니다. 상단 Contact의 연락처를 통해 문의 부탁드립니다.");
+                }
+            }
+
+            history.replaceState({}, null, null);
+
             //modal 사용 변수 선언
             var modal = $("#basicModal");
             var modalTitle = modal.find("#modalTitle");

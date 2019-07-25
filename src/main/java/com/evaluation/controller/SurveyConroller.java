@@ -258,6 +258,14 @@ public class SurveyConroller {
             });
         });
 
+        if ("T".equals(finish)) {
+            rttr.addFlashAttribute("msg", "modify");
+        } else if ("Y".equals(finish)) {
+            rttr.addFlashAttribute("msg", "register");
+        } else {
+            rttr.addFlashAttribute("msg", "error");
+        }
+
         return "redirect:/survey/list";
     }
 
