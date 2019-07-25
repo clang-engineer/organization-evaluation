@@ -2,7 +2,7 @@
 직원들 간에 관계를 설정한 뒤, 다면평가 또는 실적평가를 직접 운영할 수 있는 WEB 프로그램입니다. :-)
 
 ## Stack
-![](https://img.shields.io/badge/springboot-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/jpa-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/querydsl-✓-blue.svg) ![](https://img.shields.io/badge/springwebsecurity-✓-blue.svg) ![](https://img.shields.io/badge/maven-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/mysql-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/thymeleaf-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/bootstrap-%E2%9C%93-blue.svg)![](https://img.shields.io/badge/font--awesome-✓-blue.svg) ![](https://img.shields.io/badge/jquery-%E2%9C%93-blue.svg)
+![](https://img.shields.io/badge/springboot-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/jpa-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/querydsl-✓-blue.svg) ![](https://img.shields.io/badge/springwebsecurity-✓-blue.svg) ![](https://img.shields.io/badge/maven-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/mysql-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/thymeleaf-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/bootstrap-%E2%9C%93-blue.svg) ![](https://img.shields.io/badge/font--awesome-✓-blue.svg) ![](https://img.shields.io/badge/jquery-%E2%9C%93-blue.svg)
 
 ## 개요
 ### 다면평가

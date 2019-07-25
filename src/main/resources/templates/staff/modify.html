@@ -32,11 +32,13 @@
 					</div>
 					<div class="form-group">
 						<label>Password</label>
-						<input type="text" class="form-control" name="password" placeholder="" th:value="${staff.password}">
+						<input type="text" class="form-control" name="password" id="pwd1" placeholder="" th:value="${staff.password}">
 					</div>
 					<div class="form-group">
-						<input type="text" class="form-control" name="password2" placeholder="" th:value="${staff.password}">
+						<input type="text" class="form-control" name="password2" id="pwd2" placeholder="" th:value="${staff.password}">
 					</div>
+					<div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+					<div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
 					<div class="form-group">
 						<label>Telephone</label>
 						<input class="form-control" type="tel" name="telephone" th:value="${staff.telephone}" placeholder="000-0000-0000">
@@ -97,8 +99,8 @@
 					</div>
 				</fieldset>
 				<div class="form-group">
-					<button data-oper="modify" type="button" class="btn btn-success">Modify</button>
-					<button data-oper="remove" type="button" class="btn btn-danger">remove</button>
+					<button data-oper="modify" type="button" class="btn btn-success" id="modify">Modify</button>
+					<button data-oper="remove" type="button" class="btn btn-danger" id="remove">remove</button>
 					<button data-oper="list" type="button" class="btn btn-info">List</button>
 				</div>
 			</div>
@@ -110,6 +112,7 @@
 
 
 <th:block layout:fragment="script">
+	<script type="text/javascript" th:src="@{/public/js/passwordConfirm.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			var formObj = $("#f1");

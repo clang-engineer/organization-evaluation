@@ -29,11 +29,13 @@
 					</div>
 					<div class="form-group">
 						<label>Password</label>
-						<input type="password" class="form-control" name="password" id="password" th:value="${vo?.password}">
+						<input type="password" class="form-control" name="password" id="pwd1" th:value="${vo?.password}">
 					</div>
 					<div class="form-group">
-						<input type="password" class="form-control" name="password2" id="password2" th:value="${vo?.password}">
+						<input type="password" class="form-control" name="password2" id="pwd2" th:value="${vo?.password}">
 					</div>
+					<div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+					<div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
 					<div class="form-group">
 						<label>HR Manager Name</label>
 						<input type="text" class="form-control" name="hrManager" th:value="${vo?.hrManager}">
@@ -66,9 +68,9 @@
 					<input type="text" class="form-control" name="updateDate" readonly="readonly" th:value="${#dates.format(vo?.updateDate,'yyyy-MM-dd  hh:mm:ss')}">
 				</div>
 
-				<button data-oper='modify' class="btn btn-default border">Modify</button>
+				<button data-oper='modify' class="btn btn-default border" id="modify">Modify</button>
 					<span th:if="(${vo?.writeId} eq ${#authentication?.name}) or ${#authorization?.expression('hasRole(''ADMIN'')')}">
-					<button data-oper='delete' class="btn btn-danger">Delete</button>
+					<button data-oper='delete' class="btn btn-danger" id="remove">Delete</button>
 				</span>
 				<button data-oper='list' class="btn btn-info">List</button>
 
@@ -80,6 +82,7 @@
 	<!-- /.container-fluid -->
 </div>
 <th:block layout:fragment="script">
+	<script type="text/javascript" th:src="@{/public/js/passwordConfirm.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			var formObj = $("#f1");

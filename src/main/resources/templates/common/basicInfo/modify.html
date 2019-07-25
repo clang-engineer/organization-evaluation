@@ -1,6 +1,11 @@
 <!-- container -->
 <div class="container" th:fragment="modify">
-
+    <style>
+        #alert-success,
+        #alert-danger {
+            display: none;
+        }
+    </style>
     <!-- Page Heading/Breadcrumbs -->
     <h2 class="mb-5">Profile
         <small>기본 인적 사항 수정을 원하시는 분은 각 회사 인사팀에 요청 부탁 드립니다.</small>
@@ -23,12 +28,15 @@
                 <label>Password</label>
                 <div class="form-row">
                     <div class="form-group col-md-6">
-                        <input class="form-control" type="password" name="password" placeholder="Password" th:value="${evaluator?.password}">
+                        <input class="form-control" type="password" name="password" placeholder="Password" id="pwd1" th:value="${evaluator?.password}">
                     </div>
                     <div class="form-group col-md-6">
-                        <input class="form-control" type="password" placeholder="Confirm Password" th:value="${evaluator?.password}">
+                        <input class="form-control" type="password" placeholder="Confirm Password" id="pwd2" th:value="${evaluator?.password}">
                     </div>
                 </div>
+                <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+                <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+
                 <div class="form-group">
                     <label>Telephone</label>
                     <input class="form-control" type="telephone" name="telephone" placeholder="555-5555-5555" th:value="${evaluator?.telephone}">
@@ -53,7 +61,7 @@
                 <input type="hidden" name="cno" th:value="${evaluator?.cno}">
                 <!-- <input type="hidden" name="company" th:value="${company}"> -->
                 <input type="hidden" name="tno" th:value="${tno}">
-                <button type="submit" class="btn btn-danger">Modify</button>
+                <button type="submit" class="btn btn-danger" id="submit">Modify</button>
             </form>
         </div>
         <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}" >
