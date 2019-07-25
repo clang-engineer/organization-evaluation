@@ -116,8 +116,8 @@ public class MboController {
 
     @GetMapping("/recentChange/{tno}/{page}")
     @ResponseBody
-    public ResponseEntity<Optional<List<String>>> name(@PathVariable("tno") long tno, @PathVariable("page") int page,
-            HttpServletRequest request) {
+    public ResponseEntity<Optional<List<String>>> recentChange(@PathVariable("tno") long tno,
+            @PathVariable("page") int page, HttpServletRequest request) {
         log.info("recentChange by " + tno + "/" + page);
         HttpSession session = request.getSession();
         Staff staff = (Staff) session.getAttribute("evaluator");

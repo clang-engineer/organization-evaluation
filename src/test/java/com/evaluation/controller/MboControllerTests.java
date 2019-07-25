@@ -76,6 +76,12 @@ public class MboControllerTests {
     }
 
     @Test
+    public void recentChange() throws Exception {
+        log.info(
+                "" + mockMvc.perform(MockMvcRequestBuilders.get("/mbo/recentChange/1/1").session(session)).andReturn());
+    }
+
+    @Test
     public void testList() throws Exception {
         String resultPage = mockMvc.perform(
                 MockMvcRequestBuilders.get("/mbo/list").session(session).param("company", "test").param("tno", "1"))

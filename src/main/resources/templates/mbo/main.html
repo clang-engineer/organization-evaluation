@@ -73,7 +73,7 @@
                 </div>
                 <!--./ Categories Widget -->
                 <!-- Categories Widget -->
-                <div class="card mb-4">
+                <div class="card mb-4" th:if="${turn?.infoMbo?.status}=='plan' OR ${turn?.infoMbo?.status}=='do'">
                     <h5 class="card-header dep-card" data-html="true" data-toggle="tooltip" data-placement="right" title="최근 변경 내역 입니다.">Recent Changes</h5>
                     <div class="card-body">
                         <div class="row">
