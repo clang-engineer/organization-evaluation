@@ -209,9 +209,9 @@ public class HomeController {
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String surveyInfo = words[1];
+        String pathInfo = words[1];
 
-        String redirectPath = "redirect:/" + surveyInfo;
+        String redirectPath = "redirect:/" + pathInfo;
         return redirectPath;
     }
 
@@ -314,9 +314,9 @@ public class HomeController {
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String surveyInfo = words[1];
+        String pathInfo = words[1];
 
-        String redirectPath = "redirect:/" + surveyInfo + "/profile";
+        String redirectPath = "redirect:/" + pathInfo + "/profile";
         return redirectPath;
     }
 
@@ -350,8 +350,8 @@ public class HomeController {
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String surveyInfo = words[1];
-        String redirectPath = surveyInfo + "/contact";
+        String pathInfo = words[1];
+        String redirectPath = pathInfo + "/contact";
         return redirectPath;
     }
 
@@ -370,16 +370,16 @@ public class HomeController {
             RedirectAttributes rttr) {
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String surveyInfo = words[1];
+        String pathInfo = words[1];
 
-        helpDesk.setSurveyInfo(surveyInfo);
+        helpDesk.setSurveyInfo(pathInfo);
         helpDeskService.register(helpDesk);
 
         rttr.addAttribute("company", company);
         rttr.addAttribute("tno", tno);
         rttr.addFlashAttribute("msg", "register");
 
-        String redirectPath = "redirect:/" + surveyInfo + "/contact";
+        String redirectPath = "redirect:/" + pathInfo + "/contact";
         return redirectPath;
     }
 }
