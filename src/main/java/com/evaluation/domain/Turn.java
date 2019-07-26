@@ -56,7 +56,7 @@ public class Turn {
 	private Set<String> types;
 
 	@ElementCollection
-	@CollectionTable(name = "tbl_question_comments", joinColumns = @JoinColumn(name = "turn_tno"))
+	@CollectionTable(name = "tbl_turn_comments", joinColumns = @JoinColumn(name = "turn_tno"))
 	@OrderColumn(name = "comment_idx")
 	@Column(name = "comment")
 	private List<String> comments;
@@ -66,6 +66,12 @@ public class Turn {
 	@OrderColumn(name = "appellation_idx")
 	@Column(name = "appellation")
 	private List<String> surveyAppellation;
+
+	@ElementCollection
+	@CollectionTable(name = "tbl_turn_mbo_appellation", joinColumns = @JoinColumn(name = "turn_tno"))
+	@OrderColumn(name = "appellation_idx")
+	@Column(name = "appellation")
+	private List<String> mboAppellation;
 
 	private String writeId;
 	private String updateId;
