@@ -24,10 +24,10 @@
 						<select class="form-control col-sm-4" id="searchType">
 							<option>---
 								</optinon>
-							<option value="department1" th:selected="${pageVO.type}=='department1'">Department1</option>
-							<option value="department2" th:selected="${pageVO.type}=='department2'">Department2</option>
+							<option value="department1" th:selected="${pageVO?.type}=='department1'">Department1</option>
+							<option value="department2" th:selected="${pageVO?.type}=='department2'">Department2</option>
 						</select>
-						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO.keyword}" placeholder="Search for...">
+						<input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
 						<div class="input-group-append">
 							<button class="btn btn-default border" id="searchBtn" type="button">
 								<i class="fas fa-search fa-sm"></i>
@@ -200,7 +200,7 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
 				formObj.attr("action", "register").attr("method", "post");
 				formObj.append("<input type='hidden' name='department1' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='department2' value='" + modalContent2.val() + "'/>");
@@ -211,7 +211,7 @@
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
 				formObj.attr("action", "modify").attr("method", "post");
 				formObj.append("<input type='hidden' name='department1' value='" + modalContent1.val() + "'/>");
 				formObj.append("<input type='hidden' name='department2' value='" + modalContent2.val() + "'/>");
@@ -223,7 +223,7 @@
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf.parameterName }]] + " value=" + [[${ _csrf.token }]] + ">");
+				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
 				if (delchk() == true) {
 					formObj.attr("action", "delete");
 				} else {

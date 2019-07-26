@@ -8,7 +8,6 @@ import java.util.List;
 import com.evaluation.domain.Book;
 import com.evaluation.domain.embeddable.Content;
 
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -33,24 +32,6 @@ public class BookRepositoryTests {
 	@Test
 	public void testtDI() {
 		assertNotNull(repo);
-	}
-
-	@Before
-	public void setBefore() {
-		book = new Book();
-		book.setTitle("High - Low");
-		book.setType("MboReply");
-		book.setTitle("test");
-		List<Content> contents = new ArrayList<Content>();
-		contents.add(new Content("매우 그렇지 않다", 1));
-		contents.add(new Content("그렇지 않다", 2));
-		contents.add(new Content("보통이다", 3));
-		contents.add(new Content("그렇다", 4));
-		contents.add(new Content("매우 그렇다", 5));
-
-		book.setContents(contents);
-		book.setType("360Reply");
-		repo.save(book);
 	}
 
 	@Test
@@ -142,19 +123,13 @@ public class BookRepositoryTests {
 
 	@Test
 	public void testRead() {
-		Book book = new Book();
-		book.setTitle("High - Low");
-		book.setType("MboReply");
-
-		repo.save(book);
-
-		repo.findById(book.getBno());
+		repo.findById(1);
 	}
 
 	@Test
 	public void testUpdate() {
 
-		repo.findById(book.getBno()).ifPresent(origin -> {
+		repo.findById(1).ifPresent(origin -> {
 			origin.setTitle("modified");
 			repo.save(origin);
 		});
@@ -162,12 +137,12 @@ public class BookRepositoryTests {
 
 	@Test
 	public void testDelete() {
-		repo.deleteById(book.getBno());
+		repo.deleteById(1);
 	}
 
 	@Test
 	public void testRemoveContents() {
-		repo.findById(book.getBno()).ifPresent(origin -> {
+		repo.findById(1).ifPresent(origin -> {
 			origin.getContents().remove(1);
 			repo.save(origin);
 		});

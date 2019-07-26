@@ -32,23 +32,6 @@ public class TurnRepositoryTests {
 		assertNotNull(repo);
 	}
 
-	@Before
-	public void testInsert() {
-		repo.deleteAll();
-
-		IntStream.range(1, 4).forEach(i -> {
-			Turn turn = new Turn();
-			turn.setTitle("turn..." + i);
-			Set<String> types = new HashSet<>();
-			types.add("360");
-			types.add("mbo");
-			turn.setTypes(types);
-			turn.setCno(1L);
-			repo.save(turn);
-		});
-
-	}
-
 	@Test
 	public void testGetTurnsOfCompany() {
 		repo.getTurnsOfCompany(1L);
