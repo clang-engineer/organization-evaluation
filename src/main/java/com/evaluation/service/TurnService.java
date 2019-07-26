@@ -63,10 +63,4 @@ public interface TurnService {
 	 */
 	Optional<List<Turn>> getTurnsInMbo(Long cno);
 
-	/**
-	 * 주관식 정보를 등록한다.
-	 * 
-	 * @param turn 회차 정보
-	 */
-	void commentRegister(Turn turn);
 }

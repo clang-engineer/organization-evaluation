@@ -81,8 +81,4 @@ public class TurnServiceImpl implements TurnService {
 		return result;
 	}
 
-	@Override
-	public void commentRegister(Turn turn) {
-		turnRepo.save(turn);
-	}
 }
