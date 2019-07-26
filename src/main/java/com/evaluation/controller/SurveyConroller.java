@@ -114,6 +114,10 @@ public class SurveyConroller {
             model.addAttribute("companyInfo", origin);
         });
 
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("appellationList", origin.getSurveyAppellation());
+        });
+
         model.addAttribute("tno", tno);
         model.addAttribute("company", company);
 

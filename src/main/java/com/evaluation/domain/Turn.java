@@ -61,6 +61,12 @@ public class Turn {
 	@Column(name = "comment")
 	private List<String> comments;
 
+	@ElementCollection
+	@CollectionTable(name = "tbl_turn_survey_appellation", joinColumns = @JoinColumn(name = "turn_tno"))
+	@OrderColumn(name = "appellation_idx")
+	@Column(name = "appellation")
+	private List<String> surveyAppellation;
+
 	private String writeId;
 	private String updateId;
 
