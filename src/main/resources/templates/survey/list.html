@@ -54,12 +54,10 @@
                     </div>
                     <!-- ./본인평가 -->
                     <!-- 1차 평가자 리스트 card 1차 평가자가 평가자 중에 존재하는 경우만 실행 -->
-                    <div th:with="relationArray = ${ {'1', '2', '3'} }">
-                        <div class="card mb-4" th:each="r:${relationArray}" th:if="${#lists.contains(relationList,r)}">
-                            <h5 class="card-header">[[${r}]]차 평가자로서 평가할 대상자
-                                <small class="float-right" th:if="${r}=='1'">[[${session.evaluator.name}]] 님은 아래 대상자의 상사 입니다.</small>
-                                <small class="float-right" th:if="${r}=='2'">[[${session.evaluator.name}]] 님은 아래 대상자의 동료 입니다.</small>
-                                <small class="float-right" th:if="${r}=='3'">[[${session.evaluator.name}]] 님은 아래 대상자의 부하 입니다.</small>
+                    <div>
+                        <div class="card mb-4" th:each="appellation,idx:${appellationList}" th:if="${#lists.contains(relationList,''+idx.count)}">
+                            <h5 class="card-header">[[${idx.count}]]차 평가자로서 평가할 대상자
+                                <small class="float-right">[[${session.evaluator.name}]] 님은 아래 대상자의 [[${appellation}]] 입니다.</small>
                             </h5>
                             <!-- card body -->
                             <div class="card-body pb-0 table-responsive">
@@ -74,7 +72,7 @@
                                         </tr>
                                     </thead>
                                     <tbody>
-                                        <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}==${r}">
+                                        <tr th:each="relation,status:${evaluatedList}" th:if="${relation.relation}==${idx.count}">
                                             <td class="align-middle text-nowrap">[[${relation.evaluated.name}]]</td>
                                             <td class="align-middle">[[${relation.evaluated.department1}]]-[[${relation.evaluated.department2}]]</td>
                                             <td class="align-middle">[[${relation.evaluated.division1}]]-[[${relation.evaluated.division2}]]</td>

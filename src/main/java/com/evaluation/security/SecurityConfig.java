@@ -50,6 +50,7 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         http.authorizeRequests().antMatchers("/progress/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/infoMbo/**").hasAnyRole("MANAGER", "ADMIN");
         http.authorizeRequests().antMatchers("/relationMbo/**").hasAnyRole("MANAGER", "ADMIN");
+        http.authorizeRequests().antMatchers("/appellation/**").hasAnyRole("MANAGER", "ADMIN");
 
         http.authorizeRequests().antMatchers("/survey/*").permitAll();
         http.authorizeRequests().antMatchers("/mbo/*").permitAll();
