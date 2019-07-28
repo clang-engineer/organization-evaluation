@@ -190,6 +190,7 @@
 <th:block layout:fragment="script">
     <script type="text/javascript" th:src="@{/public/js/object.js}"></script>
     <script type="text/javascript" th:src="@{/public/js/reply.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
             var csrf = JSON.parse('[[${_csrf}]]');
@@ -392,8 +393,8 @@
                         });
                         var removedObject = objectListTable.find(".modifyObject").filter("button[data-mno=" + mno + "]").parent().parent().clone();
                         removedObject.find("th[name=objectCount]").attr("name", "removedCount").text(max + 1);
-                        var currentDate = new Date();
-                        removedObject.find(".modifyObject").parent().text(displayTime(currentDate));
+                        var currentDate = common.displayTime(new Date());
+                        removedObject.find(".modifyObject").parent().text(currentDate);
                         removedObject.find("button[href='#collapse" + mno + "']").removeAttr("href").text("-");
                         $("#removedListTable").append(removedObject);
                     }
@@ -437,8 +438,8 @@
                             //목표 삭제 되는 순간 removedTable로 이동시킴.
                             var removedObject = objectListTable.find(".modifyObject").filter("button[data-mno=" + mno + "]").parent().parent();
                             removedObject.find("th[name=objectCount]").attr("name", "removedCount").text(max + 1);
-                            var currentDate = new Date();
-                            removedObject.find(".modifyObject").parent().text(displayTime(currentDate));
+                            var currentDate = common.displayTime(new Date());
+                            removedObject.find(".modifyObject").parent().text(currentDate);
                             $("#removedListTable").append(removedObject);
 
                             //댓글도 함께 이동. 
@@ -472,7 +473,7 @@
 
                 //ajax 호출
                 replyService.register(param, function (result) {
-                    var currentDate = new Date(result.writeDate);
+                    var currentDate = common.displayTime(new Date());
 
                     //댓글 colspan
                     var colspan = '3';
@@ -480,7 +481,7 @@
                         colspan = 4;
                     }
                     var str = "<tr class='collapse show' id='collapse" + mno + "'><td><div class='collapse show' th:id='collapse" + mno + "'><i class='fas fa-comment-dots fa-flip-horizontal'></i></div></td>"
-                        + "<td colspan='" + colspan + "' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div></div></td>"
+                        + "<td colspan='" + colspan + "' class='text-left'><div class='collapse show' id='collapse" + mno + "'>" + result.comment + "<div class='float-right'>" + result.updateId + " - " + currentDate + "</div></div></td>"
                         + "<td><button type='button' data-rno='" + result.rno + "' class='btn btn-default btn-sm replyModify'><i class='fas fa-eraser'></i></button></td ></tr >";
 
                     objectListTable.find("tr[id='collapse" + mno + "']").last().before(str);
@@ -541,9 +542,9 @@
                 //ajax 호출
                 replyService.modify(param, function (result) {
                     alert("수정 되었습니다.");
-                    var currentDate = new Date(result.updateDate);
+                    var currentDate = common.displayTime(new Date());
                     var str = "<div class='collpse show' th:id='collapse'" + result.mno + ">"
-                        + result.comment + "<div class='float-right'>" + result.updateId + " - " + displayTime(currentDate) + "</div>"
+                        + result.comment + "<div class='float-right'>" + result.updateId + " - " + currentDate + "</div>"
                         + "</div>";
 
                     objectListTable.find("button[data-rno=" + rno + "]").parent().parent().find('td').eq(1).html(str);
@@ -783,29 +784,6 @@
                     return false;
                 }
             }
-
-            //시간 표시 함수
-            function displayTime(timeValue) {
-                var today = new Date();
-                var gap = today.getTime() - timeValue;
-
-                var dateObj = new Date(timeValue);
-                var str = "";
-
-                if (gap < (1000 * 60 * 60 * 24)) {
-                    var hh = dateObj.getHours();
-                    var mi = dateObj.getMinutes();
-                    var ss = dateObj.getSeconds();
-
-                    return [(hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi, ':', (ss > 9 ? '' : '0') + ss].join('');
-                } else {
-                    var yy = dateObj.getFullYear();
-                    var mm = dateObj.getMonth() + 1;
-                    var dd = dateObj.getDate();
-
-                    return [yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd].join('');
-                }
-            };
 
             $('.container').css("width", $(document).width());
             $(window).on('resize', function () {
