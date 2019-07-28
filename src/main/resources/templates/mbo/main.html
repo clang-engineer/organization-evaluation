@@ -194,6 +194,7 @@
 
 <th:block layout:fragment="script">
     <script type="text/javascript" th:src="@{/public/js/department.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
             var csrf = JSON.parse('[[${_csrf}]]');
@@ -369,7 +370,7 @@
                         var type = splitResult[3];
                         var write_date = splitResult[5];
                         var update_date = splitResult[6];
-                        var display_update_date = displayTime(splitResult[6]);
+                        var display_update_date = common.displayTime(new Date(splitResult[6].replace(" ", "T")));
                         var status = (write_date == update_date) ? '등록' : '수정';
                         var string = "";
                         switch (type + status) {
@@ -397,28 +398,6 @@
                 });
         }
         
-        //시간 표시 함수
-        function displayTime(timeValue) {
-            var today = new Date();
-            var dateObj = new Date(timeValue);
-            var gap = today.getTime() - dateObj;
-
-            var str = "";
-
-            if (gap < (1000 * 60 * 60 * 24)) {
-                var hh = dateObj.getHours();
-                var mi = dateObj.getMinutes();
-                var ss = dateObj.getSeconds();
-
-                return [(hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi, ':', (ss > 9 ? '' : '0') + ss].join('');
-            } else {
-                var yy = dateObj.getFullYear();
-                var mm = dateObj.getMonth() + 1;
-                var dd = dateObj.getDate();
-
-                return [yy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd].join('');
-            }
-        };
     </script>
 </th:block>
 
