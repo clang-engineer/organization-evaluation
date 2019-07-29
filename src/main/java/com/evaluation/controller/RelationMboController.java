@@ -274,12 +274,11 @@ public class RelationMboController {
                     relationMboService.register(relationMbo);
                 }
 
-                // 1차 고과자 설정
-                insertEvaluator(tno, cno, 8, "1", evaluated, list);
-                // 2차 고과자 설정
-                insertEvaluator(tno, cno, 9, "2", evaluated, list);
-                // 3차 고과자 설정
-                insertEvaluator(tno, cno, 10, "3", evaluated, list);
+                // appellation list로 반복횟수를 정하고 기준열부터 갯수만큼 관계 삽입을 한다. 기준열부터 관계 1,2,3,... 으로 증가
+                List<String> appellationList = turnService.read(tno).map(Turn::getMboAppellation).orElse(null);
+                for (int i = 0; i < appellationList.size(); i++) {
+                    insertEvaluator(tno, cno, i + 8, Integer.toString(i + 1), evaluated, list);
+                }
             });
         }
     }
@@ -334,7 +333,8 @@ public class RelationMboController {
 
     /**
      * 회차 내의 관계 정보를 xl 다운로드 한다.
-     * @param tno 회차 id
+     * 
+     * @param tno      회차 id
      * @param response 응답 정보 객체
      */
     @PostMapping(value = "/xlDownload")
@@ -371,9 +371,9 @@ public class RelationMboController {
             header.add("직군");
             header.add("계층");
             header.add("본인평가");
-            header.add("1차고과자");
-            header.add("2차고과자");
-            header.add("3차고과자");
+            origin.getMboAppellation().forEach(appellation -> {
+                header.add(appellation);
+            });
 
             xlList.add(header);
 
@@ -383,10 +383,6 @@ public class RelationMboController {
             evaluatedList.forEach(evaluated -> {
                 List<String> tmpList = new ArrayList<String>();
 
-                // foreach에서 index를 얻기 위한..
-                // int index = evaluatedList.indexOf(evaluated);
-                // tmpList.add(Integer.toString(index + 1));
-
                 tmpList.add(evaluated.getName());
                 tmpList.add(evaluated.getEmail());
                 tmpList.add(evaluated.getLevel());
@@ -394,53 +390,46 @@ public class RelationMboController {
                 tmpList.add(evaluated.getDepartment2());
                 tmpList.add(evaluated.getDivision1());
                 tmpList.add(evaluated.getDivision2());
+
                 /* 관계 테이블 만들기 전체 명단에서 일칯하는 것만 리스트로 만든다 */
+                List<RelationMbo> relationList = relationMboService.findAllByTno(tno).orElse(null);
+
+                // 본인 먼저 추가
                 List<String> relationMe = new ArrayList<String>();
-                List<String> relation1 = new ArrayList<String>();
-                List<String> relation2 = new ArrayList<String>();
-                List<String> relation3 = new ArrayList<String>();
-                relationMboService.findAllByTno(tno).get().forEach(relation -> {
-                    String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName).orElse("null");
-                    if (evaluated.getSno() == relation.getEvaluated().getSno()) {
-                        switch (relation.getRelation()) {
-                        case "me":
-                            relationMe.add(evaluator);
-                            break;
-                        case "1":
-                            relation1.add(evaluator);
-                            break;
-                        case "2":
-                            relation2.add(evaluator);
-                            break;
-                        case "3":
-                            relation3.add(evaluator);
-                            break;
-                        }
+                for (RelationMbo relation : relationList) {
+                    if ((evaluated.getSno() == relation.getEvaluated().getSno())
+                            && "me".equals(relation.getRelation())) {
+                        String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName)
+                                .orElse("null");
+                        relationMe.add(evaluator);
                     }
-                });
-                /* ./관계 테이블 만들기 */
+                }
+
+                // 엑셀 리스트에 추가
                 if (relationMe.isEmpty()) {
                     tmpList.add("N");
                 } else {
                     tmpList.add("Y");
                 }
 
-                if (relation1.isEmpty()) {
-                    tmpList.add("N");
-                } else {
-                    tmpList.add(relation1.toString().replace("[", "").replace("]", "").trim());
-                }
+                // 관계 사이즈를 기준으로 for문
+                for (int i = 0; i < origin.getMboAppellation().size(); i++) {
+                    List<String> relationTmp = new ArrayList<String>();
+                    for (RelationMbo relation : relationList) {
+                        if ((evaluated.getSno() == relation.getEvaluated().getSno())
+                                && Integer.toString(i + 1).equals(relation.getRelation())) {
+                            String evaluator = Optional.ofNullable(relation.getEvaluator()).map(Staff::getName)
+                                    .orElse("null");
+                            relationTmp.add(evaluator);
+                        }
+                    }
 
-                if (relation2.isEmpty()) {
-                    tmpList.add("N");
-                } else {
-                    tmpList.add(relation2.toString().replace("[", "").replace("]", "").trim());
-                }
-
-                if (relation3.isEmpty()) {
-                    tmpList.add("N");
-                } else {
-                    tmpList.add(relation3.toString().replace("[", "").replace("]", "").trim());
+                    // 엑셀 리시트에 추가
+                    if (relationTmp.isEmpty()) {
+                        tmpList.add("N");
+                    } else {
+                        tmpList.add(relationTmp.toString().replace("[", "").replace("]", "").trim());
+                    }
                 }
                 xlList.add(tmpList);
             });

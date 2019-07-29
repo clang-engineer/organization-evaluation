@@ -103,7 +103,7 @@ public interface RelationMboRepository
      * @param tno 회차id
      * @return 직원 객체 리스트
      */
-    @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno")
+    @Query("SELECT DISTINCT r.evaluated FROM RelationMbo r WHERE r.rno>0 AND r.tno=:tno ORDER BY r.evaluated.sno ASC")
     List<Staff> findDintinctEavluatedByTno(@Param("tno") Long tno);
 
     /**
