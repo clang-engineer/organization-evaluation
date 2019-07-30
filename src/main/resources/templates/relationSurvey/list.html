@@ -123,7 +123,7 @@
             //페이지에 붙은 링크 클릭 시
             $(".pagination a").click(function (e) {
                 e.preventDefault();
-                
+
                 formObj.attr("action", "list");
                 formObj.attr("method", "get");
                 formObj.find("input[name='_csrf']").remove();
@@ -134,7 +134,7 @@
             //검색 버튼 클릭 시
             $("#searchBtn").click(function (e) {
                 e.preventDefault();
-                
+
                 formObj.attr("action", "list");
                 formObj.attr("method", "get");
 
@@ -328,6 +328,12 @@
                 }
 
                 if (modal.data("type") == "evaluated" || modal.data("type") == "evaluator") {
+                    if (evaluated == null || evaluator == null) {
+                        alert("등록하시려는 정보를 확인해주세요.");
+                        return false;
+                    }
+                    $(this).attr("disabled", true);
+                    $(this).addClass("disabled");
                     formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
                     formObj.attr("action", "./register").attr("method", "post");
                     formObj.append("<input type='hidden' name='evaluated' value='" + evaluated + "'/>");
@@ -354,7 +360,7 @@
                     formObj.attr("action", "./removeRow").attr("method", "post");
                     formObj.append("<input type='hidden' name='sno' value='" + modal.data("idx") + "'/>");
                 }
-                
+
                 formObj.submit();
             });
 
