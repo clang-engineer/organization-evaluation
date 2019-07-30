@@ -688,6 +688,9 @@
             $("#basicModal").find("#modalRegisterBtn").click(function (e) {
                 var rno = [[${ relation?.rno }]];
 
+                $(this).attr("disabled", true);
+                $(this).addClass("disabled");
+
                 switch ($("#basicModal").data("finish")) {
                     case "T":
                         var finish = 'T';
