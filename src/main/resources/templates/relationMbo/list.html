@@ -326,7 +326,12 @@
                 }
 
                 if (modal.data("type") == "evaluated" || modal.data("type") == "evaluator") {
-
+                    if (evaluated == null || evaluator == null) {
+                        alert("등록하시려는 정보를 확인해주세요.");
+                        return false;
+                    }
+                    $(this).attr("disabled", true);
+                    $(this).addClass("disabled");
                     formObj.attr("action", "./register").attr("method", "post");
                     formObj.append("<input type='hidden' name='evaluated' value='" + evaluated + "'/>");
                     formObj.append("<input type='hidden' name='evaluator' value='" + evaluator + "'/>");

@@ -213,6 +213,8 @@
                         formObj.append("<input type='hidden' name='finish' value='T'>");
                         break;
                 }
+                $(this).attr("disabled", true);
+                $(this).addClass("disabled");
                 formObj.submit();
             });
 
