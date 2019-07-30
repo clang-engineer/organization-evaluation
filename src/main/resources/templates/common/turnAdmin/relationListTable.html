@@ -9,9 +9,7 @@
             <th>Division1</th>
             <th>Division1</th>
             <th>본인</th>
-            <th>1차</th>
-            <th>2차</th>
-            <th>3차</th>
+            <th th:each="appellation:${appellationList}">[[${appellation}]]</th>
             <th>제외</th>
         </tr>
     </thead>
@@ -25,9 +23,7 @@
             <th>Division1</th>
             <th>Division1</th>
             <th>본인</th>
-            <th>1차</th>
-            <th>2차</th>
-            <th>3차</th>
+            <th th:each="appellation:${appellationList}">[[${appellation}]]</th>
             <th>제외</th>
         </tr>
     </tfoot>
@@ -47,30 +43,12 @@
                     </a>
                 </span>
             </td>
-            <td>
-                <span class="evaluatorList" th:each="relation:${relation1}">
-                    <a th:href="${relation.rno}" data-relation="1" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
+            <td th:each=appellation,idx:${appellationList}>
+                <span class="evaluatorList" th:each="relation:${relationOther.get('relation'+idx.count)}">
+                    <a th:href="${relation.rno}" data-relation="${idx.count}" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
                     </a>
                 </span>
-                <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='1'" type="button">
-                    <i class="fas fa-user-plus fa-sm"></i>
-                </button>
-            </td>
-            <td>
-                <span class="evaluatorList" th:each="relation:${relation2}">
-                    <a th:href="${relation.rno}" data-relation="2" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
-                    </a>
-                </span>
-                <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='2'" type="button">
-                    <i class="fas fa-user-plus fa-sm"></i>
-                </button>
-            </td>
-            <td>
-                <span class="evaluatorList" th:each="relation:${relation3}">
-                    <a th:href="${relation.rno}" data-relation="3" th:if="${staff.sno}==${relation.evaluated.sno}" th:text="${relation?.evaluator?.name}+','">
-                    </a>
-                </span>
-                <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation='3'" type="button">
+                <button class="btn btn-default staffForEvaluator" th:attr="data-evaluated=${staff.sno}, data-relation=${idx.count}" type="button">
                     <i class="fas fa-user-plus fa-sm"></i>
                 </button>
             </td>

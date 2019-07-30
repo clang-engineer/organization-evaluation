@@ -5,7 +5,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -124,36 +126,42 @@ public class RelationMboController {
         Page<Staff> result = relationMboService.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
+        // 테이블 차원, 고과자 관계 개수를 화면에 전달한다.
+        List<String> appellationList = turnService.read(tno).map(Turn::getMboAppellation).orElse(null);
+        model.addAttribute("appellationList", appellationList);
+
         // 화면에 표시되는 피평가자들의 관계별 relationTable만들기
         List<RelationMbo> relationMe = new ArrayList<>();
-        List<RelationMbo> relation1 = new ArrayList<>();
-        List<RelationMbo> relation2 = new ArrayList<>();
-        List<RelationMbo> relation3 = new ArrayList<>();
+        Map<String, List<RelationMbo>> relationOther = new HashMap<String, List<RelationMbo>>();
+
         result.getContent().forEach(evaluated -> {
-            relationMboService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
-                relation.forEach(origin -> {
-                    switch (origin.getRelation()) {
-                    case "me":
+            relationMboService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relationList -> {
+                relationList.forEach(origin -> {
+                    if ("me".equals(origin.getRelation())) {
                         relationMe.add(origin);
-                        break;
-                    case "1":
-                        relation1.add(origin);
-                        break;
-                    case "2":
-                        relation2.add(origin);
-                        break;
-                    case "3":
-                        relation3.add(origin);
-                        break;
                     }
                 });
+
+                // appellation 갯수만큼 map에 관계 list를 추가한다.
+                for (int i = 0; i < appellationList.size(); i++) {
+                    List<RelationMbo> relationTmp = new ArrayList<>();
+                    for (RelationMbo relation : relationList) {
+                        if (Integer.toString(i + 1).equals(relation.getRelation())) {
+                            relationTmp.add(relation);
+                        }
+                    }
+                    String relationKey="relation" + (i + 1);
+                    if (!relationOther.containsKey(relationKey)) {
+                        relationOther.put(relationKey, relationTmp);
+                    } else {
+                        relationOther.get(relationKey).addAll(relationTmp);
+                    }
+                }
             });
         });
 
         model.addAttribute("relationMe", relationMe);
-        model.addAttribute("relation1", relation1);
-        model.addAttribute("relation2", relation2);
-        model.addAttribute("relation3", relation3);
+        model.addAttribute("relationOther", relationOther);
     }
 
     /**

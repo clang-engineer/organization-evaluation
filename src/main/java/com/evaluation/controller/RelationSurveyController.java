@@ -5,7 +5,9 @@ import java.net.URLEncoder;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 import javax.servlet.http.HttpServletResponse;
@@ -121,36 +123,42 @@ public class RelationSurveyController {
         Page<Staff> result = relationSurveyService.getDistinctEvaluatedList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
 
+        // 테이블 차원, 고과자 관계 개수를 화면에 전달한다.
+        List<String> appellationList = turnService.read(tno).map(Turn::getSurveyAppellation).orElse(null);
+        model.addAttribute("appellationList", appellationList);
+
         // 화면에 표시되는 피평가자들의 관계별 relationTable만들기
         List<RelationSurvey> relationMe = new ArrayList<>();
-        List<RelationSurvey> relation1 = new ArrayList<>();
-        List<RelationSurvey> relation2 = new ArrayList<>();
-        List<RelationSurvey> relation3 = new ArrayList<>();
+        Map<String, List<RelationSurvey>> relationOther = new HashMap<String, List<RelationSurvey>>();
+
         result.getContent().forEach(evaluated -> {
-            relationSurveyService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relation -> {
-                relation.forEach(origin -> {
-                    switch (origin.getRelation()) {
-                    case "me":
+            // 평가자와 관계된 relation을 모두 찾는다.
+            relationSurveyService.findByEvaulated(tno, evaluated.getSno()).ifPresent(relationList -> {
+                relationList.forEach(origin -> {
+                    if ("me".equals(origin.getRelation())) {
                         relationMe.add(origin);
-                        break;
-                    case "1":
-                        relation1.add(origin);
-                        break;
-                    case "2":
-                        relation2.add(origin);
-                        break;
-                    case "3":
-                        relation3.add(origin);
-                        break;
                     }
                 });
+
+                // appellation 갯수만큼 map에 관계 list를 추가한다.
+                for (int i = 0; i < appellationList.size(); i++) {
+                    List<RelationSurvey> relationTmp = new ArrayList<>();
+                    for (RelationSurvey relation : relationList) {
+                        if (Integer.toString(i + 1).equals(relation.getRelation())) {
+                            relationTmp.add(relation);
+                        }
+                    }
+                    String relationKey="relation" + (i + 1);
+                    if (!relationOther.containsKey(relationKey)) {
+                        relationOther.put(relationKey, relationTmp);
+                    } else {
+                        relationOther.get(relationKey).addAll(relationTmp);
+                    }
+                }
             });
         });
-
         model.addAttribute("relationMe", relationMe);
-        model.addAttribute("relation1", relation1);
-        model.addAttribute("relation2", relation2);
-        model.addAttribute("relation3", relation3);
+        model.addAttribute("relationOther", relationOther);
     }
 
     /**
