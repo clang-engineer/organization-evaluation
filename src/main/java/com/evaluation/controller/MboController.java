@@ -90,8 +90,15 @@ public class MboController {
             return "redirect:/mbo";
         }
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
+        // 회사 정보
+        companyService.findByCompanyId(company).ifPresent(origin -> {
+            model.addAttribute("company", origin);
+        });
+
+        // 회차 정보
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
 
         Staff staff = (Staff) session.getAttribute("evaluator");
         long sno = staff.getSno();
@@ -99,16 +106,6 @@ public class MboController {
         // 사용자의 부서 정보
         departmentService.findByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("department", list);
-        });
-
-        // 회사 정보
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
-        });
-
-        // 회차 정보
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
         });
 
         return "/mbo/main";
@@ -152,16 +149,13 @@ public class MboController {
 
         // 회사 정보
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
         // 회차 정보
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
-
-        model.addAttribute("tno", tno);
-        model.addAttribute("company", company);
 
         relationMboService.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
             // 관계정보 전달
@@ -216,7 +210,7 @@ public class MboController {
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addFlashAttribute("companyInfo", origin);
+            rttr.addFlashAttribute("company", origin);
         });
 
         rttr.addAttribute("company", company);
@@ -237,20 +231,13 @@ public class MboController {
     public void object(String company, long tno, Long rno, Model model) {
         log.info("object list by " + company + "/" + tno + "/" + rno);
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-
         // 회사 정보
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
-        // 회차 정보
         turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
-        });
-
-        turnService.read(tno).ifPresent(turn -> {
             // 평가 단계에서 회답지 추가
             if (turn.getInfoMbo().getStatus().equals("see") || turn.getInfoMbo().getStatus().equals("count")) {
                 // 회답지 추가

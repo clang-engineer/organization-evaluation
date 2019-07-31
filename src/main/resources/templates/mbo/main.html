@@ -41,7 +41,7 @@
                         <p class="card-text" th:if="${turn.title}!=''" th:text="'- '+${turn.title}"></p>
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoMbo?.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">MBO
+                        <a id="surveyStart" th:href="@{list(company=${company?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">MBO
                             start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
@@ -152,8 +152,8 @@
                             <label for="">
                                 인사 정보 관련 문의 : 
                             </label>
-                            <br>[[${companyInfo?.hrManager}]] ([[${companyInfo?.name}]])
-                            <br>Tel : [[${companyInfo?.hrManagerTel}]] 
+                            <br>[[${company?.hrManager}]] ([[${company?.name}]])
+                            <br>Tel : [[${company?.hrManagerTel}]] 
                             </p>
                             <p class="card-text m-0">
                             <label for="">
@@ -171,7 +171,7 @@
         </div>
         <!-- /.row -->
     </div>
-    <form id="f1" th:action="@{object(company=${companyInfo?.id},tno=${turn?.tno})}" method="POST">
+    <form id="f1" th:action="@{object(company=${company?.id},tno=${turn?.tno})}" method="POST">
         <input type="hidden" th:valu="${turn?.infoMbo?.status}">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
@@ -319,7 +319,7 @@
                     formObj.empty();
                     formObj.attr("action", "./list");
                     formObj.attr("method", "get");
-                    formObj.append("<input type='hidden' name='company' value='" + [[${ companyInfo?.id }]] + "'/>");
+                    formObj.append("<input type='hidden' name='company' value='" + [[${ company?.id }]] + "'/>");
                     formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
                     formObj.submit();
                 } else if (type == 'recentChange') {

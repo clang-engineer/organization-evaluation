@@ -54,12 +54,12 @@
                             style="resize:none"></textarea>
                     </div>
                 </div>
-                <input type="hidden" name="company" th:value="${company}">
+                <input type="hidden" name="company" th:value="${company.id}">
                 <input type="hidden" name="name" th:value="${session?.evaluator?.name}">
                 <input type="hidden" name="email" th:value="${session?.evaluator?.email}">
                 <input type="hidden" name="writeId" th:value="${session?.evaluator?.email}">
                 <input type="hidden" name="updateId" th:value="${session?.evaluator?.email}">
-                <input type="hidden" name="tno" th:value="${tno}">
+                <input type="hidden" name="tno" th:value="${turn?.tno}">
                 <!-- For success/fail messages -->
                 <button type="submit" class="btn btn-primary" id="sendMessageButton">Send Message</button>
             </form>

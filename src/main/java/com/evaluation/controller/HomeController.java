@@ -233,14 +233,12 @@ public class HomeController {
             return "redirect:/survey";
         }
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-        // mbo turn에 따른 navbar 구분을 위해
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
-        });
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
+        });
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
 
         String whatYouCall = request.getServletPath();
@@ -266,16 +264,12 @@ public class HomeController {
             return "redirect:/survey";
         }
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-
-        // mbo turn에 따른 navbar 구분을 위해
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
-        });
-
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
+        });
+        
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
 
         String whatYouCall = request.getServletPath();
@@ -337,15 +331,13 @@ public class HomeController {
             return "redirect:/survey";
         }
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
         // mbo turn에 따른 navbar 구분을 위해
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
 
         String whatYouCall = request.getServletPath();

@@ -106,7 +106,7 @@
     <nav class="navbar fixed-top navbar-expand-lg navbar-dark bg-dark fixed-top">
         <div class="container">
 
-            <a onclick="window.open(this.href, '_blank'); return false;" class="navbar-brand" th:href="${companyInfo?.homepage}" th:text="${companyInfo?.name}">
+            <a onclick="window.open(this.href, '_blank'); return false;" class="navbar-brand" th:href="${company?.homepage}" th:text="${company?.name}">
 
                 <!-- <img src="http://placehold.it/150x50?text=Logo" alt=""> -->
             </a>
@@ -117,7 +117,7 @@
             <div class="collapse navbar-collapse" id="navbarResponsive">
                 <ul class="navbar-nav ml-auto">
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{main(company=${company},tno=${tno})}">About</a>
+                        <a class="nav-link" th:href="@{main(company=${company?.id},tno=${turn?.tno})}">About</a>
                     </li>
                     <li class="nav-item dropdown" th:if="${turn?.infoMbo?.status}!='count'">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -125,16 +125,16 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                             <div th:if="${session.evaluator}">
-                                <a id="navStep1" class="dropdown-item" th:href="@{/mbo/list(company=${company},tno=${tno})}">Plan(목표 설정)</a>
+                                <a id="navStep1" class="dropdown-item" th:href="@{/mbo/list(company=${company?.id},tno=${turn?.tno})}">Plan(목표 설정)</a>
                                 <div class="dropdown-divider"></div>
-                                <a id="navStep2" class="dropdown-item" th:href="@{/mbo/list(company=${company},tno=${tno})}">Do(중간 운영)</a>
+                                <a id="navStep2" class="dropdown-item" th:href="@{/mbo/list(company=${company?.id},tno=${turn?.tno})}">Do(중간 운영)</a>
                                 <div class="dropdown-divider"></div>
-                                <a id="navStep3" class="dropdown-item" th:href="@{/mbo/list(company=${company},tno=${tno})}">See(평가)</a>
+                                <a id="navStep3" class="dropdown-item" th:href="@{/mbo/list(company=${company?.id},tno=${turn?.tno})}">See(평가)</a>
                             </div>
                         </div>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" th:href="@{contact(company=${company},tno=${tno})}">Contact</a>
+                        <a class="nav-link" th:href="@{contact(company=${company?.id},tno=${turn?.tno})}">Contact</a>
                     </li>
                     <li class="nav-item dropdown">
                         <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownBlog" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
@@ -143,11 +143,11 @@
                         </a>
                         <div class="dropdown-menu dropdown-menu-right" aria-labelledby="navbarDropdownBlog">
                             <div th:if="${session?.evaluator}">
-                                <a class="dropdown-item" th:href="@{profile(company=${company},tno=${tno})}">Profile</a>
+                                <a class="dropdown-item" th:href="@{profile(company=${company?.id},tno=${turn?.tno})}">Profile</a>
                                 <div class="dropdown-divider"></div>
                                 <a class="dropdown-item" href="#" data-toggle="modal" data-target="#logoutModal">Logout</a>
                             </div>
-                            <a th:unless="${session?.evaluator}" class="dropdown-item" th:href="@{/mbo/(company=${company})}">Login</a>
+                            <a th:unless="${session?.evaluator}" class="dropdown-item" th:href="@{/mbo/(company=${company?.id})}">Login</a>
                         </div>
                     </li>
                 </ul>
@@ -191,7 +191,7 @@
     <!-- ./Logout Modal-->
     <!-- form for logout -->
     <form method="POST" th:action="@{logout}">
-        <input type="hidden" name="company" th:value="${company}">
+        <input type="hidden" name="company" th:value="${company?.id}">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
     <!-- ./form for logout -->

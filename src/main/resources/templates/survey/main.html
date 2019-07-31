@@ -24,7 +24,7 @@
                         </p>
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoSurvey?.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
+                        <a id="surveyStart" th:href="@{list(company=${company?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
                             title="click!!">Survey start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
@@ -78,8 +78,8 @@
                             <label for="">
                                 인사 정보 관련 문의 : 
                             </label>
-                            <br>[[${companyInfo?.hrManager}]] ([[${companyInfo?.name}]])
-                            <br>Tel : [[${companyInfo?.hrManagerTel}]] 
+                            <br>[[${company?.hrManager}]] ([[${company?.name}]])
+                            <br>Tel : [[${company?.hrManagerTel}]] 
                             </p>
                             <p class="card-text m-0">
                             <label for="">
@@ -99,7 +99,7 @@
 
     </div>
     <!-- /.container -->
-    <form id="f1" th:action="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" method="get">
+    <form id="f1" th:action="@{list(company=${company?.id},tno=${turn?.tno})}" method="get">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 
@@ -135,7 +135,7 @@
                 e.preventDefault();
                 var formObj = $("#f1");
                 formObj.empty();
-                formObj.append("<input type='hidden' name='company' value='" + [[${ companyInfo?.id }]] + "'/>");
+                formObj.append("<input type='hidden' name='company' value='" + [[${ company?.id }]] + "'/>");
                 formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
                 formObj.submit();
             });

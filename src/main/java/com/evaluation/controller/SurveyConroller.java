@@ -71,19 +71,16 @@ public class SurveyConroller {
             return "redirect:/survey";
         }
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
-        });
-
-        questionService.getDistinctDivisionCountByTno(tno).ifPresent(origin -> {
-            model.addAttribute("question", origin);
+            model.addAttribute("company", origin);
         });
 
         turnService.read(tno).ifPresent(turn -> {
             model.addAttribute("turn", turn);
+        });
+
+        questionService.getDistinctDivisionCountByTno(tno).ifPresent(origin -> {
+            model.addAttribute("question", origin);
         });
 
         return "/survey/main";
@@ -111,15 +108,12 @@ public class SurveyConroller {
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
         turnService.read(tno).ifPresent(origin -> {
-            model.addAttribute("appellationList", origin.getSurveyAppellation());
+            model.addAttribute("turn", origin);
         });
-
-        model.addAttribute("tno", tno);
-        model.addAttribute("company", company);
 
         relationSurveyService.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
             Set<String> relationList = new HashSet<>();
@@ -153,7 +147,7 @@ public class SurveyConroller {
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addAttribute("companyInfo", origin);
+            rttr.addAttribute("company", origin);
         });
 
         rttr.addAttribute("company", company);
@@ -174,16 +168,13 @@ public class SurveyConroller {
     public void evaluate(String company, long tno, Long rno, Model model) {
         log.info("evaluate by " + company + "/" + tno + "/" + rno);
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
         // 회차에 속하는 comment list를 추가하기 위한.
         turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("commentList", turn.getComments());
+            model.addAttribute("turn", turn);
             // 회답지 추가
             Integer replyCode = turn.getInfoSurvey().getReplyCode();
             if (replyCode != null) {
@@ -256,7 +247,6 @@ public class SurveyConroller {
                 long cno = turn.getCno();
                 companyService.read(cno).ifPresent(company -> {
                     rttr.addAttribute("company", company.getId());
-                    rttr.addFlashAttribute("companyInfo", company);
                     rttr.addAttribute("tno", tno);
                 });
             });
