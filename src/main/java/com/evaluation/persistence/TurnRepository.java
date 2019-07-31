@@ -43,7 +43,13 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 	 * @param threshold 현재 시간
 	 * @return 회차 객체 리스트
 	 */
-	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND t.infoMbo.status NOT IN ('setting', 'inactivation') AND :time BETWEEN t.infoMbo.startDate AND t.infoMbo.endDate ORDER BY t.tno DESC")
+	String mboPeriodCriteria = ":time BETWEEN t.infoMbo.startDate AND t.infoMbo.endDate";
+	String mboPlanCriteria = "t.infoMbo.status ='plan' AND :time BETWEEN t.infoMbo.step1Start AND t.infoMbo.step1End";
+	String mboDoCriteria = "t.infoMbo.status ='do' AND :time BETWEEN t.infoMbo.step2Start AND t.infoMbo.step2End";
+	String mboSeeCriteria = "t.infoMbo.status ='see' AND :time BETWEEN t.infoMbo.step3Start AND t.infoMbo.step3End";
+
+	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND " + mboPeriodCriteria + " AND (" + mboPlanCriteria
+			+ " OR " + mboDoCriteria + " OR " + mboSeeCriteria + " OR t.infoMbo.status='count') ORDER BY t.tno DESC")
 	Optional<List<Turn>> getTurnsInMbo(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
 
 	/**
