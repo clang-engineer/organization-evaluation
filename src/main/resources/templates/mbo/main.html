@@ -41,7 +41,7 @@
                         <p class="card-text" th:if="${turn.title}!=''" th:text="'- '+${turn.title}"></p>
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoMbo?.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${companyInfo?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">MBO
+                        <a id="surveyStart" th:href="@{list(company=${company?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">MBO
                             start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
@@ -152,8 +152,8 @@
                             <label for="">
                                 인사 정보 관련 문의 : 
                             </label>
-                            <br>[[${companyInfo?.hrManager}]] ([[${companyInfo?.name}]])
-                            <br>Tel : [[${companyInfo?.hrManagerTel}]] 
+                            <br>[[${company?.hrManager}]] ([[${company?.name}]])
+                            <br>Tel : [[${company?.hrManagerTel}]] 
                             </p>
                             <p class="card-text m-0">
                             <label for="">
@@ -171,7 +171,7 @@
         </div>
         <!-- /.row -->
     </div>
-    <form id="f1" th:action="@{object(company=${companyInfo?.id},tno=${turn?.tno})}" method="POST">
+    <form id="f1" th:action="@{|/mbo/object/${company?.id}/${turn?.tno}|}" method="POST">
         <input type="hidden" th:valu="${turn?.infoMbo?.status}">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
@@ -313,15 +313,11 @@
 
             //변경 내용 링크 modal 등록 버튼 클릭 시
             $("#basicModal").find("#modalRegisterBtn").click(function (e) {
+                e.preventDefault();
                 var formObj = $("#f1");
                 var type = $("#basicModal").data("type");
                 if (type == 'start') {
-                    formObj.empty();
-                    formObj.attr("action", "./list");
-                    formObj.attr("method", "get");
-                    formObj.append("<input type='hidden' name='company' value='" + [[${ companyInfo?.id }]] + "'/>");
-                    formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
-                    formObj.submit();
+                    window.location.href = "../../list/" + [[${ company?.id }]] + "/" + [[${ turn?.tno }]];
                 } else if (type == 'recentChange') {
                     formObj.append("<input type='hidden' name='rno' value='" + $("#basicModal").data("rno") + "'/>");
                     formObj.submit();
@@ -356,7 +352,7 @@
         //최근 변경 내역을 호출하는 함수
         getRecentChangeList(1);
         function getRecentChangeList(page) {
-            $.getJSON("/mbo/recentChange/" + [[${ turn?.tno }]] + "/" + page,
+            $.getJSON("../../recentChange/" + [[${ turn?.tno }]] + "/" + page,
                 function (result) {
                     var str = "";
                     if (result == null || result.length == 0) {
@@ -397,7 +393,7 @@
                     }
                 });
         }
-        
+
     </script>
 </th:block>
 

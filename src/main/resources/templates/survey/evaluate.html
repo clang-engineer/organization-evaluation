@@ -15,7 +15,7 @@
             <small class="font-weight-light" th:if="${turn?.infoSurvey?.status}!='see'">[[${relation?.evaluated?.name}]]님에 대한 질의 목록</small>
         </h2>
         <!-- form -->
-        <form id="f1" method="POST" th:action="@{submit}">
+        <form id="f1" method="POST" th:action="@{/survey/submit}">
             <!-- card -->
             <div class="card mb-4" th:if="${category!=null}">
                 <!-- card-header -->
@@ -43,12 +43,12 @@
             </div>
             <!-- ./card -->
             <!-- card -->
-            <div class="card mb-3 essay" th:if="${#lists.size(commentList)}>0 and ${relation?.relation!='me'}">
+            <div class="card mb-3 essay" th:if="${#lists.size(turn?.comments)}>0 and ${relation?.relation!='me'}">
                 <h5 class="card-header text-white bg-dark">주관식
                     <small class="float-md-right">[[${relation?.evaluated?.name}]] 님에 대한 주관식 질의 입니다.</small>
                 </h5>
                 <div class="card m-3">
-                    <div class="card-body" th:each="question, status:${commentList}">
+                    <div class="card-body" th:each="question, status:${turn?.comments}">
                         <div class="card-text mb-3">Q[[${status.count}]]. [[${question}]]</div>
                         <textarea required th:name="'c'+${status?.count}" class="form-control" rows="7" th:text="${relation?.comments?.get('c'+status?.count)}" th:disabled="${relation?.finish}=='Y'">
                         </textarea>
