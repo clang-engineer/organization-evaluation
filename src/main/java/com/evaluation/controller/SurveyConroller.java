@@ -9,7 +9,10 @@ import java.util.Set;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpSession;
 
+import com.evaluation.domain.Company;
+import com.evaluation.domain.RelationSurvey;
 import com.evaluation.domain.Staff;
+import com.evaluation.domain.Turn;
 import com.evaluation.service.BookService;
 import com.evaluation.service.CompanyService;
 import com.evaluation.service.QuestionService;
@@ -21,6 +24,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -61,29 +65,26 @@ public class SurveyConroller {
      * @param model   화면 전달 정보
      * @return Survey 메인 페이자
      */
-    @GetMapping("/main")
-    public String main(String company, Long tno, HttpServletRequest request, RedirectAttributes rttr, Model model) {
+    @GetMapping("/main/{company}/{tno}")
+    public String main(@PathVariable("company") String company, @PathVariable("tno") Long tno,
+            HttpServletRequest request, Model model) {
         log.info("survey main by " + company + "/" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         }
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
+        });
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
 
         questionService.getDistinctDivisionCountByTno(tno).ifPresent(origin -> {
             model.addAttribute("question", origin);
-        });
-
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
         });
 
         return "/survey/main";
@@ -99,35 +100,32 @@ public class SurveyConroller {
      * @param rttr    재전송 정보
      * @return Survey 대상자 목록 페이지
      */
-    @GetMapping("/list")
-    public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
+    @GetMapping("/list/{company}/{tno}")
+    public String list(@PathVariable("company") String company, @PathVariable("tno") long tno,
+            HttpServletRequest request, Model model) {
         log.info("survey list by " + company + "/" + tno);
         HttpSession session = request.getSession();
         Staff evaluator = (Staff) session.getAttribute("evaluator");
 
         if (evaluator == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
         turnService.read(tno).ifPresent(origin -> {
-            model.addAttribute("appellationList", origin.getSurveyAppellation());
+            model.addAttribute("turn", origin);
         });
 
-        model.addAttribute("tno", tno);
-        model.addAttribute("company", company);
-
-        relationSurveyService.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
+        relationSurveyService.findByEvaluator(tno, evaluator.getSno()).ifPresent(origin -> {
             Set<String> relationList = new HashSet<>();
-            relation.forEach(origin -> {
-                relationList.add(origin.getRelation());
+            origin.forEach(rel -> {
+                relationList.add(rel.getRelation());
             });
             model.addAttribute("relationList", relationList);
-            model.addAttribute("evaluatedList", relation);
+            model.addAttribute("evaluatedList", origin);
         });
 
         return "/survey/list";
@@ -142,23 +140,17 @@ public class SurveyConroller {
      * @param rttr    재전송 정보
      * @return Survey 대상자 목록 페이지
      */
-    @GetMapping("/evaluate")
-    public String evaluate(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
+    @GetMapping("/evaluate/{company}/{tno}")
+    public String evaluate(@PathVariable("company") String company, @PathVariable("tno") long tno,
+            HttpServletRequest request, RedirectAttributes rttr) {
         log.info("evaluate redirect by " + company + "/" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         }
 
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addAttribute("companyInfo", origin);
-        });
-
-        rttr.addAttribute("company", company);
-        rttr.addAttribute("tno", tno);
-        return "redirect:/survey/list";
+        return "redirect:/survey/list/" + company + "/" + tno;
     }
 
     /**
@@ -170,22 +162,20 @@ public class SurveyConroller {
      * @param model   화면 전달 정보
      */
     // @GetMapping("/evaluate")
-    @PostMapping("/evaluate")
-    public void evaluate(String company, long tno, Long rno, Model model) {
+    @PostMapping("/evaluate/{company}/{tno}")
+    public String evaluate(@PathVariable("company") String company, @PathVariable("tno") long tno, Long rno,
+            Model model) {
         log.info("evaluate by " + company + "/" + tno + "/" + rno);
 
-        model.addAttribute("company", company);
-        model.addAttribute("tno", tno);
-
         companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("companyInfo", origin);
+            model.addAttribute("company", origin);
         });
 
         // 회차에 속하는 comment list를 추가하기 위한.
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("commentList", turn.getComments());
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
             // 회답지 추가
-            Integer replyCode = turn.getInfoSurvey().getReplyCode();
+            Integer replyCode = origin.getInfoSurvey().getReplyCode();
             if (replyCode != null) {
                 bookService.read(replyCode).ifPresent(book -> {
                     model.addAttribute("book", book.getContents());
@@ -194,14 +184,14 @@ public class SurveyConroller {
         });
 
         // 관계 정보가 존재하는 경우에 작동
-        relationSurveyService.read(rno).ifPresent(relation -> {
+        relationSurveyService.read(rno).ifPresent(origin -> {
             // 관계에 대한 정보 추가
-            model.addAttribute("relation", relation);
+            model.addAttribute("relation", origin);
 
             // 개인의 division 정보와 일치하는 객관식 list를 추가하기 위한
             Staff evaluated = new Staff();
-            evaluated = relation.getEvaluated();
-            questionService.getListByDivision(relation.getTno(), evaluated.getDivision1(), evaluated.getDivision2())
+            evaluated = origin.getEvaluated();
+            questionService.getListByDivision(origin.getTno(), evaluated.getDivision1(), evaluated.getDivision2())
                     .ifPresent(question -> {
                         // 중복 제거한 카테고리를 위해
                         Set<String> category = new LinkedHashSet<String>();
@@ -213,6 +203,8 @@ public class SurveyConroller {
                     });
 
         });
+
+        return "survey/evaluate";
     }
 
     /**
@@ -249,17 +241,6 @@ public class SurveyConroller {
             origin.setFinish(finish);
 
             relationSurveyService.modify(origin);
-
-            // redirect 속성 만들기
-            long tno = origin.getTno();
-            turnService.read(tno).ifPresent(turn -> {
-                long cno = turn.getCno();
-                companyService.read(cno).ifPresent(company -> {
-                    rttr.addAttribute("company", company.getId());
-                    rttr.addFlashAttribute("companyInfo", company);
-                    rttr.addAttribute("tno", tno);
-                });
-            });
         });
 
         if ("T".equals(finish)) {
@@ -270,7 +251,11 @@ public class SurveyConroller {
             rttr.addFlashAttribute("msg", "error");
         }
 
-        return "redirect:/survey/list";
+        long tno = relationSurveyService.read(rno).map(RelationSurvey::getTno).orElse(0L);
+        long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
+        String company = companyService.read(cno).map(Company::getId).orElse(null);
+
+        return "redirect:/survey/list/" + company + "/" + tno;
     }
 
 }
