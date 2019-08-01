@@ -40,7 +40,7 @@
     <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <form th:action="@{help}" method="post" name="sentMessage" id="contactForm">
+            <form action="../../help" method="post" name="sentMessage" id="contactForm">
                 <div class="control-group form-group">
                     <div class="controls">
                         <label>Phone Number:</label>
@@ -60,6 +60,7 @@
                 <input type="hidden" name="writeId" th:value="${session?.evaluator?.email}">
                 <input type="hidden" name="updateId" th:value="${session?.evaluator?.email}">
                 <input type="hidden" name="tno" th:value="${turn?.tno}">
+                <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
                 <!-- For success/fail messages -->
                 <button type="submit" class="btn btn-primary" id="sendMessageButton">Send Message</button>
             </form>

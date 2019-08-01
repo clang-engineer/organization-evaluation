@@ -16,7 +16,7 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            <form th:action="${modify}" method="POST" th:with="evaluator=${session?.evaluator}">
+            <form th:action="@{/survey/modify}" method="POST" th:with="evaluator=${session?.evaluator}">
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" class="form-control" name="name" placeholder="Name" th:value="${evaluator?.name}" readonly>
@@ -59,7 +59,9 @@
                 <input type="hidden" name="division2" th:value="${evaluator?.division2}">
                 <input type="hidden" name="updateId" th:value="${evaluator?.name}">
                 <input type="hidden" name="cno" th:value="${evaluator?.cno}">
+                <input type="hidden" name="company"` th:value="${company?.id}">
                 <input type="hidden" name="tno" th:value="${turn?.tno}">
+                <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
                 <button type="submit" class="btn btn-danger" id="submit">Modify</button>
             </form>
         </div>

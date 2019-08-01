@@ -105,7 +105,7 @@
 </div>
 <!-- button -->
 
-    <form id="f1" th:action="@{evaluate(company=${company.id},tno=${turn?.tno})}" method="POST">
+    <form id="f1" th:action="@{|/survey/evaluate/${company.id}/${turn?.tno}|}" method="POST">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 

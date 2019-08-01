@@ -24,8 +24,7 @@
                         </p>
                         <hr>
                         <p class="card-text" th:utext="${turn?.infoSurvey?.content}"></p>
-                        <a id="surveyStart" th:href="@{list(company=${company?.id},tno=${turn?.tno})}" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right"
-                            title="click!!">Survey start &rarr;</a>
+                        <a id="surveyStart" href="#" class="btn btn-primary mt-3" data-toggle="tooltip" data-placement="right" title="click!!">Survey start &rarr;</a>
                     </div>
                     <!-- ./card-body -->
                     <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}">
@@ -99,9 +98,6 @@
 
     </div>
     <!-- /.container -->
-    <form id="f1" th:action="@{list(company=${company?.id},tno=${turn?.tno})}" method="get">
-        <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
-    </form>
 
     <div th:insert="~{common/modal::basic}"></div>
     <div th:insert="~{common/modal::instruction}"></div>
@@ -133,11 +129,7 @@
             //변경 내용 링크 modal 등록 버튼 클릭 시
             $("#basicModal").find("#modalRegisterBtn").click(function (e) {
                 e.preventDefault();
-                var formObj = $("#f1");
-                formObj.empty();
-                formObj.append("<input type='hidden' name='company' value='" + [[${ company?.id }]] + "'/>");
-                formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
-                formObj.submit();
+                window.location.href = "/survey/list/" + [[${ company?.id }]] + "/" + [[${ turn?.tno }]];
             });
 
             // //close button click 시

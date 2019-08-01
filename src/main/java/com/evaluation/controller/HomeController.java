@@ -15,6 +15,7 @@ import com.evaluation.service.TurnService;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
@@ -80,29 +81,31 @@ public class HomeController {
      * @param model   화면 전달 정보
      * @return Mbo로그인 페이지
      */
-    @GetMapping(value = { "/survey", "/mbo" })
-    public String userLogin(String company, HttpServletRequest request, Model model) {
+    @GetMapping(value = { "/survey/{company}", "/mbo/{company}" })
+    public String userLogin(@PathVariable("company") String company, HttpServletRequest request, Model model) {
         log.info("user login by " + company);
 
         String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[1];
 
         // 회사에 관한 정보 찾고
         companyService.findByCompanyId(company).ifPresent(origin -> {
             long cno = origin.getCno();
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
-            if (whatYouCall.equals("/survey")) {
+            if (pathInfo.equals("survey")) {
                 turnService.getTurnsInSurvey(cno).ifPresent(turn -> {
                     model.addAttribute("turns", turn);
                 });
-            } else if (whatYouCall.equals("/mbo")) {
+            } else if (pathInfo.equals("mbo")) {
                 turnService.getTurnsInMbo(cno).ifPresent(turn -> {
                     model.addAttribute("turns", turn);
                 });
             }
         });
 
-        return whatYouCall + "/index";
+        return pathInfo + "/index";
     }
 
     /**
@@ -116,24 +119,22 @@ public class HomeController {
      * @return Survey 메인 페이지
      */
     @PostMapping("/survey/login")
-    public String surveyLogin(String company, long tno, Staff staff, RedirectAttributes rttr,
-            HttpServletRequest request) {
+    public String surveyLogin(String company, long tno, Staff staff, HttpServletRequest request,
+            RedirectAttributes rttr) {
         log.info("user login by" + company + "/" + tno + "/" + staff);
-
-        rttr.addAttribute("company", company);
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         }
 
         if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).map(Staff::getPassword)
                 .orElse(null).equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         }
 
         relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
@@ -143,10 +144,8 @@ public class HomeController {
             }
         });
 
-        rttr.addAttribute("tno", tno);
-
         // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
-        return "redirect:/survey/main";
+        return "redirect:/survey/main/" + company + "/" + tno;
     }
 
     /**
@@ -162,20 +161,19 @@ public class HomeController {
     @PostMapping("/mbo/login")
     public String login(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("user login by " + company + "/" + tno + "/" + staff);
-        rttr.addAttribute("company", company);
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/mbo";
+            return "redirect:/mbo/" + company;
         }
 
         if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/mbo";
+            return "redirect:/mbo/" + company;
         } else if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).map(Staff::getPassword).orElse(null)
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/mbo";
+            return "redirect:/mbo/" + company;
         }
 
         relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
@@ -185,9 +183,8 @@ public class HomeController {
             }
         });
 
-        rttr.addAttribute("tno", tno);
         // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
-        return "redirect:/mbo/main";
+        return "redirect:/mbo/main/" + company + "/" + tno;
     }
 
     /**
@@ -205,13 +202,11 @@ public class HomeController {
         HttpSession session = request.getSession();
         session.invalidate();
 
-        rttr.addAttribute("company", company);
-
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
         String pathInfo = words[1];
 
-        String redirectPath = "redirect:/" + pathInfo;
+        String redirectPath = "redirect:/" + pathInfo + "/" + company;
         return redirectPath;
     }
 
@@ -222,15 +217,18 @@ public class HomeController {
      * @param tno     회차 id
      * @param model   화면 전달 정보
      */
-    @GetMapping(value = { "/survey/profile", "/mbo/profile" })
-    public String userProfile(String company, long tno, HttpServletRequest request, Model model,
-            RedirectAttributes rttr) {
+    @GetMapping(value = { "/survey/profile/{company}/{tno}", "/mbo/profile/{company}/{tno}" })
+    public String userProfile(@PathVariable("company") String company, @PathVariable("tno") long tno,
+            HttpServletRequest request, Model model) {
         log.info("profile by " + company + "/" + tno);
+
+        String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[1];
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/survey";
+            return "redirect:/" + pathInfo + "/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
@@ -241,9 +239,7 @@ public class HomeController {
             model.addAttribute("turn", origin);
         });
 
-        String whatYouCall = request.getServletPath();
-
-        return whatYouCall;
+        return pathInfo + "/profile";
     }
 
     /**
@@ -253,28 +249,29 @@ public class HomeController {
      * @param tno     회차 id
      * @param model   화면 전달 정보
      */
-    @GetMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String userProfileModify(String company, long tno, HttpServletRequest request, Model model,
-            RedirectAttributes rttr) {
+    @GetMapping(value = { "/survey/modify/{company}/{tno}", "/mbo/modify/{company}/{tno}" })
+    public String userProfileModify(@PathVariable("company") String company, @PathVariable("tno") long tno,
+            HttpServletRequest request, Model model) {
         log.info("profile by " + company + "/" + tno);
+
+        String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[1];
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/survey";
+            return "redirect:/" + pathInfo + "/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("company", origin);
         });
-        
+
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
 
-        String whatYouCall = request.getServletPath();
-
-        return whatYouCall;
+        return pathInfo + "/modify";
     }
 
     /**
@@ -288,8 +285,7 @@ public class HomeController {
      * @return 사용자 프로필 페이지
      */
     @PostMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String userProfileModify(String company, long tno, Staff staff, HttpServletRequest request,
-            RedirectAttributes rttr) {
+    public String userProfileModify(String company, long tno, Staff staff, HttpServletRequest request) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
             long sno = origin.getSno();
             staff.setSno(sno);
@@ -299,18 +295,11 @@ public class HomeController {
             session.setAttribute("evaluator", staff);
         });
 
-        rttr.addAttribute("company", company);
-        rttr.addAttribute("tno", tno);
-
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addFlashAttribute("companyInfo", origin);
-        });
-
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
         String pathInfo = words[1];
 
-        String redirectPath = "redirect:/" + pathInfo + "/profile";
+        String redirectPath = "redirect:/" + pathInfo + "/profile/" + company + "/" + tno;
         return redirectPath;
     }
 
@@ -321,14 +310,13 @@ public class HomeController {
      * @param tno     회차 id
      * @param model   화면 전달 정보
      */
-    @GetMapping(value = { "/survey/contact", "/mbo/contact" })
-    public String userContact(String company, Long tno, HttpServletRequest request, Model model,
-            RedirectAttributes rttr) {
+    @GetMapping(value = { "/survey/contact/{company}/{tno}", "/mbo/contact/{company}/{tno}" })
+    public String userContact(@PathVariable("company") String company, @PathVariable("tno") Long tno,
+            HttpServletRequest request, Model model) {
         log.info("contact by " + company + "/" + tno);
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/survey";
+            return "redirect:/survey/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
@@ -367,11 +355,9 @@ public class HomeController {
         helpDesk.setSurveyInfo(pathInfo);
         helpDeskService.register(helpDesk);
 
-        rttr.addAttribute("company", company);
-        rttr.addAttribute("tno", tno);
         rttr.addFlashAttribute("msg", "register");
 
-        String redirectPath = "redirect:/" + pathInfo + "/contact";
+        String redirectPath = "redirect:/" + pathInfo + "/contact/" + company + "/" + tno;
         return redirectPath;
     }
 }

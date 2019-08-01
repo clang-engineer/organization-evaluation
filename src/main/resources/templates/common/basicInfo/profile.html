@@ -49,7 +49,7 @@
                 </fieldset>
             </form>
             <div>
-                <a th:href="@{modify(company=${company.id},tno=${turn?.tno})}">
+                <a th:href="@{|../../modify/${company.id}/${turn?.tno}|}">
                     <button type="submit" class="btn btn-primary">Modify</button>
                 </a>
             </div>
