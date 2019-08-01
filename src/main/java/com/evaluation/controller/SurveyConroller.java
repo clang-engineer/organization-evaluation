@@ -150,10 +150,6 @@ public class SurveyConroller {
             return "redirect:/survey/" + company;
         }
 
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addFlashAttribute("company", origin);
-        });
-
         return "redirect:/survey/list/" + company + "/" + tno;
     }
 

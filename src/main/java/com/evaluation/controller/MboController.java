@@ -79,15 +79,14 @@ public class MboController {
      * @param model   화면 전달 정보
      * @return mbo 메인 페이자
      */
-    @GetMapping("/main")
-    public String main(String company, Long tno, HttpServletRequest request, RedirectAttributes rttr, Model model) {
+    @GetMapping("/main/{company}/{tno}")
+    public String main(@PathVariable("company") String company, @PathVariable("tno") Long tno,
+            HttpServletRequest request, Model model) {
         log.info("mbo main by " + company);
 
         HttpSession session = request.getSession();
-
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/mbo";
+            return "redirect:/mbo/" + company;
         }
 
         // 회사 정보
@@ -134,17 +133,16 @@ public class MboController {
      * @param rttr    재전송 정보
      * @return mbo 대상자 목록 페이지
      */
-    @GetMapping("/list")
-    public String list(String company, long tno, HttpServletRequest request, Model model, RedirectAttributes rttr) {
+    @GetMapping("/list/{company}/{tno}")
+    public String list(@PathVariable("company") String company, @PathVariable("tno") long tno,
+            HttpServletRequest request, Model model) {
         log.info("mbo list by company" + company + "/" + tno);
 
         HttpSession session = request.getSession();
         // 밑에 또 사용할 일이 있어서 따로 객체 만듬.
         Staff evaluator = (Staff) session.getAttribute("evaluator");
-
         if (evaluator == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/mbo";
+            return "redirect:/mbo/" + company;
         }
 
         // 회사 정보
@@ -157,32 +155,30 @@ public class MboController {
             model.addAttribute("turn", origin);
         });
 
-        relationMboService.findByEvaluator(tno, evaluator.getSno()).ifPresent(relation -> {
+        relationMboService.findByEvaluator(tno, evaluator.getSno()).ifPresent(origin -> {
             // 관계정보 전달
-            model.addAttribute("evaluatedList", relation);
+            model.addAttribute("evaluatedList", origin);
 
             // 관계 종류를 전달하기 위한 Set
             Set<String> relationList = new HashSet<>();
-            relation.forEach(origin -> {
-                relationList.add(origin.getRelation());
-            });
-            model.addAttribute("relationList", relationList);
-
             // 피평가자의 특정 정보를 얻기 위한 list와 for문
             List<List<String>> ratioList = new ArrayList<>();
             List<RelationMbo> relationMeList = new ArrayList<>();
 
-            relation.forEach(origin -> {
+            origin.forEach(rel -> {
+                // 관계 종류를 전달하기 위한
+                relationList.add(rel.getRelation());
                 // 피평가자의 서베이 진행률을 얻기 위한
-                mboService.ratioByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(ratio -> {
+                mboService.ratioByTnoSno(tno, rel.getEvaluated().getSno()).ifPresent(ratio -> {
                     ratioList.addAll(ratio);
                 });
 
                 // 피평가자의 본인 평가 완료 여부를 얻기 위한
-                relationMboService.findMeRelationByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(tmpRel -> {
+                relationMboService.findMeRelationByTnoSno(tno, rel.getEvaluated().getSno()).ifPresent(tmpRel -> {
                     relationMeList.add(tmpRel);
                 });
             });
+            model.addAttribute("relationList", relationList);
             model.addAttribute("ratioList", ratioList);
             model.addAttribute("relationMeList", relationMeList);
         });
@@ -199,23 +195,17 @@ public class MboController {
      * @param rttr    재전송 정보
      * @return mbo 대상자 목록 페이지
      */
-    @GetMapping("/object")
-    public String object(String company, long tno, HttpServletRequest request, RedirectAttributes rttr) {
+    @GetMapping("/object/{company}/{tno}")
+    public String object(@PathVariable("company") String company, @PathVariable("tno") long tno,
+            HttpServletRequest request) {
         log.info("object redirect by " + company + "/" + tno);
 
         HttpSession session = request.getSession();
         if (session.getAttribute("evaluator") == null) {
-            rttr.addAttribute("company", company);
-            return "redirect:/mbo";
+            return "redirect:/mbo/" + company;
         }
 
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            rttr.addFlashAttribute("company", origin);
-        });
-
-        rttr.addAttribute("company", company);
-        rttr.addAttribute("tno", tno);
-        return "redirect:/mbo/list";
+        return "redirect:/mbo/list/" + company + "/" + tno;
     }
 
     /**
@@ -227,8 +217,9 @@ public class MboController {
      * @param model   화면 전달 정보
      */
     // @GetMapping("/object")
-    @PostMapping("/object")
-    public void object(String company, long tno, Long rno, Model model) {
+    @PostMapping("/object/{company}/{tno}")
+    public String object(@PathVariable("company") String company, @PathVariable("tno") long tno, Long rno,
+            Model model) {
         log.info("object list by " + company + "/" + tno + "/" + rno);
 
         // 회사 정보
@@ -236,19 +227,19 @@ public class MboController {
             model.addAttribute("company", origin);
         });
 
-        turnService.read(tno).ifPresent(turn -> {
-            model.addAttribute("turn", turn);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
             // 평가 단계에서 회답지 추가
-            if (turn.getInfoMbo().getStatus().equals("see") || turn.getInfoMbo().getStatus().equals("count")) {
+            if (origin.getInfoMbo().getStatus().equals("see") || origin.getInfoMbo().getStatus().equals("count")) {
                 // 회답지 추가
-                Integer replyCode = turn.getInfoMbo().getReplyCode();
+                Integer replyCode = origin.getInfoMbo().getReplyCode();
                 if (replyCode != null) {
                     bookService.read(replyCode).ifPresent(book -> {
                         model.addAttribute("replyCodeList", book.getContents());
                     });
                 }
                 // 가중치 추가
-                Integer weightCode = turn.getInfoMbo().getWeightCode();
+                Integer weightCode = origin.getInfoMbo().getWeightCode();
                 if (weightCode != null) {
                     bookService.read(weightCode).ifPresent(book -> {
                         model.addAttribute("weightCodeList", book.getContents());
@@ -257,23 +248,23 @@ public class MboController {
             }
         });
 
-        relationMboService.read(rno).ifPresent(relation -> {
+        relationMboService.read(rno).ifPresent(origin -> {
             // 관계에 대한 정보 추가
-            model.addAttribute("relation", relation);
+            model.addAttribute("relation", origin);
 
             // 본인평가 정보 전달
-            relationMboService.findMeRelationByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(relationMe -> {
+            relationMboService.findMeRelationByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(relationMe -> {
                 model.addAttribute("relationMe", relationMe);
             });
 
             // 피평가자의 팀 목표 전달
-            departmentService.findByDepartment(tno, relation.getEvaluated().getDepartment1(),
-                    relation.getEvaluated().getDepartment2()).ifPresent(origin -> {
-                        model.addAttribute("department", origin);
+            departmentService.findByDepartment(tno, origin.getEvaluated().getDepartment1(),
+                    origin.getEvaluated().getDepartment2()).ifPresent(dep -> {
+                        model.addAttribute("department", dep);
                     });
 
             // 피평가자의 목표 가져오기, 피평가자 sno와 tno로
-            mboService.listByTnoSno(tno, relation.getEvaluated().getSno()).ifPresent(list -> {
+            mboService.listByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(list -> {
                 // finish Y인 목록과 N인 목록 구분 지음.
                 List<ObjectWithReplyNum> objectList = new LinkedList<ObjectWithReplyNum>();
                 List<ObjectWithReplyNum> removedList = new LinkedList<ObjectWithReplyNum>();
@@ -285,8 +276,8 @@ public class MboController {
                     // 목표를 추가하고
                     object.mbo = list.get(i);
                     // 목표에 해당하는 댓글수를 가져와서 추가하고
-                    replyService.listByMno(list.get(i).getMno()).ifPresent(origin -> {
-                        object.replyNum = origin.size();
+                    replyService.listByMno(list.get(i).getMno()).ifPresent(reply -> {
+                        object.replyNum = reply.size();
                     });
 
                     // 삭제,수정 된 목표와 아닌 것을 구분하고
@@ -303,13 +294,15 @@ public class MboController {
                 // 댓글 리스트 목록으로 만들어 전달하기 현재 목표리스트의 mno와 일치하는 댓글만
                 List<Reply> replyList = new ArrayList<>();
                 for (int i = 0; i < list.size(); i++) {
-                    replyService.listByMno(list.get(i).getMno()).ifPresent(origin -> {
-                        replyList.addAll(origin);
+                    replyService.listByMno(list.get(i).getMno()).ifPresent(reply -> {
+                        replyList.addAll(reply);
                     });
                 }
                 model.addAttribute("replyList", replyList);
             });
         });
+
+        return "mbo/object";
     }
 
     /**
@@ -380,7 +373,6 @@ public class MboController {
             RatioValue tmpValue = gson.fromJson(answer.get("value").toString(), RatioValue.class);
 
             relationMboService.read(tmpRno).ifPresent(origin -> {
-                origin.setFinish(tmpFinish);
                 origin.getAnswers().put(tmpKey, tmpValue);
                 relationMboService.modify(origin);
             });

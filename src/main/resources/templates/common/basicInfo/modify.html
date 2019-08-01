@@ -16,7 +16,7 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            <form th:action="@{/survey/modify}" method="POST" th:with="evaluator=${session?.evaluator}">
+            <form th:action="@{../../modify}" method="POST" th:with="evaluator=${session?.evaluator}">
                 <div class="form-group">
                     <label>Name</label>
                     <input type="text" class="form-control" name="name" placeholder="Name" th:value="${evaluator?.name}" readonly>

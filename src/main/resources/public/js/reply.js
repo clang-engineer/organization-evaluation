@@ -3,7 +3,7 @@ var replyService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: '../reply/',
+            url: '../../../reply/',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var replyService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("../reply/" + param.rno,
+        $.get("../../../reply/" + param.rno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var replyService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '../reply/',
+            url: '../../../reply/',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -61,7 +61,7 @@ var replyService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '../reply/' + param.rno,
+            url: '../../../reply/' + param.rno,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
@@ -78,24 +78,10 @@ var replyService = (function () {
         });
     }
 
-    function getList(bno, callback, error) {
-        $.getJSON("./contents/" + bno,
-            function (data) {
-                if (callback) {
-                    callback(data);
-                }
-            }).fail(function (xhr, status, err) {
-                if (error) {
-                    error();
-                }
-            });
-    }
-
     return {
         register: register,
         read: read,
         modify: modify,
-        remove: remove,
-        getList: getList
+        remove: remove
     };
 })();

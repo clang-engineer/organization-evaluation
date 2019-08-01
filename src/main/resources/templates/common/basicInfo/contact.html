@@ -40,7 +40,7 @@
     <!-- In order to set the email address and subject line for the contact form go to the bin/contact_me.php file. -->
     <div class="row">
         <div class="col-lg-8 mb-4">
-            <form action="../../help" method="post" name="sentMessage" id="contactForm">
+            <form th:action="@{../../help}" method="post" name="sentMessage" id="contactForm">
                 <div class="control-group form-group">
                     <div class="controls">
                         <label>Phone Number:</label>

@@ -178,32 +178,12 @@
 
 				if (confirm(type + " 사용자 페이지로 이동하시겠습니까?")) {
 					e.preventDefault();
-					window.location.href = "/" + type + "/" + $(this).attr('href');
+					window.location.href = "../" + type + "/" + $(this).attr('href');
 				} else {
 					return false;
 				}
 			});
 		});
-
-		/* 			$(document).ready(function(){
-		 var result=[[${result}]];
-
-		 checkModal(result);
-
-		 history.replaceState({},null,null);
-
-		 function checkModal(result){
-
-		 if(result===''||history.state){
-		 return;
-		 }
-		 if(parseInt(result)>0){
-		 $(".modal-body").html( result + "번째 정보가 정상적으로 등록 되었습니다.");
-		 $("#myModal").modal("show");
-		 }
-		 }
-
-		 }); */
 	</script>
 </th:block>
 </body>
