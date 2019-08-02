@@ -10,7 +10,7 @@
 		<hr>
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
-			<div class="card-body">
+			<div class="card-body" th:with="infoSurvey=${turn?.infoSurvey}">
 				<fieldset disabled>
 					<div class="form-group">
 						<label>Survey Title</label>
@@ -72,7 +72,7 @@
 		</div>
 	</div>
 	<form id="myForm" th:action="@{modify}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+		<input type="hidden" name="tno" th:value="${turn?.tno}" />
 	</form>
 	<!-- /.container-fluid -->
 </div>

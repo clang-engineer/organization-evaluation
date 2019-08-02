@@ -54,7 +54,7 @@
                         <tbody>
                             <tr th:each="staff,iterstate:${progress}">
                                 <th>[[${iterstate.count}]]</td>
-                                <td><a th:href="@{/progress/mbo/objectList(tno=${tno},sno=${staff[0]})}">[[${staff[1]}]]</a></td>
+                                <td><a th:href="@{/progress/mbo/objectList(tno=${turn?.tno},sno=${staff[0]})}">[[${staff[1]}]]</a></td>
                                 <td>[[${staff[2]}]]</td>
                                 <td>[[${staff[3]}]]</td>
                                 <td>[[${staff[4]}]]</td>

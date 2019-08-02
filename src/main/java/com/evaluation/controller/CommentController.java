@@ -96,10 +96,8 @@ public class CommentController {
     public void readList(long tno, Model model) {
         log.info("question list by " + tno);
 
-        turnService.read(tno).ifPresent(turn -> {
-            log.info("" + turn.getComments());
-            model.addAttribute("commentList", turn.getComments());
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
-        model.addAttribute("tno", tno);
     }
 }

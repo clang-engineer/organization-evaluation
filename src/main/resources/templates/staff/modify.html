@@ -7,10 +7,10 @@
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a th:href="@{list(tno=${tno})}">List</a>
+				<a th:href="@{list(tno=${turn?.tno})}">List</a>
 			</li>
 			<li class="breadcrumb-item">
-				<a th:href="@{view(tno=${tno},sno=${staff.sno})}">Detail</a>
+				<a th:href="@{view(tno=${turn?.tno},sno=${staff.sno})}">Detail</a>
 			</li>
 			<li class="breadcrumb-item active">Modify</li>
 		</ol>
@@ -134,7 +134,7 @@
 					};
 				}
 
-				formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
+				formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
 				formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO.page }]] + "'/>");
 				formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO.size }]] + "'/>");
 				formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO.type }]] + "'/>");

@@ -1,7 +1,6 @@
 package com.evaluation.controller;
 
 import com.evaluation.domain.Division;
-import com.evaluation.domain.Turn;
 import com.evaluation.service.DivisionService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -117,11 +116,13 @@ public class DivisionController {
     public void readList(long tno, PageVO vo, Model model) {
         log.info("division list by " + tno);
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+            
+            Page<Division> result = divisionService.getList(origin.getCno(), vo);
+            model.addAttribute("result", new PageMaker<>(result));
+        });
 
-        long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
-        Page<Division> result = divisionService.getList(cno, vo);
-        model.addAttribute("result", new PageMaker<>(result));
     }
 
 }

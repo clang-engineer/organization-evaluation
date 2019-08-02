@@ -120,7 +120,9 @@ public class DepartmentController {
     public void readList(long tno, PageVO vo, Model model) {
         log.info("department list by " + tno);
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
 
         Page<Department> result = departmentService.getList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
@@ -160,20 +162,20 @@ public class DepartmentController {
     public void readLeader(long tno, long dno, PageVO vo, Model model) {
         log.info("read leader " + tno + dno);
         // dno일치하는 팀 정보와 리더 정보 전달.
-        departmentService.read(dno).ifPresent(department -> {
-            if (department.getLeader() != null) {
-                model.addAttribute("team", department.getLeader());
-                staffService.read(department.getLeader().getSno()).ifPresent(staff -> {
+        departmentService.read(dno).ifPresent(origin -> {
+            if (origin.getLeader() != null) {
+                model.addAttribute("team", origin.getLeader());
+                staffService.read(origin.getLeader().getSno()).ifPresent(staff -> {
                     model.addAttribute("leader", staff);
                 });
             }
         });
 
         // leader를 전체 직원 중 등록하기 위해 직원 명단 전송
-        turnService.read(tno).ifPresent(turn -> {
-            long cno = turn.getCno();
-            staffService.findByCno(cno).ifPresent(origin -> {
-                model.addAttribute("staffList", origin);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+            staffService.findByCno(origin.getCno()).ifPresent(staff -> {
+                model.addAttribute("staffList", staff);
             });
         });
 
@@ -213,38 +215,39 @@ public class DepartmentController {
     }
 
     // /**
-    //  * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
-    //  * 
-    //  * @param dno 부서 id
-    //  * @return 부서 정보
-    //  */
+    // * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
+    // *
+    // * @param dno 부서 id
+    // * @return 부서 정보
+    // */
     // @GetMapping("/{dno}")
     // @ResponseBody
     // public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
-    //     log.info("read leader " + dno);
-    //     Department department = departmentService.read(dno).orElse(null);
-    //     return new ResponseEntity<>(department, HttpStatus.OK);
+    // log.info("read leader " + dno);
+    // Department department = departmentService.read(dno).orElse(null);
+    // return new ResponseEntity<>(department, HttpStatus.OK);
     // }
 
     // /**
-    //  * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
-    //  * 
-    //  * @param dno    부서 id
-    //  * @param leader 리더 정보
-    //  * @return http 상태 정보
-    //  */
+    // * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
+    // *
+    // * @param dno 부서 id
+    // * @param leader 리더 정보
+    // * @return http 상태 정보
+    // */
     // @PutMapping("/{dno}")
     // @ResponseBody
-    // public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
-    //     log.info("modify leader info " + dno);
-    //     departmentService.read(dno).ifPresent(origin -> {
-    //         if (origin.getLeader() != null) {
-    //             origin.getLeader().setTitle(leader.getTitle());
-    //             origin.getLeader().setContent(leader.getContent());
-    //             departmentService.modify(origin);
-    //         }
-    //     });
+    // public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno,
+    // @RequestBody Leader leader) {
+    // log.info("modify leader info " + dno);
+    // departmentService.read(dno).ifPresent(origin -> {
+    // if (origin.getLeader() != null) {
+    // origin.getLeader().setTitle(leader.getTitle());
+    // origin.getLeader().setContent(leader.getContent());
+    // departmentService.modify(origin);
+    // }
+    // });
 
-    //     return new ResponseEntity<>(HttpStatus.OK);
+    // return new ResponseEntity<>(HttpStatus.OK);
     // }
 }

@@ -2,9 +2,8 @@ package com.evaluation.controller;
 
 import com.evaluation.domain.embeddable.InfoMbo;
 import com.evaluation.service.BookService;
-import com.evaluation.service.InfoMboService;
+import com.evaluation.service.TurnService;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -12,6 +11,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
+import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
 /**
@@ -20,13 +20,12 @@ import lombok.extern.slf4j.Slf4j;
 @Controller
 @RequestMapping("/infoMbo/*")
 @Slf4j
+@AllArgsConstructor
 public class InfoMboController {
 
-	@Autowired
-	private InfoMboService infoMboService;
-
-	@Autowired
 	private BookService bookService;
+
+	private TurnService turnService;
 
 	/**
 	 * Mbo 설정 정보를 읽어온다.
@@ -38,12 +37,13 @@ public class InfoMboController {
 	public void view(long tno, Model model) {
 		log.info("infoMbo read get " + tno);
 
-		model.addAttribute("tno", tno);
+		turnService.read(tno).ifPresent(origin->{
+			model.addAttribute("turn", origin);
+		});
+
 		bookService.findByType("MboReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
-
-		model.addAttribute("infoMbo", infoMboService.read(tno));
 	}
 
 	/**
@@ -56,11 +56,13 @@ public class InfoMboController {
 	public void modify(long tno, Model model) {
 		log.info("infoMBO modify get" + tno);
 
-		model.addAttribute("tno", tno);
+		turnService.read(tno).ifPresent(origin->{
+			model.addAttribute("turn", origin);
+		});
+
 		bookService.findByType("MboReply").ifPresent(origin -> {
 			model.addAttribute("bookReply", origin);
 		});
-		model.addAttribute("infoMbo", infoMboService.read(tno));
 	}
 
 	/**
@@ -75,7 +77,10 @@ public class InfoMboController {
 	public String modify(long tno, InfoMbo infoMbo, RedirectAttributes rttr) {
 		log.info("controller : infoMbo modify post " + infoMbo);
 
-		infoMboService.modify(tno, infoMbo);
+		turnService.read(tno).ifPresent(origin->{
+			origin.setInfoMbo(infoMbo);
+			turnService.register(origin);
+		});
 
 		rttr.addAttribute("tno", tno);
 		return "redirect:/infoMbo/read";

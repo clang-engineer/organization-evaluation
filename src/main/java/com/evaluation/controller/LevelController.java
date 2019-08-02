@@ -1,7 +1,6 @@
 package com.evaluation.controller;
 
 import com.evaluation.domain.Level;
-import com.evaluation.domain.Turn;
 import com.evaluation.service.LevelService;
 import com.evaluation.service.TurnService;
 import com.evaluation.vo.PageMaker;
@@ -117,11 +116,13 @@ public class LevelController {
     public void readList(long tno, PageVO vo, Model model) {
         log.info("level list by " + tno);
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin->{
+            model.addAttribute("turn", origin);
+            
+            Page<Level> result = levelService.getList(origin.getCno(), vo);
+            model.addAttribute("result", new PageMaker<>(result));
+        });
 
-        long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
-        Page<Level> result = levelService.getList(cno, vo);
-        model.addAttribute("result", new PageMaker<>(result));
     }
 
 }

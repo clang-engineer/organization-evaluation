@@ -41,7 +41,7 @@
 							</tr>
 						</tfoot>
 						<tbody>
-							<tr th:each="question,status:${commentList}">
+							<tr th:each="question,status:${turn?.comments}">
 								<td>[[${status.count}]]</td>
 								<td>[[${question}]]</td>
 								<td><a th:href="${status.index}" class="detail">
@@ -58,7 +58,7 @@
 	</div>
 	<!-- /.container-fluid -->
 	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+		<input type="hidden" name="tno" th:value="${turn?.tno}" />
 		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 	</form>
 

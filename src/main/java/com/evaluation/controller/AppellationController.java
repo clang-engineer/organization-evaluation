@@ -129,14 +129,15 @@ public class AppellationController {
         String[] words = whatYouCall.split("/");
         String pathInfo = words[2];
 
-        turnService.read(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+
             if ("survey".equals(pathInfo)) {
-                model.addAttribute("appellationList", turn.getSurveyAppellation());
+                model.addAttribute("type", "survey");
             } else if ("mbo".equals(pathInfo)) {
-                model.addAttribute("appellationList", turn.getMboAppellation());
+                model.addAttribute("type", "mbo");
             }
         });
-        model.addAttribute("tno", tno);
 
         return "appellation/list";
     }

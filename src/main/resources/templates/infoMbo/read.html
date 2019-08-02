@@ -13,10 +13,9 @@
 
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
-			<div class="card-body">
+			<div class="card-body" th:with="infoMbo=${turn?.infoMbo}">
 				<fieldset disabled>
-
-					<input type="hidden" name="tno" th:value="${tno}" />
+					<input type="hidden" name="tno" th:value="${turn?.tno}" />
 					<div class="form-group">
 						<label>MBO Title</label>
 						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoMbo?.title}">
@@ -107,7 +106,7 @@
 	</div>
 	<!-- /.container-fluid -->
 	<form id="myForm" th:action="@{modify}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+		<input type="hidden" name="tno" th:value="${turn?.tno}" />
 	</form>
 </div>
 

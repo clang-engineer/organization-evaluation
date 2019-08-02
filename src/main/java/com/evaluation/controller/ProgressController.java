@@ -100,7 +100,9 @@ public class ProgressController {
             });
         }
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
     }
 
     /**
@@ -124,7 +126,10 @@ public class ProgressController {
                 model.addAttribute("evaluatedList", origin);
             });
         }
-        model.addAttribute("tno", tno);
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
     }
 
     /**
@@ -616,7 +621,10 @@ public class ProgressController {
             model.addAttribute("count", list.size());
             model.addAttribute("total", total);
         });
-        model.addAttribute("tno", tno);
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
     }
 
     /**
@@ -628,9 +636,12 @@ public class ProgressController {
      */
     @GetMapping("/mbo/objectList")
     public void objectList(long tno, long sno, Model model) {
-        model.addAttribute("tno", tno);
         mboService.listByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("objectList", list);
+        });
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
     }
 

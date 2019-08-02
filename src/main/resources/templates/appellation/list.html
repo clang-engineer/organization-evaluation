@@ -40,7 +40,14 @@
 							</tr>
 						</tfoot>
 						<tbody>
-							<tr th:each="appellation,status:${appellationList}">
+							<tr th:if="${type}=='survey'" th:each="appellation,status:${turn?.surveyAppellation}">
+								<td>[[${status.count}]]</td>
+								<td>[[${appellation}]]</td>
+								<td><a th:href="${status.index}" class="detail">
+										<button type="button" class="btn btn-detail"><i class="fas fa-pen"></i></button>
+									</a></td>
+							</tr>
+							<tr th:if="${type}=='mbo'" th:each="appellation,status:${turn?.mboAppellation}">
 								<td>[[${status.count}]]</td>
 								<td>[[${appellation}]]</td>
 								<td><a th:href="${status.index}" class="detail">
@@ -57,7 +64,7 @@
 	</div>
 	<!-- /.container-fluid -->
 	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+		<input type="hidden" name="tno" th:value="${turn?.tno}" />
 		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 	</form>
 
