@@ -193,7 +193,7 @@
 
 
 <th:block layout:fragment="script">
-    <script type="text/javascript" th:src="@{/public/js/department.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/mbo/leader.js}"></script>
     <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
@@ -255,7 +255,7 @@
 
             $(".department").click(function (e) {
                 dno = $(this).data('dno');
-                departmentService.read(dno, function (result) {
+                leaderService.read(dno, function (result) {
                     modalTitle.text(result.department1 + " - " + result.department2 + " 목표 설정");
                     modalContent1.val(result.leader.title);
                     modalContent2.text(result.leader.content).keyup();
@@ -276,7 +276,7 @@
                     csrf: csrf
                 }
 
-                departmentService.modify(param, function (result) {
+                leaderService.modify(param, function (result) {
                     alert("수정 되었습니다.");
                     modal.modal("hide");
                 });

@@ -1,4 +1,4 @@
-var departmentService = (function () {
+var leaderService = (function () {
 
     function read(dno, callback, error) {
         console.log("read");
