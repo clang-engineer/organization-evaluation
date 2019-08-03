@@ -42,11 +42,9 @@ public class LevelController {
      * 
      * @param tno   회차 id
      * @param level 직급 정보
-     * @param rttr  재전송 정보
-     * @return 직급 목록 페이지
+     * @return 상태 메시지
      */
     @PostMapping("/{tno}")
-    @ResponseBody
     public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Level level) {
         log.info("level register by " + tno + level);
 
@@ -58,6 +56,13 @@ public class LevelController {
         return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
+    /**
+     * 직급 정보를 읽어온다.
+     * 
+     * @param tno 회차 id
+     * @param lno 직급 id
+     * @return 상태 메시지
+     */
     @GetMapping("/{tno}/{lno}")
     @ResponseBody
     public ResponseEntity<Level> read(@PathVariable("tno") long tno, @PathVariable("lno") long lno) {
@@ -77,6 +82,7 @@ public class LevelController {
      * @return 직급 목록 페이지
      */
     @PutMapping("/{tno}/{lno}")
+    @ResponseBody
     public ResponseEntity<Level> modify(@PathVariable("tno") long tno, @RequestBody Level level) {
         log.info("modify " + level);
 
@@ -88,9 +94,8 @@ public class LevelController {
     /**
      * 직급 정보를 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param lno  직급 id
-     * @param vo   페이지 정보
+     * @param tno 회차 id
+     * @param lno 직급 id
      * @return 직급 목록 페이지
      */
     @DeleteMapping("/{tno}/{lno}")

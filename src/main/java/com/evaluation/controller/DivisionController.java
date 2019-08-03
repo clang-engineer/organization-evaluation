@@ -8,12 +8,18 @@ import com.evaluation.vo.PageVO;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -36,15 +42,12 @@ public class DivisionController {
      * 
      * @param tno      회차 id
      * @param division 계층 정보
-     * @param rttr     재전달 정보
-     * @return 계층 목록 페이지
+     * @return 상태 메시지
      */
-    @PostMapping("/register")
-    public String register(long tno, Division division, RedirectAttributes rttr) {
+    @PostMapping("/{tno}")
+    @ResponseBody
+    public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Division division) {
         log.info("division register by " + tno + division);
-
-        rttr.addFlashAttribute("msg", "register");
-        rttr.addAttribute("tno", tno);
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
@@ -52,7 +55,24 @@ public class DivisionController {
             divisionService.register(division);
         });
 
-        return "redirect:/division/list";
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /**
+     * 계층 정보를 읽어온다.
+     * 
+     * @param tno 회차 id
+     * @param dno 계층 id
+     * @return 상태 메시지
+     */
+    @GetMapping("/{tno}/{dno}")
+    @ResponseBody
+    public ResponseEntity<Division> read(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
+        log.info("level read by " + tno + "/" + dno);
+
+        Division division = divisionService.read(dno).orElse(null);
+
+        return new ResponseEntity<>(division, HttpStatus.OK);
     }
 
     /**
@@ -60,49 +80,31 @@ public class DivisionController {
      * 
      * @param tno      회차 id
      * @param division 계층 정보
-     * @param vo       페이지 정보
-     * @param rttr     재전송 정보
-     * @return 계층 목록 페이지
+     * @return 상태 메시지
      */
-    @PostMapping("/modify")
-    public String modify(long tno, Division division, PageVO vo, RedirectAttributes rttr) {
+    @PutMapping("/{tno}/{dno}")
+    public ResponseEntity<Division> modify(@PathVariable("tno") long tno, @RequestBody Division division) {
         log.info("modify " + division);
 
         divisionService.modify(division);
 
-        rttr.addFlashAttribute("msg", "modify");
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/division/list";
+        return new ResponseEntity<>(division, HttpStatus.OK);
     }
 
     /**
      * 계층 정보를 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param dno  계층 id
-     * @param vo   페이지 정보
-     * @param rttr 재전송 정보
-     * @return 계층 목록 페이지
+     * @param tno 회차 id
+     * @param dno 계층 id
+     * @return 상태 메시지
      */
-    @PostMapping("/remove")
-    public String remove(long tno, long dno, PageVO vo, RedirectAttributes rttr) {
+    @DeleteMapping("/{tno}/{dno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
         log.info("remove " + dno);
 
         divisionService.remove(dno);
 
-        rttr.addFlashAttribute("msg", "remove");
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/division/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -112,17 +114,18 @@ public class DivisionController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list")
-    public void readList(long tno, PageVO vo, Model model) {
+    @GetMapping("/list/{tno}")
+    public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("division list by " + tno);
 
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
-            
+
             Page<Division> result = divisionService.getList(origin.getCno(), vo);
             model.addAttribute("result", new PageMaker<>(result));
         });
 
+        return "division/list";
     }
 
 }
