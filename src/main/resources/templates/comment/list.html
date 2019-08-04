@@ -57,11 +57,6 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${turn?.tno}" />
-		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
-	</form>
-
 
 	<!-- Modal -->
 	<div th:insert="~{common/modal::basic}"></div>
@@ -72,6 +67,7 @@
 
 
 <th:block layout:fragment="script">
+	<script th:inline="javascript" th:src="@{/public/js/admin/comment.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			//modal 사용 변수 선언
@@ -90,41 +86,9 @@
 			modalLabel2.hide();
 			modalContent2.hide();
 
-			var msg = [[${ msg }]];
+			var tno = [[${ turn?.tno }]];
 			var authName = [[${ #authentication?.name }]];
-
-			if (history.state == null) {
-				if (msg == 'register') {
-					alert("등록 되었습니다.");
-				} else if (msg == 'modify') {
-					alert("수정 되었습니다.");
-				} else if (msg == 'remove') {
-					alert("삭제 되었습니다.");
-				}
-			}
-
-			history.replaceState({}, null, null);
-
-			var formObj = $("#f1");
-
-			//페이지에 붙은 링크 클릭 시
-			$(".pagination a").click(function (e) {
-				e.preventDefault();
-
-				formObj.find('[name="page"]').val($(this).attr('href'));
-				formObj.submit();
-			});
-
-			//검색 버튼 클릭 시
-			$("#searchBtn").click(function (e) {
-				var typeStr = $("#searchType").find(":selected").val();
-				var keywordStr = $("#searchKeyword").val();
-
-				formObj.find("[name='type']").val(typeStr);
-				formObj.find("[name='keyword']").val(keywordStr);
-				formObj.find("[name='page']").val("1");
-				formObj.submit();
-			});
+			var csrf = JSON.parse('[[${_csrf}]]');
 
 			//디테일 버튼 클릭 시
 			$(".detail").click(function (e) {
@@ -136,8 +100,10 @@
 
 				//모달 text
 				modalTitle.text("Comment Modify or Delete");
-				content = $(this).closest("tr").children().eq(1).text();
-				modalContent1.val(content);
+				var obj = { tno: tno, idx: detailNo };
+				commentService.read(obj, function (result) {
+					modalContent1.val(result);
+				});
 
 				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
@@ -164,44 +130,36 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				formObj.attr("action", "register").attr("method", "post");
-				formObj.append("<input type='hidden' name='comment' value='" + modalContent1.val() + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, comment: modalContent1.val(), csrf: csrf };
+				commentService.register(obj, function () {
+					alert("등록 되었습니다.");
+					location.reload();
+				});
 			});
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				formObj.attr("action", "modify").attr("method", "post");
-				formObj.append("<input type='hidden' name='comment' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='idx' value='" + modal.data("idx") + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, idx: modal.data('idx'), comment: modalContent1.val(), csrf: csrf };
+				commentService.modify(obj, function () {
+					alert("수정 되었습니다.");
+					location.reload();
+				});
 			});
 
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				if (delchk() == true) {
-					formObj.attr("action", "delete");
-				} else {
-					return;
-				};
-				formObj.attr("action", "remove").attr("method", "post");
-				formObj.append("<input type='hidden' name='idx' value='" + modal.data("idx") + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, idx: modal.data('idx'), csrf: csrf };
+				commentService.remove(obj, function () {
+					alert("삭제 되었습니다.");
+					location.reload();
+				});
 			});
 
 			//close button click 시
 			modalCloseBtn.on("click", function (e) {
 				modal.modal('hide');
 			});
-
-			function delchk() {
-				if (confirm("삭제하시겠습니까?")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
 
 		});
 	</script>

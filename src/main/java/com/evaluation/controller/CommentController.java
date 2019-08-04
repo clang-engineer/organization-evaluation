@@ -1,14 +1,22 @@
 package com.evaluation.controller;
 
+import java.util.List;
+
+import com.evaluation.domain.Turn;
 import com.evaluation.service.TurnService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -28,11 +36,10 @@ public class CommentController {
      * 
      * @param tno     회차 id
      * @param comment 주관식 문항
-     * @param rttr    재전송 정보
-     * @return 주관식 목록
+     * @return 상태 메시지
      */
-    @PostMapping("/register")
-    public String register(long tno, String comment, RedirectAttributes rttr) {
+    @PostMapping("/{tno}")
+    public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody String comment) {
         log.info("add " + comment);
 
         turnService.read(tno).ifPresent(turn -> {
@@ -40,8 +47,7 @@ public class CommentController {
             turnService.register(turn);
         });
 
-        rttr.addAttribute("tno", tno);
-        return "redirect:/comment/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -50,11 +56,11 @@ public class CommentController {
      * @param tno     회차 id
      * @param idx     리스트 index
      * @param comment 주관식 문항
-     * @param rttr    재전송 정보
-     * @return 주관식 목록
+     * @return 상태 메시지
      */
-    @PostMapping("/modify")
-    public String modify(long tno, int idx, String comment, RedirectAttributes rttr) {
+    @PutMapping("/{tno}/{idx}")
+    public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
+            @RequestBody String comment) {
         log.info("Modify " + comment);
 
         turnService.read(tno).ifPresent(turn -> {
@@ -62,28 +68,41 @@ public class CommentController {
             turnService.register(turn);
         });
 
-        rttr.addAttribute("tno", tno);
-        return "redirect:/comment/list";
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 주관식 정보를 읽어온다.
+     * 
+     * @param tno 회차 id
+     * @param idx 리스트 index
+     * @return 주관식 정보
+     */
+    @GetMapping("/{tno}/{idx}")
+    public ResponseEntity<String> read(@PathVariable("tno") long tno, @PathVariable("idx") int idx) {
+        log.info("read " + tno + "/" + idx);
+
+        List<String> comments = turnService.read(tno).map(Turn::getComments).orElse(null);
+
+        return new ResponseEntity<>(comments.get(idx), HttpStatus.OK);
     }
 
     /**
      * 주관식 문항을 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param idx  리스트 index
-     * @param rttr 재전송 정보
-     * @return 주관식 목록
+     * @param tno 회차 id
+     * @param idx 리스트 index
+     * @return 상태 메시지
      */
-    @PostMapping("/remove")
-    public String remove(long tno, int idx, RedirectAttributes rttr) {
+    @DeleteMapping("/{tno}/{idx}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("idx") int idx) {
         log.info("remove " + idx);
         turnService.read(tno).ifPresent(turn -> {
             turn.getComments().remove(idx);
             turnService.register(turn);
         });
 
-        rttr.addAttribute("tno", tno);
-        return "redirect:/comment/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -92,12 +111,13 @@ public class CommentController {
      * @param tno   회차 id
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list")
-    public void readList(long tno, Model model) {
+    @GetMapping("/list/{tno}")
+    public String readList(@PathVariable("tno") long tno, Model model) {
         log.info("question list by " + tno);
 
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
+        return "comment/list";
     }
 }
