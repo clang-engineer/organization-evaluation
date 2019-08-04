@@ -1,5 +1,11 @@
 <!-- container -->
 <div class="container" th:fragment="profile">
+    <style>
+        #alert-success,
+        #alert-danger {
+            display: none;
+        }
+    </style>
     <!-- Page Heading/Breadcrumbs -->
     <h2 class="mb-5">Profile
         <small>인사팀을 통해 전달 받은 기본 정보 입니다.</small>
@@ -9,55 +15,53 @@
     <div class="card mb-4">
         <div class="card-body">
 
-            <form th:with="evaluator=${session?.evaluator}">
-                <fieldset disabled>
-                    <div class="form-group">
-                        <label>Name</label>
-                        <input type="text" class="form-control" placeholder="Name" th:value="${evaluator?.name}">
+            <form th:with="evaluator=${session?.evaluator}" id="myForm">
+                <div class="form-group">
+                    <label>Name</label>
+                    <input class="form-control" name="name" type="text" placeholder="Name" th:value="${evaluator?.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>Email</label>
+                    <input class="form-control" placeholder="Email" name="email" id="email" type="email" th:value="${evaluator?.email}" readonly>
+                </div>
+                <label>Password</label>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <input class="form-control" name="password" id="pwd1" type="password" placeholder="Password" th:value="${evaluator?.password}" readonly>
                     </div>
-                    <div class="form-group">
-                        <label>Email</label>
-                        <input type="email" class="form-control" placeholder="Email" th:value="${evaluator?.email}">
+                    <div class="form-group col-md-6">
+                        <input class="form-control" id="pwd2" type="password" placeholder="Confirm Password" th:value="${evaluator?.password}" readonly>
                     </div>
-                    <label>Password</label>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <input class="form-control" type="password" placeholder="Password" th:value="${evaluator?.password}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <input class="form-control" type="password" placeholder="Confirm Password" th:value="${evaluator?.password}">
-                        </div>
+                </div>
+                <div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+                <div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+                <div class="form-group">
+                    <label>Telephone</label>
+                    <input class="form-control" name="telephone" type="telephone" placeholder="000-0000-0000" th:value="${evaluator?.telephone}" readonly>
+                </div>
+                <div class="form-row">
+                    <div class="form-group col-md-6">
+                        <label>Department1</label>
+                        <input class="form-control" name="department1" type="text" placeholder="Department1" th:value="${evaluator?.department1}" readonly>
                     </div>
-                    <div class="form-group">
-                        <label>Telephone</label>
-                        <input class="form-control" type="telephone" placeholder="555-5555-5555" th:value="${evaluator?.telephone}">
+                    <div class="form-group col-md-6">
+                        <label>Department2</label>
+                        <input class="form-control" name="department2" type="text" placeholder="Department2" th:value="${evaluator?.department2}" readonly>
                     </div>
-                    <div class="form-row">
-                        <div class="form-group col-md-6">
-                            <label>Department1</label>
-                            <input type="text" class="form-control" placeholder="Department1" th:value="${evaluator?.department1}">
-                        </div>
-                        <div class="form-group col-md-6">
-                            <label>Department2</label>
-                            <input type="email" class="form-control" placeholder="Department2" th:value="${evaluator?.department2}">
-                        </div>
-                    </div>
-                    <div class="form-group">
-                        <label>Level</label>
-                        <input type="text" class="form-control" placeholder="Level" th:value="${evaluator?.level}">
-                    </div>
-                </fieldset>
+                </div>
+                <div class="form-group">
+                    <label>Level</label>
+                    <input class="form-control" name="level" type="text" placeholder="Level" th:value="${evaluator?.level}" readonly>
+                </div>
             </form>
-            <div>
-                <a th:href="@{|../../modify/${company.id}/${turn?.tno}|}">
-                    <button type="submit" class="btn btn-primary">Modify</button>
-                </a>
+            <div class="form-group mt-3">
+                <button class="btn btn-primary" id="modify">Modify</button>
+                <button class="btn btn-danger" id="submit" style="display:none;">Save</button>
             </div>
         </div>
         <div class="card-footer text-muted" th:text="${#calendars.format(#calendars.createNow())}" >
         </div>
     </div>
     <!--./ Blog Post -->
-
 </div>
 <!-- ./container -->
