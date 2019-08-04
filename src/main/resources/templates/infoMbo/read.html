@@ -19,15 +19,15 @@
 						<input type="hidden" name="tno" th:value="${turn?.tno}" />
 						<div class="form-group">
 							<label>MBO Title</label>
-							<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoMbo?.title}">
+							<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoMbo?.title}" readonly>
 						</div>
 						<div class="form-group">
 							<label>Content</label>
-							<textarea id="content" name="content" class="form-control" rows="5" th:text="${infoMbo?.content}"></textarea>
+							<textarea id="content" name="content" class="form-control" rows="5" th:text="${infoMbo?.content}" readonly></textarea>
 						</div>
 
 						<div class="form-group">
-							<label>Reply Type</label> <select class="form-control" name="replyCode">
+							<label>Reply Type</label> <select class="form-control" name="replyCode" readonly>
 								<option value="">--</option>
 								<span th:each="book:${bookReply}">
 									<option th:selected="${book?.bno}==${infoMbo?.replyCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
@@ -36,7 +36,7 @@
 						</div>
 
 						<div class="form-group">
-							<label>Weight Type</label> <select class="form-control" name="weightCode">
+							<label>Weight Type</label> <select class="form-control" name="weightCode" readonly>
 								<option value="">--</option>
 								<span th:each="book:${bookReply}">
 									<option th:selected="${book?.bno}==${infoMbo?.weightCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
@@ -46,7 +46,7 @@
 
 						<div class="form-group">
 							<label>Status</label>
-							<select class="form-control" name="status">
+							<select class="form-control" name="status" readonly>
 								<option value="">--</option>
 								<option value="setting" th:selected="${infoMbo?.status}=='setting'">설정 중</option>
 								<option value="plan" th:selected="${infoMbo?.status}=='plan'">목표 설정</option>
@@ -70,23 +70,23 @@
 								<tbody>
 									<tr>
 										<th scope="row">운영 기간</th>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.startDate}" name="startDate"></td>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.endDate}" name="endDate"> </td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.startDate}" name="startDate" readonly></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.endDate}" name="endDate" readonly> </td>
 									</tr>
 									<tr>
 										<th scope="row">Plan(목표설정기간)</th>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step1Start}" name="step1Start"></td>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step1End}" name="step1End"></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step1Start}" name="step1Start" readonly></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step1End}" name="step1End" readonly></td>
 									</tr>
 									<tr>
 										<th scope="row">Do(중간운영기간)</th>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step2Start}" name="step2Start"></td>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step2End}" name="step2End"></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step2Start}" name="step2Start" readonly></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step2End}" name="step2End" readonly></td>
 									</tr>
 									<tr>
 										<th scope="row">See(평가기간)</th>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step3Start}" name="step3Start"></td>
-										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step3End}" name="step3End"></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step3Start}" name="step3Start" readonly></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoMbo?.step3End}" name="step3End" readonly></td>
 									</tr>
 								</tbody>
 							</table>
@@ -96,6 +96,7 @@
 					</form>
 					<div class="form-group">
 						<button class="btn btn-primary" id="modify">Modify</button>
+						<button class="btn btn-danger" id="submit" style="display:none;">Save</button>
 					</div>
 				</fieldset>
 			</div>
@@ -110,19 +111,30 @@
 	<!-- ckeditor adjust -->
 	<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 	<script th:inline="javascript">
-		ClassicEditor
-			.create(document.querySelector('#content'))
-			.then(editor => {
-				console.log(editor);
-			})
-			.catch(error => {
-				console.error(error);
-			});
 
 		$(document).ready(function (e) {
+			let theEditor;
 			$('#modify').on('click', function () {
+				$(this).hide();
+				$('#submit').show();
+
+				$.each($('input, select ,textarea'), function (k) {
+					$(this).attr('readonly', false);
+				});
+				ClassicEditor
+					.create(document.querySelector('#content'))
+					.then(editor => {
+						theEditor = editor;
+						console.log(editor);
+					})
+					.catch(error => {
+						console.error(error);
+					});
+			});
+
+			$('#submit').on('click', function () {
 				var param = $('form').serializeObject();
-				console.log(param);
+				param.content = theEditor.getData();
 				var csrf = JSON.parse('[[${_csrf}]]');
 				$.ajax({
 					type: 'put',
@@ -135,9 +147,7 @@
 					},
 					success: function (result, status, shr) {
 						alert("등록 되었습니다.");
-						$("#modify").prop('disabled', 'true');
-						$("#modify").addClass('disabled');
-						$('fieldset').attr('disabled', 'true');
+						location.reload();
 					},
 					error: function (xhr, status, err) {
 						alert(err);
