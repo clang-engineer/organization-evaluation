@@ -12,11 +12,15 @@ import com.evaluation.service.RelationSurveyService;
 import com.evaluation.service.StaffService;
 import com.evaluation.service.TurnService;
 
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
@@ -243,49 +247,17 @@ public class HomeController {
     }
 
     /**
-     * 사용자 정보 수정 페이지를 읽어온다.
-     * 
-     * @param company 회사 이름
-     * @param tno     회차 id
-     * @param model   화면 전달 정보
-     */
-    @GetMapping(value = { "/survey/modify/{company}/{tno}", "/mbo/modify/{company}/{tno}" })
-    public String userProfileModify(@PathVariable("company") String company, @PathVariable("tno") long tno,
-            HttpServletRequest request, Model model) {
-        log.info("profile by " + company + "/" + tno);
-
-        String whatYouCall = request.getServletPath();
-        String[] words = whatYouCall.split("/");
-        String pathInfo = words[1];
-
-        HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
-            return "redirect:/" + pathInfo + "/" + company;
-        }
-
-        companyService.findByCompanyId(company).ifPresent(origin -> {
-            model.addAttribute("company", origin);
-        });
-
-        turnService.read(tno).ifPresent(origin -> {
-            model.addAttribute("turn", origin);
-        });
-
-        return pathInfo + "/modify";
-    }
-
-    /**
      * 사용자 정보를 수정한다.
      * 
      * @param company 회사 이름
      * @param tno     회차 id
      * @param staff   직원 정보
      * @param request 요청 정보 객체
-     * @param rttr    재전송 정보
-     * @return 사용자 프로필 페이지
+     * @return 상태 메시지
      */
-    @PostMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String userProfileModify(String company, long tno, Staff staff, HttpServletRequest request) {
+    @PutMapping(value = { "/survey/profile/{company}/{tno}", "/mbo/profile/{company}/{tno}" })
+    public ResponseEntity<HttpStatus> userProfileModify(@PathVariable("company") String company,
+            @PathVariable("tno") long tno, @RequestBody Staff staff, HttpServletRequest request) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
             long sno = origin.getSno();
             staff.setSno(sno);
@@ -295,12 +267,7 @@ public class HomeController {
             session.setAttribute("evaluator", staff);
         });
 
-        String whatYouCall = request.getServletPath();
-        String[] words = whatYouCall.split("/");
-        String pathInfo = words[1];
-
-        String redirectPath = "redirect:/" + pathInfo + "/profile/" + company + "/" + tno;
-        return redirectPath;
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
