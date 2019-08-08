@@ -9,6 +9,50 @@
 
 </html>
 <th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/serializeObject.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/passwordConfirm.js}"></script>
     <script th:inline="javascript">
+        $(document).ready(function () {
+            $('#modify').on('click', function (e) {
+                $('#myForm').find("input[type='telephone']").prop('readonly', false);
+                $('#myForm').find("input[type='password']").prop('readonly', false);
+                $('#modify').hide();
+                $('#submit').show();
+            });
+
+            $('#submit').on('click', function (e) {
+                var param = $('form').serializeObject();
+                var tno = [[${ turn?.tno }]];
+                var csrf = JSON.parse('[[${_csrf}]]');
+
+                var email = $('#email').val();
+
+                if (!checkPassword($('#pwd1').val(), email.substring(0, email.indexOf("@")))) {
+                    return false;
+                };
+                
+                $.ajax({
+                    type: 'put',
+                    url: tno,
+                    data: JSON.stringify(param),
+                    // data: param.content,
+                    contentType: "application/json; charset:utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(csrf.headerName, csrf.token)
+                    },
+                    success: function (result, status, shr) {
+                        alert("수정 되었습니다.");
+                        $('#modify').show();
+                        $('#submit').hide();
+                        $('#myForm').find("input[type='telephone']").prop('readonly', true);
+                        $('#myForm').find("input[type='password']").prop('readonly', true);
+                        location.reload();
+                    },
+                    error: function (xhr, status, err) {
+                        alert(err);
+                    }
+                });
+            });
+        });
     </script>
 </th:block>
