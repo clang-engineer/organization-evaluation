@@ -3,13 +3,7 @@ package com.evaluation.persistence;
 import static org.junit.Assert.assertNotNull;
 
 import java.time.LocalDateTime;
-import java.util.HashSet;
-import java.util.Set;
-import java.util.stream.IntStream;
 
-import com.evaluation.domain.Turn;
-
-import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;

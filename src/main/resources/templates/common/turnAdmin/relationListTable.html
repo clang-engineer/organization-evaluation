@@ -30,7 +30,7 @@
     <tbody>
         <tr th:each="staff,status:${result.content}">
             <td>[[${idxpageNum-1}*10+${status.count}]]</td>
-            <td>[[${staff.name}]]</td>
+            <td class="text-nowrap">[[${staff.name}]]</td>
             <td>[[${staff.level}]]</td>
             <td>[[${staff.department1}]]</td>
             <td>[[${staff.department2}]]</td>

@@ -63,11 +63,6 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${turn?.tno}" />
-		<input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
-	</form>
-
 
 	<!-- Modal -->
 	<div th:insert="~{common/modal::basic}"></div>
