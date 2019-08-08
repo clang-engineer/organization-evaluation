@@ -57,7 +57,7 @@
 
 	<nav class="navbar navbar-expand navbar-dark bg-dark static-top">
 
-		<a class="navbar-brand mr-1" href="#">Company Detail</a>
+		<a class="navbar-brand mr-1" href="#">[[${turn?.title}]]</a>
 
 		<button class="btn btn-link btn-sm text-white order-1 order-sm-0" id="sidebarToggle" href="#">
 			<i class="fas fa-bars"></i>
@@ -99,7 +99,7 @@
 		<ul class="sidebar navbar-nav">
 
 			<!-- <li class="nav-item">
-				<a class="nav-link" th:href="@{/staff/list(tno=${tno})}">
+				<a class="nav-link" th:href="@{/staff/list(tno=${turn?.tno})}">
 					<i class="fas fa-fw fa-table"></i>
 					<span>Staff List</span>
 				</a>
@@ -111,12 +111,12 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
 					<h6 class="dropdown-header">Staff : </h6>
-					<a class="dropdown-item" th:href="@{/staff/list(tno=${tno})}">Staff</a>
+					<a class="dropdown-item" th:href="@{/staff/list(tno=${turn?.tno})}">Staff</a>
 					<div class="dropdown-divider"></div>
 					<h6 class="dropdown-header">Detail : </h6>
-					<a class="dropdown-item" th:href="@{/department/list(tno=${tno})}">Department</a>
-					<a class="dropdown-item" th:href="@{/level/list(tno=${tno})}">Level</a>
-					<a class="dropdown-item" th:href="@{/division/list(tno=${tno})}">Division</a>
+					<a class="dropdown-item" th:href="@{|/department/list/${turn?.tno}|}">Department</a>
+					<a class="dropdown-item" th:href="@{|/level/list/${turn?.tno}|}">Level</a>
+					<a class="dropdown-item" th:href="@{|/division/list/${turn?.tno}|}">Division</a>
 				</div>
 			</li>
 			<li class="nav-item dropdown">
@@ -126,16 +126,16 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
 					<h6 class="dropdown-header">Basic Info : </h6>
-					<a class="dropdown-item" th:href="@{/infoSurvey/read(tno=${tno})}">Info</a>
-					<a class="dropdown-item" th:href="@{/appellation/survey/list(tno=${tno})}">Appellation</a>
-					<a class="dropdown-item" th:href="@{/relationSurvey/list(tno=${tno})}">Relation Mapping</a>
+					<a class="dropdown-item" th:href="@{|/infoSurvey/${turn?.tno}|}">Info</a>
+					<a class="dropdown-item" th:href="@{|/appellation/survey/list/${turn?.tno}|}">Appellation</a>
+					<a class="dropdown-item" th:href="@{/relationSurvey/list(tno=${turn?.tno})}">Relation Mapping</a>
 					<div class="dropdown-divider"></div>
 					<h6 class="dropdown-header">Question : </h6>
-					<a class="dropdown-item" th:href="@{/question/list(tno=${tno})}">Question</a>
-					<a class="dropdown-item" th:href="@{/comment/list(tno=${tno})}">Essay</a>
+					<a class="dropdown-item" th:href="@{/question/list(tno=${turn?.tno})}">Question</a>
+					<a class="dropdown-item" th:href="@{|/comment/list/${turn?.tno}|}">Essay</a>
 					<div class="dropdown-divider"></div>
 					<h6 class="dropdown-header">Result : </h6>
-					<a class="dropdown-item" th:href="@{/progress/survey(tno=${tno})}">Progress</a>
+					<a class="dropdown-item" th:href="@{|/progress/survey/${turn?.tno}|}">Progress</a>
 				</div>
 			</li>
 			<li class="nav-item dropdown">
@@ -145,13 +145,13 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
 					<h6 class="dropdown-header">MBO Setting : </h6>
-					<a class="dropdown-item" th:href="@{/infoMbo/read(tno=${tno})}">Info</a>
-					<a class="dropdown-item" th:href="@{/appellation/mbo/list(tno=${tno})}">Appellation</a>
-					<a class="dropdown-item" th:href="@{/relationMbo/list(tno=${tno})}">Relation Mapping</a>
+					<a class="dropdown-item" th:href="@{|/infoMbo/${turn?.tno}|}">Info</a>
+					<a class="dropdown-item" th:href="@{|/appellation/mbo/list/${turn?.tno}|}">Appellation</a>
+					<a class="dropdown-item" th:href="@{/relationMbo/list(tno=${turn?.tno})}">Relation Mapping</a>
 					<div class="dropdown-divider"></div>
 					<h6 class="dropdown-header">Result : </h6>
-					<a class="dropdown-item" th:href="@{/progress/mbo/plan(tno=${tno})}">Plan/Do</a>
-					<a class="dropdown-item" th:href="@{/progress/mbo(tno=${tno})}">See</a>
+					<a class="dropdown-item" th:href="@{/progress/mbo/plan(tno=${turn?.tno})}">Plan/Do</a>
+					<a class="dropdown-item" th:href="@{|/progress/mbo/${turn?.tno}|}">See</a>
 				</div>
 			</li>
 			<li class="nav-item">

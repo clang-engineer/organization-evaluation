@@ -7,7 +7,7 @@
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a th:href="@{list(tno=${tno})}">List</a>
+				<a th:href="@{list(tno=${turn?.tno})}">List</a>
 			</li>
 			<li class="breadcrumb-item active">Detail</li>
 		</ol>
@@ -83,7 +83,7 @@
 		</div>
 	</div>
 	<form id="f1" th:action="@{modify}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+		<input type="hidden" name="tno" th:value="${turn?.tno}" />
 		<input type="hidden" name="page" th:value=${pageVO?.page} />
 		<input type="hidden" name="size" th:value=${pageVO?.size} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />

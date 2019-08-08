@@ -117,7 +117,9 @@ public class RelationSurveyController {
     public void getList(long tno, PageVO vo, Model model) {
         log.info("getList by " + tno);
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin->{
+            model.addAttribute("turn", origin);
+        });
 
         // 우선 중복 제거한 피평가자 paging처리해서 구함
         Page<Staff> result = relationSurveyService.getDistinctEvaluatedList(tno, vo);

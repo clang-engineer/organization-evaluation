@@ -9,11 +9,10 @@
         <ol class="breadcrumb">
             <li class="breadcrumb-item active">List</li>
         </ol>
-
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-table"></i> MBO Plan Progress
+                <i class="fas fa-table"></i> [[${type}]] Progress
             </div>
 
             <!-- search box -->
@@ -37,16 +36,20 @@
                                 <th>Level</th>
                                 <th>Department1</th>
                                 <th>Department2</th>
+                                <th>complete</th>
+                                <th>Total</th>
                                 <th class="w-50 th-lg" style="min-width: 300px">Ratio</th>
                             </tr>
                         </thead>
                         <tfoot>
                             <tr class="table-secondary">
                                 <th colspan="6">Total</th>
+                                <th>[[${completeCount}]]</th>
+                                <th>[[${totalCount}]]</th>
                                 <td>
-                                    <div class="progress" th:if="${count}!=null AND ${count}!=0">
-                                        <div class="progress-bar bg-success" role="progressbar" th:style="'width:'+${#numbers.formatPercent(total/count,0,0)}" aria-valuenow="25"
-                                            aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(total/count,0,0)}]]</div>
+                                    <div class="progress">
+                                        <div class="progress-bar bg-success" role="progressbar" th:style="${totalCount}!=null?'width:'+(${completeCount}/${totalCount})*100+'%'" aria-valuenow="25"
+                                            aria-valuemin="0" aria-valuemax="100"></div>
                                     </div>
                                 </td>
                             </tr>
@@ -54,14 +57,16 @@
                         <tbody>
                             <tr th:each="staff,iterstate:${progress}">
                                 <th>[[${iterstate.count}]]</td>
-                                <td><a th:href="@{/progress/mbo/objectList(tno=${turn?.tno},sno=${staff[0]})}">[[${staff[1]}]]</a></td>
+                                <td><a class="evaluatedList" th:href=${staff[8]}>[[${staff[0]}]]</a></td>
+                                <td>[[${staff[1]}]]</td>
                                 <td>[[${staff[2]}]]</td>
                                 <td>[[${staff[3]}]]</td>
                                 <td>[[${staff[4]}]]</td>
                                 <td>[[${staff[5]}]]</td>
+                                <td>[[${staff[6]}]]</td>
                                 <td>
                                     <div class="progress">
-                                        <div class="progress-bar" role="progressbar" th:style="'width:'+${#numbers.formatPercent(staff[6],0,0)}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(staff[6],0,0)}]]</div>
+                                        <div class="progress-bar" role="progressbar" th:style="'width:'+${#numbers.formatPercent(staff[7],0,0)}" aria-valuenow="25" aria-valuemin="0" aria-valuemax="100">[[${#numbers.formatPercent(staff[7],0,0)}]]</div>
                                     </div>
                                 </td>
                             </tr>
@@ -73,16 +78,15 @@
             <div class="card-footer small text-muted" th:text="${#calendars.format(#calendars.createNow())}"></div>
 
         </div>
-
     </div>
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="POST">
-        <input type="hidden" name="tno" th:value="${tno}">
+        <input type="hidden" name="tno" th:value="${turn?.tno}">
         <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
     </form>
 
     <div id="viewLoading">
-        <img th:src="@{/img/loading.gif}" />
+        <img src="/img/loading.gif" />
     </div>
 
 
@@ -99,13 +103,27 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.attr("action", "./plan");
+                formObj.attr("action", ".");
                 formObj.submit();
             });
 
             //rawdata 다운로드 함수
             $("#xlRawdata").click(function (e) {
-                formObj.attr("action", "./plan/result");
+                formObj.attr("action", "result");
+                formObj.submit();
+            });
+
+            // 개인의 피평가자 리스트 보는 버튼 클릭.
+            $(".evaluatedList").click(function (e) {
+                e.preventDefault();
+                var tno = [[${ turn?.tno }]];
+                var sno = $(this).attr("href");
+
+                formObj.empty();
+                formObj.attr("method", "GET")
+                formObj.append("<input type='hidden' name='tno' value='" + tno + "'>");
+                formObj.append("<input type='hidden' name='sno' value='" + sno + "'>");
+                formObj.attr("action", "evaluatedList");
                 formObj.submit();
             });
 

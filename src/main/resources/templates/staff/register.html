@@ -7,7 +7,7 @@
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a th:href="@{list(tno=${tno})}">List</a>
+				<a th:href="@{list(tno=${turn?.tno})}">List</a>
 			</li>
 			<li class="breadcrumb-item active">Register</li>
 		</ol>
@@ -107,7 +107,7 @@
 				if (operation === 'list') {
 					formObj.empty();
 					formObj.attr("action", "list").attr("method", "get");
-					formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
+					formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
 					formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO?.page }]] + "'/>");
 					formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO?.size }]] + "'/>");
 					formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO?.type }]] + "'/>");

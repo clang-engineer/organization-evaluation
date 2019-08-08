@@ -60,9 +60,9 @@ public class QuestionController {
     public void register(long tno, PageVO vo, Model model) {
         log.info("register get by " + tno + vo);
 
-        model.addAttribute("tno", tno);
-
         turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
@@ -100,13 +100,12 @@ public class QuestionController {
     public void read(long tno, long qno, PageVO vo, Model model) {
         log.info("view by " + tno + vo);
 
-        model.addAttribute("tno", tno);
-
         questionService.read(qno).ifPresent(origin -> {
             model.addAttribute("question", origin);
         });
 
         turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
@@ -124,13 +123,12 @@ public class QuestionController {
     public void modify(long tno, long qno, PageVO vo, Model model) {
         log.info("modify by " + tno + vo);
 
-        model.addAttribute("tno", tno);
-
         questionService.read(qno).ifPresent(origin -> {
             model.addAttribute("question", origin);
         });
 
         turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
@@ -197,7 +195,9 @@ public class QuestionController {
     public void readList(long tno, PageVO vo, Model model) {
         log.info("question list by " + tno + vo);
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
 
         Page<Question> result = questionService.getList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));

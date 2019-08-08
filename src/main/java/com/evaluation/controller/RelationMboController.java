@@ -119,8 +119,9 @@ public class RelationMboController {
     @GetMapping("/list")
     public void getList(long tno, PageVO vo, Model model) {
         log.info("getList by " + tno);
-
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
 
         // 우선 중복 제거한 피평가자 paging처리해서 구함
         Page<Staff> result = relationMboService.getDistinctEvaluatedList(tno, vo);
@@ -150,7 +151,7 @@ public class RelationMboController {
                             relationTmp.add(relation);
                         }
                     }
-                    String relationKey="relation" + (i + 1);
+                    String relationKey = "relation" + (i + 1);
                     if (!relationOther.containsKey(relationKey)) {
                         relationOther.put(relationKey, relationTmp);
                     } else {

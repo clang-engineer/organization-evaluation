@@ -90,8 +90,7 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+	<form id="f1" th:action="@{|${turn?.tno}|}" method="get">
 		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
 		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -108,6 +107,7 @@
 
 
 <th:block layout:fragment="script">
+	<script th:inline="javascript" th:src="@{/public/js/admin/department.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			//modal 사용 변수 선언
@@ -125,20 +125,9 @@
 			modalLabel1.text("Department1");
 			modalLabel2.text("Department2");
 
-			var msg = [[${ msg }]];
+			var tno = [[${ turn?.tno }]];
 			var authName = [[${ #authentication?.name }]];
-
-			if (history.state == null) {
-				if (msg == 'register') {
-					alert("등록 되었습니다.");
-				} else if (msg == 'modify') {
-					alert("수정 되었습니다.");
-				} else if (msg == 'remove') {
-					alert("삭제 되었습니다.");
-				}
-			}
-
-			history.replaceState({}, null, null);
+			var csrf = JSON.parse('[[${_csrf}]]');
 
 			var formObj = $("#f1");
 
@@ -171,10 +160,11 @@
 
 				//모달 text
 				modalTitle.text("Department Modify or Delete");
-				dep1 = $(this).closest("tr").children().eq(1).text();
-				dep2 = $(this).closest("tr").children().eq(2).text();
-				modalContent1.val(dep1);
-				modalContent2.val(dep2);
+				var obj = { tno: tno, dno: detailNo };
+				departmentService.read(obj, function (result) {
+					modalContent1.val(result.department1);
+					modalContent2.val(result.department2);
+				});
 
 				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
@@ -200,38 +190,31 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-				formObj.attr("action", "register").attr("method", "post");
-				formObj.append("<input type='hidden' name='department1' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='department2' value='" + modalContent2.val() + "'/>");
-				formObj.append("<input type='hidden' name='writeId' value='" + authName + "'/>");
-				formObj.append("<input type='hidden' name='updateId' value='" + authName + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, department1: modalContent1.val(), department2: modalContent2.val(), writeId: authName, updateId: authName, csrf: csrf };
+
+				departmentService.register(obj, function () {
+					alert("등록 되었습니다.");
+					location.reload();
+				});
 			});
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-				formObj.attr("action", "modify").attr("method", "post");
-				formObj.append("<input type='hidden' name='department1' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='department2' value='" + modalContent2.val() + "'/>");
-				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
-				formObj.append("<input type='hidden' name='updateId' value='" + authName + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, dno: modal.data('idx'), department1: modalContent1.val(), department2: modalContent2.val(), writeId: authName, updateId: authName, csrf: csrf };
+				departmentService.modify(obj, function () {
+					alert("수정 되었습니다.");
+					location.reload();
+				})
 			});
 
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-				if (delchk() == true) {
-					formObj.attr("action", "delete");
-				} else {
-					return;
-				};
-				formObj.attr("action", "remove").attr("method", "post");
-				formObj.append("<input type='hidden' name='dno' value='" + modal.data("idx") + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, dno: modal.data('idx'), csrf: csrf };
+				departmentService.remove(obj, function () {
+					alert("삭제 되었습니다.");
+					location.reload();
+				});
 			});
 
 			//close button click 시
@@ -252,8 +235,7 @@
 				e.preventDefault();
 
 				var dno = $(this).attr("href");
-				formObj.attr("action", "leader").attr("method", "get");
-				formObj.append("<input type='hidden' name='dno' value='" + dno + "'/>");
+				formObj.attr("action", "../leader/" + tno + "/" + dno).attr("method", "get");
 				formObj.find("input[name='_csrf']").remove();
 				formObj.submit();
 			});

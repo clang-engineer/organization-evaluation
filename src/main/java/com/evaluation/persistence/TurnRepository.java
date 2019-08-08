@@ -33,7 +33,7 @@ public interface TurnRepository extends CrudRepository<Turn, Long> {
 	 * @param threshold 현재 시간
 	 * @return 회차 객체 리스트
 	 */
-	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND t.infoSurvey.status NOT IN ('setting', 'inactivation')  AND :time BETWEEN t.infoSurvey.startDate AND t.infoSurvey.endDate ORDER BY t.tno DESC")
+	@Query("SELECT t FROM Turn t WHERE t.cno=:cno AND t.tno>0 AND t.infoSurvey.status IN ('survey', 'count') AND :time BETWEEN t.infoSurvey.startDate AND t.infoSurvey.endDate ORDER BY t.tno DESC")
 	Optional<List<Turn>> getTurnsInSurvey(@Param("cno") Long cno, @Param("time") LocalDateTime threshold);
 
 	/**

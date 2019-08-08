@@ -13,12 +13,18 @@ import com.evaluation.vo.PageMaker;
 import com.evaluation.vo.PageVO;
 
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -43,20 +49,32 @@ public class DepartmentController {
      * 
      * @param tno        회차 id
      * @param department 부서 정보
-     * @param rttr       재전송 정보
-     * @return 부서 목록 페이지
+     * @return 상태 메시지
      */
-    @PostMapping("/register")
-    public String register(long tno, Department department, RedirectAttributes rttr) {
+    @PostMapping("/{tno}")
+    public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Department department) {
         log.info("department register by " + tno + department);
 
-        rttr.addFlashAttribute("msg", "register");
-        rttr.addAttribute("tno", tno);
-
-        department.setTno(tno);
         departmentService.register(department);
 
-        return "redirect:/department/list";
+        return new ResponseEntity<>(HttpStatus.CREATED);
+    }
+
+    /**
+     * 부서 정보를 읽어온다.
+     * 
+     * @param tno 회차 id
+     * @param dno 부서 id
+     * @return 상태 메시지
+     */
+    @GetMapping("/{tno}/{dno}")
+    @ResponseBody
+    public ResponseEntity<Department> read(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
+        log.info("level read by " + tno + "/" + dno);
+
+        Department department = departmentService.read(dno).orElse(null);
+
+        return new ResponseEntity<>(department, HttpStatus.OK);
     }
 
     /**
@@ -64,24 +82,15 @@ public class DepartmentController {
      * 
      * @param tno        회차 id
      * @param department 부서 정보
-     * @param vo         페이지 정보
-     * @param rttr       재전송 정보
-     * @return 부서 목록 페이지
+     * @return 상태 메시지
      */
-    @PostMapping("/modify")
-    public String modify(long tno, Department department, PageVO vo, RedirectAttributes rttr) {
+    @PutMapping("/{tno}/{dno}")
+    public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @RequestBody Department department) {
         log.info("modify " + department);
 
         departmentService.modify(department);
-        rttr.addFlashAttribute("msg", "modify");
 
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/department/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -93,20 +102,13 @@ public class DepartmentController {
      * @param rttr 재전송 정보
      * @return 부서 목록 페이지
      */
-    @PostMapping("/remove")
-    public String remove(long tno, long dno, PageVO vo, RedirectAttributes rttr) {
+    @DeleteMapping("/{tno}/{dno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
         log.info("remove " + dno);
 
         departmentService.remove(dno);
 
-        rttr.addFlashAttribute("msg", "remove");
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/department/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -116,11 +118,13 @@ public class DepartmentController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list")
-    public void readList(long tno, PageVO vo, Model model) {
+    @GetMapping("/list/{tno}")
+    public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("department list by " + tno);
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
 
         Page<Department> result = departmentService.getList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
@@ -137,6 +141,8 @@ public class DepartmentController {
             }
         });
         model.addAttribute("leaderList", leader);
+
+        return "department/list";
     }
 
     /**
@@ -156,33 +162,34 @@ public class DepartmentController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/leader")
-    public void readLeader(long tno, long dno, PageVO vo, Model model) {
+    @GetMapping("/leader/{tno}/{dno}")
+    public String readLeader(@PathVariable("tno") long tno, @PathVariable("dno") long dno, PageVO vo, Model model) {
         log.info("read leader " + tno + dno);
         // dno일치하는 팀 정보와 리더 정보 전달.
-        departmentService.read(dno).ifPresent(department -> {
-            if (department.getLeader() != null) {
-                model.addAttribute("team", department.getLeader());
-                staffService.read(department.getLeader().getSno()).ifPresent(staff -> {
+        departmentService.read(dno).ifPresent(origin -> {
+            if (origin.getLeader() != null) {
+                model.addAttribute("team", origin.getLeader());
+                staffService.read(origin.getLeader().getSno()).ifPresent(staff -> {
                     model.addAttribute("leader", staff);
                 });
             }
         });
 
         // leader를 전체 직원 중 등록하기 위해 직원 명단 전송
-        turnService.read(tno).ifPresent(turn -> {
-            long cno = turn.getCno();
-            staffService.findByCno(cno).ifPresent(origin -> {
-                model.addAttribute("staffList", origin);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+            staffService.findByCno(origin.getCno()).ifPresent(staff -> {
+                model.addAttribute("staffList", staff);
             });
         });
 
         model.addAttribute("dno", dno);
-        model.addAttribute("tno", tno);
         model.addAttribute("page", vo.getPage());
         model.addAttribute("size", vo.getSize());
         model.addAttribute("type", vo.getType());
         model.addAttribute("keyword", vo.getKeyword());
+
+        return "department/leader";
     }
 
     /**
@@ -191,60 +198,18 @@ public class DepartmentController {
      * @param tno    회차 id
      * @param dno    부서 id
      * @param leader 리더 정보
-     * @param vo     페이지 정보
-     * @param rttr   재전송 정보
      * @return 부서 목록 페이지
      */
-    @PostMapping("/leader/register")
-    public String registerLeader(long tno, long dno, Leader leader, PageVO vo, RedirectAttributes rttr) {
+    @PutMapping("/leader/{tno}/{dno}")
+    public ResponseEntity<HttpStatus> registerLeader(@PathVariable("tno") long tno, @PathVariable("dno") long dno,
+            @RequestBody Leader leader) {
         log.info("register leader " + tno + dno + leader);
         departmentService.read(dno).ifPresent(origin -> {
             origin.setLeader(leader);
             departmentService.modify(origin);
         });
 
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/department/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
-    // /**
-    //  * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
-    //  * 
-    //  * @param dno 부서 id
-    //  * @return 부서 정보
-    //  */
-    // @GetMapping("/{dno}")
-    // @ResponseBody
-    // public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
-    //     log.info("read leader " + dno);
-    //     Department department = departmentService.read(dno).orElse(null);
-    //     return new ResponseEntity<>(department, HttpStatus.OK);
-    // }
-
-    // /**
-    //  * 부서 정보 등록 하는 REST (Mbo에서 팀장이 팀 목표 등록시)
-    //  * 
-    //  * @param dno    부서 id
-    //  * @param leader 리더 정보
-    //  * @return http 상태 정보
-    //  */
-    // @PutMapping("/{dno}")
-    // @ResponseBody
-    // public ResponseEntity<HttpStatus> modify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
-    //     log.info("modify leader info " + dno);
-    //     departmentService.read(dno).ifPresent(origin -> {
-    //         if (origin.getLeader() != null) {
-    //             origin.getLeader().setTitle(leader.getTitle());
-    //             origin.getLeader().setContent(leader.getContent());
-    //             departmentService.modify(origin);
-    //         }
-    //     });
-
-    //     return new ResponseEntity<>(HttpStatus.OK);
-    // }
 }

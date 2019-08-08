@@ -7,7 +7,7 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a th:href="@{list(tno=${tno})}">List</a>
+                <a th:href="@{|list/${turn?.tno}|}">List</a>
             </li>
             <li class="breadcrumb-item active">Leader</li>
         </ol>
@@ -15,39 +15,37 @@
         <!-- DataTales Example -->
         <div class="card shadow mb-4">
             <div class="card-body">
-                <form th:action="@{./leader/register}" id="myForm" method="post">
-                    <div class="form-group">
-                        <label>Leader</label> <select class="form-control" name="sno">
-                            <option>--</option>
-                            <span th:each="staff:${staffList}">
-                                <option th:selected="${leader?.sno}==${staff?.sno}" th:value="${staff?.sno}">[[${staff?.name}]] - [[${staff?.level}]] - [[${staff?.department1}]] -
-                                    [[${staff?.department2}]]</option>
-                            </span>
-                        </select>
-                    </div>
-                    <div class="form-group">
-                        <label>Team Title</label>
-                        <input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${team?.title}">
-                    </div>
-                    <div class="form-group">
-                        <label>Team Content</label>
-                        <textarea id="content" name="content" class="form-control" rows="10" th:text="${team?.content}"></textarea>
-                    </div>
+                <div class="form-group">
+                    <label>Leader</label> <select class="form-control" name="sno">
+                        <option>--</option>
+                        <span th:each="staff:${staffList}">
+                            <option th:selected="${leader?.sno}==${staff?.sno}" th:value="${staff?.sno}">[[${staff?.name}]] - [[${staff?.level}]] - [[${staff?.department1}]] -
+                                [[${staff?.department2}]]</option>
+                        </span>
+                    </select>
+                </div>
+                <div class="form-group">
+                    <label>Team Title</label>
+                    <input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${team?.title}">
+                </div>
+                <div class="form-group">
+                    <label>Team Content</label>
+                    <textarea id="content" name="content" class="form-control" rows="10" th:text="${team?.content}"></textarea>
+                </div>
 
 
-                    <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
+                <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
 
-                    <div class="form-group">
-                        <button type="submit" class="btn btn-primary">Modify</button>
-                    </div>
+                <div class="form-group">
+                    <button class="btn btn-primary" id="modify">Modify</button>
+                    <button class="btn btn-info" id="list">List</button>
+                </div>
 
-                    <input type="hidden" name="dno" th:value="${dno}" />
-                    <input type="hidden" name="tno" th:value="${tno}" />
+                <form th:action="@{|../../list/${turn?.tno}|}" id="myForm" method="get">
                     <input type="hidden" name="size" th:value=${pageVO?.size} />
                     <input type="hidden" name="page" th:value=${pageVO?.page} />
                     <input type="hidden" name="type" th:value=${pageVO?.type} />
                     <input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
-                    <input type="hidden" th:name="${_csrf?.parameterName}" th:value="${_csrf?.token}">
                 </form>
             </div>
         </div>
@@ -58,4 +56,45 @@
 
 
 <th:block layout:fragment="script">
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var tno = [[${ turn?.tno }]];
+            var dno = [[${ dno }]];
+            var csrf = JSON.parse('[[${_csrf}]]');
+
+            $('#modify').on('click', function (e) {
+                e.preventDefault();
+                var sno = $('.card-body').find("select[name='sno']");
+                var title = $('.card-body').find("input[name='title']");
+                var content = $('.card-body').find("textarea[name='content']");
+                var param = { tno: tno, dno: dno, sno: sno.val(), title: title.val(), content: content.val(), csrf: csrf };
+
+                $.ajax({
+                    type: 'put',
+                    url: "../" + param.tno + "/" + param.dno,
+                    data: JSON.stringify(param),
+                    // data: param.content,
+                    contentType: "application/json; charset:utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+                    },
+                    success: function (result, status, shr) {
+                        alert("등록 되었습니다.");
+                        sno.prop('disabled', 'true');
+                        title.prop('disabled', 'true');
+                        content.prop('disabled', 'true');
+                        $("#modify").prop('disabled', 'true');
+                        $("#modify").addClass('disabled');
+                    },
+                    error: function (xhr, status, err) {
+                        alert(err);
+                    }
+                });
+            });
+            $("#list").on('click', function (e) {
+                e.preventDefault();
+                $('#myForm').submit();
+            });
+        });
+    </script>
 </th:block>

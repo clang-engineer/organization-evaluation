@@ -1,16 +1,26 @@
 package com.evaluation.controller;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import javax.servlet.http.HttpServletRequest;
 
+import com.evaluation.domain.Turn;
 import com.evaluation.service.TurnService;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 import lombok.extern.slf4j.Slf4j;
 
@@ -30,12 +40,12 @@ public class AppellationController {
      * 
      * @param tno         회차 id
      * @param appellation 호칭 정보
-     * @param rttr        재전송 정보
      * @param request     요청 정보
-     * @return 주관식 목록
+     * @return 상태 메시지
      */
-    @PostMapping(value = { "/survey/register", "/mbo/register" })
-    public String register(long tno, String appellation, HttpServletRequest request, RedirectAttributes rttr) {
+    @PostMapping(value = { "/survey/{tno}", "/mbo/{tno}" })
+    public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody String appellation,
+            HttpServletRequest request) {
         log.info("register " + appellation);
 
         String whatYouCall = request.getServletPath();
@@ -51,8 +61,35 @@ public class AppellationController {
             turnService.register(turn);
         });
 
-        rttr.addAttribute("tno", tno);
-        return "redirect:/appellation/" + pathInfo + "/list";
+        return new ResponseEntity<>(HttpStatus.OK);
+    }
+
+    /**
+     * 호칭 정보를 등록한다.
+     * 
+     * @param tno         회차 id
+     * @param appellation 호칭 정보
+     * @param request     요청 정보
+     * @return 호칭
+     */
+    @GetMapping(value = { "/survey/{tno}/{idx}", "/mbo/{tno}/{idx}" })
+    @ResponseBody
+    public ResponseEntity<String> read(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
+            HttpServletRequest request) {
+        log.info("read " + tno + "/" + idx);
+
+        String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[2];
+
+        List<String> appellation = new ArrayList<>();
+        if ("survey".equals(pathInfo)) {
+            appellation = turnService.read(tno).map(Turn::getSurveyAppellation).orElse(null);
+        } else if ("mbo".equals(pathInfo)) {
+            appellation = turnService.read(tno).map(Turn::getMboAppellation).orElse(null);
+        }
+
+        return new ResponseEntity<>(appellation.get(idx), HttpStatus.OK);
     }
 
     /**
@@ -62,11 +99,11 @@ public class AppellationController {
      * @param idx         리스트 index
      * @param appellation 주관식 문항
      * @param request     요청 정보
-     * @param rttr        재전송 정보
-     * @return 주관식 목록
+     * @return 상태 메시지
      */
-    @PostMapping(value = { "/survey/modify", "/mbo/modify" })
-    public String modify(long tno, int idx, String appellation, HttpServletRequest request, RedirectAttributes rttr) {
+    @PutMapping(value = { "/survey/{tno}/{idx}", "/mbo/{tno}/{idx}" })
+    public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
+            @RequestBody String appellation, HttpServletRequest request) {
         log.info("Modify " + appellation);
 
         String whatYouCall = request.getServletPath();
@@ -82,20 +119,19 @@ public class AppellationController {
             turnService.register(turn);
         });
 
-        rttr.addAttribute("tno", tno);
-        return "redirect:/appellation/" + pathInfo + "/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 호칭 문항을 삭제한다.
      *
-     * @param tno  회차 id
-     * @param idx  리스트 index
-     * @param rttr 재전송 정보
-     * @return 주관식 목록
+     * @param tno 회차 id
+     * @param idx 리스트 index
+     * @return 상태 메시지
      */
-    @PostMapping(value = { "/survey/remove", "/mbo/remove" })
-    public String remove(long tno, int idx, HttpServletRequest request, RedirectAttributes rttr) {
+    @DeleteMapping(value = { "/survey/{tno}/{idx}", "/mbo/{tno}/{idx}" })
+    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
+            HttpServletRequest request) {
         log.info("remove " + idx);
 
         String whatYouCall = request.getServletPath();
@@ -111,32 +147,33 @@ public class AppellationController {
             turnService.register(turn);
         });
 
-        rttr.addAttribute("tno", tno);
-        return "redirect:/appellation/" + pathInfo + "/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 회차에 속하는 주관식 목록을 전달한다.
      * 
-     * @param tno   회차 id
-     * @param model 화면 전달 정보
+     * @param tno     회차 id
+     * @param request 요청 정보
+     * @param model   화면 전달 정보
      */
-    @GetMapping(value = { "/survey/list", "/mbo/list" })
-    public String readList(long tno, HttpServletRequest request, Model model) {
+    @GetMapping(value = { "/survey/list/{tno}", "/mbo/list/{tno}" })
+    public String readList(@PathVariable("tno") long tno, HttpServletRequest request, Model model) {
         log.info("appellation list by " + tno);
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
         String pathInfo = words[2];
 
-        turnService.read(tno).ifPresent(turn -> {
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+
             if ("survey".equals(pathInfo)) {
-                model.addAttribute("appellationList", turn.getSurveyAppellation());
+                model.addAttribute("type", "survey");
             } else if ("mbo".equals(pathInfo)) {
-                model.addAttribute("appellationList", turn.getMboAppellation());
+                model.addAttribute("type", "mbo");
             }
         });
-        model.addAttribute("tno", tno);
 
         return "appellation/list";
     }

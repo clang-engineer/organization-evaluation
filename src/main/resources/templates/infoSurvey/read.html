@@ -1,91 +1,156 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
+
 <div layout:fragment="content">
 	<div class="container-fluid">
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item active">Detail</li>
+			<li class="breadcrumb-item active">Read</li>
 		</ol>
+
 		<!-- Page Content -->
 		<hr>
 		<!-- DataTales Example -->
 		<div class="card shadow mb-4">
-			<div class="card-body">
-				<fieldset disabled>
-					<div class="form-group">
-						<label>Survey Title</label>
-						<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoSurvey?.title}">
-					</div>
-					<div class="form-group">
-						<label>Content</label>
-						<textarea name="content" class="form-control" rows="5" th:text="${infoSurvey?.content}"></textarea>
-					</div>
+			<div class="card-body" th:with="infoSurvey=${turn?.infoSurvey}">
+				<fieldset>
+					<form>
+						<input type="hidden" name="tno" th:value="${turn?.tno}" />
+						<div class="form-group">
+							<label>Survey Title</label>
+							<input type="text" class="form-control" name="title" placeholder="Enter Company Name" th:value="${infoSurvey?.title}" readonly>
+						</div>
+						<div class="form-group">
+							<label>Content</label>
+							<textarea id="content" name="content" class="form-control" rows="5" th:text="${infoSurvey?.content}" readonly></textarea>
+						</div>
 
-					<div class="form-group">
-						<label>Reply Type</label> <select class="form-control" name="replyCode">
-							<option>--</option>
-							<span th:each="book:${bookReply}">
-								<option th:selected="${book?.bno}==${infoSurvey?.replyCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
-							</span>
-						</select>
-					</div>
+						<div class="form-group">
+							<label>Reply Type</label> <select class="form-control" name="replyCode" readonly>
+								<option value="">--</option>
+								<span th:each="book:${bookReply}">
+									<option th:selected="${book?.bno}==${infoSurvey?.replyCode}" th:value="${book?.bno}">[[${book?.title}]]</option>
+								</span>
+							</select>
+						</div>
 
-					<div class="form-group">
-						<label>Status</label>
-						<select class="form-control" name="status">
-							<option>--</option>
-							<option value="setting" th:selected="${infoSurvey?.status}=='setting'">설정 중</option>
-							<option value="survey" th:selected="${infoSurvey?.status}=='survey'">평가 진행</option>
-							<option value="count" th:selected="${infoSurvey?.status}=='count'">평가 집계</option>
-							<option value="inactivation" th:selected="${infoSurvey?.status}=='inactivation'">비활성화</option>
-						</select>
-					</div>
+						<div class="form-group">
+							<label>Status</label>
+							<select class="form-control" name="status" readonly>
+								<option value="">--</option>
+								<option value="setting" th:selected="${infoSurvey?.status}=='setting'">설정 중</option>
+								<option value="survey" th:selected="${infoSurvey?.status}=='survey'">평가 진행</option>
+								<option value="count" th:selected="${infoSurvey?.status}=='count'">평가 집계</option>
+								<option value="inactivation" th:selected="${infoSurvey?.status}=='inactivation'">비활성화</option>
+							</select>
+						</div>
 
-					<!-- period table -->
-					<div class="table-responsive">
-						<label for="">기간 설정</label>
-						<table class="table table-bordered">
-							<thead class="thead-dark">
-								<tr>
-									<th scope="col">#</th>
-									<th scope="col">Start</th>
-									<th scope="col">End</th>
-								</tr>
-							</thead>
-							<tbody>
-								<tr>
-									<th scope="row">운영 기간</th>
-									<td><input class="form-control" type="datetime-local" th:value="${infoSurvey?.startDate}" name="startDate"></td>
-									<td> <input class="form-control" type="datetime-local" th:value="${infoSurvey?.endDate}" name="endDate"> </td>
-								</tr>
-							</tbody>
-						</table>
-					</div>
-					<!-- ./period table -->
+						<!-- period table -->
+						<div class="table-responsive">
+							<label for="">기간 설정</label>
+							<table class="table table-bordered">
+								<thead class="thead-dark">
+									<tr>
+										<th scope="col">#</th>
+										<th scope="col">Start</th>
+										<th scope="col">End</th>
+									</tr>
+								</thead>
+								<tbody>
+									<tr>
+										<th scope="row">운영 기간</th>
+										<td><input class="form-control" type="datetime-local" th:value="${infoSurvey?.startDate}" name="startDate" readonly></td>
+										<td> <input class="form-control" type="datetime-local" th:value="${infoSurvey?.endDate}" name="endDate" readonly> </td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+						<!-- ./period table -->
 
 
+						<input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+					</form>
 				</fieldset>
+
 				<div class="form-group">
-					<button type="submit" class="btn btn-primary">Modify</button>
+					<button class="btn btn-primary" id="modify">Modify</button>
+					<button class="btn btn-danger" id="submit" style="display:none;">Save</button>
 				</div>
+
 			</div>
 		</div>
 	</div>
-	<form id="myForm" th:action="@{modify}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
-	</form>
 	<!-- /.container-fluid -->
 </div>
 
 
 
 <th:block layout:fragment="script">
+	<!-- ckeditor adjust -->
+	<script src="https://cdn.ckeditor.com/ckeditor5/12.0.0/classic/ckeditor.js"></script>
 	<script th:inline="javascript">
-		$(document).ready(function () {
-			$('button').on("click", function (e) {
-				var formObj = $("#myForm");
-				formObj.submit();
+
+		$(document).ready(function (e) {
+			let theEditor;
+			$('#modify').on('click', function () {
+				$(this).hide();
+				$('#submit').show();
+
+				$.each($('input, select ,textarea'), function (k) {
+					$(this).attr('readonly', false);
+				});
+				ClassicEditor
+					.create(document.querySelector('#content'))
+					.then(editor => {
+						theEditor = editor;
+						console.log(editor);
+					})
+					.catch(error => {
+						console.error(error);
+					});
 			});
+
+			$('#submit').on('click', function () {
+				var param = $('form').serializeObject();
+				param.content = theEditor.getData();
+				var csrf = JSON.parse('[[${_csrf}]]');
+				$.ajax({
+					type: 'put',
+					url: param.tno,
+					data: JSON.stringify(param),
+					// data: param.content,
+					contentType: "application/json; charset:utf-8",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(csrf.headerName, csrf.token)
+					},
+					success: function (result, status, shr) {
+						alert("등록 되었습니다.");
+						location.reload();
+					},
+					error: function (xhr, status, err) {
+						alert(err);
+					}
+				});
+			});
+
 		});
+
+		jQuery.fn.serializeObject = function () {
+			var obj = null;
+			try {
+				if (this[0].tagName && this[0].tagName.toUpperCase() == "FORM") {
+					var arr = this.serializeArray();
+					if (arr) {
+						obj = {}; jQuery.each(arr, function () {
+							obj[this.name] = this.value;
+						});
+					}
+				}
+			} catch (e) {
+				alert(e.message);
+			} finally {
+			} return obj;
+		}
+
 	</script>
 </th:block>

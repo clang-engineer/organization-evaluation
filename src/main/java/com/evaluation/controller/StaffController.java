@@ -78,12 +78,12 @@ public class StaffController {
 	public void register(long tno, PageVO vo, Model model) {
 		log.info("controller : staff register get by " + tno + vo);
 
-		turnService.read(tno).ifPresent(turn -> {
-			long cno = turn.getCno();
+		turnService.read(tno).ifPresent(origin -> {
+			model.addAttribute("turn", origin);
+
+			long cno = origin.getCno();
 			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
 		});
-
-		model.addAttribute("tno", tno);
 	}
 
 	/**
@@ -119,10 +119,13 @@ public class StaffController {
 	public void read(long tno, long sno, PageVO vo, Model model) {
 		log.info("controller : staff read by " + tno + vo);
 
-		Staff staff = staffService.read(sno).orElse(null);
+		turnService.read(tno).ifPresent(origin -> {
+			model.addAttribute("turn", origin);
+		});
 
-		model.addAttribute("tno", tno);
-		model.addAttribute("staff", staff);
+		staffService.read(sno).ifPresent(origin -> {
+			model.addAttribute("staff", origin);
+		});
 	}
 
 	/**
@@ -137,15 +140,15 @@ public class StaffController {
 	public void modify(long tno, long sno, PageVO vo, Model model) {
 		log.info("controller : staff modify by " + tno + vo);
 
-		model.addAttribute("tno", tno);
+		turnService.read(tno).ifPresent(origin -> {
+			model.addAttribute("turn", origin);
 
-		turnService.read(tno).ifPresent(turn -> {
-			long cno = turn.getCno();
+			long cno = origin.getCno();
 			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
 		});
 
-		staffService.read(sno).ifPresent(staff -> {
-			model.addAttribute("staff", staff);
+		staffService.read(sno).ifPresent(origin -> {
+			model.addAttribute("staff", origin);
 		});
 	}
 
@@ -214,12 +217,12 @@ public class StaffController {
 	public void readList(long tno, PageVO vo, Model model) {
 		log.info("controller : staff list by " + tno + vo);
 
-		model.addAttribute("tno", tno);
+		turnService.read(tno).ifPresent(origin -> {
+			model.addAttribute("turn", origin);
 
-		long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
-
-		Page<Staff> result = staffService.getList(cno, vo);
-		model.addAttribute("result", new PageMaker<>(result));
+			Page<Staff> result = staffService.getList(origin.getCno(), vo);
+			model.addAttribute("result", new PageMaker<>(result));
+		});
 	}
 
 	/**

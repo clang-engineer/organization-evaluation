@@ -7,7 +7,7 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a th:href="@{list(tno=${tno})}">List</a>
+                <a th:href="@{list(tno=${turn?.tno})}">List</a>
             </li>
             <li class="breadcrumb-item active">Detail</li>
         </ol>
@@ -93,7 +93,7 @@
                     formObj.append("<input type='hidden' name='qno' value='" + [[${ question?.qno }]] + "'/>");
                 }
 
-                formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
+                formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
                 formObj.submit();
             });
         });

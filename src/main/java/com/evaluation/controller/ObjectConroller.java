@@ -1,7 +1,5 @@
 package com.evaluation.controller;
 
-import java.util.Optional;
-
 import com.evaluation.domain.Department;
 import com.evaluation.domain.Mbo;
 import com.evaluation.domain.embeddable.Leader;
@@ -64,7 +62,7 @@ public class ObjectConroller {
     public ResponseEntity<Mbo> read(@PathVariable("mno") long mno) {
         log.info("add object ");
 
-        Mbo mbo = Optional.ofNullable(mboService.read(mno)).map(Optional::get).orElse(null);
+        Mbo mbo = mboService.read(mno).orElse(null);
         return new ResponseEntity<>(mbo, HttpStatus.OK);
     }
 

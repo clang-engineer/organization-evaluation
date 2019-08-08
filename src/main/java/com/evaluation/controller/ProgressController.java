@@ -30,6 +30,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -64,12 +65,12 @@ public class ProgressController {
      * @param model   화면 전달 정보
      * @param request 요청 정보 객체
      */
-    @GetMapping(value = { "/survey", "/mbo" })
-    public void progressList(long tno, Model model, HttpServletRequest request) {
+    @GetMapping(value = { "/survey/{tno}", "/mbo/{tno}" })
+    public String progressList(@PathVariable("tno") long tno, Model model, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
 
         // survey와 mbo를 요청했을 때를 if문으로 구분
-        if (whatYouCall.equals("/progress/survey")) {
+        if (whatYouCall.equals("/progress/survey/" + tno)) {
             relationSurveyService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
                 // 총 개수 구하기
@@ -80,10 +81,11 @@ public class ProgressController {
                     totalCount += Integer.parseInt(origin.get(i).get(6));
                 }
 
+                model.addAttribute("type", "survey");
                 model.addAttribute("completeCount", completeCount);
                 model.addAttribute("totalCount", totalCount);
             });
-        } else if (whatYouCall.equals("/progress/mbo")) {
+        } else if (whatYouCall.equals("/progress/mbo/" + tno)) {
             relationMboService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
 
@@ -95,12 +97,16 @@ public class ProgressController {
                     totalCount += Integer.parseInt(origin.get(i).get(6));
                 }
 
+                model.addAttribute("type", "mbo");
                 model.addAttribute("completeCount", completeCount);
                 model.addAttribute("totalCount", totalCount);
             });
         }
 
-        model.addAttribute("tno", tno);
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
+        return "progress/list";
     }
 
     /**
@@ -124,7 +130,10 @@ public class ProgressController {
                 model.addAttribute("evaluatedList", origin);
             });
         }
-        model.addAttribute("tno", tno);
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
     }
 
     /**
@@ -616,7 +625,10 @@ public class ProgressController {
             model.addAttribute("count", list.size());
             model.addAttribute("total", total);
         });
-        model.addAttribute("tno", tno);
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
+        });
     }
 
     /**
@@ -628,9 +640,12 @@ public class ProgressController {
      */
     @GetMapping("/mbo/objectList")
     public void objectList(long tno, long sno, Model model) {
-        model.addAttribute("tno", tno);
         mboService.listByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("objectList", list);
+        });
+
+        turnService.read(tno).ifPresent(origin -> {
+            model.addAttribute("turn", origin);
         });
     }
 

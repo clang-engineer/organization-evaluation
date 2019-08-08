@@ -57,7 +57,7 @@
 
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="get">
-        <input type="hidden" name="tno" th:value="${tno}" />
+        <input type="hidden" name="tno" th:value="${turn?.tno}" />
         <input type="hidden" name="page" th:value=${result?.currentPageNum} />
         <input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
         <input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -81,7 +81,7 @@
 
 
 <th:block layout:fragment="script">
-    <script type="text/javascript" th:src="@{/public/js/relation.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/admin/relation.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
 
@@ -100,7 +100,7 @@
             var modalRegisterBtn = $("#modalRegisterBtn");
             var modalCloseBtn = $("#modalCloseBtn");
 
-            var tno = [[${ tno }]];
+            var tno = [[${ turn?.tno }]];
             var msg = [[${ msg }]];
 
             var csrf = JSON.parse('[[${_csrf}]]');

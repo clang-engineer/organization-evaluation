@@ -77,8 +77,7 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${tno}" />
+	<form id="f1" th:action="@{|${turn?.tno}|}" method="get">
 		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
 		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -94,6 +93,7 @@
 
 
 <th:block layout:fragment="script">
+	<script th:inline="javascript" th:src="@{/public/js/admin/level.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			//modal 사용 변수 선언
@@ -111,21 +111,10 @@
 			modalLabel1.text("Level");
 			modalLabel2.hide();
 			modalContent2.hide();
-
-			var msg = [[${ msg }]];
+			var tno = [[${ turn?.tno }]];
 			var authName = [[${ #authentication?.name }]];
+			var csrf = JSON.parse('[[${_csrf}]]');
 
-			if (history.state == null) {
-				if (msg == 'register') {
-					alert("등록 되었습니다.");
-				} else if (msg == 'modify') {
-					alert("수정 되었습니다.");
-				} else if (msg == 'remove') {
-					alert("삭제 되었습니다.");
-				}
-			}
-
-			history.replaceState({}, null, null);
 
 			var formObj = $("#f1");
 
@@ -153,13 +142,16 @@
 				e.preventDefault();
 
 				//모달 data
-				detailNo = $(this).attr("href");
-				modal.data("idx", detailNo);
+				lno = $(this).attr("href");
+				modal.data("lno", lno);
 
 				//모달 text
 				modalTitle.text("Level Modify or Delete");
-				content = $(this).closest("tr").children().eq(1).text();
-				modalContent1.val(content);
+				var obj = { tno: tno, lno: lno };
+				levelService.read(obj, function (result) {
+					content = result.content;
+					modalContent1.val(content);
+				});
 
 				//모달 button
 				modal.find("button[id!='modalCloseBtn']").hide();
@@ -186,50 +178,36 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-				formObj.attr("action", "./register").attr("method", "post");
-				formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='writeId' value='" + authName + "'/>");
-				formObj.append("<input type='hidden' name='updateId' value='" + authName + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, content: modalContent1.val(), writeId: authName, updateId: authName, csrf: csrf };
+				levelService.register(obj, function () {
+					alert("등록 되었습니다.");
+					location.reload();
+				});
 			});
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-				formObj.attr("action", "./modify").attr("method", "post");
-				formObj.append("<input type='hidden' name='content' value='" + modalContent1.val() + "'/>");
-				formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
-				formObj.append("<input type='hidden' name='updateId' value='" + authName + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, lno: modal.data('lno'), content: modalContent1.val(), updateId: authName, csrf: csrf };
+				levelService.modify(obj, function () {
+					alert("수정 되었습니다.");
+					location.reload();
+				});
 			});
 
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-				if (delchk() == true) {
-					formObj.attr("action", "delete");
-				} else {
-					return;
-				};
-				formObj.attr("action", "./remove").attr("method", "post");
-				formObj.append("<input type='hidden' name='lno' value='" + modal.data("idx") + "'/>");
-				formObj.submit();
+				var obj = { tno: tno, lno: modal.data('lno'), csrf: csrf };
+				levelService.remove(obj, function () {
+					alert("삭제 되었습니다.");
+					location.reload();
+				});
 			});
 
 			//close button click 시
 			modalCloseBtn.on("click", function (e) {
 				modal.modal('hide');
 			});
-
-			function delchk() {
-				if (confirm("삭제하시겠습니까?")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
 
 		});
 	</script>
