@@ -3,7 +3,7 @@ var replyService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: '../../../reply/',
+            url: '../../replys/',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var replyService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("../../../reply/" + param.rno,
+        $.get("../../replys/" + param.rno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var replyService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '../../../reply/',
+            url: '../../replys/',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -61,7 +61,7 @@ var replyService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: '../../../reply/' + param.rno,
+            url: '../../replys/' + param.rno,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },

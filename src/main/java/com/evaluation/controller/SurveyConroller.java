@@ -37,7 +37,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>SurveyConroller</code>객체는 survey를 관리한다.
  */
 @Controller
-@RequestMapping("/survey")
+@RequestMapping("/surveys")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -59,26 +59,24 @@ public class SurveyConroller {
      * 메인 페이지를 읽어온다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param request 요청 정보 객체
-     * @param rttr    재전송 정보
      * @param model   화면 전달 정보
      * @return Survey 메인 페이자
      */
-    @GetMapping("/main/{company}/{tno}")
-    public String main(@PathVariable("company") String company, @PathVariable("tno") Long tno,
-            HttpServletRequest request, Model model) {
-        log.info("survey main by " + company + "/" + tno);
+    @GetMapping("/{company}/main")
+    public String main(@PathVariable("company") String company, HttpServletRequest request, Model model) {
+        log.info("survey main by " + company);
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
-            return "redirect:/survey/" + company;
+        if (session.getAttribute("evaluator") == null || session.getAttribute("tno") == null) {
+            return "redirect:/surveys/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("company", origin);
         });
 
+        long tno = (long) session.getAttribute("tno");
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
@@ -87,28 +85,26 @@ public class SurveyConroller {
             model.addAttribute("question", origin);
         });
 
-        return "/survey/main";
+        return "survey/main";
     }
 
     /**
      * Survey목록 페이지를 읽어온다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param request 요청 객체 정보
      * @param model   화면 전달 정보
-     * @param rttr    재전송 정보
      * @return Survey 대상자 목록 페이지
      */
-    @GetMapping("/list/{company}/{tno}")
-    public String list(@PathVariable("company") String company, @PathVariable("tno") long tno,
-            HttpServletRequest request, Model model) {
-        log.info("survey list by " + company + "/" + tno);
+    @GetMapping("/{company}/list")
+    public String list(@PathVariable("company") String company, HttpServletRequest request, Model model) {
+        log.info("survey list by " + company);
         HttpSession session = request.getSession();
         Staff evaluator = (Staff) session.getAttribute("evaluator");
+        long tno = (long) session.getAttribute("tno");
 
-        if (evaluator == null) {
-            return "redirect:/survey/" + company;
+        if (evaluator == null || Long.valueOf(tno) == null) {
+            return "redirect:/surveys/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
@@ -128,48 +124,49 @@ public class SurveyConroller {
             model.addAttribute("evaluatedList", origin);
         });
 
-        return "/survey/list";
+        return "survey/list";
     }
 
     /**
      * Survey 페이지에서 새로 고침시 목록 페이지로 재전송한다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param request 요청 객체 정보
      * @param rttr    재전송 정보
-     * @return Survey 대상자 목록 페이지
+     * @return 리다이렉트 Survey 대상자 목록 페이지
      */
-    @GetMapping("/evaluate/{company}/{tno}")
-    public String evaluate(@PathVariable("company") String company, @PathVariable("tno") long tno,
-            HttpServletRequest request, RedirectAttributes rttr) {
-        log.info("evaluate redirect by " + company + "/" + tno);
+    @GetMapping("/{company}/evaluation")
+    public String evaluate(@PathVariable("company") String company, HttpServletRequest request,
+            RedirectAttributes rttr) {
+        log.info("evaluate redirect by " + company);
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
-            return "redirect:/survey/" + company;
+        if (session.getAttribute("evaluator") == null || session.getAttribute("tno") == null) {
+            return "redirect:/surveys/" + company;
         }
 
-        return "redirect:/survey/list/" + company + "/" + tno;
+        return "redirect:/surveys/" + company + "/list";
     }
 
     /**
      * 피평가자에 대한 서베이를 실시한다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param rno     관계 id
+     * @param request 요청 객체 정보
      * @param model   화면 전달 정보
      */
     // @GetMapping("/evaluate")
-    @PostMapping("/evaluate/{company}/{tno}")
-    public String evaluate(@PathVariable("company") String company, @PathVariable("tno") long tno, Long rno,
-            Model model) {
-        log.info("evaluate by " + company + "/" + tno + "/" + rno);
+    @PostMapping("/{company}/evaluation")
+    public String evaluate(@PathVariable("company") String company, Long rno, HttpServletRequest request, Model model) {
+        log.info("evaluate by " + company + "/" + rno);
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("company", origin);
         });
+
+        HttpSession session = request.getSession();
+        long tno = (long) session.getAttribute("tno");
 
         // 회차에 속하는 comment list를 추가하기 위한.
         turnService.read(tno).ifPresent(origin -> {
@@ -204,7 +201,7 @@ public class SurveyConroller {
 
         });
 
-        return "survey/evaluate";
+        return "survey/evaluation";
     }
 
     /**
@@ -255,7 +252,7 @@ public class SurveyConroller {
         long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
         String company = companyService.read(cno).map(Company::getId).orElse(null);
 
-        return "redirect:/survey/list/" + company + "/" + tno;
+        return "redirect:/surveys/" + company + "/list";
     }
 
 }

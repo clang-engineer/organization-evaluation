@@ -47,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>MboController</code>객체는 Mbo정보를 관리한다.
  */
 @Controller
-@RequestMapping("/mbo")
+@RequestMapping("/mbos")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -73,20 +73,17 @@ public class MboController {
      * 메인 페이지를 읽어온다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param request 요청 정보 객체
-     * @param rttr    재전송 정보
      * @param model   화면 전달 정보
      * @return mbo 메인 페이자
      */
-    @GetMapping("/main/{company}/{tno}")
-    public String main(@PathVariable("company") String company, @PathVariable("tno") Long tno,
-            HttpServletRequest request, Model model) {
+    @GetMapping("/{company}/main")
+    public String main(@PathVariable("company") String company, HttpServletRequest request, Model model) {
         log.info("mbo main by " + company);
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
-            return "redirect:/mbo/" + company;
+        if (session.getAttribute("evaluator") == null || session.getAttribute("tno") == null) {
+            return "redirect:/mbos/" + company;
         }
 
         // 회사 정보
@@ -94,6 +91,7 @@ public class MboController {
             model.addAttribute("company", origin);
         });
 
+        long tno = (long) session.getAttribute("tno");
         // 회차 정보
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
@@ -101,23 +99,30 @@ public class MboController {
 
         Staff staff = (Staff) session.getAttribute("evaluator");
         long sno = staff.getSno();
-
         // 사용자의 부서 정보
         departmentService.findByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("department", list);
         });
 
-        return "/mbo/main";
+        return "mbo/main";
     }
 
-    @GetMapping("/recentChange/{tno}/{page}")
+    /**
+     * 메인 페이지에 최근 변경 내역 리스트를 불러온다.
+     * 
+     * @param page    페이지 번호
+     * @param request 요청 정보 객체
+     * @return 최근 변경 내역 리스트
+     */
+    @GetMapping("/recentChange/{page}")
     @ResponseBody
-    public ResponseEntity<Optional<List<String>>> recentChange(@PathVariable("tno") long tno,
-            @PathVariable("page") int page, HttpServletRequest request) {
-        log.info("recentChange by " + tno + "/" + page);
+    public ResponseEntity<Optional<List<String>>> recentChange(@PathVariable("page") int page,
+            HttpServletRequest request) {
+        log.info("recentChange by " + page);
         HttpSession session = request.getSession();
         Staff staff = (Staff) session.getAttribute("evaluator");
         long sno = staff.getSno();
+        long tno = (long) session.getAttribute("tno");
 
         return new ResponseEntity<Optional<List<String>>>(mboService.recentChangeOfEvaluatedList(tno, sno, page),
                 HttpStatus.OK);
@@ -127,22 +132,20 @@ public class MboController {
      * mbo목록 페이지를 읽어온다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param request 요청 객체 정보
      * @param model   화면 전달 정보
-     * @param rttr    재전송 정보
      * @return mbo 대상자 목록 페이지
      */
-    @GetMapping("/list/{company}/{tno}")
-    public String list(@PathVariable("company") String company, @PathVariable("tno") long tno,
-            HttpServletRequest request, Model model) {
-        log.info("mbo list by company" + company + "/" + tno);
+    @GetMapping("/{company}/list")
+    public String list(@PathVariable("company") String company, HttpServletRequest request, Model model) {
+        log.info("mbo list by company" + company);
 
         HttpSession session = request.getSession();
         // 밑에 또 사용할 일이 있어서 따로 객체 만듬.
         Staff evaluator = (Staff) session.getAttribute("evaluator");
-        if (evaluator == null) {
-            return "redirect:/mbo/" + company;
+        long tno = (long) session.getAttribute("tno");
+        if (evaluator == null || Long.valueOf(tno) == null) {
+            return "redirect:/mbos/" + company;
         }
 
         // 회사 정보
@@ -183,49 +186,47 @@ public class MboController {
             model.addAttribute("relationMeList", relationMeList);
         });
 
-        return "/mbo/list";
+        return "mbo/list";
     }
 
     /**
      * 목표 페이지에서 새로 고침시 목록 페이지로 재전송한다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param request 요청 객체 정보
-     * @param rttr    재전송 정보
      * @return mbo 대상자 목록 페이지
      */
-    @GetMapping("/object/{company}/{tno}")
-    public String object(@PathVariable("company") String company, @PathVariable("tno") long tno,
-            HttpServletRequest request) {
-        log.info("object redirect by " + company + "/" + tno);
+    @GetMapping("/{company}/object")
+    public String object(@PathVariable("company") String company, HttpServletRequest request) {
+        log.info("object redirect by " + company);
 
-        HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
-            return "redirect:/mbo/" + company;
+        if (request.getSession() == null) {
+            return "redirect:/mbos/" + company;
         }
 
-        return "redirect:/mbo/list/" + company + "/" + tno;
+        return "redirect:/mbos/" + company + "/list";
     }
 
     /**
      * 사용자의 목표 정보를 불러온다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param rno     관계 id
+     * @param request 요청 객체 정보
      * @param model   화면 전달 정보
      */
     // @GetMapping("/object")
-    @PostMapping("/object/{company}/{tno}")
-    public String object(@PathVariable("company") String company, @PathVariable("tno") long tno, Long rno,
-            Model model) {
-        log.info("object list by " + company + "/" + tno + "/" + rno);
+    @PostMapping("/{company}/object")
+    public String object(@PathVariable("company") String company, Long rno, HttpServletRequest request, Model model) {
+        log.info("object list by " + company + "/" + rno);
 
         // 회사 정보
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("company", origin);
         });
+
+        HttpSession session = request.getSession();
+        long tno = (long) session.getAttribute("tno");
 
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
@@ -252,7 +253,7 @@ public class MboController {
             // 관계에 대한 정보 추가
             model.addAttribute("relation", origin);
 
-            // 본인평가 정보 전달
+            // 피평가자 본인평가 정보 전달
             relationMboService.findMeRelationByTnoSno(tno, origin.getEvaluated().getSno()).ifPresent(relationMe -> {
                 model.addAttribute("relationMe", relationMe);
             });
@@ -321,7 +322,7 @@ public class MboController {
      * @param note 면담 내용
      * @return http 성공메시지
      */
-    @PostMapping("/note/{rno}/{step}")
+    @PostMapping("/notes/{rno}/{step}")
     public ResponseEntity<HttpStatus> noteCreate(@PathVariable("rno") long rno, @PathVariable("step") String step,
             String note) {
         log.info("regiter note by " + rno + "/" + step + "/" + note);
@@ -341,7 +342,7 @@ public class MboController {
      * @param step 단계 id
      * @return 면담 내용
      */
-    @GetMapping("/note/{rno}/{step}")
+    @GetMapping("/notes/{rno}/{step}")
     @ResponseBody
     public ResponseEntity<String> noteRead(@PathVariable("rno") long rno, @PathVariable("step") String step) {
         log.info("read note by " + rno + step);

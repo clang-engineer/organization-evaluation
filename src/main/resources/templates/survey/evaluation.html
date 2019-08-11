@@ -15,7 +15,7 @@
             <small class="font-weight-light" th:if="${turn?.infoSurvey?.status}!='see'">[[${relation?.evaluated?.name}]]님에 대한 질의 목록</small>
         </h2>
         <!-- form -->
-        <form id="f1" method="POST" th:action="@{/survey/submit}">
+        <form id="f1" method="POST" th:action="@{/surveys/submit}">
             <!-- card -->
             <div class="card mb-4" th:if="${category!=null}">
                 <!-- card-header -->

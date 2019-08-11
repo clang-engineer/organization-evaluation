@@ -2,7 +2,7 @@ var leaderService = (function () {
 
     function read(dno, callback, error) {
         console.log("read");
-        $.get("../../../object/department/" + dno,
+        $.get("../../objects/leaders/" + dno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -17,7 +17,7 @@ var leaderService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: '../../../object/department/' + param.dno,
+            url: '../../objects/leaders/' + param.dno,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",

@@ -83,9 +83,10 @@ public class HomeController {
      * 
      * @param company 회사 이름
      * @param model   화면 전달 정보
+     * @param request 요청 객체
      * @return Mbo로그인 페이지
      */
-    @GetMapping(value = { "/survey/{company}", "/mbo/{company}" })
+    @GetMapping(value = { "/surveys/{company}", "/mbos/{company}" })
     public String userLogin(@PathVariable("company") String company, HttpServletRequest request, Model model) {
         log.info("user login by " + company);
 
@@ -98,18 +99,18 @@ public class HomeController {
             long cno = origin.getCno();
             model.addAttribute("company", origin);
             // 회사 cno로 turn정보를 찾는다.
-            if (pathInfo.equals("survey")) {
+            if (pathInfo.equals("surveys")) {
                 turnService.getTurnsInSurvey(cno).ifPresent(turn -> {
                     model.addAttribute("turns", turn);
                 });
-            } else if (pathInfo.equals("mbo")) {
+            } else if (pathInfo.equals("mbos")) {
                 turnService.getTurnsInMbo(cno).ifPresent(turn -> {
                     model.addAttribute("turns", turn);
                 });
             }
         });
 
-        return pathInfo + "/index";
+        return pathInfo.substring(0, pathInfo.length() - 1) + "/index";
     }
 
     /**
@@ -122,34 +123,35 @@ public class HomeController {
      * @param rttr    재전송 정보
      * @return Survey 메인 페이지
      */
-    @PostMapping("/survey/login")
+    @PostMapping("/surveys/login")
     public String surveyLogin(String company, long tno, Staff staff, HttpServletRequest request,
             RedirectAttributes rttr) {
         log.info("user login by" + company + "/" + tno + "/" + staff);
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/survey/" + company;
+            return "redirect:/surveys/" + company;
         }
 
         if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/survey/" + company;
+            return "redirect:/surveys/" + company;
         } else if (!relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).map(Staff::getPassword)
                 .orElse(null).equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/survey/" + company;
+            return "redirect:/surveys/" + company;
         }
 
         relationSurveyService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
+                session.setAttribute("tno", tno);
             }
         });
 
         // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
-        return "redirect:/survey/main/" + company + "/" + tno;
+        return "redirect:/surveys/" + company + "/main";
     }
 
     /**
@@ -162,33 +164,34 @@ public class HomeController {
      * @param rttr    재전송 정보
      * @return mbo 메인 페이지
      */
-    @PostMapping("/mbo/login")
+    @PostMapping("/mbos/login")
     public String login(String company, long tno, Staff staff, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("user login by " + company + "/" + tno + "/" + staff);
 
         if (tno == 0) {
             rttr.addFlashAttribute("error", "tno");
-            return "redirect:/mbo/" + company;
+            return "redirect:/mbos/" + company;
         }
 
         if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).isPresent()) {
             rttr.addFlashAttribute("error", "email");
-            return "redirect:/mbo/" + company;
+            return "redirect:/mbos/" + company;
         } else if (!relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).map(Staff::getPassword).orElse(null)
                 .equals(staff.getPassword())) {
             rttr.addFlashAttribute("error", "password");
-            return "redirect:/mbo/" + company;
+            return "redirect:/mbos/" + company;
         }
 
         relationMboService.findByEvaluatorEmail(tno, staff.getEmail()).ifPresent(evaluator -> {
             if (evaluator.getPassword().equals(staff.getPassword())) {
                 HttpSession session = request.getSession();
                 session.setAttribute("evaluator", evaluator);
+                session.setAttribute("tno", tno);
             }
         });
 
         // 로그인 실패하면 메인으로 가도 세션없어서 로그인 폼으로 감! 패스워드 일치여부에 관계없이 메인으로 리다이렉트.
-        return "redirect:/mbo/main/" + company + "/" + tno;
+        return "redirect:/mbos/" + company + "/main";
     }
 
     /**
@@ -199,7 +202,7 @@ public class HomeController {
      * @param rttr    재전송 정보
      * @return 로그인 페이지
      */
-    @PostMapping(value = { "/survey/logout", "/mbo/logout" })
+    @PostMapping(value = { "/surveys/logout", "/mbos/logout" })
     public String userLogOut(String company, HttpServletRequest request, RedirectAttributes rttr) {
         log.info("log out!");
 
@@ -218,20 +221,19 @@ public class HomeController {
      * 사용자 정보를 읽어온다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
+     * @param request 요청 정보 객체
      * @param model   화면 전달 정보
      */
-    @GetMapping(value = { "/survey/profile/{company}/{tno}", "/mbo/profile/{company}/{tno}" })
-    public String userProfile(@PathVariable("company") String company, @PathVariable("tno") long tno,
-            HttpServletRequest request, Model model) {
-        log.info("profile by " + company + "/" + tno);
+    @GetMapping(value = { "/surveys/{company}/profile", "/mbos/{company}/profile" })
+    public String userProfile(@PathVariable("company") String company, HttpServletRequest request, Model model) {
+        log.info("profile by " + company);
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
         String pathInfo = words[1];
 
         HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
+        if (session.getAttribute("evaluator") == null || session.getAttribute("tno") == null) {
             return "redirect:/" + pathInfo + "/" + company;
         }
 
@@ -239,32 +241,32 @@ public class HomeController {
             model.addAttribute("company", origin);
         });
 
+        long tno = (Long) session.getAttribute("tno");
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
 
-        return pathInfo + "/profile";
+        return pathInfo.substring(0, pathInfo.length() - 1) + "/profile";
     }
 
     /**
      * 사용자 정보를 수정한다.
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param staff   직원 정보
      * @param request 요청 정보 객체
      * @return 상태 메시지
      */
-    @PutMapping(value = { "/survey/profile/{company}/{tno}", "/mbo/profile/{company}/{tno}" })
+    @PutMapping(value = { "/surveys/{company}/profile", "/mbos/{company}/profile" })
     public ResponseEntity<HttpStatus> userProfileModify(@PathVariable("company") String company,
-            @PathVariable("tno") long tno, @RequestBody Staff staff, HttpServletRequest request) {
+            @RequestBody Staff staff, HttpServletRequest request) {
         staffService.findByEmail(staff.getEmail()).ifPresent(origin -> {
-            long sno = origin.getSno();
-            staff.setSno(sno);
-            staffService.modify(staff);
+            origin.setPassword(staff.getPassword());
+            origin.setTelephone(staff.getTelephone());
+            staffService.modify(origin);
 
             HttpSession session = request.getSession();
-            session.setAttribute("evaluator", staff);
+            session.setAttribute("evaluator", origin);
         });
 
         return new ResponseEntity<>(HttpStatus.OK);
@@ -274,57 +276,55 @@ public class HomeController {
      * 문의 사항 페이지
      * 
      * @param company 회사 이름
-     * @param tno     회차 id
      * @param model   화면 전달 정보
+     * @return 문의 사항 페이지
      */
-    @GetMapping(value = { "/survey/contact/{company}/{tno}", "/mbo/contact/{company}/{tno}" })
-    public String userContact(@PathVariable("company") String company, @PathVariable("tno") Long tno,
-            HttpServletRequest request, Model model) {
-        log.info("contact by " + company + "/" + tno);
+    @GetMapping(value = { "/surveys/{company}/contact", "/mbos/{company}/contact" })
+    public String userContact(@PathVariable("company") String company, HttpServletRequest request, Model model) {
+        log.info("contact by " + company);
         HttpSession session = request.getSession();
-        if (session.getAttribute("evaluator") == null) {
-            return "redirect:/survey/" + company;
+        String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[1];
+
+        if (session.getAttribute("evaluator") == null || session.getAttribute("tno") == null) {
+            return "redirect:/" + pathInfo + "/" + company;
         }
 
         companyService.findByCompanyId(company).ifPresent(origin -> {
             model.addAttribute("company", origin);
         });
 
+        long tno = (long) session.getAttribute("tno");
         // mbo turn에 따른 navbar 구분을 위해
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
 
-        String whatYouCall = request.getServletPath();
-        String[] words = whatYouCall.split("/");
-        String pathInfo = words[1];
-        String redirectPath = pathInfo + "/contact";
-        return redirectPath;
+        return pathInfo.substring(0, pathInfo.length() - 1) + "/contact";
     }
 
     /**
      * 문의사항 등록 함수
      * 
      * @param company  회사 이름
-     * @param tno      회차 id
      * @param helpDesk 문의 내용 객체
      * @param request  요청 정보 객체
      * @param rttr     재전송 정보
-     * @return 문의 페이지
+     * @return 문의 페이지로 리다이렉트
      */
-    @PostMapping(value = { "/survey/help", "/mbo/help" })
-    public String userContact(String company, long tno, HelpDesk helpDesk, HttpServletRequest request,
-            RedirectAttributes rttr) {
+    @PostMapping(value = { "/surveys/help", "/mbos/help" })
+    public String userContact(String company, HelpDesk helpDesk, HttpServletRequest request, RedirectAttributes rttr) {
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
         String pathInfo = words[1];
 
-        helpDesk.setSurveyInfo(pathInfo);
+        helpDesk.setSurveyInfo(pathInfo.substring(0, pathInfo.length() - 1));
         helpDeskService.register(helpDesk);
 
         rttr.addFlashAttribute("msg", "register");
 
-        String redirectPath = "redirect:/" + pathInfo + "/contact/" + company + "/" + tno;
+        String redirectPath = "redirect:/" + pathInfo + "/" + company + "/contact";
         return redirectPath;
     }
 }
