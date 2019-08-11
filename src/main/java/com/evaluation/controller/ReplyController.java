@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>ReplyController</code>는 목표에 달린 댓글을 REST로 관리한다.
  */
 @RestController
-@RequestMapping("/reply/**")
+@RequestMapping("/replys/*")
 @Slf4j
 @AllArgsConstructor
 public class ReplyController {

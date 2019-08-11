@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * path 포괄을 위해 ** 을 사용..
  */
 @RestController
-@RequestMapping("/object/**")
+@RequestMapping("/objects/**")
 @Slf4j
 @AllArgsConstructor
 public class ObjectConroller {
@@ -145,13 +145,13 @@ public class ObjectConroller {
         return new ResponseEntity<>(HttpStatus.OK);
     }
 
-        /**
+    /**
      * 부서 정보를 읽어오는 REST (Mbo 목표 작성 시 부서 정보 읽어오기 위해)
      * 
      * @param dno 부서 id
      * @return 부서 정보
      */
-    @GetMapping("/department/{dno}")
+    @GetMapping("/leaders/{dno}")
     public ResponseEntity<Department> teamObjectRead(@PathVariable("dno") long dno) {
         log.info("read leader " + dno);
         Department department = departmentService.read(dno).orElse(null);
@@ -165,7 +165,7 @@ public class ObjectConroller {
      * @param leader 리더 정보
      * @return http 상태 정보
      */
-    @PutMapping("/department/{dno}")
+    @PutMapping("/leaders/{dno}")
     public ResponseEntity<HttpStatus> teamObjectModify(@PathVariable("dno") long dno, @RequestBody Leader leader) {
         log.info("modify leader info " + dno);
         departmentService.read(dno).ifPresent(origin -> {
