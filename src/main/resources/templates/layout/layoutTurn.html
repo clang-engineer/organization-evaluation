@@ -111,7 +111,7 @@
 				</a>
 				<div class="dropdown-menu" aria-labelledby="pagesDropdown">
 					<h6 class="dropdown-header">Staff : </h6>
-					<a class="dropdown-item" th:href="@{/staff/list(tno=${turn?.tno})}">Staff</a>
+					<a class="dropdown-item" th:href="@{|/turns/${turn?.tno}/staffs/list|}">Staff</a>
 					<div class="dropdown-divider"></div>
 					<h6 class="dropdown-header">Detail : </h6>
 					<a class="dropdown-item" th:href="@{|/department/list/${turn?.tno}|}">Department</a>

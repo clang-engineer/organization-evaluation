@@ -101,7 +101,6 @@
 	</div>
 	<!-- /.container-fluid -->
 	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="tno" th:value="${turn?.tno}" />
 		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
 		<input type="hidden" name="size" th:value=${result?.currentPage.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -142,26 +141,12 @@
 			var modalRegisterBtn = $("#modalRegisterBtn");
 			var modalCloseBtn = $("#modalCloseBtn");
 
-			if (history.state == null) {
-				if (msg == 'register') {
-					alert("등록 되었습니다.");
-				} else if (msg == 'modify') {
-					alert("수정 되었습니다.");
-				} else if (msg == 'remove') {
-					alert("삭제 되었습니다.");
-				}
-			}
-
-			history.replaceState({}, null, null);
-
 			var formObj = $("#f1");
 
 			//페이지에 붙은 링크 클릭 시
 			$(".pagination a").click(function (e) {
 				e.preventDefault();
 
-                formObj.attr("action", "list");
-                formObj.attr("method", "get");
 				formObj.find('[name="page"]').val($(this).attr('href'));
 				formObj.submit();
 			});
@@ -169,8 +154,6 @@
 			//검색 버튼 클릭 시
 			$("#searchBtn").click(function (e) {
 				e.preventDefault();
-                formObj.attr("action", "list");
-                formObj.attr("method", "get");
 
 				var typeStr = $("#searchType").find(":selected").val();
 				var keywordStr = $("#searchKeyword").val();
@@ -186,21 +169,15 @@
 				e.preventDefault();
 
 				var detailNo = $(this).attr("href");
-				formObj.attr("method", "get");
-				formObj.attr("action", './view');
-				formObj.append("<input type='hidden' name='sno' value='" + detailNo + "'/>");
-				formObj.find("input[name='_csrf']").remove();
+				formObj.attr("action", detailNo);
+				// formObj.find("input[name='_csrf']").remove();
 				formObj.submit();
 			});
 
 			//등록 버튼 클릭 시
 			$("#register").click(function (e) {
 				e.preventDefault();
-
-				formObj.attr("action", './register');
-				formObj.attr("method", "get");
-				formObj.find("input[name='_csrf']").remove();
-				formObj.submit();
+				window.location.href = ".";
 			});
 
 			//xlRegister 클릭 시
