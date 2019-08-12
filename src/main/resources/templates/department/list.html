@@ -90,7 +90,7 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{|${turn?.tno}|}" method="get">
+	<form id="f1" th:action="@{list}" method="get">
 		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
 		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -210,7 +210,13 @@
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				var obj = { tno: tno, dno: modal.data('idx'), csrf: csrf };
+
+				if (confirm("삭제하시겠습니까?")) {
+				} else {
+					return false;
+				}
+
+				var obj = { dno: modal.data('idx'), csrf: csrf };
 				departmentService.remove(obj, function () {
 					alert("삭제 되었습니다.");
 					location.reload();
@@ -222,21 +228,11 @@
 				modal.modal('hide');
 			});
 
-			function delchk() {
-				if (confirm("삭제하시겠습니까?")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
-
 			//leader 버튼 클릭시
 			$(".leader").on("click", function (e) {
 				e.preventDefault();
-
 				var dno = $(this).attr("href");
-				formObj.attr("action", "../leader/" + tno + "/" + dno).attr("method", "get");
-				formObj.find("input[name='_csrf']").remove();
+				formObj.attr('action', '../leaders/' + dno);
 				formObj.submit();
 			});
 

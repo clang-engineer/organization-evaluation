@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * * <code>DivisionController</code>객체는 직군, 계층 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/division/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 public class DivisionController {
 
@@ -44,7 +44,7 @@ public class DivisionController {
      * @param division 계층 정보
      * @return 상태 메시지
      */
-    @PostMapping("/{tno}")
+    @PostMapping("/divisions")
     @ResponseBody
     public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Division division) {
         log.info("division register by " + tno + division);
@@ -61,14 +61,13 @@ public class DivisionController {
     /**
      * 계층 정보를 읽어온다.
      * 
-     * @param tno 회차 id
      * @param dno 계층 id
-     * @return 상태 메시지
+     * @return 상태 메시지 + 계층 정보
      */
-    @GetMapping("/{tno}/{dno}")
+    @GetMapping("/divisions/{dno}")
     @ResponseBody
-    public ResponseEntity<Division> read(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
-        log.info("level read by " + tno + "/" + dno);
+    public ResponseEntity<Division> read(@PathVariable("dno") long dno) {
+        log.info("level read by " + dno);
 
         Division division = divisionService.read(dno).orElse(null);
 
@@ -78,12 +77,11 @@ public class DivisionController {
     /**
      * 계층 정보를 수정한다.
      * 
-     * @param tno      회차 id
      * @param division 계층 정보
-     * @return 상태 메시지
+     * @return 상태 메시지 + 계층 정보
      */
-    @PutMapping("/{tno}/{dno}")
-    public ResponseEntity<Division> modify(@PathVariable("tno") long tno, @RequestBody Division division) {
+    @PutMapping("/divisions/{dno}")
+    public ResponseEntity<Division> modify(@RequestBody Division division) {
         log.info("modify " + division);
 
         divisionService.modify(division);
@@ -94,12 +92,11 @@ public class DivisionController {
     /**
      * 계층 정보를 삭제한다.
      * 
-     * @param tno 회차 id
      * @param dno 계층 id
-     * @return 상태 메시지
+     * @return 상태 메시지 + 계층 정보
      */
-    @DeleteMapping("/{tno}/{dno}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
+    @DeleteMapping("/divisions/{dno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("dno") long dno) {
         log.info("remove " + dno);
 
         divisionService.remove(dno);
@@ -114,7 +111,7 @@ public class DivisionController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list/{tno}")
+    @GetMapping("/divisions/list")
     public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("division list by " + tno);
 

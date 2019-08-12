@@ -27,7 +27,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>LevelController 직급 정보를 관리한다.</code>
  */
 @Controller
-@RequestMapping("/level/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 public class LevelController {
 
@@ -44,7 +44,7 @@ public class LevelController {
      * @param level 직급 정보
      * @return 상태 메시지
      */
-    @PostMapping("/{tno}")
+    @PostMapping("/levels")
     public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Level level) {
         log.info("level register by " + tno + level);
 
@@ -59,14 +59,13 @@ public class LevelController {
     /**
      * 직급 정보를 읽어온다.
      * 
-     * @param tno 회차 id
      * @param lno 직급 id
-     * @return 상태 메시지
+     * @return 상태 메시지 + 직급 정보
      */
-    @GetMapping("/{tno}/{lno}")
+    @GetMapping("/levels/{lno}")
     @ResponseBody
-    public ResponseEntity<Level> read(@PathVariable("tno") long tno, @PathVariable("lno") long lno) {
-        log.info("level read by " + tno + "/" + lno);
+    public ResponseEntity<Level> read(@PathVariable("lno") long lno) {
+        log.info("level read by " + lno);
 
         Level level = levelService.read(lno).orElse(null);
 
@@ -76,14 +75,12 @@ public class LevelController {
     /**
      * 직급 정보를 수정한다.
      * 
-     * @param tno   회차 id
      * @param level 직급 정보
-     * @param vo    페이지 정보
-     * @return 직급 목록 페이지
+     * @return 상태 메시지 + 직급 정보
      */
-    @PutMapping("/{tno}/{lno}")
+    @PutMapping("/levels/{lno}")
     @ResponseBody
-    public ResponseEntity<Level> modify(@PathVariable("tno") long tno, @RequestBody Level level) {
+    public ResponseEntity<Level> modify(@RequestBody Level level) {
         log.info("modify " + level);
 
         levelService.modify(level);
@@ -94,12 +91,11 @@ public class LevelController {
     /**
      * 직급 정보를 삭제한다.
      * 
-     * @param tno 회차 id
      * @param lno 직급 id
-     * @return 직급 목록 페이지
+     * @return 상태 메시지
      */
-    @DeleteMapping("/{tno}/{lno}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("lno") long lno) {
+    @DeleteMapping("/levels/{lno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("lno") long lno) {
         log.info("remove " + lno);
 
         levelService.remove(lno);
@@ -114,7 +110,7 @@ public class LevelController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list/{tno}")
+    @GetMapping("/levels/list")
     public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("level list by " + tno);
 

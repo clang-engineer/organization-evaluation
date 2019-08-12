@@ -73,7 +73,7 @@ public class StaffController {
 	DivisionService divisionService;
 
 	/**
-	 * 직원 정보를 등록한다.
+	 * 직원 정보 등록 페이지
 	 * 
 	 * @param tno   회차 id
 	 * @param model 화면 전달 정보
@@ -141,12 +141,10 @@ public class StaffController {
 	/**
 	 * 직원 정보를 수정한다.
 	 * 
-	 * @param tno   회차 id
-	 * @param sno   직원 id
-	 * @param vo    페이지 정보
-	 * @param model 화면 전달 정보
+	 * @param staff 직원 정보 객체
+	 * @return 상태 메시지
 	 */
-	@PutMapping("/staffs/")
+	@PutMapping("/staffs")
 	public ResponseEntity<HttpStatus> modify(@RequestBody Staff staff) {
 		log.info("controller : staff modify");
 
@@ -158,10 +156,8 @@ public class StaffController {
 	/**
 	 * 직원 정보를 삭제한다.
 	 * 
-	 * @param tno 회차 id
 	 * @param sno 직원 id
-	 * @param vo  페이지 정보
-	 * @return 직원 목록 페이지
+	 * @return 상태 메시지
 	 */
 	@DeleteMapping("/staffs/{sno}")
 	public ResponseEntity<HttpStatus> remove(@PathVariable("sno") long sno) {

@@ -77,7 +77,7 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{|${turn?.tno}|}" method="get">
+	<form id="f1" th:action="@{list}" method="get">
 		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
 		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -147,7 +147,7 @@
 
 				//모달 text
 				modalTitle.text("Level Modify or Delete");
-				var obj = { tno: tno, lno: lno };
+				var obj = { lno: lno };
 				levelService.read(obj, function (result) {
 					content = result.content;
 					modalContent1.val(content);
@@ -178,7 +178,7 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				var obj = { tno: tno, content: modalContent1.val(), writeId: authName, updateId: authName, csrf: csrf };
+				var obj = { content: modalContent1.val(), writeId: authName, updateId: authName, csrf: csrf };
 				levelService.register(obj, function () {
 					alert("등록 되었습니다.");
 					location.reload();
@@ -187,7 +187,7 @@
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				var obj = { tno: tno, lno: modal.data('lno'), content: modalContent1.val(), updateId: authName, csrf: csrf };
+				var obj = { lno: modal.data('lno'), content: modalContent1.val(), updateId: authName, csrf: csrf };
 				levelService.modify(obj, function () {
 					alert("수정 되었습니다.");
 					location.reload();
@@ -197,7 +197,13 @@
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				var obj = { tno: tno, lno: modal.data('lno'), csrf: csrf };
+
+				if (confirm("삭제하시겠습니까?")) {
+				} else {
+					return false;
+				}
+
+				var obj = { lno: modal.data('lno'), csrf: csrf };
 				levelService.remove(obj, function () {
 					alert("삭제 되었습니다.");
 					location.reload();
