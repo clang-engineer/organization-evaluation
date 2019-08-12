@@ -18,6 +18,7 @@
         <div class="card shadow mb-4">
             <div class="card-body">
                 <form id="f1" th:action="@{register}" method="POST">
+                    <input type="hidden" name="tno" th:value="${turn?.tno}">
                     <div class="form-group">
                         <label>Category</label>
                         <select name="category" class="form-control">
@@ -61,8 +62,8 @@
                     </div>
                 </form>
                 <div class="form-group">
-                    <button data-oper="register" type="button" class="btn btn-success">Register</button>
-                    <button data-oper="list" type="button" class="btn btn-info">List</button>
+                    <button class="btn btn-success" type="button" id="submit">Register</button>
+                    <button class="btn btn-info" type="button" id="list">List</button>
                 </div>
             </div>
         </div>
@@ -73,27 +74,34 @@
 
 
 <th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/serializeObject.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
             var formObj = $("#f1");
+            var csrf = JSON.parse('[[${_csrf}]]');
 
-            $('button').on("click", function (e) {
-                e.preventDefault();
+            $("button[id='submit']").on("click", function (e) {
+                var param = $('#f1').serializeObject();
+                $.ajax({
+                    type: 'post',
+                    url: 'questions',
+                    data: JSON.stringify(param),
+                    contentType: "application/json; charset:utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(csrf.headerName, csrf.token)
+                    },
+                    success: function (result, status, shr) {
+                        alert("등록 되었습니다.");
+                        window.location.href = "questions/list";
+                    },
+                    error: function (xhr, status, err) {
+                        alert(status);
+                    }
+                });
+            });
 
-                var operation = $(this).data("oper");
-                console.log(operation);
-
-                if (operation === 'list') {
-                    formObj.empty();
-                    formObj.attr("action", "list").attr("method", "get");
-                    formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO.page }]] + "'/>");
-                    formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO.size }]] + "'/>");
-                    formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO.type }]] + "'/>");
-                    formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO.keyword }]] + "'/>");
-                }
-
-                formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
-                formObj.submit();
+            $("button[id='list']").on("click", function (e) {
+                window.location.href = "questions/list";
             });
         });
     </script>

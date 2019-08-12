@@ -104,7 +104,7 @@
 				var param = $('#f1').serializeObject();
 				$.ajax({
 					type: 'post',
-					url: '.',
+					url: 'staffs',
 					data: JSON.stringify(param),
 					contentType: "application/json; charset:utf-8",
 					beforeSend: function (xhr) {
@@ -112,7 +112,7 @@
 					},
 					success: function (result, status, shr) {
 						alert("등록 되었습니다.");
-						window.location.href = "list";
+						window.location.href = "staffs/list";
 					},
 					error: function (xhr, status, err) {
 						alert(status);
@@ -121,7 +121,7 @@
 			});
 
 			$("button[id='list']").on("click", function (e) {
-				window.location.href = "list";
+				window.location.href = "staffs/list";
 			});
 		});
 	</script>

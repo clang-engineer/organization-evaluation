@@ -81,7 +81,7 @@ public class StaffController {
 	 */
 	@GetMapping("/staffs")
 	public String register(@PathVariable("tno") long tno, Model model) {
-		log.info("controller : staff register by " + tno );
+		log.info("controller : staff register by " + tno);
 
 		turnService.read(tno).ifPresent(origin -> {
 			model.addAttribute("turn", origin);
@@ -121,7 +121,7 @@ public class StaffController {
 	 */
 	@GetMapping("/staffs/{sno}")
 	public String read(@PathVariable("tno") long tno, @PathVariable("sno") long sno, PageVO vo, Model model) {
-		log.info("controller : staff read by " + tno + vo);
+		log.info("controller : staff read by " + tno);
 
 		turnService.read(tno).ifPresent(origin -> {
 			model.addAttribute("turn", origin);
@@ -132,6 +132,8 @@ public class StaffController {
 		staffService.read(sno).ifPresent(origin -> {
 			model.addAttribute("staff", origin);
 		});
+
+		model.addAttribute("pageVO", vo);
 
 		return "staff/read";
 	}
@@ -145,8 +147,8 @@ public class StaffController {
 	 * @param model 화면 전달 정보
 	 */
 	@PutMapping("/staffs/")
-	public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @RequestBody Staff staff) {
-		log.info("controller : staff modify by " + tno);
+	public ResponseEntity<HttpStatus> modify(@RequestBody Staff staff) {
+		log.info("controller : staff modify");
 
 		staffService.modify(staff);
 
@@ -162,7 +164,7 @@ public class StaffController {
 	 * @return 직원 목록 페이지
 	 */
 	@DeleteMapping("/staffs/{sno}")
-	public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("sno") long sno) {
+	public ResponseEntity<HttpStatus> remove(@PathVariable("sno") long sno) {
 		log.info("controller : staff delete by " + sno);
 
 		staffService.remove(sno);
