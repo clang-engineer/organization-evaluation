@@ -20,14 +20,19 @@ import com.evaluation.vo.PageVO;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -36,7 +41,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>QuestionController</code>객체는 질문 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/question/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 @AllArgsConstructor
 public class QuestionController {
@@ -53,12 +58,11 @@ public class QuestionController {
      * 질문 등록 페이지를 읽어온다.
      * 
      * @param tno   회차 id
-     * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/register")
-    public void register(long tno, PageVO vo, Model model) {
-        log.info("register get by " + tno + vo);
+    @GetMapping("/questions")
+    public String register(@PathVariable("tno") long tno, Model model) {
+        log.info("register get by " + tno);
 
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
@@ -66,26 +70,23 @@ public class QuestionController {
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
+
+        return "question/register";
     }
 
     /**
      * 질문을 등록한다.
      * 
      * @param question 질문 정보
-     * @param tno      회차 id
-     * @param rttr     재전송 정보
-     * @return 질문 목록 페이지
+     * @return 상태 메시지
      */
-    @PostMapping("/register")
-    public String register(long tno, Question question, RedirectAttributes rttr) {
+    @PostMapping("/questions")
+    public ResponseEntity<HttpStatus> register(@RequestBody Question question) {
         log.info("register post by " + question);
 
-        question.setTno(tno);
         questionService.register(question);
 
-        rttr.addFlashAttribute("msg", "register");
-        rttr.addAttribute("tno", tno);
-        return "redirect:/question/list";
+        return new ResponseEntity<>(HttpStatus.CREATED);
     }
 
     /**
@@ -96,8 +97,8 @@ public class QuestionController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/view")
-    public void read(long tno, long qno, PageVO vo, Model model) {
+    @GetMapping("/questions/{qno}")
+    public String read(@PathVariable("tno") long tno, @PathVariable("qno") long qno, PageVO vo, Model model) {
         log.info("view by " + tno + vo);
 
         questionService.read(qno).ifPresent(origin -> {
@@ -109,90 +110,53 @@ public class QuestionController {
             long cno = origin.getCno();
             model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
         });
-    }
 
-    /**
-     * 질문 정보를 수정페이지를 읽는다.
-     * 
-     * @param tno   회차 id
-     * @param qno   질문 id
-     * @param vo    페이지 정보
-     * @param model 화면 전달 정보
-     */
-    @GetMapping("/modify")
-    public void modify(long tno, long qno, PageVO vo, Model model) {
-        log.info("modify by " + tno + vo);
+        model.addAttribute("pageVO", vo);
 
-        questionService.read(qno).ifPresent(origin -> {
-            model.addAttribute("question", origin);
-        });
-
-        turnService.read(tno).ifPresent(origin -> {
-            model.addAttribute("turn", origin);
-            long cno = origin.getCno();
-            model.addAttribute("distinctInfo", questionService.getDistinctQuestionInfo(cno, tno));
-        });
+        return "question/read";
     }
 
     /**
      * 질문 정보를 수정한다.
      * 
      * @param question 질문 정보
-     * @param tno      회차 id
-     * @param vo       페이지 정보
-     * @param rttr     재전송 정보
-     * @return 질문 목록 페이지
+     * @return 상태 메시지
      */
-    @PostMapping("/modify")
-    public String modify(Question question, long tno, PageVO vo, RedirectAttributes rttr) {
+    @PutMapping("/questions")
+    public ResponseEntity<HttpStatus> modify(@RequestBody Question question) {
         log.info("modify" + question);
 
         questionService.modify(question);
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("qno", question.getQno());
-        rttr.addFlashAttribute("msg", "modify");
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/question/view";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 질문 정보를 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param qno  질문 id
-     * @param vo   페이지 정보
-     * @param rttr 재전송 정보
-     * @return 질문 목록 페이지
+     * @param tno 회차 id
+     * @param qno 질문 id
+     * @return 상태 메시지
      */
-    @PostMapping("/remove")
-    public String remove(long tno, long qno, PageVO vo, RedirectAttributes rttr) {
+    @DeleteMapping("/questions/{qno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("qno") long qno) {
         log.info("remove " + qno);
 
         questionService.remove(qno);
 
-        rttr.addAttribute("tno", tno);
-        rttr.addFlashAttribute("msg", "remove");
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/question/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
      * 질문 목록을 읽어온다.
      * 
-     * @param tno   회차 id
-     * @param vo    페이지 정보
-     * @param model 화면 전달 정보
+     * @param tno    회차 id
+     * @param vo     페이지 정보
+     * @param model  화면 전달 정보
+     * @param return 질문 목록 페이지
      */
-    @GetMapping("/list")
-    public void readList(long tno, PageVO vo, Model model) {
+    @GetMapping("/questions/list")
+    public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("question list by " + tno + vo);
 
         turnService.read(tno).ifPresent(origin -> {
@@ -201,6 +165,10 @@ public class QuestionController {
 
         Page<Question> result = questionService.getList(tno, vo);
         model.addAttribute("result", new PageMaker<>(result));
+
+        model.addAttribute("pageVO", vo);
+
+        return "question/list";
     }
 
     /**
@@ -211,7 +179,7 @@ public class QuestionController {
      * @param uploadFile 업로드할 파일
      * @param model      화면 전달 정보
      */
-    @PostMapping("/xlUpload")
+    @PostMapping("/questions/xlUpload")
     @ResponseBody
     public void xlUpload(Question question, Boolean deleteList, MultipartFile uploadFile, Model model) {
 
@@ -252,9 +220,9 @@ public class QuestionController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping(value = "/xlDownload")
+    @PostMapping(value = "/questions/xlDownload")
     @ResponseBody
-    public void xlDown(long tno, HttpServletResponse response) {
+    public void xlDown(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();

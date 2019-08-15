@@ -9,23 +9,12 @@
 
 </html>
 <th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
             //작업 메시지 세트
             var msg = [[${ msg }]];
-            console.log(msg);
-            if (history.state == null) {
-                if (msg == 'register') {
-                    alert("등록 되었습니다.");
-                } else if (msg == 'modify') {
-                    alert("수정 되었습니다.");
-                } else if (msg == 'remove') {
-                    alert("삭제 되었습니다.");
-                }
-            }
-
-            history.replaceState({}, null, null);
-
+            common.historyMessage(history, msg);
         });
 
     </script>

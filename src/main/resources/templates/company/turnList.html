@@ -42,13 +42,6 @@
 
 	</div>
 
-	<form id="f1" th:action="@{list}" method="get">
-		<input type="hidden" name="page" th:value=${pageVO?.page} />
-		<input type="hidden" name="size" th:value=${pageVO?.size} />
-		<input type="hidden" name="type" th:value=${pageVO?.type} />
-		<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
-	</form>
-
 	<!-- Modal -->
 	<div th:insert="~{common/modal::basic}"></div>
 	<!-- ./Modal -->
@@ -59,6 +52,7 @@
 
 <th:block layout:fragment="script">
 	<script th:inline="javascript" th:src="@{'/public/js/admin/turn.js'}"></script>
+	<script th:inline="javascript" th:src="@{'/public/js/common.js'}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function (e) {
 
@@ -110,33 +104,16 @@
 				var turnObj;
 				for (var i = 0; i < list.length; i++) {
 					turnObj = list[i];
-
 					str += "<tr>" +
 						"<td>" + (i + 1) + "</td>" +
 						"<td>" + turnObj.title + "</td>" +
 						"<td>" + turnObj.types + "</td>" +
-						"<td>" + formatDate(turnObj.writeDate) + "</td>" +
-						"<td>" + formatDate(turnObj.updateDate) + "</td>" +
+						"<td>" + common.displayTime(new Date(turnObj.writeDate)) + "</td>" +
+						"<td>" + common.displayTime(new Date(turnObj.updateDate)) + "</td>" +
 						"<td><a href='" + turnObj.tno + "'><button type='button' class='btn btn-default'><i class='fas fa-sitemap'></i></button></a></td>" +
 						"</tr>";
 				}
 				$("#turnTable").html(str);
-			}
-
-			/* list에 출력되는 시간 포멧 */
-			function formatDate(timeValue) {
-				var date = new Date(timeValue);
-				var yyyy = date.getFullYear();
-				var mm = date.getMonth();
-				var dd = date.getDate();
-
-				var hh = date.getHours();
-				var mi = date.getMinutes();
-				var ss = date.getSeconds();
-
-				var formatedTime = [yyyy, '/', (mm > 9 ? '' : '0') + mm, '/', (dd > 9 ? '' : '0') + dd, ' ', (hh > 9 ? '' : '0') + hh, ':', (mi > 9 ? '' : '0') + mi, ':', (ss > 9 ? '' : '0') + ss].join('');
-
-				return formatedTime;
 			}
 
 			/* modal 창 */
@@ -212,10 +189,8 @@
 			$("#turnTable").on("click", "a", function (e) {
 				if (confirm("회차 상세 설정 화면으로 이동하시겠습니까?")) {
 					e.preventDefault();
-					$("#f1").empty();
-					$("#f1").attr("action", '../staff/list');
-					$("#f1").append("<input type='hidden' name='tno' value='" + $(this).attr('href') + "'/>");
-					$("#f1").submit();
+					var tno = $(this).attr('href');
+					window.location.href = '../turns/' + tno + '/staffs/list';
 				} else {
 					return false;
 				}
@@ -277,10 +252,6 @@
 					return false;
 				}
 			}
-
-			$("#companyListBtn").on("click", function (e) {
-				$("#f1").submit();
-			});
 
 			//close button click 시
 			modalCloseBtn.on("click", function (e) {

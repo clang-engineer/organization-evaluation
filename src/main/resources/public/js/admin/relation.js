@@ -2,8 +2,8 @@ console.log("Relation Staff Module...")
 
 var relationService = (function () {
 
-    function getEvaluatedList(tno, callback, error) {
-        $.getJSON("evaluated/" + tno, function (data) {
+    function getEvaluatedList(callback, error) {
+        $.getJSON("evaluated", function (data) {
             if (callback) {
                 callback(data);
             }
@@ -15,7 +15,7 @@ var relationService = (function () {
     };
 
     function getEvaluatorList(param, callback, error) {
-        $.getJSON("evaluator/" + param.tno + "/" + param.sno, function (data) {
+        $.getJSON("evaluators/" + param.sno, function (data) {
             if (callback) {
                 callback(data);
             }
@@ -26,9 +26,47 @@ var relationService = (function () {
         });
     };
 
+    function deleteRelation(param, callback, error) {
+        $.ajax({
+            type: 'delete',
+            url: param.idx,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+            },
+            success: function (result, status, shr) {
+                alert("삭제 되었습니다.");
+                window.location.reload();
+            },
+            error: function (xhr, status, er) {
+                if (error) {
+                    error(er);
+                }
+            }
+        });
+    }
 
+    function deleteEvaluators(param, callback, error) {
+        $.ajax({
+            type: 'delete',
+            url: 'evaluators/' + param.idx,
+            beforeSend: function (xhr) {
+                xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
+            },
+            success: function (result, status, shr) {
+                alert("삭제 되었습니다.");
+                window.location.reload();
+            },
+            error: function (xhr, status, er) {
+                if (error) {
+                    error(er);
+                }
+            }
+        });
+    }
     return {
         getEvaluatedList: getEvaluatedList,
-        getEvaluatorList: getEvaluatorList
+        getEvaluatorList: getEvaluatorList,
+        deleteRelation: deleteRelation,
+        deleteEvaluators: deleteEvaluators
     };
 })();

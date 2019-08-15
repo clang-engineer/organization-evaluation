@@ -3,18 +3,17 @@
 
 <div layout:fragment="content">
     <div class="container-fluid">
-
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a th:href="@{/progress/mbo(tno=${turn?.tno})}">List</a>
+                <a th:href="@{../progress}">List</a>
             </li>
             <li class="breadcrumb-item active">Evaluated List</li>
         </ol>
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-table"></i>MBO Evaluated List
+                <i class="fas fa-table"></i>[[${type}]] Evaluated List
             </div>
 
             <div class="card-body">
@@ -41,7 +40,7 @@
             $("#dataTable").on("change", "select", function (e) {
                 var rno = $(this).data("rno");
                 var finish = $(this).val();
-
+                console.log(finish);
                 var param = {
                     rno: rno,
                     finish: finish,
@@ -49,8 +48,8 @@
                 }
                 $.ajax({
                     type: 'put',
-                    url: 'evaluatedList',
-                    data: 'rno=' + param.rno + '&finish=' + param.finish,
+                    url: param.rno,
+                    data: 'finish=' + param.finish,
                     beforeSend: function (xhr) {
                         xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
                     },
@@ -58,7 +57,7 @@
                         alert("success");
                     },
                     error: function (xhr, status, er) {
-                        alert(er);
+                        alert(xhr);
                     }
                 });
             });

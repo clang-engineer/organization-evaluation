@@ -3,7 +3,7 @@ var departmentService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: "../" + param.tno,
+            url: '.',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var departmentService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("../" + param.tno + "/" + param.dno,
+        $.get(param.dno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var departmentService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: "../" + param.tno + "/" + param.dno,
+            url: param.dno,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var departmentService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: "../" + param.tno + "/" + param.dno,
+            url: param.dno,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },

@@ -24,7 +24,39 @@ var common = (function () {
         }
     };
 
+    //파일 사이즈 및 형식 제한.
+    var regex = new RegExp("(.*?)\.(xlsx)$");
+    var maxSize = 5242880;//5MB
+
+    function checkExtension(fileName, fileSize) {
+        if (fileSize >= maxSize) {
+            alert("파일 사이즈 초과");
+            return false;
+        }
+
+        if (!regex.test(fileName)) {
+            alert("xlsx 파일만 업로드 가능.")
+            return false;
+        }
+        return true;
+    }
+
+    function historyMessage(history, msg) {
+        if (history.state == null) {
+            if (msg == 'register') {
+                alert("등록 되었습니다.");
+            } else if (msg == 'modify') {
+                alert("수정 되었습니다.");
+            } else if (msg == 'remove') {
+                alert("삭제 되었습니다.");
+            }
+        }
+
+        history.replaceState({}, null, null);
+    }
     return {
-        displayTime: displayTime
+        displayTime: displayTime,
+        checkExtension: checkExtension,
+        historyMessage: historyMessage
     };
 })();

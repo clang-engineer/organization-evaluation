@@ -1,0 +1,189 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
+
+<div layout:fragment="content">
+	<!-- .container-fluid -->
+	<div class="container-fluid">
+		<!-- Breadcrumbs-->
+		<ol class="breadcrumb">
+			<li class="breadcrumb-item">
+				<a th:href="@{list}">List</a>
+			</li>
+			<li class="breadcrumb-item active">Read</li>
+		</ol>
+
+		<!-- Page Content -->
+		<hr>
+		<!-- DataTales Example -->
+		<div class="card shadow mb-4">
+			<div class="card-body">
+				<fieldset disabled>
+					<form id="f1" th:action="@{modify}" method="POST">
+						<input type="hidden" name="cno" th:value="${turn?.cno}">
+						<input type="hidden" name="sno" th:value="${staff?.sno}">
+						<div class="form-group">
+							<label>Name</label>
+							<input type="text" class="form-control" name="name" placeholder="" th:value="${staff?.name}">
+						</div>
+						<div class="form-group">
+							<label>Email</label>
+							<input type="email" class="form-control" name="email" placeholder="" th:value="${staff?.email}">
+						</div>
+						<div class="form-group">
+							<label>Password</label>
+							<input type="text" class="form-control" name="password" id="pwd1" placeholder="" th:value="${staff?.password}">
+						</div>
+						<div class="form-group">
+							<input type="text" class="form-control" name="password2" id="pwd2" placeholder="" th:value="${staff?.password}">
+						</div>
+						<div class="alert alert-success" id="alert-success">비밀번호가 일치합니다.</div>
+						<div class="alert alert-danger" id="alert-danger">비밀번호가 일치하지 않습니다.</div>
+						<div class="form-group">
+							<label>Telephone</label>
+							<input class="form-control" type="tel" name="telephone" th:value="${staff?.telephone}" placeholder="000-0000-0000">
+						</div>
+						<div class="form-group">
+							<label>Level</label>
+							<select name="level" class="form-control">
+								<option value="">--</option>
+								<option th:each="res:${distinctInfo?.level}" th:text="${res}" th:value="${res}" th:selected="${staff?.level}==${res}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Department1</label>
+							<select name="department1" class="form-control">
+								<option value="">--</option>
+								<option th:each="res:${distinctInfo.department1}" th:text="${res}" th:value="${res}" th:selected="${staff?.department1}==${res}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Department2</label>
+							<select name="department2" class="form-control">
+								<option value="">--</option>
+								<option th:each="res:${distinctInfo.department2}" th:text="${res}" th:value="${res}" th:selected="${staff?.department2}==${res}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Division1</label>
+							<select name="division1" class="form-control">
+								<option value="">--</option>
+								<option th:each="res:${distinctInfo.division1}" th:text="${res}" th:value="${res}" th:selected="${staff?.division1}==${res}"></option>
+							</select>
+						</div>
+						<div class="form-group">
+							<label>Division2</label>
+							<select name="division2" class="form-control">
+								<option value="">--</option>
+								<option th:each="res:${distinctInfo.division2}" th:text="${res}" th:value="${res}" th:selected="${staff?.division2}==${res}"></option>
+							</select>
+						</div>
+						<input type="hidden" name="updateId" th:value="${#authentication?.name}">
+					</form>
+				
+					<div class="form-group">
+						<label>WriteId</label>
+						<input type="text" class="form-control" name="writeId" th:value="${staff?.writeId}" readonly>
+					</div>
+					<div class="form-group">
+						<label>WriteDate</label>
+						<input type="url" class="form-control" name="writeDate" th:value="${#dates.format(staff?.writeDate,'yyyy-MM-dd  hh:mm:ss')}" readonly>
+					</div>
+					<div class="form-group">
+						<label>UpdateId</label>
+						<input type="text" class="form-control" name="updateId" th:value="${#authentication?.name}" readonly>
+					</div>
+					<div class="form-group">
+						<label>UpdateDate</label>
+						<input type="url" class="form-control" name="updateDate" th:value="${#dates.format(staff?.updateDate,'yyyy-MM-dd  hh:mm:ss')}" readonly>
+					</div>
+				</fieldset>
+				<div class="form-group">
+					<button class="btn btn-success" type="button" id="modify">Modify</button>
+					<button class="btn btn-success" type="button" id="submit" hidden>Sumbit</button>
+					<button class="btn btn-danger" type="button" id="remove" hidden>remove</button>
+					<button class="btn btn-info" type="button" id="list">List</button>
+				</div>
+				<form id="f2" th:action="@{list}" method="get">
+					<input type="hidden" name="page" th:value=${pageVO?.page} />
+					<input type="hidden" name="size" th:value=${pageVO?.size} />
+					<input type="hidden" name="type" th:value=${pageVO?.type} />
+					<input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
+				</form>
+			</div>
+		</div>
+	</div>
+	<!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+	<script type="text/javascript" th:src="@{/public/js/passwordConfirm.js}"></script>
+	<script type="text/javascript" th:src="@{/public/js/serializeObject.js}"></script>
+	<script th:inline="javascript">
+		$(document).ready(function () {
+			var formObj = $("#f1");
+			var csrf = JSON.parse('[[${_csrf}]]');
+			var tno = [[${ turn?.tno }]];
+
+			$("button[id='modify']").on("click", function (e) {
+				$(this).hide();
+				$("fieldset").attr("disabled", false);
+				$("#remove").attr("hidden", false);
+				$("#submit").attr("hidden", false);
+			});
+
+			$("button[id='submit']").on("click", function (e) {
+				var param = $('#f1').serializeObject();
+				$.ajax({
+					type: 'put',
+					url: '.',
+					data: JSON.stringify(param),
+					contentType: "application/json; charset:utf-8",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(csrf.headerName, csrf.token)
+					},
+					success: function (result, status, shr) {
+						alert("수정 되었습니다.");
+						$("fieldset").attr("disabled", true);
+						location.reload();
+					},
+					error: function (xhr, status, err) {
+						alert(status);
+					}
+				});
+			});
+
+			$("button[id='remove']").on("click", function (e) {
+
+				if (!confirm("삭제하시겠습니까?")) {
+					return false;
+				}
+
+				var sno = [[${ staff?.sno }]];
+				$.ajax({
+					type: 'delete',
+					url: sno,
+					contentType: "application/json; charset:utf-8",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(csrf.headerName, csrf.token)
+					},
+					success: function (result, status, shr) {
+						alert("삭제 되었습니다.");
+						$("#f2").submit();
+					},
+					error: function (xhr, status, err) {
+						alert(status);
+					}
+				});
+			});
+
+			$("button[id='list']").on("click", function (e) {
+				$("#f2").submit();
+			});
+
+
+
+		});
+	</script>
+</th:block>

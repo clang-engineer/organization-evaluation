@@ -103,28 +103,21 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.attr("action", ".");
+                formObj.attr("action", "progress");
                 formObj.submit();
             });
 
             //rawdata 다운로드 함수
             $("#xlRawdata").click(function (e) {
-                formObj.attr("action", "result");
+                formObj.attr("action", "rawdata");
                 formObj.submit();
             });
 
             // 개인의 피평가자 리스트 보는 버튼 클릭.
             $(".evaluatedList").click(function (e) {
                 e.preventDefault();
-                var tno = [[${ turn?.tno }]];
                 var sno = $(this).attr("href");
-
-                formObj.empty();
-                formObj.attr("method", "GET")
-                formObj.append("<input type='hidden' name='tno' value='" + tno + "'>");
-                formObj.append("<input type='hidden' name='sno' value='" + sno + "'>");
-                formObj.attr("action", "evaluatedList");
-                formObj.submit();
+                window.location.href = "evaluatedList/" + sno;
             });
 
             $('#viewLoading').hide();

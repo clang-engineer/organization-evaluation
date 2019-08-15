@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>InfoMboController</code>객체는 Mbo 설정 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/infoMbo/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 @AllArgsConstructor
 public class InfoMboController {
@@ -36,7 +36,7 @@ public class InfoMboController {
 	 * @param tno   회차 id
 	 * @param model 화면 전달 정보
 	 */
-	@GetMapping("/{tno}")
+	@GetMapping("/infoMbo")
 	public String view(@PathVariable("tno") long tno, Model model) {
 		log.info("infoMbo read get " + tno);
 
@@ -58,7 +58,7 @@ public class InfoMboController {
 	 * @param infoMbo Mbo 설정 정보
 	 * @return Mbo 설정 정보
 	 */
-	@PutMapping("/{tno}")
+	@PutMapping("/infoMbo")
 	public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @RequestBody InfoMbo infoMbo) {
 		log.info("controller : infoMbo modify post " + infoMbo);
 

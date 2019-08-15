@@ -54,7 +54,7 @@
                         <tbody>
                             <tr th:each="staff,iterstate:${progress}">
                                 <th>[[${iterstate.count}]]</td>
-                                <td><a th:href="@{/progress/mbo/objectList(tno=${turn?.tno},sno=${staff[0]})}">[[${staff[1]}]]</a></td>
+                                <td><a th:href="@{|objectList/${staff[0]}|}">[[${staff[1]}]]</a></td>
                                 <td>[[${staff[2]}]]</td>
                                 <td>[[${staff[3]}]]</td>
                                 <td>[[${staff[4]}]]</td>
@@ -99,13 +99,13 @@
 
             //xl 다운로드 함수
             $("#xlDownload").click(function (e) {
-                formObj.attr("action", "./plan");
+                formObj.attr("action", "plan");
                 formObj.submit();
             });
 
             //rawdata 다운로드 함수
             $("#xlRawdata").click(function (e) {
-                formObj.attr("action", "./plan/result");
+                formObj.attr("action", "plan/rawdata");
                 formObj.submit();
             });
 

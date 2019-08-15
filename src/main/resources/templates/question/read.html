@@ -1,0 +1,161 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" xmlns:layout="http://www.ultraq.net.nz/thymeleaf/layout" layout:decorate="~{/layout/layoutTurn}">
+
+<div layout:fragment="content">
+    <!-- .container-fluid -->
+    <div class="container-fluid">
+        <!-- Breadcrumbs-->
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item">
+                <a th:href="@{list}">List</a>
+            </li>
+            <li class="breadcrumb-item active">Read</li>
+        </ol>
+        <!-- Page Content -->
+        <hr>
+        <!-- DataTales Example -->
+        <div class="card shadow mb-4">
+            <div class="card-body">
+                <fieldset disabled>
+                    <form id="f1" th:action="@{modify}" method="POST">
+                        <input type="hidden" name="tno" th:value="${turn?.tno}">
+                        <input type="hidden" name="qno" th:value="${question?.qno}">
+                        <div class="form-group">
+                            <label>Category</label>
+                            <select name="category" class="form-control">
+                                <option value="">--</option>
+                                <option th:each="res:${distinctInfo?.category}" th:text="${res}" th:value="${res}" th:selected="${res}==${question?.category}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Order Idx</label>
+                            <input type="text" class="form-control" name="idx" th:value="${question?.idx}">
+                        </div>
+                        <div class="form-group">
+                            <label>Division1</label>
+                            <select name="division1" class="form-control">
+                                <option value="">--</option>
+                                <option th:each="res:${distinctInfo?.division1}" th:text="${res}" th:value="${res}" th:selected="${res}==${question?.division1}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Division2</label>
+                            <select name="division2" class="form-control">
+                                <option value="">--</option>
+                                <option th:each="res:${distinctInfo?.division2}" th:text="${res}" th:value="${res}" th:selected="${res}==${question?.division2}"></option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label>Question</label>
+                            <input type="text" class="form-control" name="item" th:value="${question?.item}">
+                        </div>
+                        <div class="form-group">
+                            <label>Ratio</label>
+                            <input type="text" class="form-control" name="ratio" th:value="${question?.ratio}">
+                        </div>
+                        <input type="hidden" name="updateId" th:value="${#authentication?.name}">
+                    </form>
+                </fieldset>
+                <div class="form-group">
+                    <label>WriteId</label>
+                    <input type="text" class="form-control" name="writeId" th:value="${question?.writeId}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>WriteDate</label>
+                    <input type="text" class="form-control" name="writeDate" th:value="${#dates.format(question?.writeDate,'yyyy-MM-dd  hh:mm:ss')}" readonly/>
+                </div>
+                <div class="form-group">
+                     <label>UpdateId</label>
+                     <input type="text" class="form-control" name="updateId" th:value="${#authentication?.name}" readonly>
+                </div>
+                <div class="form-group">
+                    <label>UpdateDate</label>
+                    <input type="text" class="form-control" name="updateDate" th:value="${#dates.format(question?.updateDate,'yyyy-MM-dd  hh:mm:ss')}" readonly>
+                </div>
+                <div class="form-group">
+                    <button class="btn btn-success" id="modify" type="button">Modfiy</button>
+                    <button class="btn btn-success" id="submit" type="button" hidden>Sumbit</button>
+                    <button class="btn btn-danger" id="remove" type="button" hidden>Delete</button>
+                    <button class="btn btn-info" id="list" type="button">List</button>
+                </div>
+                <form id="f2" th:action="@{list}" method="get">
+                    <input type="hidden" name="page" th:value=${pageVO?.page} />
+                    <input type="hidden" name="size" th:value=${pageVO?.size} />
+                    <input type="hidden" name="type" th:value=${pageVO?.type} />
+                    <input type="hidden" name="keyword" th:value=${pageVO?.keyword} />
+                </form>
+            </div>
+        </div>
+    </div>
+    <!-- /.container-fluid -->
+</div>
+
+
+
+<th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/serializeObject.js}"></script>
+    <script th:inline="javascript">
+        $(document).ready(function () {
+            var formObj = $("#f1");
+            var csrf = JSON.parse('[[${_csrf}]]');
+            var tno = [[${ turn?.tno }]];
+
+            $("button[id='modify']").on("click", function (e) {
+                $(this).hide();
+                $("fieldset").attr("disabled", false);
+                $("#remove").attr("hidden", false);
+                $("#submit").attr("hidden", false);
+            });
+
+            $("button[id='submit']").on("click", function (e) {
+                var param = $('#f1').serializeObject();
+                $.ajax({
+                    type: 'put',
+                    url: '.',
+                    data: JSON.stringify(param),
+                    contentType: "application/json; charset:utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(csrf.headerName, csrf.token)
+                    },
+                    success: function (result, status, shr) {
+                        alert("수정 되었습니다.");
+                        $("fieldset").attr("disabled", true);
+                        location.reload();
+                    },
+                    error: function (xhr, status, err) {
+                        alert(status);
+                    }
+                });
+            });
+
+            $("button[id='remove']").on("click", function (e) {
+
+                if (!confirm("삭제하시겠습니까?")) {
+                    return false;
+                }
+
+                var qno = [[${ question?.qno }]];
+                $.ajax({
+                    type: 'delete',
+                    url: qno,
+                    contentType: "application/json; charset:utf-8",
+                    beforeSend: function (xhr) {
+                        xhr.setRequestHeader(csrf.headerName, csrf.token)
+                    },
+                    success: function (result, status, shr) {
+                        alert("삭제 되었습니다.");
+                        $("#f2").submit();
+                    },
+                    error: function (xhr, status, err) {
+                        alert(status);
+                    }
+                });
+            });
+
+            $("button[id='list']").on("click", function (e) {
+                $("#f2").submit();
+            });
+        });
+
+    </script>
+</th:block>

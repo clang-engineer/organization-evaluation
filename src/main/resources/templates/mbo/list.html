@@ -172,6 +172,7 @@
 </html>
 <th:block layout:fragment="script">
     <script type="text/javascript" th:src="@{/public/js/mbo/note.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/bottomBtnSize.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function (e) {
 
@@ -352,47 +353,11 @@
             });
 
             // load했을 때 버튼 사이즈
-            var win = $(this);
-            if (win.width() < 768) {
-                $('#bottomBtn').addClass('btn-group-sm');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-lg');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-vertical');
-
-            } else if ((win.width() < 1200)) {
-                $('#bottomBtn').removeClass('btn-group-sm');
-                $('#bottomBtn').addClass('btn-group-xs');
-                $('#bottomBtn').removeClass('btn-group-lg');
-                $('#bottomBtn').removeClass('btn-group-vertical');
-
-            } else {
-                $('#bottomBtn').removeClass('btn-group-sm');
-                $('#bottomBtn').removeClass('btn-group-xs');
-                $('#bottomBtn').addClass('btn-group-lg');
-                $('#bottomBtn').addClass('btn-group-vertical');
-            }
+            bottomBtnSize();
 
             //버튼 크기 조정을 위한 클래스 부여
             $(window).on('resize', function () {
-                if (win.width() < 768) {
-                    $('#bottomBtn').addClass('btn-group-sm');
-                    $('#bottomBtn').removeClass('btn-group-xs');
-                    $('#bottomBtn').removeClass('btn-group-lg');
-                    $('#bottomBtn').removeClass('btn-group-vertical');
-
-                } else if ((win.width() < 1200)) {
-                    $('#bottomBtn').removeClass('btn-group-sm');
-                    $('#bottomBtn').addClass('btn-group-xs');
-                    $('#bottomBtn').removeClass('btn-group-lg');
-                    $('#bottomBtn').removeClass('btn-group-vertical');
-
-                } else {
-                    $('#bottomBtn').removeClass('btn-group-sm');
-                    $('#bottomBtn').removeClass('btn-group-xs');
-                    $('#bottomBtn').addClass('btn-group-lg');
-                    $('#bottomBtn').addClass('btn-group-vertical');
-                }
+                bottomBtnSize();
             });
 
 

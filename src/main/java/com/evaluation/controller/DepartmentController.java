@@ -33,7 +33,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>DepartmentController</code>객체는 부문, 부서 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/department/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 @AllArgsConstructor
 public class DepartmentController {
@@ -47,13 +47,12 @@ public class DepartmentController {
     /**
      * 부문, 부서 정보를 등록한다.
      * 
-     * @param tno        회차 id
      * @param department 부서 정보
      * @return 상태 메시지
      */
-    @PostMapping("/{tno}")
-    public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Department department) {
-        log.info("department register by " + tno + department);
+    @PostMapping("/departments")
+    public ResponseEntity<HttpStatus> register(@RequestBody Department department) {
+        log.info("department register by " + department);
 
         departmentService.register(department);
 
@@ -63,14 +62,13 @@ public class DepartmentController {
     /**
      * 부서 정보를 읽어온다.
      * 
-     * @param tno 회차 id
      * @param dno 부서 id
-     * @return 상태 메시지
+     * @return 상태 메시지 + 브서 정보
      */
-    @GetMapping("/{tno}/{dno}")
+    @GetMapping("/departments/{dno}")
     @ResponseBody
-    public ResponseEntity<Department> read(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
-        log.info("level read by " + tno + "/" + dno);
+    public ResponseEntity<Department> read(@PathVariable("dno") long dno) {
+        log.info("level read by " + dno);
 
         Department department = departmentService.read(dno).orElse(null);
 
@@ -80,12 +78,11 @@ public class DepartmentController {
     /**
      * 부서 정보를 수정한다.
      * 
-     * @param tno        회차 id
      * @param department 부서 정보
      * @return 상태 메시지
      */
-    @PutMapping("/{tno}/{dno}")
-    public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @RequestBody Department department) {
+    @PutMapping("/departments/{dno}")
+    public ResponseEntity<HttpStatus> modify(@RequestBody Department department) {
         log.info("modify " + department);
 
         departmentService.modify(department);
@@ -96,14 +93,11 @@ public class DepartmentController {
     /**
      * 부서 정보를 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param dno  부서 id
-     * @param vo   페이지 정보
-     * @param rttr 재전송 정보
-     * @return 부서 목록 페이지
+     * @param dno 부서 id
+     * @return 상태 메시지
      */
-    @DeleteMapping("/{tno}/{dno}")
-    public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("dno") long dno) {
+    @DeleteMapping("/departments/{dno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("dno") long dno) {
         log.info("remove " + dno);
 
         departmentService.remove(dno);
@@ -118,7 +112,7 @@ public class DepartmentController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list/{tno}")
+    @GetMapping("/departments/list")
     public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("department list by " + tno);
 
@@ -162,7 +156,7 @@ public class DepartmentController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/leader/{tno}/{dno}")
+    @GetMapping("/leaders/{dno}")
     public String readLeader(@PathVariable("tno") long tno, @PathVariable("dno") long dno, PageVO vo, Model model) {
         log.info("read leader " + tno + dno);
         // dno일치하는 팀 정보와 리더 정보 전달.
@@ -200,10 +194,9 @@ public class DepartmentController {
      * @param leader 리더 정보
      * @return 부서 목록 페이지
      */
-    @PutMapping("/leader/{tno}/{dno}")
-    public ResponseEntity<HttpStatus> registerLeader(@PathVariable("tno") long tno, @PathVariable("dno") long dno,
-            @RequestBody Leader leader) {
-        log.info("register leader " + tno + dno + leader);
+    @PutMapping("/leaders/{dno}")
+    public ResponseEntity<HttpStatus> registerLeader(@PathVariable("dno") long dno, @RequestBody Leader leader) {
+        log.info("register leader " + dno + leader);
         departmentService.read(dno).ifPresent(origin -> {
             origin.setLeader(leader);
             departmentService.modify(origin);

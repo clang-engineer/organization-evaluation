@@ -21,7 +21,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>InfoSurveyController</code>객체는 Survey 설정 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/infoSurvey/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 @AllArgsConstructor
 public class InfoSurveyController {
@@ -36,7 +36,7 @@ public class InfoSurveyController {
 	 * @param tno   회차 id
 	 * @param model 화면 전달 정보
 	 */
-	@GetMapping("/{tno}")
+	@GetMapping("/infoSurvey")
 	public String view(@PathVariable("tno") long tno, Model model) {
 		log.info("infoSurvey read get " + tno);
 
@@ -58,7 +58,7 @@ public class InfoSurveyController {
 	 * @param infoSurvey Survey 설정 정보
 	 * @return Survey 설정 정보 페이지
 	 */
-	@PutMapping("/{tno}")
+	@PutMapping("/infoSurvey")
 	public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @RequestBody InfoSurvey infoSurvey) {
 		log.info("controller : infoSurvey modify post " + infoSurvey);
 

@@ -5,10 +5,7 @@
 	<div class="container-fluid">
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
-			<li class="breadcrumb-item">
-				<a th:href="@{read(tno=${turn?.tno})}">Detail</a>
-			</li>
-			<li class="breadcrumb-item active">Modify</li>
+			<li class="breadcrumb-item active">Read</li>
 		</ol>
 		<hr>
 		<!-- DataTales Example -->
@@ -138,7 +135,7 @@
 				var csrf = JSON.parse('[[${_csrf}]]');
 				$.ajax({
 					type: 'put',
-					url: param.tno,
+					url: 'infoMbo',
 					data: JSON.stringify(param),
 					// data: param.content,
 					contentType: "application/json; charset:utf-8",

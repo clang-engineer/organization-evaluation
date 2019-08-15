@@ -7,7 +7,7 @@
 		<!-- Breadcrumbs-->
 		<ol class="breadcrumb">
 			<li class="breadcrumb-item">
-				<a th:href="@{list(tno=${turn?.tno})}">List</a>
+				<a th:href="@{staffs/list}">List</a>
 			</li>
 			<li class="breadcrumb-item active">Register</li>
 		</ol>
@@ -81,8 +81,8 @@
 						<input type="hidden" class="form-control" name="updateId" th:value="${#authentication?.name}" readonly>
 				</form>
 				<div class="form-group">
-					<button data-oper="register" type="button" class="btn btn-success" id="submit">Register</button>
-					<button data-oper="list" type="button" class="btn btn-info">List</button>
+					<button class="btn btn-success" type="button" id="submit">Register</button>
+					<button class="btn btn-info" type="button" id="list">List</button>
 				</div>
 			</div>
 		</div>
@@ -94,28 +94,34 @@
 
 <th:block layout:fragment="script">
 	<script type="text/javascript" th:src="@{/public/js/passwordConfirm.js}"></script>
+	<script type="text/javascript" th:src="@{/public/js/serializeObject.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 			var formObj = $("#f1");
+			var csrf = JSON.parse('[[${_csrf}]]');
+			
+			$("button[id='submit']").on("click", function (e) {
+				var param = $('#f1').serializeObject();
+				$.ajax({
+					type: 'post',
+					url: 'staffs',
+					data: JSON.stringify(param),
+					contentType: "application/json; charset:utf-8",
+					beforeSend: function (xhr) {
+						xhr.setRequestHeader(csrf.headerName, csrf.token)
+					},
+					success: function (result, status, shr) {
+						alert("등록 되었습니다.");
+						window.location.href = "staffs/list";
+					},
+					error: function (xhr, status, err) {
+						alert(status);
+					}
+				});
+			});
 
-			$('button').on("click", function (e) {
-				e.preventDefault();
-
-				var operation = $(this).data("oper");
-				console.log(operation);
-				// [[@{'/staff/list'}]]
-				if (operation === 'list') {
-					formObj.empty();
-					formObj.attr("action", "list").attr("method", "get");
-					formObj.append("<input type='hidden' name='tno' value='" + [[${ turn?.tno }]] + "'/>");
-					formObj.append("<input type='hidden' name='page' value='" + [[${ pageVO?.page }]] + "'/>");
-					formObj.append("<input type='hidden' name='size' value='" + [[${ pageVO?.size }]] + "'/>");
-					formObj.append("<input type='hidden' name='type' value='" + [[${ pageVO?.type }]] + "'/>");
-					formObj.append("<input type='hidden' name='keyword' value='" + [[${ pageVO?.keyword }]] + "'/>");
-				} else if (operation === 'register') {
-					formObj.append("<input type='hidden' name='tno' value='" + [[${ tno }]] + "'/>");
-				}
-				formObj.submit();
+			$("button[id='list']").on("click", function (e) {
+				window.location.href = "staffs/list";
 			});
 		});
 	</script>

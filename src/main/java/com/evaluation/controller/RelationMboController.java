@@ -31,6 +31,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -46,7 +47,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>RelationMboController</code> 객체는 mbo 관계정보를 관리한다.
  */
 @Controller
-@RequestMapping("/relationMbo/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -68,45 +69,35 @@ public class RelationMboController {
      * @param rttr        재전송 정보
      * @return 관계 목록 페이지
      */
-    @PostMapping("/register")
+    @PostMapping("/relationMbos")
     public String register(RelationMbo relationMbo, PageVO vo, RedirectAttributes rttr) {
         log.info("register " + relationMbo.getEvaluated().getSno());
 
         relationMboService.register(relationMbo);
 
         rttr.addFlashAttribute("msg", "register");
-        rttr.addAttribute("tno", relationMbo.getTno());
         rttr.addAttribute("page", vo.getPage());
         rttr.addAttribute("size", vo.getSize());
         rttr.addAttribute("type", vo.getType());
         rttr.addAttribute("keyword", vo.getKeyword());
 
-        return "redirect:/relationMbo/list";
+        return "redirect:/turns/" + relationMbo.getTno() + "/relationMbos/list";
     }
 
     /**
      * 관계를 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param rno  관계 id
-     * @param vo   페이지 정보
-     * @param rttr 재전송 정보
-     * @return 관계 목록 페이지
+     * @param tno 회차 id
+     * @param rno 관계 id
+     * @return 상테 메시지
      */
-    @PostMapping("/remove")
-    public String remove(long tno, long rno, PageVO vo, RedirectAttributes rttr) {
-        log.info("remove " + tno + rno);
+    @DeleteMapping("/relationMbos/{rno}")
+    public ResponseEntity<HttpStatus> remove(@PathVariable("rno") long rno) {
+        log.info("remove " + rno);
 
         relationMboService.remove(rno);
 
-        rttr.addFlashAttribute("msg", "remove");
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/relationMbo/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -116,9 +107,10 @@ public class RelationMboController {
      * @param vo    페이지 정보
      * @param model 화면 전달 정보
      */
-    @GetMapping("/list")
-    public void getList(long tno, PageVO vo, Model model) {
+    @GetMapping("/relationMbos/list")
+    public String getList(@PathVariable("tno") long tno, PageVO vo, Model model) {
         log.info("getList by " + tno);
+
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
@@ -163,6 +155,9 @@ public class RelationMboController {
 
         model.addAttribute("relationMe", relationMe);
         model.addAttribute("relationOther", relationOther);
+        model.addAttribute("type", "MBO");
+
+        return "relationTable/list";
     }
 
     /**
@@ -171,7 +166,7 @@ public class RelationMboController {
      * @param tno 회차 id
      * @return 피평가자 등록 후보 명단
      */
-    @GetMapping("/evaluated/{tno}")
+    @GetMapping("/relationMbos/evaluated")
     @ResponseBody
     public ResponseEntity<Optional<List<Staff>>> getMboEvaluatedList(@PathVariable("tno") long tno) {
         log.info("get All Staff List Exclude Evaluated....");
@@ -187,7 +182,7 @@ public class RelationMboController {
      * @param sno 피평가자 id
      * @return 평가자 등록 후보 명단
      */
-    @GetMapping("/evaluator/{tno}/{sno}")
+    @GetMapping("/relationMbos/evaluators/{sno}")
     @ResponseBody
     public ResponseEntity<Optional<List<Staff>>> getMboEvaluatorList(@PathVariable("tno") long tno,
             @PathVariable("sno") long sno) {
@@ -200,14 +195,13 @@ public class RelationMboController {
     /**
      * 회차 내의 피평가자의 모든 관계 정보를 삭제한다.
      * 
-     * @param tno  회차 id
-     * @param sno  피평가자 id
-     * @param vo   페이지 정보
-     * @param rttr 재전송 정보
+     * @param tno 회차 id
+     * @param sno 피평가자 id
      * @return 관계 목록 페이지
      */
-    @PostMapping("/removeRow")
-    public String deleteEvaluatedInfo(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
+    @DeleteMapping("/relationMbos/evaluators/{sno}")
+    public ResponseEntity<HttpStatus> deleteEvaluatedInfo(@PathVariable("tno") long tno,
+            @PathVariable("sno") long sno) {
         log.info("deleteEvaluatedInfo by " + tno);
 
         relationMboService.findByEvaulated(tno, sno).ifPresent(list -> {
@@ -216,14 +210,7 @@ public class RelationMboController {
             });
         });
 
-        rttr.addFlashAttribute("msg", "remove");
-        rttr.addAttribute("tno", tno);
-        rttr.addAttribute("page", vo.getPage());
-        rttr.addAttribute("size", vo.getSize());
-        rttr.addAttribute("type", vo.getType());
-        rttr.addAttribute("keyword", vo.getKeyword());
-
-        return "redirect:/relationMbo/list";
+        return new ResponseEntity<>(HttpStatus.OK);
     }
 
     /**
@@ -232,11 +219,10 @@ public class RelationMboController {
      * @param tno        회차 id
      * @param deleteList 기존 관계 삭제 여부
      * @param uploadFile 업로드 파일
-     * @param model      화면 전달 정보
      */
-    @PostMapping("/xlUpload")
+    @PostMapping("/relationMbos/xlUpload")
     @ResponseBody
-    public void xlUpload(long tno, Boolean deleteList, MultipartFile uploadFile, Model model) {
+    public void xlUpload(@PathVariable("tno") long tno, Boolean deleteList, MultipartFile uploadFile) {
         log.info("read file" + uploadFile);
 
         long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
@@ -346,9 +332,9 @@ public class RelationMboController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping(value = "/xlDownload")
+    @PostMapping(value = "/relationMbos/xlDownload")
     @ResponseBody
-    public void xlDownload(long tno, HttpServletResponse response) {
+    public void xlDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();

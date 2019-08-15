@@ -3,10 +3,10 @@ var appellationService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: "../" + param.tno,
+            url: '.',
             data: param.appellation,
             contentType: "application/json; charset:utf-8",
-            beforeSend: function (xhr) {    
+            beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
             success: function (result, status, xhr) {
@@ -24,7 +24,7 @@ var appellationService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("../" + param.tno + "/" + param.idx,
+        $.get(param.idx,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var appellationService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: "../" + param.tno + "/" + param.idx,
+            url: param.idx,
             data: param.appellation,
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var appellationService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: "../" + param.tno + "/" + param.idx,
+            url: param.idx,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },
