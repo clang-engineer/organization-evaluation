@@ -32,15 +32,20 @@ import com.evaluation.vo.PageVO;
 
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.data.domain.Page;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.ui.Model;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.PutMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.multipart.MultipartFile;
-import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 
 import lombok.AllArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -49,7 +54,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>StaffController</code>객체는 직원 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/staff/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 @AllArgsConstructor
 @Transactional
@@ -68,22 +73,23 @@ public class StaffController {
 	DivisionService divisionService;
 
 	/**
-	 * 직원 등록 페이지를 읽어온다.
+	 * 직원 정보 등록 페이지
 	 * 
 	 * @param tno   회차 id
-	 * @param vo    페이지 정보
 	 * @param model 화면 전달 정보
+	 * @return 직원 등록 페이지
 	 */
-	@GetMapping("/register")
-	public void register(long tno, PageVO vo, Model model) {
-		log.info("controller : staff register get by " + tno + vo);
+	@GetMapping("/staffs")
+	public String register(@PathVariable("tno") long tno, Model model) {
+		log.info("controller : staff register by " + tno);
 
 		turnService.read(tno).ifPresent(origin -> {
 			model.addAttribute("turn", origin);
-
 			long cno = origin.getCno();
 			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
 		});
+
+		return "staff/register";
 	}
 
 	/**
@@ -91,20 +97,17 @@ public class StaffController {
 	 * 
 	 * @param tno   회차 id
 	 * @param staff 직원정보
-	 * @param rttr  재전송 정보
-	 * @return 직원 목록 페이지
+	 * @return 상태 메시지
 	 */
-	@PostMapping("/register")
-	public String register(long tno, Staff staff, RedirectAttributes rttr) {
+	@PostMapping("/staffs")
+	public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody Staff staff) {
 		log.info("controller : staff register post by " + tno);
 
 		long cno = turnService.read(tno).map(Turn::getCno).orElse(0L);
 		staff.setCno(cno);
 		staffService.register(staff);
 
-		rttr.addFlashAttribute("msg", "register");
-		rttr.addAttribute("tno", tno);
-		return "redirect:/staff/list";
+		return new ResponseEntity<>(HttpStatus.CREATED);
 	}
 
 	/**
@@ -114,35 +117,14 @@ public class StaffController {
 	 * @param sno   직원 id
 	 * @param vo    페이지 정보
 	 * @param model 화면 전달 정보
+	 * @return 직원 읽기 페이지
 	 */
-	@GetMapping("/view")
-	public void read(long tno, long sno, PageVO vo, Model model) {
-		log.info("controller : staff read by " + tno + vo);
+	@GetMapping("/staffs/{sno}")
+	public String read(@PathVariable("tno") long tno, @PathVariable("sno") long sno, PageVO vo, Model model) {
+		log.info("controller : staff read by " + tno);
 
 		turnService.read(tno).ifPresent(origin -> {
 			model.addAttribute("turn", origin);
-		});
-
-		staffService.read(sno).ifPresent(origin -> {
-			model.addAttribute("staff", origin);
-		});
-	}
-
-	/**
-	 * 직원 정보 수젱 페이지를 읽어온다.
-	 * 
-	 * @param tno   회차 id
-	 * @param sno   직원 id
-	 * @param vo    페이지 정보
-	 * @param model 화면 전달 정보
-	 */
-	@GetMapping("/modify")
-	public void modify(long tno, long sno, PageVO vo, Model model) {
-		log.info("controller : staff modify by " + tno + vo);
-
-		turnService.read(tno).ifPresent(origin -> {
-			model.addAttribute("turn", origin);
-
 			long cno = origin.getCno();
 			model.addAttribute("distinctInfo", staffService.getDistinctInfo(cno, tno));
 		});
@@ -150,60 +132,40 @@ public class StaffController {
 		staffService.read(sno).ifPresent(origin -> {
 			model.addAttribute("staff", origin);
 		});
+
+		model.addAttribute("pageVO", vo);
+
+		return "staff/read";
 	}
 
 	/**
 	 * 직원 정보를 수정한다.
 	 * 
-	 * @param tno   회차 id
-	 * @param staff 직원 정보
-	 * @param vo    페이지 정보
-	 * @param rttr  재전송 정보
-	 * @return 직원 정보 페이지
+	 * @param staff 직원 정보 객체
+	 * @return 상태 메시지
 	 */
-	@PostMapping("/modify")
-	public String modify(long tno, Staff staff, PageVO vo, RedirectAttributes rttr) {
-		log.info("controller : staff modify post by " + staff.getName());
-
-		long cno = turnService.read(tno).map(Turn::getCno).orElse(null);
-		staff.setCno(cno);
+	@PutMapping("/staffs")
+	public ResponseEntity<HttpStatus> modify(@RequestBody Staff staff) {
+		log.info("controller : staff modify");
 
 		staffService.modify(staff);
 
-		rttr.addFlashAttribute("msg", "modify");
-
-		rttr.addAttribute("tno", tno);
-		rttr.addAttribute("sno", staff.getSno());
-		rttr.addAttribute("page", vo.getPage());
-		rttr.addAttribute("size", vo.getSize());
-		rttr.addAttribute("type", vo.getType());
-		rttr.addAttribute("keyword", vo.getKeyword());
-
-		return "redirect:/staff/view";
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
 	 * 직원 정보를 삭제한다.
 	 * 
-	 * @param tno  회차 id
-	 * @param sno  직원 id
-	 * @param vo   페이지 정보
-	 * @param rttr 재전송 정보
-	 * @return 직원 목록 페이지
+	 * @param sno 직원 id
+	 * @return 상태 메시지
 	 */
-	@PostMapping("/remove")
-	public String remove(long tno, long sno, PageVO vo, RedirectAttributes rttr) {
+	@DeleteMapping("/staffs/{sno}")
+	public ResponseEntity<HttpStatus> remove(@PathVariable("sno") long sno) {
 		log.info("controller : staff delete by " + sno);
 
 		staffService.remove(sno);
 
-		rttr.addAttribute("tno", tno);
-		rttr.addAttribute("page", vo.getPage());
-		rttr.addAttribute("size", vo.getSize());
-		rttr.addAttribute("type", vo.getType());
-		rttr.addAttribute("keyword", vo.getKeyword());
-		rttr.addFlashAttribute("msg", "remove");
-		return "redirect:/staff/list";
+		return new ResponseEntity<>(HttpStatus.OK);
 	}
 
 	/**
@@ -213,8 +175,8 @@ public class StaffController {
 	 * @param vo    페이지 정보
 	 * @param model 화면 전달 정보
 	 */
-	@GetMapping("/list")
-	public void readList(long tno, PageVO vo, Model model) {
+	@GetMapping("/staffs/list")
+	public String readList(@PathVariable("tno") long tno, PageVO vo, Model model) {
 		log.info("controller : staff list by " + tno + vo);
 
 		turnService.read(tno).ifPresent(origin -> {
@@ -223,6 +185,8 @@ public class StaffController {
 			Page<Staff> result = staffService.getList(origin.getCno(), vo);
 			model.addAttribute("result", new PageMaker<>(result));
 		});
+
+		return "staff/list";
 	}
 
 	/**
@@ -233,9 +197,9 @@ public class StaffController {
 	 * @param uploadFile 업로드 파일
 	 * @param model      화면 전달 정보
 	 */
-	@PostMapping("/xlUpload")
+	@PostMapping("/staffs/xlUpload")
 	@ResponseBody
-	public void xlUpload(long tno, Admin admin, MultipartFile uploadFile, Model model) {
+	public void xlUpload(@PathVariable("tno") long tno, Admin admin, MultipartFile uploadFile, Model model) {
 
 		log.info("read file" + uploadFile);
 
@@ -357,9 +321,9 @@ public class StaffController {
 	 * @param tno      회차 id
 	 * @param response 응답 정보 객체
 	 */
-	@PostMapping(value = "/xlDownload")
+	@PostMapping(value = "/staffs/xlDownload")
 	@ResponseBody
-	public void xlDown(long tno, HttpServletResponse response) {
+	public void xlDown(@PathVariable("tno") long tno, HttpServletResponse response) {
 
 		turnService.read(tno).ifPresent(origin -> {
 			long cno = origin.getCno();

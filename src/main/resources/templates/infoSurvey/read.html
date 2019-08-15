@@ -116,7 +116,7 @@
 				var csrf = JSON.parse('[[${_csrf}]]');
 				$.ajax({
 					type: 'put',
-					url: param.tno,
+					url: 'infoSurvey',
 					data: JSON.stringify(param),
 					// data: param.content,
 					contentType: "application/json; charset:utf-8",

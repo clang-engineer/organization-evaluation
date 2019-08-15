@@ -24,7 +24,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>CommentController</code>객체는 주관식 문항 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/comment/*")
+@RequestMapping("/turns/{tno}")
 @Slf4j
 public class CommentController {
 
@@ -38,7 +38,7 @@ public class CommentController {
      * @param comment 주관식 문항
      * @return 상태 메시지
      */
-    @PostMapping("/{tno}")
+    @PostMapping("/comments")
     public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody String comment) {
         log.info("add " + comment);
 
@@ -58,7 +58,7 @@ public class CommentController {
      * @param comment 주관식 문항
      * @return 상태 메시지
      */
-    @PutMapping("/{tno}/{idx}")
+    @PutMapping("/comments/{idx}")
     public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
             @RequestBody String comment) {
         log.info("Modify " + comment);
@@ -78,7 +78,7 @@ public class CommentController {
      * @param idx 리스트 index
      * @return 주관식 정보
      */
-    @GetMapping("/{tno}/{idx}")
+    @GetMapping("/comments/{idx}")
     public ResponseEntity<String> read(@PathVariable("tno") long tno, @PathVariable("idx") int idx) {
         log.info("read " + tno + "/" + idx);
 
@@ -94,7 +94,7 @@ public class CommentController {
      * @param idx 리스트 index
      * @return 상태 메시지
      */
-    @DeleteMapping("/{tno}/{idx}")
+    @DeleteMapping("/comments/{idx}")
     public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("idx") int idx) {
         log.info("remove " + idx);
         turnService.read(tno).ifPresent(turn -> {
@@ -110,8 +110,9 @@ public class CommentController {
      * 
      * @param tno   회차 id
      * @param model 화면 전달 정보
+     * @return 주관식 리스트 화면
      */
-    @GetMapping("/list/{tno}")
+    @GetMapping("/comments/list")
     public String readList(@PathVariable("tno") long tno, Model model) {
         log.info("question list by " + tno);
 

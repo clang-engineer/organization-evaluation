@@ -3,7 +3,7 @@ var levelService = (function () {
         console.log("add.....");
         $.ajax({
             type: 'post',
-            url: "../" + param.tno,
+            url: '.',
             data: JSON.stringify(param),
             contentType: "application/json; charset:utf-8",
             beforeSend: function (xhr) {
@@ -24,7 +24,7 @@ var levelService = (function () {
 
     function read(param, callback, error) {
         console.log("read");
-        $.get("../" + param.tno + "/" + param.lno,
+        $.get(param.lno,
             function (data) {
                 if (callback) {
                     callback(data);
@@ -39,7 +39,7 @@ var levelService = (function () {
     function modify(param, callback, error) {
         $.ajax({
             type: 'put',
-            url: "../" + param.tno + "/" + param.lno,
+            url: param.lno,
             data: JSON.stringify(param),
             // data: param.content,
             contentType: "application/json; charset:utf-8",
@@ -62,7 +62,7 @@ var levelService = (function () {
     function remove(param, callback, error) {
         $.ajax({
             type: 'delete',
-            url: "../" + param.tno + "/" + param.lno,
+            url: param.lno,
             beforeSend: function (xhr) {
                 xhr.setRequestHeader(param.csrf.headerName, param.csrf.token)
             },

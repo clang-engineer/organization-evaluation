@@ -42,7 +42,7 @@ import lombok.AllArgsConstructor;
  * <code>ProgressController</code>객체는 survey, mbo의 진행 상황을 관리한다.
  */
 @Controller
-@RequestMapping("/progress/*")
+@RequestMapping("/turns/{tno}/types")
 @AllArgsConstructor
 public class ProgressController {
 
@@ -64,13 +64,16 @@ public class ProgressController {
      * @param tno     회차 id
      * @param model   화면 전달 정보
      * @param request 요청 정보 객체
+     * @return 진행 정보 리스트 화면
      */
-    @GetMapping(value = { "/survey/{tno}", "/mbo/{tno}" })
+    @GetMapping(value = { "/survey/progress", "/mbo/progress" })
     public String progressList(@PathVariable("tno") long tno, Model model, HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[4];
 
         // survey와 mbo를 요청했을 때를 if문으로 구분
-        if (whatYouCall.equals("/progress/survey/" + tno)) {
+        if (pathInfo.equals("survey")) {
             relationSurveyService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
                 // 총 개수 구하기
@@ -81,11 +84,11 @@ public class ProgressController {
                     totalCount += Integer.parseInt(origin.get(i).get(6));
                 }
 
-                model.addAttribute("type", "survey");
+                model.addAttribute("type", "SURVEY");
                 model.addAttribute("completeCount", completeCount);
                 model.addAttribute("totalCount", totalCount);
             });
-        } else if (whatYouCall.equals("/progress/mbo/" + tno)) {
+        } else if (pathInfo.equals("mbo")) {
             relationMboService.progressOfSurevey(tno).ifPresent(origin -> {
                 model.addAttribute("progress", origin);
 
@@ -97,7 +100,7 @@ public class ProgressController {
                     totalCount += Integer.parseInt(origin.get(i).get(6));
                 }
 
-                model.addAttribute("type", "mbo");
+                model.addAttribute("type", "MBO");
                 model.addAttribute("completeCount", completeCount);
                 model.addAttribute("totalCount", totalCount);
             });
@@ -116,24 +119,32 @@ public class ProgressController {
      * @param sno     평가자 id
      * @param model   화면 전달 정보
      * @param request 요청 정보 객체
+     * @return 피평가자 리스트 화면
      */
-    @GetMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
-    public void evaluatedList(long tno, long sno, Model model, HttpServletRequest request) {
+    @GetMapping(value = { "/survey/evaluatedList/{sno}", "/mbo/evaluatedList/{sno}" })
+    public String evaluatedList(@PathVariable("tno") long tno, @PathVariable("sno") long sno, Model model,
+            HttpServletRequest request) {
         String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[4];
 
-        if (whatYouCall.equals("/progress/survey/evaluatedList")) {
+        if (pathInfo.equals("survey")) {
             relationSurveyService.findByEvaluator(tno, sno).ifPresent(origin -> {
                 model.addAttribute("evaluatedList", origin);
+                model.addAttribute("type", "SURVEY");
             });
-        } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
+        } else if (pathInfo.equals("mbo")) {
             relationMboService.findByEvaluator(tno, sno).ifPresent(origin -> {
                 model.addAttribute("evaluatedList", origin);
+                model.addAttribute("type", "MBO");
             });
         }
 
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
+
+        return "progress/evaluatedList";
     }
 
     /**
@@ -142,18 +153,22 @@ public class ProgressController {
      * @param rno     관계 id
      * @param finish  완료 정보 (Y,Y,N)
      * @param request 요청 정보 객체
-     * @return http 상태 정보
+     * @return 상태 메시지
      */
-    @PutMapping(value = { "/survey/evaluatedList", "/mbo/evaluatedList" })
-    public ResponseEntity<HttpStatus> evaluatedFinishChange(long rno, String finish, HttpServletRequest request) {
-        String whatYouCall = request.getServletPath();
+    @PutMapping(value = { "/survey/evaluatedList/{rno}", "/mbo/evaluatedList/{rno}" })
+    public ResponseEntity<HttpStatus> evaluatedFinishChange(@PathVariable("rno") long rno, String finish,
+            HttpServletRequest request) {
 
-        if (whatYouCall.equals("/progress/survey/evaluatedList")) {
+        String whatYouCall = request.getServletPath();
+        String[] words = whatYouCall.split("/");
+        String pathInfo = words[4];
+
+        if (pathInfo.equals("survey")) {
             relationSurveyService.read(rno).ifPresent(origin -> {
                 origin.setFinish(finish);
                 relationSurveyService.modify(origin);
             });
-        } else if (whatYouCall.equals("/progress/mbo/evaluatedList")) {
+        } else if (pathInfo.equals("mbo")) {
             relationMboService.read(rno).ifPresent(origin -> {
                 origin.setFinish(finish);
                 relationMboService.modify(origin);
@@ -168,9 +183,9 @@ public class ProgressController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping("/survey")
+    @PostMapping("/survey/progress")
     @ResponseBody
-    public void surveyXlDownload(long tno, HttpServletResponse response) {
+    public void surveyXlDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
@@ -251,9 +266,9 @@ public class ProgressController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping("/survey/result")
+    @PostMapping("/survey/rawdata")
     @ResponseBody
-    public void surveyResultDownload(long tno, HttpServletResponse response) {
+    public void surveyResultDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
@@ -363,9 +378,9 @@ public class ProgressController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping("/mbo")
+    @PostMapping("/mbo/progress")
     @ResponseBody
-    public void seeXlDownload(long tno, HttpServletResponse response) {
+    public void seeXlDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
@@ -446,9 +461,9 @@ public class ProgressController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping("/mbo/result")
+    @PostMapping("/mbo/rawdata")
     @ResponseBody
-    public void mboResultDownload(long tno, HttpServletResponse response) {
+    public void mboResultDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
@@ -612,9 +627,10 @@ public class ProgressController {
      * 
      * @param tno   회차 id
      * @param model 화면 전달 정보
+     * @return mbo plan 진행 정보
      */
     @GetMapping("/mbo/plan")
-    public void progressOfPlan(long tno, Model model) {
+    public String progressOfPlan(@PathVariable("tno") long tno, Model model) {
         relationMboService.progressOfPlan(tno).ifPresent(list -> {
             model.addAttribute("progress", list);
             double total = 0;
@@ -629,6 +645,8 @@ public class ProgressController {
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
+
+        return "progress/mbo/plan";
     }
 
     /**
@@ -637,9 +655,10 @@ public class ProgressController {
      * @param tno   회차 id
      * @param sno   직원 id
      * @param model 화면 전달 정보
+     * @return 개인 작성 목표 리스트 화면
      */
-    @GetMapping("/mbo/objectList")
-    public void objectList(long tno, long sno, Model model) {
+    @GetMapping("/mbo/objectList/{sno}")
+    public String objectList(@PathVariable("tno") long tno, @PathVariable("sno") long sno, Model model) {
         mboService.listByTnoSno(tno, sno).ifPresent(list -> {
             model.addAttribute("objectList", list);
         });
@@ -647,6 +666,8 @@ public class ProgressController {
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);
         });
+
+        return "progress/mbo/objectList";
     }
 
     /**
@@ -657,7 +678,7 @@ public class ProgressController {
      */
     @PostMapping("/mbo/plan")
     @ResponseBody
-    public void planXlDownload(long tno, HttpServletResponse response) {
+    public void planXlDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();
@@ -735,9 +756,9 @@ public class ProgressController {
      * @param tno      회차 id
      * @param response 응답 정보 객체
      */
-    @PostMapping("/mbo/plan/result")
+    @PostMapping("/mbo/plan/rawdata")
     @ResponseBody
-    public void mboPlanResultDownload(long tno, HttpServletResponse response) {
+    public void mboPlanResultDownload(@PathVariable("tno") long tno, HttpServletResponse response) {
 
         turnService.read(tno).ifPresent(origin -> {
             long cno = origin.getCno();

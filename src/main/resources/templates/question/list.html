@@ -29,7 +29,7 @@
                                 </optinon>
                             <option value="division" th:selected="${pageVO?.type}=='division'">Division</option>
                             <option value="category" th:selected="${pageVO?.type}=='category'">Category</option>
-                            <option value="item" th:selected="${pageVO?.type}=='question'">Question</option>
+                            <option value="item" th:selected="${pageVO?.type}=='item'">Question</option>
                         </select>
                         <input type="text" class="col-sm-6 form-control bg-light small" id="searchKeyword" th:value="${pageVO?.keyword}" placeholder="Search for...">
                         <div class="input-group-append">
@@ -98,7 +98,6 @@
     </div>
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="get">
-        <input type="hidden" name="tno" th:value="${turn?.tno}" />
         <input type="hidden" name="page" th:value=${result?.currentPageNum} />
         <input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
         <input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -119,10 +118,10 @@
 
 
 <th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
 
-            var msg = [[${ msg }]];
             var csrf = JSON.parse('[[${_csrf}]]');
 
             var tno = [[${ turn?.tno }]];
@@ -138,26 +137,12 @@
             var modalRegisterBtn = $("#modalRegisterBtn");
             var modalCloseBtn = $("#modalCloseBtn");
 
-            if (history.state == null) {
-                if (msg == 'register') {
-                    alert("등록 되었습니다.");
-                } else if (msg == 'modify') {
-                    alert("수정 되었습니다.");
-                } else if (msg == 'remove') {
-                    alert("삭제 되었습니다.");
-                }
-            }
-
-            history.replaceState({}, null, null);
-
             var formObj = $("#f1");
 
             //페이지에 붙은 링크 클릭 시
             $(".pagination a").click(function (e) {
                 e.preventDefault();
-                formObj.attr("action", "list");
-                formObj.attr("method", "get");
-                formObj.find("input[name='_csrf']").remove();
+
                 formObj.find('[name="page"]').val($(this).attr('href'));
                 formObj.submit();
             });
@@ -165,13 +150,9 @@
             //검색 버튼 클릭 시
             $("#searchBtn").click(function (e) {
                 e.preventDefault();
-                
-                formObj.attr("action", "list");
-                formObj.attr("method", "get");
 
                 var typeStr = $("#searchType").find(":selected").val();
                 var keywordStr = $("#searchKeyword").val();
-                formObj.find("input[name='_csrf']").remove();
                 formObj.find("[name='type']").val(typeStr);
                 formObj.find("[name='keyword']").val(keywordStr);
                 formObj.find("[name='page']").val("1");
@@ -183,18 +164,14 @@
                 e.preventDefault();
 
                 var questionQno = $(this).attr("href");
-                formObj.attr("method", "get");
-                formObj.attr("action", './view');
-                formObj.append("<input type='hidden' name='qno' value='" + questionQno + "'/>");
+                formObj.attr("action", questionQno);
                 formObj.submit();
             });
 
             //등록 버튼 클릭 시
             $("#register").click(function (e) {
                 e.preventDefault();
-                formObj.attr("method", "get");
-                formObj.attr("action", './register');
-                formObj.submit();
+                window.location.href = "../questions";
             });
 
             //xlRegister 클릭 시
@@ -226,9 +203,8 @@
                 var files = inputFile[0].files;
                 var modalDeleteList = modal.find("input[name='deleteList']");
 
-                if (!checkExtension(files[0].name, files[0].size)) {
+                if (!common.checkExtension(files[0].name, files[0].size)) {
                     return false;
-
                 }
 
                 formData.append("uploadFile", files[0]);
@@ -277,24 +253,6 @@
             console.log('ajax end');
             $('#viewLoading').hide();
         });
-
-
-        //파일 사이즈 및 형식 제한.
-        var regex = new RegExp("(.*?)\.(xlsx)$");
-        var maxSize = 5242880;//5MB
-
-        function checkExtension(fileName, fileSize) {
-            if (fileSize >= maxSize) {
-                alert("파일 사이즈 초과");
-                return false;
-            }
-
-            if (!regex.test(fileName)) {
-                alert("xlsx 파일만 업로드 가능.")
-                return false;
-            }
-            return true;
-        }
 
     </script>
 </th:block>

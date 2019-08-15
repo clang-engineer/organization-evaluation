@@ -11,7 +11,7 @@
         <!-- DataTables Example -->
         <div class="card mb-3">
             <div class="card-header">
-                <i class="fas fa-table"></i> Relation360 List
+                <i class="fas fa-table"></i> [[${type}]] Relation List
             </div>
 
             <div class="row" style="margin-top: 20px; margin-left: 7px;">
@@ -58,7 +58,6 @@
 
     <!-- /.container-fluid -->
     <form id="f1" th:action="@{list}" method="get">
-        <input type="hidden" name="tno" th:value="${turn?.tno}" />
         <input type="hidden" name="page" th:value=${result.currentPageNum} />
         <input type="hidden" name="size" th:value=${result.currentPage.pageSize} />
         <input type="hidden" name="type" th:value=${pageVO.type} />
@@ -83,6 +82,7 @@
 
 <th:block layout:fragment="script">
     <script type="text/javascript" th:src="@{/public/js/admin/relation.js}"></script>
+    <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
 
@@ -106,17 +106,7 @@
 
             var csrf = JSON.parse('[[${_csrf}]]');
 
-            if (history.state == null) {
-                if (msg == 'register') {
-                    alert("등록 되었습니다.");
-                } else if (msg == 'modify') {
-                    alert("수정 되었습니다.");
-                } else if (msg == 'remove') {
-                    alert("삭제 되었습니다.");
-                }
-            }
-
-            history.replaceState({}, null, null);
+            common.historyMessage(history, msg);
 
             var formObj = $("#f1");
 
@@ -124,8 +114,6 @@
             $(".pagination a").click(function (e) {
                 e.preventDefault();
 
-                formObj.attr("action", "list");
-                formObj.attr("method", "get");
                 formObj.find("input[name='_csrf']").remove();
                 formObj.find('[name="page"]').val($(this).attr('href'));
                 formObj.submit();
@@ -134,9 +122,6 @@
             //검색 버튼 클릭 시
             $("#searchBtn").click(function (e) {
                 e.preventDefault();
-
-                formObj.attr("action", "list");
-                formObj.attr("method", "get");
 
                 var typeStr = $("#searchType").find(":selected").val();
                 var keywordStr = $("#searchKeyword").val();
@@ -199,7 +184,7 @@
                 modalGroupContent1.find("table").remove();
                 modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>email</th><th>level</th><th>department1</th><th>department2</th></tr><tbody id='radioBody'></tbody></table>");
 
-                showEvaluatedList(tno);
+                showEvaluatedList();
 
                 //모달 text
                 modalTitle.text("Add Evaluated")
@@ -235,7 +220,7 @@
                 modalGroupContent1.append("<table class='table table-bordered'><tr><th>#</th><th>name</th><th>email</th><th>level</th><th>department1</th><th>department2</th></tr><tbody id='radioBody'></tbody></table>");
 
                 var sno = $(this).data("evaluated");
-                showEvaluatorList({ tno: tno, sno: sno });
+                showEvaluatorList({ sno: sno });
 
                 //모달 text
                 var evaluated = $(this).closest("tr").children().eq(1).text();
@@ -296,12 +281,11 @@
 
                     var modalDeleteList = modal.find("input[name='deleteList']");
 
-                    if (!checkExtension(files[0].name, files[0].size)) {
+                    if (!common.checkExtension(files[0].name, files[0].size)) {
                         return false;
                     }
 
                     formData.append("uploadFile", files[0]);
-                    formData.append("tno", tno);
                     formData.append("deleteList", modalDeleteList.prop('checked'));
 
                     $.ajax({
@@ -315,12 +299,8 @@
                         type: 'POST',
                         success: function (result) {
                             alert("등록 완료 하였습니다.");
+                            window.location.reload();
                             modal.modal("hide");
-
-                            //parameter 제거 -> tno추가 하고 리로드
-                            url = window.location.href.split("?")[0];
-                            url += '?tno=' + tno;
-                            window.location.href = url;
                         }, error: function (request, status, error) {
                             alert("code:" + request.status + "\n" + "message:" + request.responseText + "\n" + "error:" + error);
                         }
@@ -334,8 +314,9 @@
                     }
                     $(this).attr("disabled", true);
                     $(this).addClass("disabled");
+
                     formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-                    formObj.attr("action", "./register").attr("method", "post");
+                    formObj.attr("action", ".").attr("method", "post");
                     formObj.append("<input type='hidden' name='evaluated' value='" + evaluated + "'/>");
                     formObj.append("<input type='hidden' name='evaluator' value='" + evaluator + "'/>");
                     formObj.append("<input type='hidden' name='relation' value='" + relation + "'/>");
@@ -345,30 +326,25 @@
 
             //모달 내의 삭제 버튼 클릭 시
             modalRemoveBtn.on("click", function (e) {
-                formObj.append("<input type='hidden' name=" + [[${ _csrf?.parameterName }]] + " value=" + [[${ _csrf?.token }]] + ">");
-                if (delchk() == true) {
-                    formObj.attr("action", "delete");
-                } else {
-                    return;
-                };
-
-                //평가자 전체 삭제냐 한명 삭제냐 구분
-                if (modal.data("delete") == "column") {
-                    formObj.attr("action", "./remove").attr("method", "post");
-                    formObj.append("<input type='hidden' name='rno' value='" + modal.data("idx") + "'/>");
-                } else if (modal.data("delete") == "row") {
-                    formObj.attr("action", "./removeRow").attr("method", "post");
-                    formObj.append("<input type='hidden' name='sno' value='" + modal.data("idx") + "'/>");
+                if (!confirm("삭제하시겠습니까?")) {
+                    return false;
                 }
 
-                formObj.submit();
+                var idx = modal.data("idx");
+                var param = { idx: idx, csrf: csrf };
+                //평가자 전체 삭제냐 한명 삭제냐 구분
+                if (modal.data("delete") == "column") {
+                    relationService.deleteRelation(param);
+                } else if (modal.data("delete") == "row") {
+                    relationService.deleteEvaluators(param);
+                }
+
             });
 
             //close button click 시
             modalCloseBtn.on("click", function (e) {
                 modal.modal('hide');
             });
-
 
             //평가자 리스트에 붙은 링크 클릭 시
             $(".evaluatorList a").click(function (e) {
@@ -414,8 +390,8 @@
             });
 
             //모달에 피평가자 list를 출력하는 함수
-            function showEvaluatedList(tno) {
-                relationService.getEvaluatedList(tno, function (list) {
+            function showEvaluatedList() {
+                relationService.getEvaluatedList(function (list) {
                     var str = "";
                     if (list == null || list.length == 0) {
                         $("#radioBody").html("");
@@ -472,30 +448,5 @@
             $('#viewLoading').hide();
         });
 
-
-        //파일 사이즈 및 형식 제한.
-        var regex = new RegExp("(.*?)\.(xlsx)$");
-        var maxSize = 5242880;//5MB
-
-        function checkExtension(fileName, fileSize) {
-            if (fileSize >= maxSize) {
-                alert("파일 사이즈 초과");
-                return false;
-            }
-
-            if (!regex.test(fileName)) {
-                alert("xlsx 파일만 업로드 가능.")
-                return false;
-            }
-            return true;
-        }
-
-        function delchk() {
-            if (confirm("삭제하시겠습니까?")) {
-                return true;
-            } else {
-                return false;
-            }
-        }
     </script>
 </th:block>

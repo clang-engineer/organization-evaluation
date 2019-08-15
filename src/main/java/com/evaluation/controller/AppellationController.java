@@ -28,7 +28,7 @@ import lombok.extern.slf4j.Slf4j;
  * <code>CommentController</code>객체는 주관식 문항 정보를 관리한다.
  */
 @Controller
-@RequestMapping("/appellation/*")
+@RequestMapping("/turns/{tno}/types")
 @Slf4j
 public class AppellationController {
 
@@ -43,14 +43,14 @@ public class AppellationController {
      * @param request     요청 정보
      * @return 상태 메시지
      */
-    @PostMapping(value = { "/survey/{tno}", "/mbo/{tno}" })
+    @PostMapping(value = { "/survey/appellations", "/mbo/appellations" })
     public ResponseEntity<HttpStatus> register(@PathVariable("tno") long tno, @RequestBody String appellation,
             HttpServletRequest request) {
         log.info("register " + appellation);
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String pathInfo = words[2];
+        String pathInfo = words[4];
 
         turnService.read(tno).ifPresent(turn -> {
             if ("survey".equals(pathInfo)) {
@@ -72,7 +72,7 @@ public class AppellationController {
      * @param request     요청 정보
      * @return 호칭
      */
-    @GetMapping(value = { "/survey/{tno}/{idx}", "/mbo/{tno}/{idx}" })
+    @GetMapping(value = { "/survey/appellations/{idx}", "/mbo/appellations/{idx}" })
     @ResponseBody
     public ResponseEntity<String> read(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
             HttpServletRequest request) {
@@ -80,7 +80,7 @@ public class AppellationController {
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String pathInfo = words[2];
+        String pathInfo = words[4];
 
         List<String> appellation = new ArrayList<>();
         if ("survey".equals(pathInfo)) {
@@ -101,14 +101,14 @@ public class AppellationController {
      * @param request     요청 정보
      * @return 상태 메시지
      */
-    @PutMapping(value = { "/survey/{tno}/{idx}", "/mbo/{tno}/{idx}" })
+    @PutMapping(value = { "/survey/appellations/{idx}", "/mbo/appellations/{idx}" })
     public ResponseEntity<HttpStatus> modify(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
             @RequestBody String appellation, HttpServletRequest request) {
         log.info("Modify " + appellation);
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String pathInfo = words[2];
+        String pathInfo = words[4];
 
         turnService.read(tno).ifPresent(turn -> {
             if ("survey".equals(pathInfo)) {
@@ -129,14 +129,14 @@ public class AppellationController {
      * @param idx 리스트 index
      * @return 상태 메시지
      */
-    @DeleteMapping(value = { "/survey/{tno}/{idx}", "/mbo/{tno}/{idx}" })
+    @DeleteMapping(value = { "/survey/appellations/{idx}", "/mbo/appellations/{idx}" })
     public ResponseEntity<HttpStatus> remove(@PathVariable("tno") long tno, @PathVariable("idx") int idx,
             HttpServletRequest request) {
         log.info("remove " + idx);
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String pathInfo = words[2];
+        String pathInfo = words[4];
 
         turnService.read(tno).ifPresent(turn -> {
             if ("survey".equals(pathInfo)) {
@@ -156,14 +156,15 @@ public class AppellationController {
      * @param tno     회차 id
      * @param request 요청 정보
      * @param model   화면 전달 정보
+     * @param return  호칭 리스트 화면
      */
-    @GetMapping(value = { "/survey/list/{tno}", "/mbo/list/{tno}" })
+    @GetMapping(value = { "/survey/appellations/list", "/mbo/appellations/list" })
     public String readList(@PathVariable("tno") long tno, HttpServletRequest request, Model model) {
         log.info("appellation list by " + tno);
 
         String whatYouCall = request.getServletPath();
         String[] words = whatYouCall.split("/");
-        String pathInfo = words[2];
+        String pathInfo = words[4];
 
         turnService.read(tno).ifPresent(origin -> {
             model.addAttribute("turn", origin);

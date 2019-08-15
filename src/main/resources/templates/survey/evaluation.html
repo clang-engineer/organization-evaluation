@@ -93,6 +93,7 @@
 <!-- ./div content -->
 
 <th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/bottomBtnSize.js}"></script>
     <script th:inline="javascript">
         /* documnet ready function */
         $(document).ready(function (e) {
@@ -117,7 +118,7 @@
             modalRegisterBtn.text("Submit");
             modalBody.addClass("pb-0")
             modalLabel2.css("fontSize", "0.9rem");
-            var evaluatedName = [[${ relation?.evaluated?.name }]];
+            var evaluatedName = [[${ relation?.evaluated ?.name }]];
 
             var formObj = $("#f1");
             var csrf = JSON.parse('[[${_csrf}]]');
@@ -139,26 +140,6 @@
                 bottomBtnSize();
             });
 
-            function bottomBtnSize() {
-                if ($(window).width() < 768) {
-                    $('#bottomBtn').addClass('btn-group-sm');
-                    $('#bottomBtn').removeClass('btn-group-xs');
-                    $('#bottomBtn').removeClass('btn-group-lg');
-                    $('#bottomBtn').removeClass('btn-group-vertical');
-
-                } else if (($(window).width() < 1200)) {
-                    $('#bottomBtn').removeClass('btn-group-sm');
-                    $('#bottomBtn').addClass('btn-group-xs');
-                    $('#bottomBtn').removeClass('btn-group-lg');
-                    $('#bottomBtn').removeClass('btn-group-vertical');
-
-                } else {
-                    $('#bottomBtn').removeClass('btn-group-sm');
-                    $('#bottomBtn').removeClass('btn-group-xs');
-                    $('#bottomBtn').addClass('btn-group-lg');
-                    $('#bottomBtn').addClass('btn-group-vertical');
-                }
-            };
             //전송 버튼 눌렀을 때의 동작
             $("#btnSubmit, #btnPause").click(function (e) {
                 e.preventDefault();

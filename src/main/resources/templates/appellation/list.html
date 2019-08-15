@@ -156,6 +156,9 @@
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
+				if (!confirm("삭제하시겠습니까?")) {
+					return false;
+				}
 				var obj = { tno: tno, idx: modal.data('idx'), csrf: csrf };
 				appellationService.remove(obj, function () {
 					alert("삭제 되었습니다.");
@@ -167,14 +170,6 @@
 			modalCloseBtn.on("click", function (e) {
 				modal.modal('hide');
 			});
-
-			function delchk() {
-				if (confirm("삭제하시겠습니까?")) {
-					return true;
-				} else {
-					return false;
-				}
-			}
 
 		});
 	</script>

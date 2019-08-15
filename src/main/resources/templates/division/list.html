@@ -81,7 +81,7 @@
 		</div>
 	</div>
 	<!-- /.container-fluid -->
-	<form id="f1" th:action="@{|${turn?.tno}|}" method="get">
+	<form id="f1" th:action="@{list}" method="get">
 		<input type="hidden" name="page" th:value=${result?.currentPageNum} />
 		<input type="hidden" name="size" th:value=${result?.currentPage?.pageSize} />
 		<input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -151,7 +151,7 @@
 
 				//모달 text
 				modalTitle.text("Division Modify or Delete");
-				var obj = { tno: tno, dno: dno };
+				var obj = { dno: dno };
 				divisionService.read(obj, function (result) {
 					modalContent1.val(result.division1);
 					modalContent2.val(result.division2);
@@ -182,7 +182,7 @@
 
 			//modal내의 register 클릭 시
 			modalRegisterBtn.on("click", function () {
-				var obj = { tno: tno, division1: modalContent1.val(), division2: modalContent2.val(), writeId: authName, updateId: authName, csrf: csrf };
+				var obj = { division1: modalContent1.val(), division2: modalContent2.val(), writeId: authName, updateId: authName, csrf: csrf };
 				divisionService.register(obj, function () {
 					alert("등록 되었습니다.");
 					location.reload();
@@ -191,7 +191,7 @@
 
 			//모달 내의 수정 버튼 클릭 시..
 			modalModifyBtn.on("click", function (e) {
-				var obj = { tno: tno, dno: modal.data('dno'), division1: modalContent1.val(), division2: modalContent2.val(), writeId: authName, updateId: authName, csrf: csrf };
+				var obj = { dno: modal.data('dno'), division1: modalContent1.val(), division2: modalContent2.val(), writeId: authName, updateId: authName, csrf: csrf };
 				divisionService.modify(obj, function () {
 					alert("수정 되었습니다.");
 					location.reload();
@@ -201,7 +201,12 @@
 
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
-				var obj = { tno: tno, dno: modal.data('dno'), csrf: csrf };
+
+				if (!confirm("삭제하시겠습니까?")) {
+					return false;
+				}
+
+				var obj = { dno: modal.data('dno'), csrf: csrf };
 				divisionService.remove(obj, function () {
 					alert("삭제 되었습니다.");
 					location.reload();

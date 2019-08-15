@@ -7,7 +7,7 @@
         <!-- Breadcrumbs-->
         <ol class="breadcrumb">
             <li class="breadcrumb-item">
-                <a th:href="@{|list/${turn?.tno}|}">List</a>
+                <a th:href="@{../departments/list}">List</a>
             </li>
             <li class="breadcrumb-item active">Leader</li>
         </ol>
@@ -41,7 +41,7 @@
                     <button class="btn btn-info" id="list">List</button>
                 </div>
 
-                <form th:action="@{|../../list/${turn?.tno}|}" id="myForm" method="get">
+                <form th:action="@{|../departments/list|}" id="myForm" method="get">
                     <input type="hidden" name="size" th:value=${pageVO?.size} />
                     <input type="hidden" name="page" th:value=${pageVO?.page} />
                     <input type="hidden" name="type" th:value=${pageVO?.type} />
@@ -71,7 +71,7 @@
 
                 $.ajax({
                     type: 'put',
-                    url: "../" + param.tno + "/" + param.dno,
+                    url: param.dno,
                     data: JSON.stringify(param),
                     // data: param.content,
                     contentType: "application/json; charset:utf-8",
