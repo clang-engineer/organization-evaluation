@@ -202,8 +202,7 @@
 			//모달 내의 삭제 버튼 클릭 시
 			modalRemoveBtn.on("click", function (e) {
 
-				if (confirm("삭제하시겠습니까?")) {
-				} else {
+				if (!confirm("삭제하시겠습니까?")) {
 					return false;
 				}
 

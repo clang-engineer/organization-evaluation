@@ -130,8 +130,7 @@
 
             $("button[id='remove']").on("click", function (e) {
 
-                if (confirm("삭제하시겠습니까?")) {
-                } else {
+                if (!confirm("삭제하시겠습니까?")) {
                     return false;
                 }
 

@@ -118,10 +118,10 @@
 
 
 <th:block layout:fragment="script">
+    <script type="text/javascript" th:src="@{/public/js/common.js}"></script>
     <script th:inline="javascript">
         $(document).ready(function () {
 
-            var msg = [[${ msg }]];
             var csrf = JSON.parse('[[${_csrf}]]');
 
             var tno = [[${ turn?.tno }]];
@@ -150,7 +150,7 @@
             //검색 버튼 클릭 시
             $("#searchBtn").click(function (e) {
                 e.preventDefault();
-                
+
                 var typeStr = $("#searchType").find(":selected").val();
                 var keywordStr = $("#searchKeyword").val();
                 formObj.find("[name='type']").val(typeStr);
@@ -171,7 +171,7 @@
             //등록 버튼 클릭 시
             $("#register").click(function (e) {
                 e.preventDefault();
-				window.location.href = "../questions";
+                window.location.href = "../questions";
             });
 
             //xlRegister 클릭 시
@@ -203,9 +203,8 @@
                 var files = inputFile[0].files;
                 var modalDeleteList = modal.find("input[name='deleteList']");
 
-                if (!checkExtension(files[0].name, files[0].size)) {
+                if (!common.checkExtension(files[0].name, files[0].size)) {
                     return false;
-
                 }
 
                 formData.append("uploadFile", files[0]);
@@ -254,24 +253,6 @@
             console.log('ajax end');
             $('#viewLoading').hide();
         });
-
-
-        //파일 사이즈 및 형식 제한.
-        var regex = new RegExp("(.*?)\.(xlsx)$");
-        var maxSize = 5242880;//5MB
-
-        function checkExtension(fileName, fileSize) {
-            if (fileSize >= maxSize) {
-                alert("파일 사이즈 초과");
-                return false;
-            }
-
-            if (!regex.test(fileName)) {
-                alert("xlsx 파일만 업로드 가능.")
-                return false;
-            }
-            return true;
-        }
 
     </script>
 </th:block>

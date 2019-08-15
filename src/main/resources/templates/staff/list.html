@@ -122,10 +122,10 @@
 
 
 <th:block layout:fragment="script">
+	<script type="text/javascript" th:src="@{/public/js/common.js}"></script>
 	<script th:inline="javascript">
 		$(document).ready(function () {
 
-			var msg = [[${ msg }]];
 			var csrf = JSON.parse('[[${_csrf}]]');
 
 			var tno = [[${ turn?.tno }]];
@@ -209,7 +209,7 @@
 				var files = inputFile[0].files;
 				var modalDeleteList = modal.find("input[name='deleteList']");
 
-				if (!checkExtension(files[0].name, files[0].size)) {
+				if (!common.checkExtension(files[0].name, files[0].size)) {
 					return false;
 				}
 
@@ -250,9 +250,7 @@
 				formObj.submit();
 			});
 
-
 			$('#viewLoading').hide();
-
 
 		}).ajaxStart(function () {         // ajax 통신 시작 callback (로딩바 show)
 			console.log('ajax start');
@@ -262,25 +260,5 @@
 			console.log('ajax end');
 			$('#viewLoading').hide();
 		});
-
-
-
-
-		//파일 사이즈 및 형식 제한.
-		var regex = new RegExp("(.*?)\.(xlsx)$");
-		var maxSize = 5242880;//5MB
-
-		function checkExtension(fileName, fileSize) {
-			if (fileSize >= maxSize) {
-				alert("파일 사이즈 초과");
-				return false;
-			}
-
-			if (!regex.test(fileName)) {
-				alert("xlsx 파일만 업로드 가능.")
-				return false;
-			}
-			return true;
-		}
 	</script>
 </th:block>
