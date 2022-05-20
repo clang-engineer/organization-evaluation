@@ -98,7 +98,7 @@
 		<dependency>
 			<groupId>com.google.code.gson</groupId>
 			<artifactId>gson</artifactId>
-			<version>2.8.2</version>
+			<version>2.8.9</version>
 		</dependency>
 		<!-- apply webjars bootstrapt/ jquery -->
 		<!-- <dependency> <groupId>org.webjars</groupId> <artifactId>jquery</artifactId> <version>3.4.1</version> </dependency> <dependency> <groupId>org.webjars</groupId> 
